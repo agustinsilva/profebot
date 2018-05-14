@@ -8,6 +8,14 @@
 # Java class files
 *.class
 
+# Maven 
+target/
+
+# eclipse project file
+.settings/
+.classpath
+.project
+
 # Generated files
 bin/
 gen/
