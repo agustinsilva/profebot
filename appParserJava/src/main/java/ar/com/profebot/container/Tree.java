@@ -18,6 +18,8 @@ public class Tree {
 	public void setNodes(List<TreeNode> nodes) {
 		this.nodes = nodes;
 	}
-	
+	public String toExpression(){
+		return rootNode.toExpression();
+	}
 	
 }
