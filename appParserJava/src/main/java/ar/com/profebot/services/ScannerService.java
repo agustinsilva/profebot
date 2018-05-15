@@ -65,13 +65,13 @@ public class ScannerService {
 			{61,61,	99,	61,	99,	99,	61,	99,	99,	99, 61, 99},   	/*  Estado 12 */
 			{62,62,	99,	62,	99,	99,	62,	99,	99,	99, 62, 99},   	/*  Estado 13 */
 			{15,99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99},	/*  Estado 14 */
-			{15,99, 63, 99, 99, 63, 63, 63, 63, 99, 99, 63}, 	/*  Estado 15 */
+			{15,99, 63, 99, 63, 63, 63, 63, 63, 99, 99, 63}, 	/*  Estado 15 */
 			{17,99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99}, 	/*  Estado 16 */
-			{17,99, 64, 99, 99, 64, 64, 64, 64, 99, 99, 64}, 	/*  Estado 17 */
+			{17,99, 64, 99, 64, 64, 64, 64, 64, 99, 99, 64}, 	/*  Estado 17 */
 			{19,99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99}, 	/*  Estado 18 */
-			{19,99, 65, 99, 99, 65, 65, 65, 65, 99, 99, 65}, 	/*  Estado 19 */
+			{19,99, 65, 99, 65, 65, 65, 65, 65, 99, 99, 65}, 	/*  Estado 19 */
 			{21,99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99}, 	/*  Estado 20 */
-			{21,99, 66, 99, 99, 66, 66, 66, 66, 99, 99, 66}, 	/*  Estado 21 */
+			{21,99, 66, 99, 66, 66, 66, 66, 66, 99, 99, 66}, 	/*  Estado 21 */
 			{67,99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99}, 	/*  Estado 22 */
 			{68,68, 99, 68, 99, 99, 68, 99, 99, 99, 99, 99}  	/*  Estado 23 */
 		};
@@ -89,9 +89,9 @@ public class ScannerService {
 	private static final int BARRA_CHAR=8;          // /
 	private static final int POTENCIA_CHAR=9;       // ^
 	private static final int RAIZ_CHAR=10;          // R
-	private static final int FIN_CHAR=11;           // ¬
+	private static final int FIN_CHAR=11;           // ï¿½
 	
-	private static final char END_CHAR='¬';          
+	private static final char END_CHAR='ï¿½';          
 	
     private int pos = -1;
     private boolean readNextToken = true;
@@ -155,11 +155,12 @@ public class ScannerService {
             // Toma el char y verifica el tipo
             c = parsedExpression.charAt(pos);
             tipo = getType(c);
-
+            if(tipo == -1){throw new InvalidExpressionException("Detectado caracter invalido: " + c);}
+            
             // Nuevo estado
             estado = tablaTransicion[estado][tipo];
         	
-            // Pequeño fix que determina si un "-" es parte de un coeficiente o es un separador de terminos
+            // Pequeï¿½o fix que determina si un "-" es parte de un coeficiente o es un separador de terminos
             // Revisando el token detectado anteriormente
             if (tipo == MENOS_CHAR && resultado.isEmpty()){
             	if (TOKEN.CONSTANTE.equals(previousToken) || 
@@ -184,7 +185,7 @@ public class ScannerService {
             	signoIgualDetectado = true;
             }else if (estado == ACEPTORES.ST_ACEPTA_FIN.getId()){
             	if (numParantesisAbiertos != 0){
-            		throw new InvalidExpressionException("Termina de parsear la expresón, luego del = tiene " + numParantesisAbiertos + " parentesis abiertos!");
+            		throw new InvalidExpressionException("Termina de parsear la expresï¿½n, luego del = tiene " + numParantesisAbiertos + " parentesis abiertos!");
             	}
             }else if (estado == ACEPTORES.ST_ACEPTA_PARENTESIS_IZQ.getId()){
             	numParantesisAbiertos++;
@@ -196,7 +197,7 @@ public class ScannerService {
             }
             
             
-            // Si llego a una expresión inválida, no sigo parseando
+            // Si llego a una expresiï¿½n invï¿½lida, no sigo parseando
             if (estado == ACEPTORES.ST_EXPRESION_INVALIDA.getId()){
             	throw new InvalidExpressionException("Detectada expresion invalida en pos " + pos);
             	
