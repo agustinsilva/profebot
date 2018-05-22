@@ -1,6 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="start"
+    android:weightSum="100">
+
+    <TextView
+        android:id="@+id/text1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="20"
+        android:background="@color/colorGreen"
+        android:textColor="@color/colorWhite"
+        android:gravity="center"
+        android:textSize="30dp"
+        />
+
+    <TextView
+        android:id="@+id/text2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="20"
+        android:background="@color/colorPrimaryDark"
+        android:gravity="center"
+        android:textColor="@color/colorWhite"
+        android:textSize="30dp"
+        />
+
+    <com.myscript.atk.math.widget.MathWidget
+        android:id="@+id/math_widget"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="60"/>
 
 </LinearLayout>
