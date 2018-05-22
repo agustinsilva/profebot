@@ -91,10 +91,8 @@ public class EnterEquationsHandDrawActivity extends AppCompatActivity implements
 
     @Override
     public void onRecognitionEnd(MathWidgetApi widget) {
-        Toast.makeText(getApplicationContext(), "Recognition update", Toast.LENGTH_SHORT).show();
         if(BuildConfig.DEBUG) {
-            ((TextView)findViewById(R.id.text1)).setText(widget.getResultAsLaTeX());
-            ((TextView)findViewById(R.id.text2)).setText(widget.getResultAsText());
+            // TODO: tomar el widget.getResultAsText() y el widget.getResultAsLaTeX()
         }
     }
 }

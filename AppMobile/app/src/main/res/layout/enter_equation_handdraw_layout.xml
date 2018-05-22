@@ -7,31 +7,18 @@
     android:weightSum="100">
 
     <TextView
-        android:id="@+id/text1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="20"
-        android:background="@color/colorGreen"
-        android:textColor="@color/colorWhite"
-        android:gravity="center"
+        android:text="Dibujá tu expresión"
         android:textSize="30dp"
-        />
-
-    <TextView
-        android:id="@+id/text2"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="20"
-        android:background="@color/colorPrimaryDark"
-        android:gravity="center"
-        android:textColor="@color/colorWhite"
-        android:textSize="30dp"
-        />
+        android:gravity="center"/>
 
     <com.myscript.atk.math.widget.MathWidget
         android:id="@+id/math_widget"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="60"/>
+        android:layout_weight="80"
+        android:background="@drawable/pizarron"/>
 
 </LinearLayout>
