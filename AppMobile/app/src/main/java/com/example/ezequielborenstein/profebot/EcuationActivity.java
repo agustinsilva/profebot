@@ -3,25 +3,23 @@ package com.example.ezequielborenstein.profebot;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+public class EcuationActivity extends AppCompatActivity {
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.enter_equation_keyboard_layout);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_id);
-        setSupportActionBar(myToolbar);
-
-        Button enterEquation = (Button)findViewById(R.id.enter_equation_id);
+        Button enterEquation = (Button) findViewById(R.id.handwrite_ecuation);
         enterEquation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
-                Intent intent = new Intent(MainActivity.this, EcuationActivity.class);
+                Intent intent = new Intent(button.getContext(), EnterEquationsHandDrawActivity.class);
                 startActivity(intent);
             }
         });

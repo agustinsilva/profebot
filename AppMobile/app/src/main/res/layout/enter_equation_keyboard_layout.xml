@@ -28,167 +28,21 @@
 
 
             <Button
-                android:id="@+id/arrow_back"
+                android:id="@+id/photo_ecuation"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="100dp"
                 android:layout_weight="2"
-                android:background="@drawable/ic_arrow_back"
+                android:text="Sacarle foto"
                 android:theme="@style/MyCalculatorButton" />
 
             <Button
-                android:id="@+id/enter_polynomial_id"
+                android:id="@+id/handwrite_ecuation"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="100dp"
                 android:layout_weight="2"
-                android:text=">"
+                android:text="Dibujar a mano"
                 android:theme="@style/MyCalculatorButton" />
 
-            <Button
-                android:id="@+id/button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="x"
-                android:theme="@style/MyCalculatorButton" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-
-            android:layout_height="5dp"
-            android:layout_weight="1"
-            android:gravity="top|center"
-            android:orientation="horizontal"
-            android:weightSum="7">
-
-
-            <Button
-                android:id="@+id/enter_equation_id"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:text="+"
-                android:theme="@style/MyCalculatorButton" />
-
-            <Button
-                android:id="@+id/enter_polynomial_id"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:text="-"
-                android:theme="@style/MyCalculatorButton" />
-
-            <Button
-                android:id="@+id/enter_function_id"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:text="*"
-                android:theme="@style/MyCalculatorButton" />
-
-            <Button
-                android:id="@+id/button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="/"
-                android:theme="@style/MyCalculatorButton" />
-
-            <Button
-                android:id="@+id/button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="x"
-                android:theme="@style/MyCalculatorButton" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="5dp"
-
-            android:layout_weight="1"
-            android:gravity="top|center"
-            android:orientation="horizontal"
-            android:weightSum="7">
-
-
-            <Button
-                android:id="@+id/enter_equation_id"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:text="+"
-                android:theme="@style/MyCalculatorButton" />
-
-            <Button
-                android:id="@+id/enter_polynomial_id"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:text="-"
-                android:theme="@style/MyCalculatorButton" />
-
-            <Button
-                android:id="@+id/enter_function_id"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:text="*"
-                android:theme="@style/MyCalculatorButton" />
-
-            <Button
-                android:id="@+id/button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="/"
-                android:theme="@style/MyCalculatorButton" />
-
-            <Button
-                android:id="@+id/button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="x"
-                android:theme="@style/MyCalculatorButton" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:layout_weight="1"
-            android:gravity="top|center"
-            android:orientation="horizontal"
-            android:weightSum="7">
-
-
-            <Button
-                android:id="@+id/enter_equation_id"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:text="s"
-                android:theme="@style/MyCalculatorButton" />
-
-            <Button
-                android:id="@+id/enter_polynomial_id"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:text="a"
-                android:theme="@style/MyCalculatorButton" />
-
-            <Button
-                android:id="@+id/enter_function_id"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="3"
-                android:text="OK"
-                android:theme="@style/MyCalculatorButton" />
 
         </LinearLayout>
 
