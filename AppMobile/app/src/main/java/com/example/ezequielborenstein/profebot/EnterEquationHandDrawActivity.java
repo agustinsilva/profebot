@@ -56,7 +56,7 @@ public class EnterEquationHandDrawActivity extends AppCompatActivity implements
         ((Button) findViewById(R.id.solve_equation_id)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
-                // Pending until we create the activity of equations resolution
+                // TODO: pending
             }
         });
     }

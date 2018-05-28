@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/toolbar_id"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorGreen">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="start">
+
+        <TextView
+            android:id="@+id/profebot_id"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="ProfeBot"
+            android:textSize="25dp"
+            android:gravity="center"
+            android:textColor="@color/colorWhite"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end">
+
+            <Button
+                android:id="@+id/enter_equation_photo_id"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@android:drawable/ic_menu_camera"
+                android:layout_marginEnd="10dp"/>
+
+            <Button
+                android:id="@+id/clear_blackboard_id"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@android:drawable/ic_menu_delete"
+                android:layout_marginEnd="10dp"/>
+
+            <Button
+                android:id="@+id/solve_equation_id"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@android:drawable/ic_media_play" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.Toolbar>

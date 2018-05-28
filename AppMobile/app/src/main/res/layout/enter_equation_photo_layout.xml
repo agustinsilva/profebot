@@ -9,7 +9,7 @@
         android:orientation="vertical"
         android:gravity="start">
 
-        <include layout="@layout/toolbar"/>
+        <include layout="@layout/main_toolbar"/>
 
     </LinearLayout>
 </LinearLayout>

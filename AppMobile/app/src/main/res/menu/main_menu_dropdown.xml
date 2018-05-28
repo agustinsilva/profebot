@@ -1,0 +1,16 @@
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/main_menu_id"
+        android:icon="@drawable/dropdown_menu"
+        android:title="main_menu_dropdown"
+        app:showAsAction="ifRoom|withText" >
+        <menu>
+            <item
+                android:id="@+id/see_exercises_pending_id"
+                android:title="Ver ejercicios pendientes" />
+        </menu>
+    </item>
+</menu>
