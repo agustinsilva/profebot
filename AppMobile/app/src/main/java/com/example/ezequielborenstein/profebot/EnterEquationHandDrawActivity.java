@@ -1,6 +1,7 @@
 package com.example.ezequielborenstein.profebot;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -24,8 +25,9 @@ public class EnterEquationHandDrawActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.enter_equation_handdraw_layout);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_id);
-        setSupportActionBar(myToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_id);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         widget = (MathWidgetApi) findViewById(R.id.math_widget);
         if (!widget.registerCertificate(MyCertificate.getBytes())) {
@@ -94,5 +96,11 @@ public class EnterEquationHandDrawActivity extends AppCompatActivity implements
         if(BuildConfig.DEBUG) {
             // TODO: tomar el widget.getResultAsText() y el widget.getResultAsLaTeX()
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        startActivity(new Intent(this, EnterEquationOptionsActivity.class));
+        return true;
     }
 }

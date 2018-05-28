@@ -12,20 +12,33 @@
         android:orientation="horizontal"
         android:gravity="start">
 
-        <Button
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/ic_menu_bar"/>
-
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="ProfeBot"
-            android:layout_marginStart="10dp"
-            android:textSize="25dp"
-            android:gravity="center"
-            android:textColor="@color/colorWhite"/>
+            android:orientation="horizontal"
+            android:gravity="start">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="ProfeBot"
+                android:textSize="25dp"
+                android:gravity="center"
+                android:textColor="@color/colorWhite"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="end">
+
+            <Button
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/dropdown_menu"
+                android:layout_margin="10dp"/>
+        </LinearLayout>
     </LinearLayout>
 
 </android.support.v7.widget.Toolbar>
