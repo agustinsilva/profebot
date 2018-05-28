@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
 
 public class EnterEquationPhotoActivity extends AppCompatActivity{
     @Override
@@ -15,8 +16,7 @@ public class EnterEquationPhotoActivity extends AppCompatActivity{
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_id);
-        setSupportActionBar(myToolbar);
+        GlobalHelper.setUpMainMenuShortCut((TextView)findViewById(R.id.profebot_id));
     }
 
     @Override

@@ -7,8 +7,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.myscript.atk.math.widget.MathWidgetApi;
 
@@ -29,6 +30,38 @@ public class EnterEquationHandDrawActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        GlobalHelper.setUpMainMenuShortCut((TextView)findViewById(R.id.profebot_id));
+
+        this.set_up_widget();
+
+        this.set_up_buttons();
+    }
+
+    private void set_up_buttons(){
+        ((Button) findViewById(R.id.enter_equation_photo_id)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View button) {
+                Intent intent = new Intent(button.getContext(), EnterEquationPhotoActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        ((Button) findViewById(R.id.clear_blackboard_id)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View button) {
+                widget.clear(false);
+            }
+        });
+
+        ((Button) findViewById(R.id.solve_equation_id)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View button) {
+                // Pending until we create the activity of equations resolution
+            }
+        });
+    }
+
+    private void set_up_widget(){
         widget = (MathWidgetApi) findViewById(R.id.math_widget);
         if (!widget.registerCertificate(MyCertificate.getBytes())) {
             AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
@@ -78,11 +111,9 @@ public class EnterEquationHandDrawActivity extends AppCompatActivity implements
     @Override
     public void onConfigureEnd(MathWidgetApi widget, boolean success) {
         if(!success) {
-            Toast.makeText(getApplicationContext(), widget.getErrorString(), Toast.LENGTH_LONG).show();
             Log.e(TAG, "Unable to configure the Math Widget: " + widget.getErrorString());
             return;
         }
-        Toast.makeText(getApplicationContext(), "Math Widget Configured", Toast.LENGTH_SHORT).show();
         if(BuildConfig.DEBUG)
             Log.d(TAG, "Math Widget configured!");
     }

@@ -19,6 +19,7 @@
             android:gravity="start">
 
             <TextView
+                android:id="@+id/profebot_id"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="ProfeBot"

@@ -1,11 +1,12 @@
 package com.example.ezequielborenstein.profebot;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class EnterEquationOptionsActivity extends AppCompatActivity {
 
@@ -17,6 +18,8 @@ public class EnterEquationOptionsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_id);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        GlobalHelper.setUpMainMenuShortCut((TextView)findViewById(R.id.profebot_id));
 
         Button option;
 

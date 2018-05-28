@@ -1,8 +1,8 @@
 package com.example.ezequielborenstein.profebot;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
@@ -25,5 +25,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        this.setMainMenuShortCut();
+    }
+
+    private void setMainMenuShortCut(){
+        GlobalHelper.setMainActivity(this);
     }
 }
