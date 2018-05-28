@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.myscript.atk.math.widget.MathWidgetApi;
 
-public class EnterEquationsHandDrawActivity extends AppCompatActivity implements
+public class EnterEquationHandDrawActivity extends AppCompatActivity implements
         MathWidgetApi.OnConfigureListener,
         MathWidgetApi.OnRecognitionListener{
 

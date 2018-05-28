@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         enterEquation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
-                Intent intent = new Intent(MainActivity.this, EcuationActivity.class);
+                Intent intent = new Intent(MainActivity.this, EnterEquationOptionsActivity.class);
                 startActivity(intent);
             }
         });

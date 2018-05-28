@@ -20,10 +20,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".EnterEquationsHandDrawActivity"
-            android:screenOrientation="landscape" />
-        <activity android:name=".EcuationActivity"></activity>
+        <activity android:name=".EnterEquationOptionsActivity" android:screenOrientation="landscape"></activity>
+        <activity android:name=".EnterEquationHandDrawActivity" android:screenOrientation="landscape"></activity>
+        <activity android:name=".EnterEquationPhotoActivity" android:screenOrientation="landscape"></activity>
     </application>
 
 </manifest>
