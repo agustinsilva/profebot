@@ -15,6 +15,8 @@ import com.myscript.atk.math.widget.MathWidgetApi;
 import com.profebot.activities.BuildConfig;
 import com.profebot.activities.R;
 
+import ar.com.certificate.MyCertificate;
+
 public class EnterEquationHandDrawActivity extends AppCompatActivity implements
         MathWidgetApi.OnConfigureListener,
         MathWidgetApi.OnRecognitionListener{

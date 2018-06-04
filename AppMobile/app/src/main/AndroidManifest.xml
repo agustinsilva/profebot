@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.ar.com.profebot.ezequielborenstein.profebot.MainActivity"
+            android:name="ar.com.profebot.activities.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,9 +20,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.ar.com.profebot.ezequielborenstein.profebot.EnterEquationOptionsActivity" android:screenOrientation="portrait"></activity>
-        <activity android:name="com.ar.com.profebot.ezequielborenstein.profebot.EnterEquationHandDrawActivity" android:screenOrientation="landscape"></activity>
-        <activity android:name="com.ar.com.profebot.ezequielborenstein.profebot.EnterEquationPhotoActivity" android:screenOrientation="landscape"></activity>
+        <activity android:name="ar.com.profebot.activities.EnterEquationOptionsActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name="ar.com.profebot.activities.EnterEquationHandDrawActivity" android:screenOrientation="landscape"></activity>
+        <activity android:name="ar.com.profebot.activities.EnterEquationPhotoActivity" android:screenOrientation="landscape"></activity>
     </application>
 
 </manifest>
