@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.myscript.atk.math.widget.MathWidgetApi;
@@ -65,8 +67,7 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
                     Intent intent = new Intent(button.getContext(), SolveEquationActivity.class);
                     startActivity(intent);
                 }else{
-                    // TODO: centrar el toast, en pantalla y su texto
-                    Toast.makeText(EnterEquationHandDrawActivity.this, "La ecuaqión ingresada no está correctamente escrita", Toast.LENGTH_SHORT).show();
+                    ExpressionsManager.showInvalidEquationMessage(button.getContext());
                 }
             }
         });
@@ -135,7 +136,7 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
 
     @Override
     public void onRecognitionEnd(MathWidgetApi widget) {
-        Toast.makeText(this, widget.getResultAsText(), Toast.LENGTH_SHORT).show();
+        ExpressionsManager.setExpressionDrawn(widget.getResultAsText());
     }
 
     @Override
