@@ -1,12 +1,12 @@
 package ar.com.profebot.parser.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ar.com.profebot.parser.container.TokenData;
 import ar.com.profebot.parser.exception.InvalidExpressionException;
 import ar.com.profebot.parser.utils.Aceptores;
 import ar.com.profebot.parser.utils.Token;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ScannerService {
 

@@ -1,13 +1,13 @@
 package ar.com.profebot.parser.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ar.com.profebot.parser.container.TokenData;
 import ar.com.profebot.parser.container.Tree;
 import ar.com.profebot.parser.container.TreeNode;
 import ar.com.profebot.parser.exception.InvalidExpressionException;
 import ar.com.profebot.parser.utils.Token;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TreeService {
 

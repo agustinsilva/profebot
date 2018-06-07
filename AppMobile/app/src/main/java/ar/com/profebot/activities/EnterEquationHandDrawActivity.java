@@ -4,12 +4,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.myscript.atk.math.widget.MathWidgetApi;
@@ -19,7 +17,7 @@ import com.profebot.activities.R;
 import ar.com.profebot.certificate.MyCertificate;
 import ar.com.profebot.service.ExpressionsManager;
 
-public class EnterEquationHandDrawActivity extends AppCompatActivity implements
+public class EnterEquationHandDrawActivity extends GlobalActivity implements
         MathWidgetApi.OnConfigureListener,
         MathWidgetApi.OnRecognitionListener{
 
@@ -31,14 +29,13 @@ public class EnterEquationHandDrawActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.enter_equation_handdraw_layout);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_id);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        GlobalHelper.setUpMainMenuShortCut((TextView)findViewById(R.id.profebot_id));
+        super.onCreate(savedInstanceState);
 
         this.setUpWidget();
 
@@ -68,6 +65,7 @@ public class EnterEquationHandDrawActivity extends AppCompatActivity implements
                     Intent intent = new Intent(button.getContext(), SolveEquationActivity.class);
                     startActivity(intent);
                 }else{
+                    // TODO: centrar el toast, en pantalla y su texto
                     Toast.makeText(EnterEquationHandDrawActivity.this, "La ecuaqión ingresada no está correctamente escrita", Toast.LENGTH_SHORT).show();
                 }
             }

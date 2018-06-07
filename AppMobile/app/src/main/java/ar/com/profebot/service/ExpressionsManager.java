@@ -27,9 +27,11 @@ public class ExpressionsManager {
 
     public static Boolean expressionDrawnIsValid(){
         try{
-            setTreeOfExpression(new ParserService().parseExpression("1+2=3"));
+            // TODO: convertir la expressionDrawn al formato que espera el parser
+            setTreeOfExpression(new ParserService().parseExpression("1+2=3")); // TODO: usar la expresión corregida
             return true;
         }catch (InvalidExpressionException e){
+            // TODO: nullizar los atributos en caso de ser inválida la expresión ingresada
             return false;
         }
     }

@@ -2,26 +2,23 @@ package ar.com.profebot.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.profebot.activities.R;
 
-public class EnterEquationOptionsActivity extends AppCompatActivity {
+public class EnterEquationOptionsActivity extends GlobalActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.enter_equation_options_layout);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_id);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        GlobalHelper.setUpMainMenuShortCut((TextView)findViewById(R.id.profebot_id));
+        super.onCreate(savedInstanceState);
 
         Button option;
 
