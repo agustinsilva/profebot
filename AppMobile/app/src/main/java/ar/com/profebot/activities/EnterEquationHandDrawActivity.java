@@ -10,12 +10,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.myscript.atk.math.widget.MathWidgetApi;
 import com.profebot.activities.BuildConfig;
 import com.profebot.activities.R;
 
 import ar.com.profebot.certificate.MyCertificate;
+import ar.com.profebot.service.ExpressionsManager;
 
 public class EnterEquationHandDrawActivity extends AppCompatActivity implements
         MathWidgetApi.OnConfigureListener,
@@ -24,6 +26,8 @@ public class EnterEquationHandDrawActivity extends AppCompatActivity implements
     private static final String TAG = "MathDemo";
 
     private MathWidgetApi widget;
+
+    private String equation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +40,12 @@ public class EnterEquationHandDrawActivity extends AppCompatActivity implements
 
         GlobalHelper.setUpMainMenuShortCut((TextView)findViewById(R.id.profebot_id));
 
-        this.set_up_widget();
+        this.setUpWidget();
 
-        this.set_up_buttons();
+        this.setUpButtons();
     }
 
-    private void set_up_buttons(){
+    private void setUpButtons(){
         ((Button) findViewById(R.id.enter_equation_photo_id)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
@@ -60,12 +64,17 @@ public class EnterEquationHandDrawActivity extends AppCompatActivity implements
         ((Button) findViewById(R.id.solve_equation_id)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
-                // TODO: pending
+                if(ExpressionsManager.expressionDrawnIsValid()){
+                    Intent intent = new Intent(button.getContext(), SolveEquationActivity.class);
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(EnterEquationHandDrawActivity.this, "La ecuaqión ingresada no está correctamente escrita", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
 
-    private void set_up_widget(){
+    private void setUpWidget(){
         widget = (MathWidgetApi) findViewById(R.id.math_widget);
         if (!widget.registerCertificate(MyCertificate.getBytes())) {
             AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
@@ -128,9 +137,7 @@ public class EnterEquationHandDrawActivity extends AppCompatActivity implements
 
     @Override
     public void onRecognitionEnd(MathWidgetApi widget) {
-        if(BuildConfig.DEBUG) {
-            // TODO: tomar el widget.getResultAsText() y el widget.getResultAsLaTeX()
-        }
+        Toast.makeText(this, widget.getResultAsText(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
