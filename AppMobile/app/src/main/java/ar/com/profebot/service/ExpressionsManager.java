@@ -10,15 +10,15 @@ import ar.com.profebot.parser.service.ParserService;
 
 public class ExpressionsManager {
 
-    private static String expressionDrawn;
+    private static String equationDrawn;
     private static Tree treeOfExpression;
 
-    public static String getExpressionDrawn() {
-        return expressionDrawn;
+    public static String getEquationDrawn() {
+        return equationDrawn;
     }
 
-    public static void setExpressionDrawn(String expressionDrawn) {
-        ExpressionsManager.expressionDrawn = expressionDrawn;
+    public static void setEquationDrawn(String equationDrawn) {
+        ExpressionsManager.equationDrawn = equationDrawn;
     }
 
     public static Tree getTreeOfExpression() {
@@ -31,11 +31,11 @@ public class ExpressionsManager {
 
     public static Boolean expressionDrawnIsValid(){
         try{
-            // TODO: convertir la expressionDrawn al formato que espera el parser
-            setTreeOfExpression(new ParserService().parseExpression("1+2")); // TODO: usar la expresión corregida
+            setTreeOfExpression(new ParserService().parseExpression(mapToOurAlphabet()));
             return true;
         }catch (InvalidExpressionException e){
-            // TODO: nullizar los atributos en caso de ser inválida la expresión ingresada
+            equationDrawn = null;
+            treeOfExpression = null;
             return false;
         }
     }
@@ -44,5 +44,33 @@ public class ExpressionsManager {
         Toast toast = Toast.makeText(context,"Fijate si la ecuación está bien escrita!", Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
+    }
+
+    public static String mapToOurAlphabet(){
+        if(equationDrawn == null){
+            return "";
+        }
+
+        String equationWellWritten = fixEquationFormat();
+
+        return equationWellWritten
+                .replaceAll("\\[", "(")
+                .replaceAll("]", ")")
+                .replaceAll(":", "/")
+                .replaceAll(",", ".")
+                .replaceAll("\\^\\(\\*\\)", "*") // After replacing [] by (), we must search ^(*)
+                .replaceAll("x", "X")
+                .replaceAll("×", "*")
+                .replaceAll("√", "R");
+    }
+
+    public static String fixEquationFormat(){
+        String equation = equationDrawn;
+
+        for(int i = 0 ; i <= 9 ; i++){
+            equation = equation.replaceAll("\\^[\\(\\[]" + i + "[\\)\\]]", "^" + i);
+        }
+
+        return equation;
     }
 }

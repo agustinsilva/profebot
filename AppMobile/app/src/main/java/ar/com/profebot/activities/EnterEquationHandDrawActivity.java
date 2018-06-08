@@ -6,11 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.myscript.atk.math.widget.MathWidgetApi;
 import com.profebot.activities.BuildConfig;
@@ -136,7 +133,7 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
 
     @Override
     public void onRecognitionEnd(MathWidgetApi widget) {
-        ExpressionsManager.setExpressionDrawn(widget.getResultAsText());
+        ExpressionsManager.setEquationDrawn(widget.getResultAsText());
     }
 
     @Override

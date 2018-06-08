@@ -9,9 +9,35 @@
     <include layout="@layout/main_toolbar"/>
 
     <TextView
-        android:id="@+id/expression_string_id"
-        android:textSize="30dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="Ecuación dibujada en formato string:"
+        android:textSize="20dp"
+        android:layout_margin="10dp"
+        />
+
+    <TextView
+        android:id="@+id/equation_drawn_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:layout_margin="10dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ecuación generada por el parser:"
+        android:textSize="20dp"
+        android:layout_margin="10dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/equation_generated_id"
+        android:textSize="20dp"
+        android:layout_margin="10dp"
+        />
 
 </LinearLayout>
