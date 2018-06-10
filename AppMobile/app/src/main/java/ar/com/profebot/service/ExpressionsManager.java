@@ -61,14 +61,19 @@ public class ExpressionsManager {
                 .replaceAll("\\^\\(\\*\\)", "*") // After replacing [] by (), we must search ^(*)
                 .replaceAll("x", "X")
                 .replaceAll("×", "*")
-                .replaceAll("√", "R");
+                .replaceAll("√", "R")
+                .replaceAll("e", "2.718281828459045235360")
+                .replaceAll("pi", "3.14159265358979323846");
     }
 
     public static String fixEquationFormat(){
         String equation = equationDrawn;
 
         for(int i = 0 ; i <= 9 ; i++){
-            equation = equation.replaceAll("\\^[\\(\\[]" + i + "[\\)\\]]", "^" + i);
+            equation = equation
+                    .replaceAll("\\^[\\(\\[]" + i + "[\\)\\]]", "^" + i)
+                    .replaceAll(i + "\\(", i + "*(")
+                    .replaceAll(i + "x", i + "*x");
         }
 
         return equation;
