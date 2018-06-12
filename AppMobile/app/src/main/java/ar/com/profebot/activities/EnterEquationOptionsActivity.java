@@ -35,7 +35,7 @@ public class EnterEquationOptionsActivity extends GlobalActivity {
         option.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
-                Intent intent = new Intent(button.getContext(), EnterEquationPhotoActivity.class);
+                Intent intent = new Intent(button.getContext(), CarmeraActivity.class);
                 startActivity(intent);
             }
         });
