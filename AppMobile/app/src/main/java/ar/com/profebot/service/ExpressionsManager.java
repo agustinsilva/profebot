@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import ar.com.profebot.activities.GlobalHelper;
+import ar.com.profebot.activities.MainActivity;
 import ar.com.profebot.parser.container.Tree;
 import ar.com.profebot.parser.exception.InvalidExpressionException;
 import ar.com.profebot.parser.service.ParserService;
@@ -52,7 +54,7 @@ public class ExpressionsManager {
         }
 
         String equationWellWritten = fixEquationFormat();
-
+        
         return equationWellWritten
                 .replaceAll("\\[", "(")
                 .replaceAll("]", ")")
@@ -60,6 +62,7 @@ public class ExpressionsManager {
                 .replaceAll(",", ".")
                 .replaceAll("\\^\\(\\*\\)", "*") // After replacing [] by (), we must search ^(*)
                 .replaceAll("x", "X")
+                .replaceAll("\\)X", ")*X")
                 .replaceAll("×", "*")
                 .replaceAll("√", "R")
                 .replaceAll("e", "2.718281828459045235360")

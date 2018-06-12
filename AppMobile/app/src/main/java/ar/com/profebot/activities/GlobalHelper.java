@@ -24,4 +24,8 @@ public class GlobalHelper {
             }
         });
     }
+
+    public static AppCompatActivity getMainActivity() {
+        return mainActivity;
+    }
 }
