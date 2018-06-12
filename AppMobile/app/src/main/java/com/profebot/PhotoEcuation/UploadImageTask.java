@@ -3,9 +3,9 @@ package com.profebot.PhotoEcuation;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
+import com.google.gson.Gson;
 import com.profebot.PhotoEcuation.api.request.SingleProcessRequest;
 import com.profebot.PhotoEcuation.api.response.DetectionResult;
-import com.google.gson.Gson;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;

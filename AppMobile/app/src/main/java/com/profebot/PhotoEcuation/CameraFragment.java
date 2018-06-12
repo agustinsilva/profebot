@@ -2,7 +2,6 @@ package com.profebot.PhotoEcuation;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Build;
@@ -30,6 +29,7 @@ import android.widget.Toast;
 import com.profebot.PhotoEcuation.camera.CameraPreview;
 import com.profebot.PhotoEcuation.camera.CameraUtil;
 import com.profebot.PhotoEcuation.cropcontrol.CropController;
+import com.profebot.activities.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
@@ -41,7 +41,6 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import com.profebot.activities.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

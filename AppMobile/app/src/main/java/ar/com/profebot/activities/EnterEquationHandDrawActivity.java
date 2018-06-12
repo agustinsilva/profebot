@@ -134,6 +134,7 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
     @Override
     public void onRecognitionEnd(MathWidgetApi widget) {
         ExpressionsManager.setEquationDrawn(widget.getResultAsText());
+        //ExpressionsManager.setEquationDrawnAsLatex(widget.getResultAsLaTeX());
     }
 
     @Override

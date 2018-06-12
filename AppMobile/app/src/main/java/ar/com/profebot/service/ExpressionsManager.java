@@ -4,8 +4,6 @@ import android.content.Context;
 import android.view.Gravity;
 import android.widget.Toast;
 
-import ar.com.profebot.activities.GlobalHelper;
-import ar.com.profebot.activities.MainActivity;
 import ar.com.profebot.parser.container.Tree;
 import ar.com.profebot.parser.exception.InvalidExpressionException;
 import ar.com.profebot.parser.service.ParserService;
@@ -23,8 +21,8 @@ public class ExpressionsManager {
         ExpressionsManager.equationDrawn = equationDrawn;
     }
 
-    public static Tree getTreeOfExpression() {
-        return treeOfExpression;
+    public static String getEquationAsString() {
+        return treeOfExpression.toExpression();
     }
 
     public static void setTreeOfExpression(Tree treeOfExpression) {
