@@ -7,6 +7,7 @@ import android.widget.Toast;
 import ar.com.profebot.parser.container.Tree;
 import ar.com.profebot.parser.exception.InvalidExpressionException;
 import ar.com.profebot.parser.service.ParserService;
+import de.uni_bielefeld.cebitec.mzurowie.pretty_formula.main.FormulaParser;
 
 public class ExpressionsManager {
 
@@ -19,6 +20,14 @@ public class ExpressionsManager {
 
     public static void setEquationDrawn(String equationDrawn) {
         ExpressionsManager.equationDrawn = equationDrawn;
+    }
+
+    public static String getEquationAsLatex() {
+        String infixEquation = treeOfExpression.toExpression()
+                .replaceAll("R", "sqrt")
+                .replaceAll("X", "x");
+        String[] expressions = infixEquation.split("=");
+        return FormulaParser.parseToLatex(expressions[0]) + "=" + FormulaParser.parseToLatex(expressions[1]);
     }
 
     public static String getEquationAsString() {

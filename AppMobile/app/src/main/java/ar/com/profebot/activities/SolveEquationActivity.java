@@ -25,8 +25,7 @@ public class SolveEquationActivity extends GlobalActivity {
 
         ((TextView) findViewById(R.id.equation_drawn_id)).setText(ExpressionsManager.getEquationDrawn());
         ((TextView) findViewById(R.id.equation_generated_id)).setText(ExpressionsManager.getEquationAsString());
-        // TODO: falta separar la expresión dibujada por el =, para pasar a latex cada miembro, y después rearmarlo.
-        ((MathView) findViewById(R.id.equation_pretty_format_id)).setText("\\(" + FormulaParser.parseToLatex("3*x^3/2+sqrt(4)") + "\\)");
+        ((MathView) findViewById(R.id.equation_pretty_format_id)).setText("\\(" + ExpressionsManager.getEquationAsLatex() + "\\)");
     }
 
     @Override
