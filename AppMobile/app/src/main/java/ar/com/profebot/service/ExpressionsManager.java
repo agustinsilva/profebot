@@ -19,7 +19,7 @@ public class ExpressionsManager {
     }
 
     public static void setEquationDrawn(String equationDrawn) {
-        ExpressionsManager.equationDrawn = equationDrawn;
+        ExpressionsManager.equationDrawn = mapToOurAlphabet(equationDrawn);
     }
 
     public static String getEquationAsLatex() {
@@ -40,7 +40,7 @@ public class ExpressionsManager {
 
     public static Boolean expressionDrawnIsValid(){
         try{
-            setTreeOfExpression(new ParserService().parseExpression(mapToOurAlphabet()));
+            setTreeOfExpression(new ParserService().parseExpression(equationDrawn));
             return true;
         }catch (InvalidExpressionException e){
             equationDrawn = null;
@@ -55,12 +55,12 @@ public class ExpressionsManager {
         toast.show();
     }
 
-    public static String mapToOurAlphabet(){
+    private static String mapToOurAlphabet(String equationDrawn){
         if(equationDrawn == null){
             return "";
         }
 
-        String equationWellWritten = fixEquationFormat();
+        String equationWellWritten = fixEquationFormat(equationDrawn);
         
         return equationWellWritten
                 .replaceAll("\\[", "(")
@@ -76,16 +76,14 @@ public class ExpressionsManager {
                 .replaceAll("pi", "3.14159265358979323846");
     }
 
-    public static String fixEquationFormat(){
-        String equation = equationDrawn;
-
+    public static String fixEquationFormat(String equationDrawn){
         for(int i = 0 ; i <= 9 ; i++){
-            equation = equation
+            equationDrawn = equationDrawn
                     .replaceAll("\\^[\\(\\[]" + i + "[\\)\\]]", "^" + i)
                     .replaceAll(i + "\\(", i + "*(")
                     .replaceAll(i + "x", i + "*x");
         }
 
-        return equation;
+        return equationDrawn;
     }
 }

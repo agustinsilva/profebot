@@ -41,10 +41,19 @@
         android:layout_margin="10dp"
         />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ecuación generada por el parser parseada a latex:"
+        android:textSize="20dp"
+        android:layout_margin="10dp"
+        />
+
     <io.github.kexanie.library.MathView
         android:id="@+id/equation_pretty_format_id"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         app:engine="KaTeX"
         >
     </io.github.kexanie.library.MathView>

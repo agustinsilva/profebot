@@ -8,7 +8,6 @@ import android.widget.TextView;
 import com.profebot.activities.R;
 
 import ar.com.profebot.service.ExpressionsManager;
-import de.uni_bielefeld.cebitec.mzurowie.pretty_formula.main.FormulaParser;
 import io.github.kexanie.library.MathView;
 
 public class SolveEquationActivity extends GlobalActivity {
@@ -25,7 +24,7 @@ public class SolveEquationActivity extends GlobalActivity {
 
         ((TextView) findViewById(R.id.equation_drawn_id)).setText(ExpressionsManager.getEquationDrawn());
         ((TextView) findViewById(R.id.equation_generated_id)).setText(ExpressionsManager.getEquationAsString());
-        ((MathView) findViewById(R.id.equation_pretty_format_id)).setText("\\(" + ExpressionsManager.getEquationAsLatex() + "\\)");
+        ((MathView) findViewById(R.id.equation_pretty_format_id)).setText("$$" + ExpressionsManager.getEquationAsLatex() + "$$");
     }
 
     @Override
