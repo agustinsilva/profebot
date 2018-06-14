@@ -81,7 +81,8 @@ public class ExpressionsManager {
             equationDrawn = equationDrawn
                     .replaceAll("\\^[\\(\\[]" + i + "[\\)\\]]", "^" + i)
                     .replaceAll(i + "\\(", i + "*(")
-                    .replaceAll(i + "x", i + "*x");
+                    .replaceAll(i + "x", i + "*x")
+                    .replaceAll(i + "X", i + "*X");
         }
 
         return equationDrawn;
