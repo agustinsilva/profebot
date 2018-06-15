@@ -135,12 +135,12 @@ public class TreeTest {
 
     @Test
     public void parse_lineal_17()  throws InvalidExpressionException {
-        testExpression("1/3*(3+4)=X");
+        testExpression("(1/3)*(3+4)=X");
     }
 
     @Test
     public void parse_lineal_18()  throws InvalidExpressionException {
-        testExpression("1/3*(X+3)=4");
+        testExpression("(1/3)*(X+3)=4");
     }
 
     @Test
@@ -216,6 +216,36 @@ public class TreeTest {
     @Test
     public void parse_cuadratica_13()  throws InvalidExpressionException {
         testExpression("X^2*(1/X+2)=3");
+    }
+
+    @Test
+    public void parse_exponente_con_fraccion()  throws InvalidExpressionException {
+        testExpression("X+(1/2)^2=3");
+    }
+
+    @Test
+    public void parse_raiz_con_fraccion()  throws InvalidExpressionException {
+        testExpression("X+R(1/2)=3");
+    }
+
+    @Test
+    public void parse_division_con_fraccion()  throws InvalidExpressionException {
+        testExpression("X+(1/2)/5=3");
+    }
+
+    @Test
+    public void parse_division_con_fraccion_2()  throws InvalidExpressionException {
+        testExpression("X+8/(1/2)=3");
+    }
+
+    @Test
+    public void parse_raiz_con_fraccion_exponente_division()  throws InvalidExpressionException {
+        testExpression("X+((R(1/2))^2)/8=3");
+    }
+
+    @Test
+    public void parse_fraccion_sumando()  throws InvalidExpressionException {
+        testExpression("X=1/3+4");
     }
 
     private void testExpression(String expression) throws InvalidExpressionException{

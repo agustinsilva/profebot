@@ -54,6 +54,10 @@ public class TreeNode {
         return "+".equals(this.getValue()) || "-".equals(this.getValue());
     }
 
+    public Boolean esProducto(){
+        return "*".equals(this.getValue());
+    }
+
     public Boolean esMultiplicativo(){
         return "*".equals(this.getValue()) || "/".equals(this.getValue());
     }
@@ -84,9 +88,15 @@ public class TreeNode {
         if (treeNode == null) return "";
         String expression = treeNode.toExpression();
 
-        // Los casos que van entre parentesis es cuando un no aditivo es
-        // Hijo de un aditivo
-        if ((treeNode.esAditivo() && this.esOperadorNoAditivo()) || this.esRaiz()){
+        // Los casos que van entre parentesis es cuando un "no aditivo" (*, ^ o R) es
+        // padre de otro operador
+        Boolean usaParentesis = (treeNode.esOperador() && this.esOperadorNoAditivo()) || this.esRaiz();
+
+        // Caso especial, si los 2 son multiplicativo, va sin parentesis
+        if (usaParentesis && treeNode.esProducto() && this.esProducto()){
+            usaParentesis = false; // padre: * hijo: *
+        }
+        if (usaParentesis){
             expression = "(" + expression + ")";
         }
         return expression;
@@ -100,7 +110,9 @@ public class TreeNode {
         int posX = this.value.indexOf("X");
         if (posX > 0){
             // Existe coeficiente, sino estaria en la primer posicion
-            setCoefficient(Integer.parseInt(this.value.substring(0, posX)));
+            String coefficientString = this.value.substring(0, posX);
+            if ("-".equals(coefficientString)){coefficientString = "-1";}
+            setCoefficient(Integer.parseInt(coefficientString));
         }
         if (posX < this.value.length()-1){
             // Existe exponente, sino estaria en la ultima posicion

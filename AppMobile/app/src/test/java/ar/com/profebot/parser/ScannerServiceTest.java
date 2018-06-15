@@ -136,12 +136,12 @@ public class ScannerServiceTest {
 
     @Test
     public void parse_lineal_17()  throws InvalidExpressionException {
-        testExpression("1/3*(3+4)=X");
+        testExpression("(1/3)*(3+4)=X");
     }
 
     @Test
     public void parse_lineal_18()  throws InvalidExpressionException {
-        testExpression("1/3*(X+3)=4");
+        testExpression("(1/3)*(X+3)=4");
     }
 
     @Test
