@@ -114,4 +114,25 @@ public class ParserTest {
         Assert.assertEquals("3", tree.getRootNode().getRightNode().getLeftNode().getValue());
         Assert.assertEquals("X", tree.getRootNode().getRightNode().getRightNode().getValue());
     }
+
+    @Test
+    public void parse_ok_7()  throws InvalidExpressionException {
+        Tree tree = (new ParserService()).parseExpression("(X-1)^2=X^3-5X^2");
+        Assert.assertEquals("=", tree.getRootNode().getValue());
+
+        Assert.assertEquals("^", tree.getRootNode().getLeftNode().getValue());
+        Assert.assertEquals("-", tree.getRootNode().getLeftNode().getLeftNode().getValue());
+        Assert.assertEquals("X", tree.getRootNode().getLeftNode().getLeftNode().getLeftNode().getValue());
+        Assert.assertEquals("1", tree.getRootNode().getLeftNode().getLeftNode().getRightNode().getValue());
+        Assert.assertEquals("2", tree.getRootNode().getLeftNode().getRightNode().getValue());
+
+        Assert.assertEquals("-", tree.getRootNode().getRightNode().getValue());
+        Assert.assertEquals("X^3", tree.getRootNode().getRightNode().getLeftNode().getValue());
+        Assert.assertEquals("5X^2", tree.getRootNode().getRightNode().getRightNode().getValue());
+
+        Assert.assertEquals(new Integer(3), tree.getRootNode().getRightNode().getLeftNode().getExponent());
+        Assert.assertEquals(new Integer(1), tree.getRootNode().getRightNode().getLeftNode().getCoefficient());
+        Assert.assertEquals(new Integer(2), tree.getRootNode().getRightNode().getRightNode().getExponent());
+        Assert.assertEquals(new Integer(5), tree.getRootNode().getRightNode().getRightNode().getCoefficient());
+    }
 }

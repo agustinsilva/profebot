@@ -9,15 +9,16 @@ public class TreeNode {
 
     public TreeNode(String value) {
         super();
-        this.value = value;
-        this.coefficient = 1;
-        this.exponent = 1;
+        this.coefficient = 1; // Por defecto
+        this.exponent = 1; // Por defecto
+        setValue(value);
     }
     public String getValue() {
         return value;
     }
     public void setValue(String value) {
         this.value = value;
+        updateVariableValues(); // Si es X, actualiza valor, exponente y coeficiente
     }
     public Integer getCoefficient() {
         return coefficient;
@@ -89,6 +90,22 @@ public class TreeNode {
             expression = "(" + expression + ")";
         }
         return expression;
+    }
 
+    private void updateVariableValues(){
+
+        if (this.value == null || !this.value.contains("X")){return;}
+
+        // Extraigo coeficiente  y exponente
+        int posX = this.value.indexOf("X");
+        if (posX > 0){
+            // Existe coeficiente, sino estaria en la primer posicion
+            setCoefficient(Integer.parseInt(this.value.substring(0, posX)));
+        }
+        if (posX < this.value.length()-1){
+            // Existe exponente, sino estaria en la ultima posicion
+            // El exponente viene despues del X y ^
+            setExponent(Integer.parseInt(this.value.substring(posX + 2)));
+        }
     }
 }
