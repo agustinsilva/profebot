@@ -3,6 +3,7 @@ package ar.com.profebot.parser;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import ar.com.profebot.parser.container.Tree;
 import ar.com.profebot.parser.exception.InvalidExpressionException;
@@ -216,6 +217,36 @@ public class ScannerServiceTest {
     @Test
     public void parse_cuadratica_13()  throws InvalidExpressionException {
         testExpression("X^2*(1/X+2)=3");
+    }
+
+    @Test
+    public void parse_inecuacion_1()  throws InvalidExpressionException {
+        testExpression("X+1>2");
+    }
+
+    @Test
+    public void parse_inecuacion_2()  throws InvalidExpressionException {
+        testExpression("X+1>=2+3");
+    }
+
+    @Test
+    public void parse_inecuacion_3()  throws InvalidExpressionException {
+        testExpression("X+1<2+3+4");
+    }
+
+    @Test
+    public void parseinecuacion_4()  throws InvalidExpressionException {
+        testExpression("X+2X<=3");
+    }
+
+    @Test(expected = InvalidExpressionException.class)
+    public void parse_inecuacion_5()  throws InvalidExpressionException {
+        testExpression("X+2X+3=>2+3");
+    }
+
+    @Test(expected = InvalidExpressionException.class)
+    public void parse_inecuacion_6()  throws InvalidExpressionException {
+        testExpression("X+1=<X+2");
     }
 
     private void testExpression(String expression) throws InvalidExpressionException{

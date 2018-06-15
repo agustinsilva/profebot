@@ -12,31 +12,35 @@ public class ScannerService {
 
     private int tablaTransicion[][] =
             {
-                    //    D  X  =   (   )   +   -   *   /   ^   R   FIN
-                    { 1, 3,	4,	5,	6,	7,	8,	12,	13, 22, 23,	98},   	/*  Estado 0- */
-                    { 1, 2,	50,	99,	50,	50,	50,	50,	50,	50, 99, 50},   	/*  Estado 1 */
-                    {99,99,	51,	99,	51,	51,	51,	51,	51,	14, 99, 51},   	/*  Estado 2 */
-                    {99,99,	52,	99,	52,	52,	52,	52,	52,	16, 99, 52},   	/*  Estado 3 */
-                    {53,53,	99,	53,	99,	99,	53,	99,	99,	99, 53, 99},   	/*  Estado 4 */
-                    {54,54,	99,	54,	99,	99,	54,	99,	99,	99, 54, 99},   	/*  Estado 5 */
-                    {99,99,	55,	99,	55,	55,	55,	55,	55,	55, 99, 55},   	/*  Estado 6 */
-                    {56,56,	99,	56,	99,	99,	56,	99,	99,	99, 56, 99},   	/*  Estado 7 */
-                    { 9,11,	99,	57,	99,	99,	99,	99,	99,	99, 57, 99},   	/*  Estado 8 */
-                    { 9,10,	58,	99,	58,	58,	58,	58,	58,	58, 99, 58},   	/*  Estado 9 */
-                    {99,99,	59,	99,	59,	59,	59,	59,	59,	18, 99, 59},   	/*  Estado 10 */
-                    {99,99,	60,	99,	60,	60,	60,	60,	60,	30, 99, 60},   	/*  Estado 11 */
-                    {61,61,	99,	61,	99,	99,	61,	99,	99,	99, 61, 99},   	/*  Estado 12 */
-                    {62,62,	99,	62,	99,	99,	62,	99,	99,	99, 62, 99},   	/*  Estado 13 */
-                    {15,99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99},	/*  Estado 14 */
-                    {15,99, 63, 99, 63, 63, 63, 63, 63, 99, 99, 63}, 	/*  Estado 15 */
-                    {17,99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99}, 	/*  Estado 16 */
-                    {17,99, 64, 99, 64, 64, 64, 64, 64, 99, 99, 64}, 	/*  Estado 17 */
-                    {19,99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99}, 	/*  Estado 18 */
-                    {19,99, 65, 99, 65, 65, 65, 65, 65, 99, 99, 65}, 	/*  Estado 19 */
-                    {21,99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99}, 	/*  Estado 20 */
-                    {21,99, 66, 99, 66, 66, 66, 66, 66, 99, 99, 66}, 	/*  Estado 21 */
-                    {67,99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99}, 	/*  Estado 22 */
-                    {68,68, 99, 68, 99, 99, 68, 99, 99, 99, 99, 99}  	/*  Estado 23 */
+                 //   D  X  =   (   )   +   -   *   /   ^   R   FIN <   >
+                    { 1, 3,	4,	5,	6,	7,	8,	12,	13, 22, 23,	98, 24, 26},   	/*  Estado 0- */
+                    { 1, 2,	50,	99,	50,	50,	50,	50,	50,	50, 99, 50, 50, 50},   	/*  Estado 1 */
+                    {99,99,	51,	99,	51,	51,	51,	51,	51,	14, 99, 51, 51, 51},   	/*  Estado 2 */
+                    {99,99,	52,	99,	52,	52,	52,	52,	52,	16, 99, 52, 52, 52},   	/*  Estado 3 */
+                    {53,53,	99,	53,	99,	99,	53,	99,	99,	99, 53, 99, 99, 99},   	/*  Estado 4 */
+                    {54,54,	99,	54,	99,	99,	54,	99,	99,	99, 54, 99, 99, 99},   	/*  Estado 5 */
+                    {99,99,	55,	99,	55,	55,	55,	55,	55,	55, 99, 55, 55, 55},   	/*  Estado 6 */
+                    {56,56,	99,	56,	99,	99,	56,	99,	99,	99, 56, 99, 99, 99},   	/*  Estado 7 */
+                    { 9,11,	99,	57,	99,	99,	99,	99,	99,	99, 57, 99, 99, 99},   	/*  Estado 8 */
+                    { 9,10,	58,	99,	58,	58,	58,	58,	58,	58, 99, 58, 58, 58},   	/*  Estado 9 */
+                    {99,99,	59,	99,	59,	59,	59,	59,	59,	18, 99, 59, 59, 59},   	/*  Estado 10 */
+                    {99,99,	60,	99,	60,	60,	60,	60,	60,	30, 99, 60, 60, 60},   	/*  Estado 11 */
+                    {61,61,	99,	61,	99,	99,	61,	99,	99,	99, 61, 99, 99, 99},   	/*  Estado 12 */
+                    {62,62,	99,	62,	99,	99,	62,	99,	99,	99, 62, 99, 99, 99},   	/*  Estado 13 */
+                    {15,99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99},	/*  Estado 14 */
+                    {15,99, 63, 99, 63, 63, 63, 63, 63, 99, 99, 63, 63, 63}, 	/*  Estado 15 */
+                    {17,99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99}, 	/*  Estado 16 */
+                    {17,99, 64, 99, 64, 64, 64, 64, 64, 99, 99, 64, 64, 64}, 	/*  Estado 17 */
+                    {19,99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99}, 	/*  Estado 18 */
+                    {19,99, 65, 99, 65, 65, 65, 65, 65, 99, 99, 65, 65, 65}, 	/*  Estado 19 */
+                    {21,99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99}, 	/*  Estado 20 */
+                    {21,99, 66, 99, 66, 66, 66, 66, 66, 99, 99, 66, 66, 66}, 	/*  Estado 21 */
+                    {67,99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99}, 	/*  Estado 22 */
+                    {68,68, 99, 68, 99, 99, 68, 99, 99, 99, 99, 99, 99, 99},  	/*  Estado 23 */
+                    {69,69,	25,	69,	99,	99,	69,	99,	99,	99, 69, 99, 99, 99},   	/*  Estado 24 */
+                    {70,70,	99,	70,	99,	99,	70,	99,	99,	99, 70, 99, 99, 99},   	/*  Estado 25 */
+                    {71,71,	27,	71,	99,	99,	71,	99,	99,	99, 71, 99, 99, 99},   	/*  Estado 26 */
+                    {72,72,	99,	72,	99,	99,	72,	99,	99,	99, 72, 99, 99, 99}    	/*  Estado 27 */
             };
     // Caracteres reconocidos (columnas de la TT)
     private static final int DIGITO_CHAR=0;         // [0-9]
@@ -51,6 +55,8 @@ public class ScannerService {
     private static final int POTENCIA_CHAR=9;       // ^
     private static final int RAIZ_CHAR=10;          // R
     private static final int FIN_CHAR=11;           // ¬
+    private static final int MENOR_CHAR=12;         // <
+    private static final int MAYOR_CHAR=13;         // >
 
     private static final char END_CHAR='¬';
 
@@ -136,7 +142,7 @@ public class ScannerService {
             }
 
             // Si llega a un =, valido parentesis
-            if (estado == Aceptores.ST_ACEPTA_IGUAL.getId() ){
+            if (esAceptorSeparadorMiembros(estado)){
                 if (numParantesisAbiertos != 0){
                     throw new InvalidExpressionException("Llega a un = con " + numParantesisAbiertos + " parentesis abiertos!");
                 }
@@ -179,6 +185,14 @@ public class ScannerService {
         return tokDetectado;
     }
 
+    private boolean esAceptorSeparadorMiembros(int estado) {
+        return estado == Aceptores.ST_ACEPTA_IGUAL.getId() ||
+                estado == Aceptores.ST_ACEPTA_MENOR.getId() ||
+                estado == Aceptores.ST_ACEPTA_MENOR_IGUAL.getId() ||
+                estado == Aceptores.ST_ACEPTA_MAYOR.getId() ||
+                estado == Aceptores.ST_ACEPTA_MAYOR_IGUAL.getId();
+    }
+
     private int getType(char c)
     {
         int typeC = -1; // Default
@@ -194,6 +208,8 @@ public class ScannerService {
         else if(c == '/') typeC=BARRA_CHAR;
         else if(c == '^') typeC=POTENCIA_CHAR;
         else if(c == 'R') typeC=RAIZ_CHAR;
+        else if(c == '<') typeC=MENOR_CHAR;
+        else if(c == '>') typeC=MAYOR_CHAR;
         else if(c == END_CHAR) typeC=FIN_CHAR;
 
         return typeC;
@@ -227,7 +243,12 @@ public class ScannerService {
             t = Token.MULTIPLICACION;
         }else if(estado == Aceptores.ST_ACEPTA_DIVISION.getId()){
             t = Token.DIVISION;
-        }else if(estado == Aceptores.ST_ACEPTA_IGUAL.getId()){
+        }else if(estado == Aceptores.ST_ACEPTA_IGUAL.getId() ||
+                estado == Aceptores.ST_ACEPTA_MENOR.getId() ||
+                estado == Aceptores.ST_ACEPTA_MENOR_IGUAL.getId() ||
+                estado == Aceptores.ST_ACEPTA_MAYOR.getId() ||
+                estado == Aceptores.ST_ACEPTA_MAYOR_IGUAL.getId()
+                ){
             t = Token.IGUAL;
         }else if(estado == Aceptores.ST_ACEPTA_POTENCIA.getId()){
             t = Token.POTENCIA;

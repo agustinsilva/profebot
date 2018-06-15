@@ -101,4 +101,17 @@ public class ParserTest {
         Assert.assertEquals("5", tree.getRootNode().getRightNode().getRightNode().getRightNode().getValue());
     }
 
+    @Test
+    public void parse_ok_6()  throws InvalidExpressionException {
+        Tree tree = (new ParserService()).parseExpression("X+3>3+X");
+        Assert.assertEquals(">", tree.getRootNode().getValue());
+
+        Assert.assertEquals("+", tree.getRootNode().getLeftNode().getValue());
+        Assert.assertEquals("X", tree.getRootNode().getLeftNode().getLeftNode().getValue());
+        Assert.assertEquals("3", tree.getRootNode().getLeftNode().getRightNode().getValue());
+
+        Assert.assertEquals("+", tree.getRootNode().getRightNode().getValue());
+        Assert.assertEquals("3", tree.getRootNode().getRightNode().getLeftNode().getValue());
+        Assert.assertEquals("X", tree.getRootNode().getRightNode().getRightNode().getValue());
+    }
 }

@@ -19,6 +19,7 @@ public class ParserService {
         // Expresion = Expresion
         rootNode.setLeftNode(getExpression());
         scannerService.match(Token.IGUAL);
+        rootNode.setValue(scannerService.getResultado()); // Reemplazo por el verdadero operador, puede ser =. <. <=, >, >=
         rootNode.setRightNode(getExpression());
 
         return tree;
