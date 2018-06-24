@@ -1,7 +1,9 @@
 package com.profebot.PhotoEcuation;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Build;
@@ -42,6 +44,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import ar.com.profebot.activities.GlobalHelper;
+import ar.com.profebot.activities.SolveEquationActivity;
+import ar.com.profebot.service.ExpressionsManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -131,8 +136,8 @@ public class CameraFragment extends Fragment {
                 result = Bitmap.createScaledBitmap(result, targetWidth / 2, targetHeight / 2, false);
 
                 //usando imagen hardcodeada
-                //Bitmap ecuacionDemo = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ecuaciondemo);
-                imageCropped(result);
+                Bitmap ecuacionDemo = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ecuaciondemo);
+                imageCropped(ecuacionDemo);
 
 
                 //region avoid black camera issue - create snapshot and load to imageview overlay
@@ -259,7 +264,11 @@ public class CameraFragment extends Fragment {
                 stopScanAnimation();
                 mLatestLatex = latex;
                 Log.d("Latex_NEW", mLatestLatex);
-                loadLocalContent();
+                // Volver al SolveEquationActivity y mostrar el String
+                ExpressionsManager.setEquationPhoto(latex);
+                Intent intent = new Intent(getActivity(), SolveEquationActivity.class);
+                startActivity(intent);
+//                loadLocalContent();
             }
         });
         task.execute(params);
@@ -268,7 +277,7 @@ public class CameraFragment extends Fragment {
     private String mLatestLatex;
 
     private void loadLocalContent() {
-        mWebViewContainer.setVisibility(View.VISIBLE);
+/*        mWebViewContainer.setVisibility(View.VISIBLE);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
@@ -294,7 +303,10 @@ public class CameraFragment extends Fragment {
         }
         String localURL = "file:///android_asset/";
         String htmlString = localHTML(getContext());
-        mWebView.loadDataWithBaseURL(localURL, htmlString, "text/html", "UTF-8", null);
+        mWebView.loadDataWithBaseURL(localURL, htmlString, "text/html", "UTF-8", null);*/
+        //this.getContext().startActivity(new Intent(this.getContext(), SolveEquationActivity.class));
+        //Intent intent = new Intent(this.getContext(), SolveEquationActivity.class);
+        //startActivity(intent);
 
     }
 

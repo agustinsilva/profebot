@@ -7,6 +7,7 @@
         android:name="com.profebot.PhotoEcuation.CameraFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:tag="CameraFragment" />
+        android:tag="CameraFragment"
+        android:id="@+id/camera_photo_profe"/>
 
 </LinearLayout>

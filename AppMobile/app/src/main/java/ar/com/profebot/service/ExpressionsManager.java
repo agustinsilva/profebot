@@ -12,10 +12,25 @@ import de.uni_bielefeld.cebitec.mzurowie.pretty_formula.main.FormulaParser;
 public class ExpressionsManager {
 
     private static String equationDrawn;
+    private static String equationPhoto;
     private static Tree treeOfExpression;
 
     public static String getEquationDrawn() {
         return equationDrawn;
+    }
+
+    public static String getEquationPhoto() {
+        return equationPhoto;
+    }
+
+    public static void setEquationPhoto(String equationPhoto) {
+        ExpressionsManager.equationPhoto = mapPhotoToOurAlphabet(equationPhoto);
+        try{
+            setTreeOfExpression(new ParserService().parseExpression(ExpressionsManager.equationPhoto));
+        }catch (InvalidExpressionException e){
+            equationDrawn = null;
+            treeOfExpression = null;
+        }
     }
 
     public static void setEquationDrawn(String equationDrawn) {
@@ -32,6 +47,10 @@ public class ExpressionsManager {
 
     public static String getEquationAsString() {
         return treeOfExpression.toExpression();
+    }
+
+    public static Tree getTreeOfExpression() {
+        return treeOfExpression;
     }
 
     public static void setTreeOfExpression(Tree treeOfExpression) {
@@ -53,6 +72,49 @@ public class ExpressionsManager {
         Toast toast = Toast.makeText(context,"Fijate si la ecuación está bien escrita!", Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
+    }
+
+    private static String mapPhotoToOurAlphabet(String equationPhoto) {
+        String ecuacion;
+        String subEcuacion;
+        equationPhoto = equationPhoto.replaceAll("\\s+","");
+        String numerador = equationPhoto.substring(equationPhoto.indexOf("rac{")+3, equationPhoto.indexOf("}")) + "}}";
+        String denominador = equationPhoto.substring(equationPhoto.lastIndexOf(numerador) + numerador.length())+ "}";
+        denominador = denominador.substring(denominador.indexOf("{"), denominador.lastIndexOf("}"));
+
+        ecuacion = numerador + "/" + denominador;
+        if(denominador.contains("rac{")){
+            while(denominador.contains("rac{")){
+                String nuevoNumerador = denominador.substring(denominador.indexOf("rac{")+3, denominador.indexOf("}")) + "}";
+                String nuevoDenominador = denominador.substring(denominador.lastIndexOf(nuevoNumerador) + nuevoNumerador.length());
+                subEcuacion = nuevoNumerador + "/" + nuevoDenominador;
+                denominador = nuevoDenominador;
+                ecuacion = numerador+ "/{" + subEcuacion + "}";
+            }
+        }
+        else{
+            ecuacion = numerador + "/" + denominador;
+        }
+        String equationWellWritten  = ecuacion
+                .replaceAll("\\{", "(")
+                .replaceAll("\\}", ")")
+                .replaceAll(":", "/")
+                .replaceAll(",", ".")
+                .replaceAll("\\^\\(\\*\\)", "*") // After replacing [] by (), we must search ^(*)
+                .replaceAll("x", "X")
+                .replaceAll("\\)X", ")*X")
+                .replaceAll("×", "*")
+                .replaceAll("√", "R")
+                .replaceAll("e", "2.718281828459045235360")
+                .replaceAll("pi", "3.14159265358979323846");
+        for(int i = 0 ; i <= 9 ; i++){
+            equationWellWritten = equationWellWritten
+                    .replaceAll("\\^[\\(\\[]" + i + "[\\)\\]]", "^" + i)
+                    .replaceAll(i + "\\(", i + "*(")
+                    .replaceAll(i + "x", i + "*x")
+                    .replaceAll(i + "X", i + "*X");
+        }
+        return equationWellWritten;
     }
 
     private static String mapToOurAlphabet(String equationDrawn){

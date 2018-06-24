@@ -4,7 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
+import com.myscript.atk.math.widget.MathWidgetApi;
 import com.profebot.activities.R;
+
+import ar.com.profebot.service.ExpressionsManager;
 
 public class EnterEquationPhotoActivity extends GlobalActivity{
     @Override

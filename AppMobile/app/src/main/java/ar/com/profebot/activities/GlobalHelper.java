@@ -8,10 +8,17 @@ import android.widget.TextView;
 public class GlobalHelper {
 
     private static AppCompatActivity mainActivity;
+    private static CarmeraActivity photoActivity;
 
     public static void setMainActivity(AppCompatActivity activity) {
         if(mainActivity == null){
             mainActivity = activity;
+        }
+    }
+
+    public static void setPhotoActivity(CarmeraActivity activity) {
+        if(photoActivity == null){
+            photoActivity = activity;
         }
     }
 
@@ -27,5 +34,8 @@ public class GlobalHelper {
 
     public static AppCompatActivity getMainActivity() {
         return mainActivity;
+    }
+    public static CarmeraActivity getPhotoActivity() {
+        return photoActivity;
     }
 }

@@ -21,10 +21,15 @@ public class SolveEquationActivity extends GlobalActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         super.onCreate(savedInstanceState);
-
-        ((TextView) findViewById(R.id.equation_drawn_id)).setText(ExpressionsManager.getEquationDrawn());
+        if(ExpressionsManager.getEquationDrawn() != null){
+            ((TextView) findViewById(R.id.equation_drawn_id)).setText(ExpressionsManager.getEquationDrawn());
+        }
+        else{
+            ((TextView) findViewById(R.id.equation_photo_id)).setText(ExpressionsManager.getEquationPhoto());
+        }
         ((TextView) findViewById(R.id.equation_generated_id)).setText(ExpressionsManager.getEquationAsString());
         ((MathView) findViewById(R.id.equation_pretty_format_id)).setText("$$" + ExpressionsManager.getEquationAsLatex() + "$$");
+
     }
 
     @Override
