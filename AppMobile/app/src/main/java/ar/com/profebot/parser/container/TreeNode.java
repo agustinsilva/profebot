@@ -59,7 +59,11 @@ public class TreeNode {
     }
 
     public Boolean esMultiplicativo(){
-        return "*".equals(this.getValue()) || "/".equals(this.getValue());
+        return esProducto() || esDivision();
+    }
+
+    public Boolean esDivision(){
+        return "/".equals(this.getValue());
     }
 
     public Boolean esPotencia(){

@@ -7,24 +7,25 @@ import ar.com.profebot.parser.container.TreeNode;
 
 public class TreeUtils {
 
-    public static Boolean esOperador(TreeNode treeNode){
-        // TODO esOperador
-        throw new UnsupportedOperationException();
-    }
-
     public static Boolean esConstante(TreeNode treeNode){
         // TODO esConstante
         throw new UnsupportedOperationException();
     }
 
+    public static Boolean zeroValue(TreeNode treeNode){
+       return (treeNode!=null && "0".equals(treeNode.getValue()) );
+    }
+
     public static Boolean esIncognita(TreeNode treeNode){
-        // TODO esIncognita
-        throw new UnsupportedOperationException();
+        return (treeNode!=null && treeNode.getValue().contains("X") );
     }
 
     public static Boolean esFraccion(TreeNode treeNode){
-        // TODO esFraccion
-        throw new UnsupportedOperationException();
+        return (treeNode!=null &&
+                treeNode.esDivision() &&
+                esConstante(treeNode.getLeftNode()) &&
+                esConstante(treeNode.getRightNode())
+        );
     }
 
 
