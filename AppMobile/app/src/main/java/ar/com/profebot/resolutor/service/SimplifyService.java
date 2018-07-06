@@ -9,6 +9,10 @@ import ar.com.profebot.resolutor.utils.TreeUtils;
 
 public class SimplifyService {
 
+    private static final Double CONSTANT_1  = new Double(1);
+    private static final Double CONSTANT_1_NEG  = new Double(-1);
+    private static final Double CONSTANT_0  = new Double(0);
+
     private List<ResolutionStep> resolutionStepList;
 
     public SimplifyService(List<ResolutionStep> resolutionStepList) {
@@ -119,13 +123,13 @@ public class SimplifyService {
         if (TreeUtils.esConstante(node) && TreeUtils.zeroValue(node)) {
             // De ser así, reemplazar el subárbol con la el otro sumando
             return NodeStatus.nodeChanged(
-                    NodeStatus.ChangeTypes.REMOVE_ADDING_ZERO, treeNode, treeNode.getRightNode());
+                    NodeStatus.ChangeTypes.REMOVE_ADDING_ZERO, treeNode, treeNode.getRightNode().clone());
         }else {
             node = treeNode.getRightNode();
             if (TreeUtils.esConstante(node) && TreeUtils.zeroValue(node)) {
                 // De ser así, reemplazar el subárbol con la el otro sumando
                 return NodeStatus.nodeChanged(
-                        NodeStatus.ChangeTypes.REMOVE_ADDING_ZERO, treeNode, treeNode.getLeftNode());
+                        NodeStatus.ChangeTypes.REMOVE_ADDING_ZERO, treeNode, treeNode.getLeftNode().clone());
             }
         }
 
@@ -134,34 +138,190 @@ public class SimplifyService {
     }
 
 
+    /**
+     * (algo) / 1 = (algo)
+     * @param treeNode
+     * @return
+     */
     public NodeStatus removeDivisionByOne(TreeNode treeNode){
-        // TODO removeDivisionByOne: (algo) / 1 = (algo)
-        throw new UnsupportedOperationException();
+        // Buscar un nodo con /
+        if (treeNode == null || !treeNode.esDivision()) {
+            return NodeStatus.noChange(treeNode);
+        }
+
+        TreeNode denominatorNode =  treeNode.getRightNode();
+        if (!TreeUtils.esConstante(denominatorNode)){
+            return NodeStatus.noChange(treeNode);
+        }
+
+        Double denominatorValue = denominatorNode.getDoubleValue();
+        if (CONSTANT_1_NEG.equals(denominatorValue)){
+
+            TreeNode numeratorNode =  treeNode.getLeftNode();
+            NodeStatus.ChangeTypes changeType = TreeUtils.esNegativo(numeratorNode)?
+                    NodeStatus.ChangeTypes.RESOLVE_DOUBLE_MINUS :
+                    NodeStatus.ChangeTypes.DIVISION_BY_NEGATIVE_ONE;
+
+            numeratorNode = TreeUtils.negate(numeratorNode);
+
+            // De ser así, reemplazar el subárbol con la el numerador
+            return NodeStatus.nodeChanged(
+                    NodeStatus.ChangeTypes.DIVISION_BY_ONE, treeNode, numeratorNode.clone());
+
+        }else if (CONSTANT_1.equals(denominatorValue)){
+            // De ser así, reemplazar el subárbol con la el numerador
+            return NodeStatus.nodeChanged(
+                    NodeStatus.ChangeTypes.DIVISION_BY_ONE, treeNode, treeNode.getLeftNode().clone());
+        }
+
+        return NodeStatus.noChange(treeNode);
     }
 
+    /**
+     * 1^(algo) = 1
+     * @param treeNode
+     * @return
+     */
     public NodeStatus removeExponentBaseOne(TreeNode treeNode){
-        // TODO removeExponentBaseOne: 1^(algo) = 1
-        throw new UnsupportedOperationException();
+        // Buscar un nodo con ^
+        if (treeNode == null || !treeNode.esPotencia()) {
+            return NodeStatus.noChange(treeNode);
+        }
+
+        TreeNode baseNode = treeNode.getLeftNode();
+        if (TreeUtils.esConstante(baseNode) &&
+                CONSTANT_1.equals(baseNode.getDoubleValue())){
+
+            TreeNode node = new TreeNode("1");
+            // De ser así, reemplazar el subárbol con 1
+            return NodeStatus.nodeChanged(
+                    NodeStatus.ChangeTypes.REMOVE_EXPONENT_BASE_ONE, treeNode, node);
+        }
+
+
+        return NodeStatus.noChange(treeNode);
     }
 
+    /**
+     * (algo)^1  = (algo)
+     * @param treeNode
+     * @return
+     */
     public NodeStatus removeExponentByOne(TreeNode treeNode){
-        // TODO removeExponentByOne: (algo)^1  = (algo)
-        throw new UnsupportedOperationException();
+        // Buscar un nodo con ^
+        if (treeNode == null || !treeNode.esPotencia()) {
+            return NodeStatus.noChange(treeNode);
+        }
+
+        TreeNode exponentNode = treeNode.getLeftNode();
+        if (TreeUtils.esConstante(exponentNode) &&
+                CONSTANT_1.equals(exponentNode.getDoubleValue())){
+
+            TreeNode node = new TreeNode("1");
+            // De ser así, reemplazar el subárbol con 1
+            return NodeStatus.nodeChanged(
+                    NodeStatus.ChangeTypes.REMOVE_EXPONENT_BASE_ONE, treeNode, node);
+        }
+
+
+        return NodeStatus.noChange(treeNode);
     }
 
+    /**
+     * (algo) * (-1) = - (algo)
+     * @param treeNode
+     * @return
+     */
     public NodeStatus removeMultiplicationByNegativeOne(TreeNode treeNode){
-        // TODO removeMultiplicationByNegativeOne: (algo) * (-1) = - (algo)
-        throw new UnsupportedOperationException();
+
+        // Buscar un nodo con *
+        if (treeNode == null || !treeNode.esProducto()) {
+            return NodeStatus.noChange(treeNode);
+        }
+
+        // TODO verificar esto en caso de modificar el arbol al achatar
+        // Si se encuentra, verificar si algún operadorando es -1
+        TreeNode node =  treeNode.getLeftNode();
+        if (TreeUtils.esConstante(node) && TreeUtils.hasValue(node, "-1")) {
+            // De ser así, reemplazar el subárbol el otro nodo negado
+            return NodeStatus.nodeChanged(
+                    NodeStatus.ChangeTypes.REMOVE_MULTIPLYING_BY_NEGATIVE_ONE, treeNode, TreeUtils.negate(treeNode.getRightNode()));
+        }else{
+            node =  treeNode.getRightNode();
+            if (TreeUtils.esConstante(node) && TreeUtils.hasValue(node, "-1")) {
+                // De ser así, reemplazar el subárbol el otro nodo negado
+                return NodeStatus.nodeChanged(
+                        NodeStatus.ChangeTypes.REMOVE_MULTIPLYING_BY_NEGATIVE_ONE, treeNode, TreeUtils.negate(treeNode.getLeftNode()));
+            }
+        }
+
+        return NodeStatus.noChange(treeNode);
+
     }
 
+    /**
+     * (algo) * 1 = algo
+     * @param treeNode
+     * @return
+     */
     public NodeStatus removeMultiplicationByOne(TreeNode treeNode){
-        // TODO removeMultiplicationByOne: (algo) * 1 = (algo)
-        throw new UnsupportedOperationException();
+
+        // Buscar un nodo con *
+        if (treeNode == null || !treeNode.esProducto()) {
+            return NodeStatus.noChange(treeNode);
+        }
+
+        // TODO verificar esto en caso de modificar el arbol al achatar
+        // Si se encuentra, verificar si algún operadorando es 1
+        TreeNode node =  treeNode.getLeftNode();
+        if (TreeUtils.esConstante(node) && TreeUtils.hasValue(node, "1")) {
+            // De ser así, reemplazar el subárbol el otro nodo
+            return NodeStatus.nodeChanged(
+                    NodeStatus.ChangeTypes.REMOVE_MULTIPLYING_BY_ONE, treeNode, treeNode.getRightNode().clone());
+        }else{
+            node =  treeNode.getRightNode();
+            if (TreeUtils.esConstante(node) && TreeUtils.hasValue(node, "1")) {
+                // De ser así, reemplazar el subárbol el otro nodo
+                return NodeStatus.nodeChanged(
+                        NodeStatus.ChangeTypes.REMOVE_MULTIPLYING_BY_ONE, treeNode, treeNode.getLeftNode().clone());
+            }
+        }
+
+        return NodeStatus.noChange(treeNode);
     }
 
+    /**
+     * Arreglar coeficientes: ej: X*5 = 5X
+     * @param treeNode
+     * @return
+     */
     public NodeStatus rearrangeCoefficient(TreeNode treeNode){
-        // TODO rearrangeCoefficient: Arreglar coeficientes: ej: X*5 = 5X
-        throw new UnsupportedOperationException();
+
+        // Buscar un nodo con *
+        if (treeNode == null || !treeNode.esProducto()) {
+            return NodeStatus.noChange(treeNode);
+        }
+
+        // Tiene que ser 1 de los 2 nodos constante, y el otro una X (En ese caso agrupo)
+        TreeNode leftNode = treeNode.getLeftNode();
+        TreeNode rightNode = treeNode.getLeftNode();
+        if (TreeUtils.esConstante(leftNode) && TreeUtils.esIncognita(rightNode) ){
+            TreeNode newNode = rightNode.clone();
+            newNode.multiplyCoefficient(leftNode.getValue());
+            // De ser así, reemplazar el subárbol el otro nodo
+            return NodeStatus.nodeChanged(
+                    NodeStatus.ChangeTypes.REARRANGE_COEFF, treeNode, newNode);
+
+        } else if (TreeUtils.esConstante(rightNode) && TreeUtils.esIncognita(leftNode) ){
+            TreeNode newNode = leftNode.clone();
+            newNode.multiplyCoefficient(rightNode.getValue());
+            // De ser así, reemplazar el subárbol el otro nodo
+            return NodeStatus.nodeChanged(
+                    NodeStatus.ChangeTypes.REARRANGE_COEFF, treeNode, newNode);
+        }
+
+
+        return NodeStatus.noChange(treeNode);
     }
 
     public void simplifyFractions(TreeNode treeNode){

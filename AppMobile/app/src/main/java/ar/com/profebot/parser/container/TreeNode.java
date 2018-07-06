@@ -13,6 +13,16 @@ public class TreeNode {
         this.exponent = 1; // Por defecto
         setValue(value);
     }
+
+    public TreeNode clone(){
+        TreeNode node = new TreeNode(this.getValue());
+        node.setCoefficient(this.getCoefficient());
+        node.setExponent(this.getExponent());
+        node.setLeftNode(this.getLeftNode().clone());
+        node.setRightNode(this.getRightNode().clone());
+        return node;
+    }
+
     public String getValue() {
         return value;
     }
@@ -82,6 +92,14 @@ public class TreeNode {
         return this.esOperadorNoAditivo() || this.esAditivo();
     }
 
+    public Double getDoubleValue(){
+        try {
+            return Double.parseDouble(this.getValue());
+        }catch (Exception e){
+            return null;
+        }
+    }
+
     public String toExpression() {
         TreeNode leftNode = this.esRaiz()?null:this.getLeftNode(); // Las raices solo tienen termino derecho
         return getNodeExpression(leftNode)  + this.getValue()  + getNodeExpression(this.getRightNode());
@@ -123,5 +141,28 @@ public class TreeNode {
             // El exponente viene despues del X y ^
             setExponent(Integer.parseInt(this.value.substring(posX + 2)));
         }
+    }
+
+    public void multiplyCoefficient(String value) {
+
+        this.setCoefficient(this.getCoefficient() * Integer.parseInt(value));
+        updateValue();
+    }
+
+    public void addExponent(String value) {
+
+        this.setExponent(this.getExponent() * Integer.parseInt(value));
+        updateValue();
+    }
+    /**
+     * Se debería usar solo cuando cambia el exponente o el coeficiente de una X
+     */
+    private void updateValue(){
+        String newValue = (coefficient!=null && coefficient!=1?coefficient.toString(): "")
+                            + "X"
+                            + (exponent!=null && exponent!=1? "^" + exponent.toString(): "");
+
+        this.setValue(newValue);
+
     }
 }

@@ -13,7 +13,11 @@ public class TreeUtils {
     }
 
     public static Boolean zeroValue(TreeNode treeNode){
-       return (treeNode!=null && "0".equals(treeNode.getValue()) );
+       return hasValue(treeNode, "0");
+    }
+
+    public static Boolean hasValue(TreeNode treeNode, String value){
+        return (treeNode!=null && value.equals(treeNode.getValue()) );
     }
 
     public static Boolean esIncognita(TreeNode treeNode){
@@ -28,6 +32,25 @@ public class TreeUtils {
         );
     }
 
+    public static Boolean esNegativo(TreeNode treeNode){
+        if (treeNode == null){return null;}
+
+        if (esConstante(treeNode)){
+            return treeNode.getDoubleValue()< 0;
+        }
+
+        if (esFraccion(treeNode)){
+            TreeNode numeratorTree = treeNode.getLeftNode();
+            TreeNode denominatorTree = treeNode.getLeftNode();
+            if (numeratorTree.getDoubleValue() < 0 || denominatorTree.getDoubleValue() < 0) {
+                return !(numeratorTree.getDoubleValue() < 0 && denominatorTree.getDoubleValue() < 0);
+            }
+        }else if (esIncognita(treeNode)){
+            return treeNode.getValue().contains("-");
+        }
+
+        return false;
+    }
 
     public static Boolean esFraccionOConstante(TreeNode treeNode){
         return TreeUtils.esConstante(treeNode) ||
@@ -57,6 +80,11 @@ public class TreeUtils {
 
     public static Set<String> listaOperadores(TreeNode treeNode){
         // TODO listaOperadores: obtiene el listado de operadores recursivamente para saber si son todos iguales
+        throw new UnsupportedOperationException();
+    }
+
+    public static TreeNode negate(TreeNode numeratorNode) {
+        // TODO negate: negar el nodo (considerar si es X, constante o polinomio
         throw new UnsupportedOperationException();
     }
 }
