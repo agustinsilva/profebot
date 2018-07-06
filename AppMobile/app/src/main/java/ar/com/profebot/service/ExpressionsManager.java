@@ -3,7 +3,7 @@ package ar.com.profebot.service;
 import android.content.Context;
 import android.view.Gravity;
 import android.widget.Toast;
-
+import java.util.List;
 import ar.com.profebot.parser.container.Tree;
 import ar.com.profebot.parser.exception.InvalidExpressionException;
 import ar.com.profebot.parser.service.ParserService;
@@ -78,7 +78,7 @@ public class ExpressionsManager {
         String ecuacion;
         String subEcuacion;
         equationPhoto = equationPhoto.replaceAll("\\s+","");
-        String numerador = equationPhoto.substring(equationPhoto.indexOf("rac{")+3, equationPhoto.indexOf("}")) + "}}";
+        String numerador = equationPhoto.substring(equationPhoto.indexOf("rac{")+3, equationPhoto.indexOf("}")) + "}";
         String denominador = equationPhoto.substring(equationPhoto.lastIndexOf(numerador) + numerador.length())+ "}";
         denominador = denominador.substring(denominador.indexOf("{"), denominador.lastIndexOf("}"));
 
@@ -98,11 +98,15 @@ public class ExpressionsManager {
         String equationWellWritten  = ecuacion
                 .replaceAll("\\{", "(")
                 .replaceAll("\\}", ")")
+                .replaceAll("\\[", "(")
+                .replaceAll("\\]", ")")
                 .replaceAll(":", "/")
                 .replaceAll(",", ".")
                 .replaceAll("\\^\\(\\*\\)", "*") // After replacing [] by (), we must search ^(*)
+                .replaceAll("n", "X")
                 .replaceAll("x", "X")
                 .replaceAll("\\)X", ")*X")
+                .replaceAll("\\(X\\(", "(X*(")
                 .replaceAll("×", "*")
                 .replaceAll("√", "R")
                 .replaceAll("e", "2.718281828459045235360")
@@ -111,10 +115,55 @@ public class ExpressionsManager {
             equationWellWritten = equationWellWritten
                     .replaceAll("\\^[\\(\\[]" + i + "[\\)\\]]", "^" + i)
                     .replaceAll(i + "\\(", i + "*(")
+                    .replaceAll(i + "\\[", i + "(")
+                    .replaceAll(i + "]", i + ")")
                     .replaceAll(i + "x", i + "*x")
                     .replaceAll(i + "X", i + "*X");
         }
-        return equationWellWritten;
+        return removeInvalidParentheses(equationWellWritten);
+    }
+    public static java.util.ArrayList<String> result = new java.util.ArrayList<String>();
+    public static int max=0;
+     public static String removeInvalidParentheses(String s) {
+        if(s==null)
+            return java.util.Arrays.toString(result.toArray());
+
+        dfs(s, "", 0, 0);
+        if(result.size()==0){
+            result.add("");
+        }
+
+        return result.get(0);
+    }
+
+    public static void dfs(String left, String right, int countLeft, int maxLeft){
+        if(left.length()==0){
+            if(countLeft==0 && right.length()!=0){
+                if(maxLeft > max){
+                    max = maxLeft;
+                }
+
+                if(maxLeft==max && !result.contains(right)){
+                    result.add(right);
+                }
+            }
+
+            return;
+        }
+
+        if(left.charAt(0)=='('){
+            dfs(left.substring(1), right+"(", countLeft+1, maxLeft+1);//keep (
+            dfs(left.substring(1), right, countLeft, maxLeft);//drop (
+        }else if(left.charAt(0)==')'){
+            if(countLeft>0){
+                dfs(left.substring(1), right+")", countLeft-1, maxLeft);
+            }
+
+            dfs(left.substring(1), right, countLeft, maxLeft);
+
+        }else{
+            dfs(left.substring(1), right+String.valueOf(left.charAt(0)), countLeft, maxLeft);
+        }
     }
 
     private static String mapToOurAlphabet(String equationDrawn){

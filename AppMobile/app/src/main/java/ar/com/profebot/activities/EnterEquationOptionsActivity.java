@@ -8,6 +8,8 @@ import android.widget.Button;
 
 import com.profebot.activities.R;
 
+import ar.com.profebot.service.ExpressionsManager;
+
 public class EnterEquationOptionsActivity extends GlobalActivity {
 
     @Override
@@ -35,7 +37,10 @@ public class EnterEquationOptionsActivity extends GlobalActivity {
         option.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
-                Intent intent = new Intent(button.getContext(), CarmeraActivity.class);
+                //Intent intent = new Intent(button.getContext(), CarmeraActivity.class);
+                String latex = "\\frac { 3 + 2 ^ { 4 } } { 3 x } = 5";
+                ExpressionsManager.setEquationPhoto(latex);
+                Intent intent = new Intent(button.getContext(), SolveEquationActivity.class);
                 startActivity(intent);
             }
         });
