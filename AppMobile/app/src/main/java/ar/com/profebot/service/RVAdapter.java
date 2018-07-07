@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.profebot.activities.R;
 
@@ -24,11 +26,30 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceView
     public static class MultipleChoiceViewHolder extends RecyclerView.ViewHolder {
         CardView card;
         MathView equationBase;
+        ImageView expandCollapseIndicator;
+        //TODO: reemplazar textoEscondido por todas las views del multiple choice
+        TextView textoEscondido;
 
         MultipleChoiceViewHolder(View itemView) {
             super(itemView);
-            card = (CardView)itemView.findViewById(R.id.step_id);
-            equationBase = (MathView)itemView.findViewById(R.id.equation_base_id);
+            card = itemView.findViewById(R.id.step_id);
+            equationBase = itemView.findViewById(R.id.equation_base_id);
+            expandCollapseIndicator = itemView.findViewById(R.id.expand_collapse_indicator_id);
+            textoEscondido = itemView.findViewById(R.id.texto_escondido_id);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean shouldExpand = textoEscondido.getVisibility() == View.GONE;
+                    if(shouldExpand){
+                        expandCollapseIndicator.setScaleY(-1f);
+                        textoEscondido.setVisibility(View.VISIBLE);
+                    }else{
+                        textoEscondido.setVisibility(View.GONE);
+                        expandCollapseIndicator.setScaleY(1f);
+                    }
+                }
+            });
         }
     }
 
