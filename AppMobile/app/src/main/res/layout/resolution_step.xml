@@ -14,7 +14,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="end">
+            android:gravity="end"
+            android:animateLayoutChanges="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -32,27 +33,29 @@
                 </io.github.kexanie.library.MathView>
 
                 <TextView
+                    android:id="@+id/summary_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Hola Mundo"
+                    android:visibility="gone"
                     android:textSize="15dp"
                     android:layout_marginStart="10dp"/>
 
-                <TextView
-                    android:id="@+id/texto_escondido_id"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Dentro del expandable"
-                    android:textSize="15dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:visibility="gone"/>
+                    android:animateLayoutChanges="true">
+
+                    <include layout="@layout/multiple_choice_resolution_step"></include>
+
+                    <include layout="@layout/multiple_choice_solved_resolution_step"></include>
+                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="end">
+                    android:gravity="end"
+                    android:animateLayoutChanges="true">
 
                     <ImageView
                         android:id="@+id/expand_collapse_indicator_id"

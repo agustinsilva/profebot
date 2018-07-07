@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/multiple_choice_section_id"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:animateLayoutChanges="true">
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/option_a_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:checked="false"
+            android:onClick="onOptionAClicked"/>
+
+        <RadioButton
+            android:id="@+id/option_b_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:checked="false"
+            android:onClick="onOptionBClicked"/>
+
+        <RadioButton
+            android:id="@+id/option_c_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:checked="false"
+            android:onClick="onOptionCClicked"/>
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/solve_step_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Resolver"
+        style="@style/MainOptionButtonStyle"
+        android:layout_margin="10dp"/>
+</LinearLayout>

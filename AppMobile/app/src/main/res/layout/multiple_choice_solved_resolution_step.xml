@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/multiple_choice_solved_section_id"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:animateLayoutChanges="true">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nuevo paso:"
+        android:layout_marginStart="10dp"
+        android:textSize="15dp"/>
+
+    <io.github.kexanie.library.MathView
+        android:id="@+id/new_equation_base_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:engine="KaTeX">
+    </io.github.kexanie.library.MathView>
+
+    <RadioButton
+        android:id="@+id/option_correct_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:checked="true"
+        android:clickable="false"/>
+
+    <RadioButton
+        android:id="@+id/option_incorrect_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:checked="false"
+        android:clickable="false"/>
+</LinearLayout>
