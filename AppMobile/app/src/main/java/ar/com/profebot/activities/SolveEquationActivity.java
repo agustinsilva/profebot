@@ -15,7 +15,6 @@ import java.util.List;
 import ar.com.profebot.Models.MultipleChoiceStep;
 import ar.com.profebot.service.ExpressionsManager;
 import ar.com.profebot.service.RVAdapter;
-import io.github.kexanie.library.MathView;
 
 public class SolveEquationActivity extends GlobalActivity {
 
@@ -45,8 +44,6 @@ public class SolveEquationActivity extends GlobalActivity {
     private List<MultipleChoiceStep> initializeMultipleChoiceSteps(){
         List<MultipleChoiceStep> steps = new ArrayList<>();
         //TODO: pedirle este objeto al backend
-        steps.add(new MultipleChoiceStep(ExpressionsManager.getEquationAsLatex()));
-        steps.add(new MultipleChoiceStep(ExpressionsManager.getEquationAsLatex()));
         steps.add(new MultipleChoiceStep(ExpressionsManager.getEquationAsLatex()));
         return steps;
     }
