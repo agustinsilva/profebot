@@ -3,7 +3,6 @@ package ar.com.profebot.parser;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import ar.com.profebot.parser.container.Tree;
 import ar.com.profebot.parser.exception.InvalidExpressionException;
