@@ -8,6 +8,7 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>
     <color name="colorGrey">#EBEBEE</color>
+    <color name="colorGreyText">#ADADAD</color>
     <color name="black_overlay">#66000000</color>
     <color name="white">#FFFFFF</color>
 </resources>

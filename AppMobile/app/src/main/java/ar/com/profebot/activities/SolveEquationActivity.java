@@ -44,7 +44,16 @@ public class SolveEquationActivity extends GlobalActivity {
     private List<MultipleChoiceStep> initializeMultipleChoiceSteps(){
         List<MultipleChoiceStep> steps = new ArrayList<>();
         //TODO: pedirle este objeto al backend
-        steps.add(new MultipleChoiceStep(ExpressionsManager.getEquationAsLatex()));
+        steps.add(new MultipleChoiceStep(ExpressionsManager.getEquationAsLatex(), ExpressionsManager.getEquationAsLatex(), "Pasar restando el 1",
+                "Pasar restando el 1 para reducir la suma", "Distribuir el cuadrado en la suma",
+                "Pasar multiplicando el 3 que divide a la X", 1, "A - era la opción correcta",
+                "B no era la opción correcta porque no se puede distribuir el cuadrado en una suma o resta",
+                "C no era la correcta porque no se puede pasar dividiendo el 3 si antes no se despeja el término con X"));
+        steps.add(new MultipleChoiceStep(ExpressionsManager.getEquationAsLatex(), ExpressionsManager.getEquationAsLatex(), "Pasar restando el 1",
+                "Pasar restando el 1 para reducir la suma", "Distribuir el cuadrado en la suma",
+                "Pasar multiplicando el 3 que divide a la X", 1, "A - era la opción correcta",
+                "B no era la opción correcta porque no se puede distribuir el cuadrado en una suma o resta",
+                "C no era la correcta porque no se puede pasar dividiendo el 3 si antes no se despeja el término con X"));
         return steps;
     }
 

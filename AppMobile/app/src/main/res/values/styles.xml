@@ -30,6 +30,14 @@
         <item name = "android:textColor">@color/colorWhite</item>
     </style>
 
+    <style name="DisableButton">
+        <item name = "android:layout_width">250dp</item>
+        <item name = "android:layout_height">50dp</item>
+        <item name = "android:layout_marginBottom">20dp</item>
+        <item name = "android:background">@color/colorGrey</item>
+        <item name = "android:textColor">@color/colorGreyText</item>
+    </style>
+
     <style name="FullscreenTheme" parent="AppTheme">
         <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
         <item name="android:windowActionBarOverlay">true</item>
