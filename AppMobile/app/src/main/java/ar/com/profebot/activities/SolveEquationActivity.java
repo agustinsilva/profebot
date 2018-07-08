@@ -18,8 +18,9 @@ import ar.com.profebot.service.RVAdapter;
 
 public class SolveEquationActivity extends GlobalActivity {
 
-    private List<MultipleChoiceStep> multipleChoiceSteps;
-    private RVAdapter adapter;
+    private static List<MultipleChoiceStep> multipleChoiceSteps;
+    private static RVAdapter adapter;
+    private static RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,14 +32,18 @@ public class SolveEquationActivity extends GlobalActivity {
 
         super.onCreate(savedInstanceState);
 
-        RecyclerView resolution = (RecyclerView)findViewById(R.id.rv_resolution_id);
+        recyclerView = (RecyclerView)findViewById(R.id.rv_resolution_id);
         LinearLayoutManager llm = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        resolution.setLayoutManager(llm);
+        recyclerView.setLayoutManager(llm);
         multipleChoiceSteps = this.initializeMultipleChoiceSteps();
         adapter = new RVAdapter(multipleChoiceSteps.get(0), multipleChoiceSteps);
-        resolution.setAdapter(adapter);
-
+        recyclerView.setAdapter(adapter);
         ((TextView) findViewById(R.id.equation_generated_id)).setText(ExpressionsManager.getEquationAsString());
+    }
+
+    public static void refreshRV(){
+        recyclerView.scrollToPosition(0);
+        recyclerView.stopScroll();
     }
 
     private List<MultipleChoiceStep> initializeMultipleChoiceSteps(){
@@ -49,13 +54,18 @@ public class SolveEquationActivity extends GlobalActivity {
                 "Pasar multiplicando el 3 que divide a la X", 1, "A - era la opción correcta",
                 "B no era la opción correcta porque no se puede distribuir el cuadrado en una suma o resta",
                 "C no era la correcta porque no se puede pasar dividiendo el 3 si antes no se despeja el término con X"));
-        steps.add(new MultipleChoiceStep(ExpressionsManager.getEquationAsLatex(), ExpressionsManager.getEquationAsLatex(), "Pasar restando el 1",
-                "Pasar restando el 1 para reducir la suma", "Distribuir el cuadrado en la suma",
+        steps.add(new MultipleChoiceStep(ExpressionsManager.getEquationAsLatex(), ExpressionsManager.getEquationAsLatex(), "Pasar restando el 2",
+                "Pasar restando el 2 para reducir la suma", "Distribuir el cuadrado en la suma",
                 "Pasar multiplicando el 3 que divide a la X", 1, "A - era la opción correcta",
                 "B no era la opción correcta porque no se puede distribuir el cuadrado en una suma o resta",
                 "C no era la correcta porque no se puede pasar dividiendo el 3 si antes no se despeja el término con X"));
-        steps.add(new MultipleChoiceStep(ExpressionsManager.getEquationAsLatex(), ExpressionsManager.getEquationAsLatex(), "Pasar restando el 1",
-                "Pasar restando el 1 para reducir la suma", "Distribuir el cuadrado en la suma",
+        steps.add(new MultipleChoiceStep(ExpressionsManager.getEquationAsLatex(), ExpressionsManager.getEquationAsLatex(), "Pasar restando el 3",
+                "Pasar restando el 3 para reducir la suma", "Distribuir el cuadrado en la suma",
+                "Pasar multiplicando el 3 que divide a la X", 1, "A - era la opción correcta",
+                "B no era la opción correcta porque no se puede distribuir el cuadrado en una suma o resta",
+                "C no era la correcta porque no se puede pasar dividiendo el 3 si antes no se despeja el término con X"));
+        steps.add(new MultipleChoiceStep(ExpressionsManager.getEquationAsLatex(), ExpressionsManager.getEquationAsLatex(), "Pasar restando el 4",
+                "Pasar restando el 4 para reducir la suma", "Distribuir el cuadrado en la suma",
                 "Pasar multiplicando el 3 que divide a la X", 1, "A - era la opción correcta",
                 "B no era la opción correcta porque no se puede distribuir el cuadrado en una suma o resta",
                 "C no era la correcta porque no se puede pasar dividiendo el 3 si antes no se despeja el término con X"));
