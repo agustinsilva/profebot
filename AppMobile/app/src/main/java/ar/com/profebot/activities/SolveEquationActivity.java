@@ -35,7 +35,7 @@ public class SolveEquationActivity extends GlobalActivity {
         LinearLayoutManager llm = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         resolution.setLayoutManager(llm);
         multipleChoiceSteps = this.initializeMultipleChoiceSteps();
-        adapter = new RVAdapter(multipleChoiceSteps);
+        adapter = new RVAdapter(multipleChoiceSteps.get(0), multipleChoiceSteps);
         resolution.setAdapter(adapter);
 
         ((TextView) findViewById(R.id.equation_generated_id)).setText(ExpressionsManager.getEquationAsString());

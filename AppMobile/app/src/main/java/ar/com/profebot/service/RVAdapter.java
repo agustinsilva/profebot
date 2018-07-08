@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.profebot.activities.R;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,9 +25,12 @@ import io.github.kexanie.library.MathView;
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceViewHolder> {
 
     private List<MultipleChoiceStep> multipleChoiceSteps;
+    private List<MultipleChoiceStep> currentMultipleChoiceSteps;
+    private static LinearLayout currentLayoutExpanded;
+    private static ImageView currentExpandCollapseIndicator;
 
-    public List<MultipleChoiceStep> getMultipleChoiceSteps() {
-        return multipleChoiceSteps;
+    public List<MultipleChoiceStep> getCurrentMultipleChoiceSteps() {
+        return currentMultipleChoiceSteps;
     }
 
     public static class MultipleChoiceViewHolder extends RecyclerView.ViewHolder {
@@ -49,6 +53,8 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceView
         String correctOptionJustification;
         String incorrectOptionJustification1;
         String incorrectOptionJustification2;
+        List<MultipleChoiceStep> multipleChoiceSteps;
+        List<MultipleChoiceStep> currentMultipleChoiceSteps;
 
         private void setUpSolveButton(){
             if(!solveStep.isEnabled()){
@@ -62,6 +68,8 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceView
                         multipleChoiceResolutionStep.setVisibility(View.GONE);
                         multipleChoiceSolvedResolutionStep.setVisibility(View.VISIBLE);
                         layoutToUse = multipleChoiceSolvedResolutionStep;
+                        currentLayoutExpanded = layoutToUse;
+                        currentExpandCollapseIndicator = expandCollapseIndicator;
 
                         correctOptionRadio.setText(correctOptionJustification);
                         if(chosenOption.equals(correctOption)){
@@ -80,12 +88,16 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceView
                             incorrectOptionRadio.setVisibility(View.VISIBLE);
                             incorrectOptionRadio.setText(incorrectOptions.get(chosenOption));
                         }
+
+                        if(currentMultipleChoiceSteps.size() < multipleChoiceSteps.size()){
+                            currentMultipleChoiceSteps.add(multipleChoiceSteps.get(currentMultipleChoiceSteps.size()));
+                        }
                     }
                 });
             }
         }
 
-        MultipleChoiceViewHolder(View itemView) {
+        MultipleChoiceViewHolder(View itemView, List<MultipleChoiceStep> currentMultipleChoiceSteps) {
             super(itemView);
             card = itemView.findViewById(R.id.step_id);
             equationBase = itemView.findViewById(R.id.equation_base_id);
@@ -102,8 +114,13 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceView
             incorrectOptionRadio = itemView.findViewById(R.id.option_incorrect_id);
 
             if(summary.getVisibility() == View.GONE){
-                expandCollapseIndicator.setScaleY(-1f);
-                multipleChoiceResolutionStep.setVisibility(View.VISIBLE);
+                if(currentMultipleChoiceSteps.size() == 1){
+                    expandCollapseIndicator.setScaleY(-1f);
+                    multipleChoiceResolutionStep.setVisibility(View.VISIBLE);
+                }else{
+                    expandCollapseIndicator.setScaleY(1f);
+                    multipleChoiceResolutionStep.setVisibility(View.GONE);
+                }
                 layoutToUse = multipleChoiceResolutionStep;
 
                 solveStep = itemView.findViewById(R.id.solve_step_id);
@@ -147,8 +164,14 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceView
                     boolean shouldExpand = layoutToUse.getVisibility() == View.GONE;
 
                     if(shouldExpand){
+                        if(currentLayoutExpanded != null){
+                            currentLayoutExpanded.setVisibility(View.GONE);
+                            currentExpandCollapseIndicator.setScaleY(1f);
+                        }
                         expandCollapseIndicator.setScaleY(-1f);
                         layoutToUse.setVisibility(View.VISIBLE);
+                        currentLayoutExpanded = layoutToUse;
+                        currentExpandCollapseIndicator = expandCollapseIndicator;
                     }else{
                         layoutToUse.setVisibility(View.GONE);
                         expandCollapseIndicator.setScaleY(1f);
@@ -158,33 +181,39 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceView
         }
     }
 
-    public RVAdapter(List<MultipleChoiceStep> multipleChoiceSteps){
+    public RVAdapter(MultipleChoiceStep firstStep, List<MultipleChoiceStep> multipleChoiceSteps){
         this.multipleChoiceSteps = multipleChoiceSteps;
+
+        List<MultipleChoiceStep> steps = new ArrayList<>();
+        steps.add(firstStep);
+        this.currentMultipleChoiceSteps = steps;
     }
 
     @Override
     public int getItemCount() {
-        return multipleChoiceSteps.size();
+        return currentMultipleChoiceSteps.size();
     }
 
     @Override
     public MultipleChoiceViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.resolution_step, viewGroup, false);
-        return new MultipleChoiceViewHolder(v);
+        return new MultipleChoiceViewHolder(v, this.currentMultipleChoiceSteps);
     }
 
     @Override
     public void onBindViewHolder(MultipleChoiceViewHolder multipleChoiceViewHolder, int i) {
-        multipleChoiceViewHolder.equationBase.setText("\\(" + multipleChoiceSteps.get(i).getEquationBase() + "\\)");
-        multipleChoiceViewHolder.newEquationBase.setText("\\(" + multipleChoiceSteps.get(i).getEquationBase() + "\\)");
-        multipleChoiceViewHolder.summary.setText(multipleChoiceSteps.get(i).getSummary());
-        multipleChoiceViewHolder.optionA.setText(multipleChoiceSteps.get(i).getOptionA());
-        multipleChoiceViewHolder.optionB.setText(multipleChoiceSteps.get(i).getOptionB());
-        multipleChoiceViewHolder.optionC.setText(multipleChoiceSteps.get(i).getOptionC());
-        multipleChoiceViewHolder.correctOption = multipleChoiceSteps.get(i).getCorrectOption();
-        multipleChoiceViewHolder.correctOptionJustification = multipleChoiceSteps.get(i).getCorrectOptionJustification();
-        multipleChoiceViewHolder.incorrectOptionJustification1 = multipleChoiceSteps.get(i).getIncorrectOptionJustification1();
-        multipleChoiceViewHolder.incorrectOptionJustification2 = multipleChoiceSteps.get(i).getIncorrectOptionJustification2();
+        multipleChoiceViewHolder.equationBase.setText("\\(" + currentMultipleChoiceSteps.get(i).getEquationBase() + "\\)");
+        multipleChoiceViewHolder.newEquationBase.setText("\\(" + currentMultipleChoiceSteps.get(i).getEquationBase() + "\\)");
+        multipleChoiceViewHolder.summary.setText(currentMultipleChoiceSteps.get(i).getSummary());
+        multipleChoiceViewHolder.optionA.setText(currentMultipleChoiceSteps.get(i).getOptionA());
+        multipleChoiceViewHolder.optionB.setText(currentMultipleChoiceSteps.get(i).getOptionB());
+        multipleChoiceViewHolder.optionC.setText(currentMultipleChoiceSteps.get(i).getOptionC());
+        multipleChoiceViewHolder.correctOption = currentMultipleChoiceSteps.get(i).getCorrectOption();
+        multipleChoiceViewHolder.correctOptionJustification = currentMultipleChoiceSteps.get(i).getCorrectOptionJustification();
+        multipleChoiceViewHolder.incorrectOptionJustification1 = currentMultipleChoiceSteps.get(i).getIncorrectOptionJustification1();
+        multipleChoiceViewHolder.incorrectOptionJustification2 = currentMultipleChoiceSteps.get(i).getIncorrectOptionJustification2();
+        multipleChoiceViewHolder.currentMultipleChoiceSteps = currentMultipleChoiceSteps;
+        multipleChoiceViewHolder.multipleChoiceSteps = multipleChoiceSteps;
     }
 
     @Override
