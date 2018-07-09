@@ -129,10 +129,10 @@ public class CameraFragment extends Fragment {
                 Log.e(TAG, "target size = " + targetWidth + ", " + targetHeight);
 
                 Bitmap result = Bitmap.createBitmap(bm, centerX - targetWidth / 2, centerY - targetHeight / 2, targetWidth, targetHeight);
-                result = Bitmap.createScaledBitmap(result, targetWidth / 2, targetHeight / 2, false);
+                //result = Bitmap.createScaledBitmap(result, targetWidth / 2, targetHeight / 2, false);
 
                 //usando imagen hardcodeada
-                Bitmap ecuacionDemo = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ecuaciondemo);
+                Bitmap ecuacionDemo = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ec_lineal_2);
                 imageCropped(ecuacionDemo);
 
 
@@ -237,7 +237,8 @@ public class CameraFragment extends Fragment {
     //endregion
 
     private void imageCropped(final Bitmap bitmap) {
-//        mCropImageView.setImageBitmap(bitmap);
+        //esto debe comentarse para hardcodear
+        //mCropImageView.setImageBitmap(bitmap);
         mCropStatusTextView.setText(R.string.processing_image);
         uploadImage(bitmap);
     }
@@ -261,7 +262,8 @@ public class CameraFragment extends Fragment {
                 mLatestLatex = latex;
                 Log.d("Latex_NEW", mLatestLatex);
                 // Volver al SolveEquationActivity y mostrar el String
-                ExpressionsManager.setEquationPhoto(latex);
+                ExpressionsManager.setEquationPhoto(mLatestLatex,getActivity().getApplicationContext());
+                ExpressionsManager.setEquationDrawn(null);
                 Intent intent = new Intent(getActivity(), SolveEquationActivity.class);
                 startActivity(intent);
 //                loadLocalContent();

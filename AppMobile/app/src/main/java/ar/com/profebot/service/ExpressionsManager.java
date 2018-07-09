@@ -23,11 +23,15 @@ public class ExpressionsManager {
         return equationPhoto;
     }
 
-    public static void setEquationPhoto(String equationPhoto) {
+    public static void setEquationPhoto(String equationPhoto, Context context) {
         ExpressionsManager.equationPhoto = mapPhotoToOurAlphabet(equationPhoto);
         try{
-            setTreeOfExpression(new ParserService().parseExpression(ExpressionsManager.equationPhoto));
+            setTreeOfExpression(new ParserService().parseExpression(getEquationPhoto()));
         }catch (InvalidExpressionException e){
+            CharSequence text = "Se produjo un error en la expresion:" + e.getMessage();
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
             equationDrawn = null;
             treeOfExpression = null;
         }
@@ -64,6 +68,7 @@ public class ExpressionsManager {
         }catch (InvalidExpressionException e){
             equationDrawn = null;
             treeOfExpression = null;
+
             return false;
         }
     }
@@ -77,25 +82,27 @@ public class ExpressionsManager {
     private static String mapPhotoToOurAlphabet(String equationPhoto) {
         String ecuacion;
         String subEcuacion;
-        equationPhoto = equationPhoto.replaceAll("\\s+","");
-        String numerador = equationPhoto.substring(equationPhoto.indexOf("rac{")+3, equationPhoto.indexOf("}")) + "}";
-        String denominador = equationPhoto.substring(equationPhoto.lastIndexOf(numerador) + numerador.length())+ "}";
-        denominador = denominador.substring(denominador.indexOf("{"), denominador.lastIndexOf("}"));
+        equationPhoto = equationPhoto.replaceAll("\\s+", "");
+        if (equationPhoto.contains("rac{")) {
+            String numerador = equationPhoto.substring(equationPhoto.indexOf("rac{") + 3, closingParen(equationPhoto,equationPhoto.indexOf("rac{")+3)+1);
+            String denominador = equationPhoto.substring(equationPhoto.lastIndexOf(numerador) + numerador.length()) + "}";
+            denominador = denominador.substring(denominador.indexOf("{"), denominador.lastIndexOf("}"));
 
-        ecuacion = numerador + "/" + denominador;
-        if(denominador.contains("rac{")){
-            while(denominador.contains("rac{")){
-                String nuevoNumerador = denominador.substring(denominador.indexOf("rac{")+3, denominador.indexOf("}")) + "}";
-                String nuevoDenominador = denominador.substring(denominador.lastIndexOf(nuevoNumerador) + nuevoNumerador.length());
-                subEcuacion = nuevoNumerador + "/" + nuevoDenominador;
-                denominador = nuevoDenominador;
-                ecuacion = numerador+ "/{" + subEcuacion + "}";
-            }
-        }
-        else{
             ecuacion = numerador + "/" + denominador;
+            if (denominador.contains("rac{")) {
+                while (denominador.contains("rac{")) {
+                    String nuevoNumerador = denominador.substring(denominador.indexOf("rac{") + 3, denominador.indexOf("}")) + "}";
+                    String nuevoDenominador = denominador.substring(denominador.lastIndexOf(nuevoNumerador) + nuevoNumerador.length());
+                    subEcuacion = nuevoNumerador + "/" + nuevoDenominador;
+                    denominador = nuevoDenominador;
+                    ecuacion = numerador + "/{" + subEcuacion + "}";
+                }
+            } else {
+                ecuacion = numerador + "/" + denominador;
+            }
+            equationPhoto = ecuacion;
         }
-        String equationWellWritten  = ecuacion
+        String equationWellWritten  = equationPhoto
                 .replaceAll("\\{", "(")
                 .replaceAll("\\}", ")")
                 .replaceAll("\\[", "(")
@@ -109,6 +116,7 @@ public class ExpressionsManager {
                 .replaceAll("\\(X\\(", "(X*(")
                 .replaceAll("×", "*")
                 .replaceAll("√", "R")
+                .replaceAll("\\\\cdot", "*")
                 .replaceAll("e", "2.718281828459045235360")
                 .replaceAll("pi", "3.14159265358979323846");
         for(int i = 0 ; i <= 9 ; i++){
@@ -122,8 +130,34 @@ public class ExpressionsManager {
         }
         return removeInvalidParentheses(equationWellWritten);
     }
+    public static int closingParen(String s, int n) {
+
+        int counter = 0;
+        char opening = '{';
+        char closing = '}';
+        int positionOfMatchingParen = -1;
+        boolean found = false;
+
+        while (n < s.length() && !found) {
+
+            if (s.charAt(n) == (opening)) {
+                counter++;
+            } else if (s.charAt(n) == (closing)) {
+                counter--;
+                if (counter == 0) {
+                    positionOfMatchingParen = n;
+                    found = true;
+                }
+            }
+            n++;
+        }
+        return positionOfMatchingParen;
+    }
+
     public static java.util.ArrayList<String> result = new java.util.ArrayList<String>();
+
     public static int max=0;
+
      public static String removeInvalidParentheses(String s) {
         if(s==null)
             return java.util.Arrays.toString(result.toArray());

@@ -37,10 +37,11 @@ public class EnterEquationOptionsActivity extends GlobalActivity {
         option.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
-                //Intent intent = new Intent(button.getContext(), CarmeraActivity.class);
-                String latex = "\\frac { 3 + 2 ^ { 4 } } { 3 x } = 5";
-                ExpressionsManager.setEquationPhoto(latex);
-                Intent intent = new Intent(button.getContext(), SolveEquationActivity.class);
+
+                Intent intent = new Intent(button.getContext(), CarmeraActivity.class);
+                //String latex = "\\frac { 3 + 2 ^ { 4 } } { 3 x } = 5";
+                //ExpressionsManager.setEquationPhoto(latex);
+                //Intent intent = new Intent(button.getContext(), SolveEquationActivity.class);
                 startActivity(intent);
             }
         });

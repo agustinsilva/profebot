@@ -30,7 +30,7 @@ public class SolveEquationActivity extends GlobalActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         super.onCreate(savedInstanceState);
-
+        
         recyclerView = (RecyclerView)findViewById(R.id.rv_resolution_id);
         LinearLayoutManager llm = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(llm);
