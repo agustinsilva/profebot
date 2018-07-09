@@ -8,11 +8,26 @@
 
     <include layout="@layout/enter_equation_handdraw_toolbar"/>
 
-    <com.myscript.atk.math.widget.MathWidget
-        android:id="@+id/math_widget"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/blackboard"
-        android:layout_marginTop="5dp"/>
+        android:layout_height="match_parent">
+
+        <com.myscript.atk.math.widget.MathWidget
+            android:id="@+id/math_widget"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/blackboard"
+            android:layout_marginTop="5dp"/>
+
+        <ProgressBar
+            android:id="@+id/progress_bar_id"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
 
 </LinearLayout>

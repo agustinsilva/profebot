@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.myscript.atk.math.widget.MathWidgetApi;
 import com.profebot.activities.BuildConfig;
@@ -19,6 +20,8 @@ import ar.com.profebot.service.ExpressionsManager;
 public class EnterEquationHandDrawActivity extends GlobalActivity implements
         MathWidgetApi.OnConfigureListener,
         MathWidgetApi.OnRecognitionListener{
+
+    private ProgressBar spinner;
 
     private static final String TAG = "MathDemo";
 
@@ -60,9 +63,12 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
         ((Button) findViewById(R.id.solve_equation_id)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
+                spinner = (ProgressBar)findViewById(R.id.progress_bar_id);
+                spinner.setVisibility(View.VISIBLE);
                 if(ExpressionsManager.expressionDrawnIsValid()){
                     Intent intent = new Intent(button.getContext(), SolveEquationActivity.class);
                     startActivity(intent);
+                    spinner.setVisibility(View.GONE);
                 }else{
                     ExpressionsManager.showInvalidEquationMessage(button.getContext());
                 }
