@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.widget.TextView;
 
 import com.profebot.activities.R;
 
@@ -38,7 +37,6 @@ public class SolveEquationActivity extends GlobalActivity {
         multipleChoiceSteps = this.initializeMultipleChoiceSteps();
         adapter = new RVAdapter(multipleChoiceSteps.get(0), multipleChoiceSteps);
         recyclerView.setAdapter(adapter);
-        ((TextView) findViewById(R.id.equation_generated_id)).setText(ExpressionsManager.getEquationAsString());
     }
 
     public static void refreshRV(){

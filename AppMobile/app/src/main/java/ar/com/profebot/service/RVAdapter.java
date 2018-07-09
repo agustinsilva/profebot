@@ -53,7 +53,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceView
         String incorrectOptionJustification2;
         List<MultipleChoiceStep> multipleChoiceSteps;
         List<MultipleChoiceStep> currentMultipleChoiceSteps;
-        Integer position;
+        TextView numberStep;
 
         private void setUpSolveButton(){
             if(!solveStep.isEnabled()){
@@ -100,6 +100,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceView
         MultipleChoiceViewHolder(View itemView, List<MultipleChoiceStep> currentMultipleChoiceSteps) {
             super(itemView);
             card = itemView.findViewById(R.id.step_id);
+            numberStep = itemView.findViewById(R.id.number_step_id);
             equationBase = itemView.findViewById(R.id.equation_base_id);
             newEquationBase = itemView.findViewById(R.id.new_equation_base_id);
             expandCollapseIndicator = itemView.findViewById(R.id.expand_collapse_indicator_id);
@@ -217,7 +218,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceView
         multipleChoiceViewHolder.incorrectOptionJustification2 = currentMultipleChoiceSteps.get(i).getIncorrectOptionJustification2();
         multipleChoiceViewHolder.currentMultipleChoiceSteps = currentMultipleChoiceSteps;
         multipleChoiceViewHolder.multipleChoiceSteps = multipleChoiceSteps;
-        multipleChoiceViewHolder.position = i;
+        multipleChoiceViewHolder.numberStep.setText((i+1) + ")");
     }
 
     @Override

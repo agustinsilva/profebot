@@ -8,20 +8,36 @@
     android:orientation="vertical"
     android:animateLayoutChanges="true">
 
-    <TextView
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/colorGreyText" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Nuevo paso:"
-        android:layout_margin="10dp"
-        android:textSize="15dp"/>
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:gravity="start">
 
-    <io.github.kexanie.library.MathView
-        android:id="@+id/new_equation_base_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        app:engine="KaTeX">
-    </io.github.kexanie.library.MathView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nuevo paso:"
+            android:layout_margin="10dp"
+            android:textSize="15dp"/>
+
+        <io.github.kexanie.library.MathView
+            android:id="@+id/new_equation_base_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            app:engine="KaTeX">
+        </io.github.kexanie.library.MathView>
+    </LinearLayout>
 
     <RadioButton
         android:id="@+id/option_correct_id"
