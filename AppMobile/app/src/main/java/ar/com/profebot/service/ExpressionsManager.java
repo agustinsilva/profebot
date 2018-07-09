@@ -24,6 +24,7 @@ public class ExpressionsManager {
     }
 
     public static void setEquationPhoto(String equationPhoto, Context context) {
+        ExpressionsManager.equationPhoto = null;
         ExpressionsManager.equationPhoto = mapPhotoToOurAlphabet(equationPhoto);
         try{
             setTreeOfExpression(new ParserService().parseExpression(getEquationPhoto()));
@@ -128,7 +129,7 @@ public class ExpressionsManager {
                     .replaceAll(i + "x", i + "*x")
                     .replaceAll(i + "X", i + "*X");
         }
-        return removeInvalidParentheses(equationWellWritten);
+        return equationWellWritten;
     }
     public static int closingParen(String s, int n) {
 

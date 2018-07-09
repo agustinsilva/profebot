@@ -129,11 +129,11 @@ public class CameraFragment extends Fragment {
                 Log.e(TAG, "target size = " + targetWidth + ", " + targetHeight);
 
                 Bitmap result = Bitmap.createBitmap(bm, centerX - targetWidth / 2, centerY - targetHeight / 2, targetWidth, targetHeight);
-                //result = Bitmap.createScaledBitmap(result, targetWidth / 2, targetHeight / 2, false);
+                result = Bitmap.createScaledBitmap(result, targetWidth / 2, targetHeight / 2, false);
 
                 //usando imagen hardcodeada
                 Bitmap ecuacionDemo = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ec_lineal_2);
-                imageCropped(ecuacionDemo);
+                imageCropped(result);
 
 
                 //region avoid black camera issue - create snapshot and load to imageview overlay
