@@ -30,6 +30,16 @@
         <item name = "android:textColor">@color/colorWhite</item>
     </style>
 
+    <style name="AppButton">
+        <item name = "android:background">@color/colorGreen</item>
+        <item name = "android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="AppButtonDisable">
+        <item name = "android:background">@color/colorGrey</item>
+        <item name = "android:textColor">@color/colorGreyText</item>
+    </style>
+
     <style name="DisableButton">
         <item name = "android:layout_width">250dp</item>
         <item name = "android:layout_height">50dp</item>
