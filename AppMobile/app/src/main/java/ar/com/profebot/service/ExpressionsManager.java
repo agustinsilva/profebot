@@ -104,6 +104,7 @@ public class ExpressionsManager {
             equationPhoto = ecuacion;
         }
         String equationWellWritten  = equationPhoto
+                .replaceAll("\\\\sqrt", "R")
                 .replaceAll("\\{", "(")
                 .replaceAll("\\}", ")")
                 .replaceAll("\\[", "(")
@@ -132,7 +133,6 @@ public class ExpressionsManager {
         return equationWellWritten;
     }
     public static int closingParen(String s, int n) {
-
         int counter = 0;
         char opening = '{';
         char closing = '}';

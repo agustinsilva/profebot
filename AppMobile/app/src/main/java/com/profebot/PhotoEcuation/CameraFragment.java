@@ -266,65 +266,12 @@ public class CameraFragment extends Fragment {
                 ExpressionsManager.setEquationDrawn(null);
                 Intent intent = new Intent(getActivity(), SolveEquationActivity.class);
                 startActivity(intent);
-//                loadLocalContent();
             }
         });
         task.execute(params);
     }
 
     private String mLatestLatex;
-
-    private void loadLocalContent() {
-/*        mWebViewContainer.setVisibility(View.VISIBLE);
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                final String js = "javascript:setLatex('" + mLatestLatex + "')";
-                if (mWebView != null) {
-                    mWebView.loadUrl(js);
-                }
-            }
-
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                return true;
-            }
-        });
-        WebSettings settings = mWebView.getSettings();
-        settings.setAllowFileAccess(true);
-        settings.setAllowContentAccess(true);
-        if (Build.VERSION.SDK_INT >= 16) {
-            settings.setAllowFileAccessFromFileURLs(true);
-            settings.setAllowUniversalAccessFromFileURLs(true);
-        }
-        String localURL = "file:///android_asset/";
-        String htmlString = localHTML(getContext());
-        mWebView.loadDataWithBaseURL(localURL, htmlString, "text/html", "UTF-8", null);*/
-        //this.getContext().startActivity(new Intent(this.getContext(), SolveEquationActivity.class));
-        //Intent intent = new Intent(this.getContext(), SolveEquationActivity.class);
-        //startActivity(intent);
-
-    }
-
-    public String localHTML(Context context) {
-        StringBuilder stringBuilder = new StringBuilder();
-        InputStream json;
-        try {
-            json = context.getAssets().open("latex.html");
-            BufferedReader in = new BufferedReader(new InputStreamReader(json));
-            String str;
-
-            while ((str = in.readLine()) != null) {
-                stringBuilder.append(str);
-            }
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return stringBuilder.toString();
-    }
 
     private void showErrorAndReset(String errMessage) {
         Toast.makeText(getContext(), errMessage, Toast.LENGTH_LONG).show();
