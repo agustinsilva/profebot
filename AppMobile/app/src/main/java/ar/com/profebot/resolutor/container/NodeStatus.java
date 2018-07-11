@@ -249,6 +249,9 @@ public class NodeStatus {
         return substeps;
     }
 
+    public Boolean hasChanged(){
+        return !ChangeTypes.NO_CHANGE.equals(this.changeType);
+    }
     // A wrapper around the Status constructor for the case where node hasn't
     // been changed.
     public static NodeStatus noChange(TreeNode treeNode) {

@@ -1,5 +1,6 @@
 package ar.com.profebot.resolutor.utils;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import ar.com.profebot.parser.container.Tree;
@@ -78,9 +79,27 @@ public class TreeUtils {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * obtiene el listado de operadores recursivamente para saber si son todos iguales
+     * @param treeNode
+     * @return
+     */
     public static Set<String> listaOperadores(TreeNode treeNode){
-        // TODO listaOperadores: obtiene el listado de operadores recursivamente para saber si son todos iguales
-        throw new UnsupportedOperationException();
+        Set<String> lista = new HashSet<>();
+        operadorEnNodo(treeNode, lista);
+        return lista;
+    }
+
+    private static void operadorEnNodo(TreeNode treeNode, Set<String> listaOperadores){
+        if (treeNode ==null){
+           return;
+        }
+
+        if (treeNode.esOperador()){
+            listaOperadores.add(treeNode.getValue());
+        }
+        operadorEnNodo(treeNode.getLeftNode(), listaOperadores);
+        operadorEnNodo(treeNode.getRightNode(), listaOperadores);
     }
 
     public static TreeNode negate(TreeNode numeratorNode) {

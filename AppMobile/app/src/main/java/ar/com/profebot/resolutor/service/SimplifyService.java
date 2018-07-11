@@ -360,8 +360,48 @@ public class SimplifyService {
         throw new UnsupportedOperationException();
     }
 
-    public NodeStatus addLikeTerms(TreeNode treeNode){
-        // TODO addLikeTerms: Asociar términos sumados con X. Ejemplo: 2x + 4x => 6x
+    /**
+     * Asociar términos sumados con X. Ejemplo: 2x + 4x => 6x
+     * @param treeNode
+     * @return
+     */
+    public NodeStatus addLikeTerms(TreeNode treeNode, Boolean polynomialOnly){
+
+        // Buscar un nodo operador
+        if (treeNode == null || !treeNode.esOperador()) {
+            return NodeStatus.noChange(treeNode);
+        }
+
+        NodeStatus nodeStatus;
+        if (!polynomialOnly) {
+            nodeStatus = evaluateConstantSum(treeNode);
+            if (nodeStatus.hasChanged()) {
+                return nodeStatus;
+            }
+        }
+
+        nodeStatus = addLikePolynomialTerms(treeNode);
+        if (nodeStatus.hasChanged()) {
+            return nodeStatus;
+        }
+
+        nodeStatus = addLikeNthRootTerms(treeNode);
+        if (nodeStatus.hasChanged()) {
+            return nodeStatus;
+        }
+
+        return NodeStatus.noChange(treeNode);
+    }
+
+    private NodeStatus evaluateConstantSum(TreeNode treeNode) {
+        throw new UnsupportedOperationException();
+    }
+
+    private NodeStatus addLikePolynomialTerms(TreeNode treeNode) {
+        throw new UnsupportedOperationException();
+    }
+
+    private NodeStatus addLikeNthRootTerms(TreeNode treeNode) {
         throw new UnsupportedOperationException();
     }
 
