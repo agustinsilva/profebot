@@ -262,10 +262,20 @@ public class CameraFragment extends Fragment {
                 mLatestLatex = latex;
                 Log.d("Latex_NEW", mLatestLatex);
                 // Volver al SolveEquationActivity y mostrar el String
-                ExpressionsManager.setEquationPhoto(mLatestLatex,getActivity().getApplicationContext());
-                ExpressionsManager.setEquationDrawn(null);
-                Intent intent = new Intent(getActivity(), SolveEquationActivity.class);
-                startActivity(intent);
+                if (latex != "") {
+                    ExpressionsManager.setEquationPhoto(mLatestLatex, getActivity().getApplicationContext());
+                    ExpressionsManager.setEquationDrawn(null);
+                    if (ExpressionsManager.getTreeOfExpression() != null) {
+                        Intent intent = new Intent(getActivity(), SolveEquationActivity.class);
+                        startActivity(intent);
+                    }
+                    else{
+                        showErrorAndReset("Hubo un error al procesar la imagen, por favor, volve a intentarlo.");
+                    }
+                }
+                else{
+                    showErrorAndReset("La imagen no se pudo procesar, por favor, volve a intentarlo.");
+                }
             }
         });
         task.execute(params);
