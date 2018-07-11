@@ -8,10 +8,15 @@ import ar.com.profebot.parser.container.TreeNode;
 public class TreeUtils {
 
     public static Boolean esConstante(TreeNode treeNode){
-        // TODO esConstante
-        throw new UnsupportedOperationException();
+        String valor = treeNode.getValue();
+        return (treeNode!=null && !esIncognita(treeNode) && contieneNumero(treeNode.getValue()));
     }
 
+    private static Boolean contieneNumero(String value){
+        return (value.contains("0") || value.contains("1") || value.contains("2")
+        || value.contains("3") || value.contains("4") || value.contains("5") || value.contains("6")
+        || value.contains("7") || value.contains("8") || value.contains("9"));
+    }
     public static Boolean zeroValue(TreeNode treeNode){
        return hasValue(treeNode, "0");
     }
@@ -41,7 +46,7 @@ public class TreeUtils {
 
         if (esFraccion(treeNode)){
             TreeNode numeratorTree = treeNode.getLeftNode();
-            TreeNode denominatorTree = treeNode.getLeftNode();
+            TreeNode denominatorTree = treeNode.getRightNode();
             if (numeratorTree.getDoubleValue() < 0 || denominatorTree.getDoubleValue() < 0) {
                 return !(numeratorTree.getDoubleValue() < 0 && denominatorTree.getDoubleValue() < 0);
             }
