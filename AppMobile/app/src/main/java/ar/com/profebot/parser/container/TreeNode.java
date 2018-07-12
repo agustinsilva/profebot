@@ -7,6 +7,7 @@ public class TreeNode {
     private TreeNode leftNode;
     private TreeNode rightNode;
 
+    //Constructor de nodo.
     public TreeNode(String value) {
         super();
         this.coefficient = 1; // Por defecto
@@ -14,12 +15,17 @@ public class TreeNode {
         setValue(value);
     }
 
+    //Realiza el clon de un nodo.
     public TreeNode clone(){
         TreeNode node = new TreeNode(this.getValue());
         node.setCoefficient(this.getCoefficient());
         node.setExponent(this.getExponent());
-        node.setLeftNode(this.getLeftNode().clone());
-        node.setRightNode(this.getRightNode().clone());
+        if(this.getLeftNode() != null) {
+            node.setLeftNode(this.getLeftNode().clone());
+        }
+        if(this.getRightNode() != null) {
+            node.setRightNode(this.getRightNode().clone());
+        }
         return node;
     }
 
@@ -157,6 +163,8 @@ public class TreeNode {
     /**
      * Se debería usar solo cuando cambia el exponente o el coeficiente de una X
      */
+    //Actualiza el valor del nodo en funcion del coeficiente y el exponente por ejemplo si el
+    //coeficiente es 3 y exponente es 2 cambiaria el valor a 3X^2
     private void updateValue(){
         String newValue = (coefficient!=null && coefficient!=1?coefficient.toString(): "")
                             + "X"
