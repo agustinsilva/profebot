@@ -34,6 +34,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceView
         MathView equationBase;
         MathView newEquationBase;
         ImageView expandCollapseIndicator;
+        ImageView expandCollapseIndicatorColor;
         TextView summary;
         LinearLayout multipleChoiceResolutionStep;
         LinearLayout multipleChoiceSolvedResolutionStep;
@@ -71,7 +72,9 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceView
                         correctOptionRadio.setText(correctOptionJustification);
                         if(chosenOption.equals(correctOption)){
                             incorrectOptionRadio.setVisibility(View.GONE);
+                            expandCollapseIndicatorColor.setBackgroundResource(R.drawable.solved_right);
                         }else{
+                            expandCollapseIndicatorColor.setBackgroundResource(R.drawable.solved_wrong);
                             Map<Integer, String> incorrectOptions = new HashMap<>();
                             for(int i = 1 ; i <= 3 ; i++){
                                 if(i != correctOption){
@@ -105,6 +108,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceView
             equationBase = itemView.findViewById(R.id.equation_base_id);
             newEquationBase = itemView.findViewById(R.id.new_equation_base_id);
             expandCollapseIndicator = itemView.findViewById(R.id.expand_collapse_indicator_id);
+            expandCollapseIndicatorColor = itemView.findViewById(R.id.expand_collapse_indicator_color_id);
             summary = itemView.findViewById(R.id.summary_id);
 
             multipleChoiceResolutionStep = itemView.findViewById(R.id.multiple_choice_section_id);

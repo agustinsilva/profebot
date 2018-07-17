@@ -11,7 +11,15 @@ import android.widget.RadioButton;
 
 import com.profebot.activities.R;
 
+import ar.com.profebot.service.ExpressionsManager;
+
 public class EnterEquationOptionsActivity extends GlobalActivity {
+
+    ImageView handdrawEquationPicture;
+    ImageView photoEquationPicture;
+    RadioButton handdrawEquationOption;
+    RadioButton photoEquationOption;
+    Button startResolution;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,11 +31,13 @@ public class EnterEquationOptionsActivity extends GlobalActivity {
 
         super.onCreate(savedInstanceState);
 
-        ImageView handdrawEquationPicture = (ImageView) findViewById(R.id.handdraw_equation_picture_id);
-        ImageView photoEquationPicture = (ImageView) findViewById(R.id.photo_equation_picture_id);
-        RadioButton handdrawEquationOption = (RadioButton) findViewById(R.id.handdraw_equation_id);
-        RadioButton photoEquationOption = (RadioButton) findViewById(R.id.photo_equation_id);
-        Button startResolution = (Button) findViewById(R.id.start_resolution_id);
+        handdrawEquationPicture = (ImageView) findViewById(R.id.handdraw_equation_picture_id);
+        photoEquationPicture = (ImageView) findViewById(R.id.photo_equation_picture_id);
+        handdrawEquationOption = (RadioButton) findViewById(R.id.handdraw_equation_id);
+        photoEquationOption = (RadioButton) findViewById(R.id.photo_equation_id);
+        startResolution = (Button) findViewById(R.id.start_resolution_id);
+
+        restartScreen();
 
         // When i touch over images
 
@@ -90,8 +100,17 @@ public class EnterEquationOptionsActivity extends GlobalActivity {
         });
     }
 
+    private void restartScreen(){
+        handdrawEquationPicture.setImageResource(R.drawable.handdraw_equation);
+        photoEquationPicture.setImageResource(R.drawable.photo_equation);
+        handdrawEquationOption.setChecked(false);
+        photoEquationOption.setChecked(false);
+        startResolution.setEnabled(false);
+        startResolution.setBackgroundResource(R.color.colorGrey);
+        startResolution.setTextColor(Color.GRAY);
+    }
+
     private void activateStartResolutionButton(){
-        Button startResolution = (Button) findViewById(R.id.start_resolution_id);
         startResolution.setEnabled(true);
         startResolution.setBackgroundResource(R.color.colorGreen);
         startResolution.setTextColor(Color.WHITE);
@@ -101,5 +120,11 @@ public class EnterEquationOptionsActivity extends GlobalActivity {
     public boolean onSupportNavigateUp() {
         startActivity(new Intent(this, MainActivity.class));
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        ExpressionsManager.setEquationDrawn(null);
+        startActivity(new Intent(this, MainActivity.class));
     }
 }

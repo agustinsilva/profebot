@@ -22,7 +22,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="start"
-                android:layout_marginStart="10dp">
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp">
 
                 <TextView
                     android:id="@+id/number_step_id"
@@ -72,11 +73,26 @@
                     android:gravity="end"
                     android:paddingTop="9dp">
 
-                    <ImageView
-                        android:id="@+id/expand_collapse_indicator_id"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@android:drawable/ic_menu_more"/>
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/expand_collapse_indicator_color_id"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@drawable/solved_pending"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginStart="5dp"/>
+
+                        <ImageView
+                            android:id="@+id/expand_collapse_indicator_id"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@android:drawable/ic_menu_more" />
+
+                    </RelativeLayout>
+
                 </LinearLayout>
 
             </LinearLayout>

@@ -219,11 +219,9 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
         return true;
     }
 
-    public Toast getInvalidEquationMessage() {
-        return invalidEquationMessage;
-    }
-
-    public void setInvalidEquationMessage(Toast invalidEquationMessage) {
-        this.invalidEquationMessage = invalidEquationMessage;
+    @Override
+    public void onBackPressed() {
+        ExpressionsManager.setEquationDrawn(null);
+        startActivity(new Intent(this, EnterEquationOptionsActivity.class));
     }
 }

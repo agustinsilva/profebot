@@ -67,8 +67,17 @@ public class SolveEquationActivity extends GlobalActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
+        returnToEnterNewEquation();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        returnToEnterNewEquation();
+    }
+
+    private void returnToEnterNewEquation(){
         ExpressionsManager.setEquationDrawn(null);
         startActivity(new Intent(this, EnterEquationOptionsActivity.class));
-        return true;
     }
 }
