@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity android:name="ar.com.profebot.activities.EnterEquationOptionsActivity" android:screenOrientation="portrait"></activity>
-        <activity android:name="ar.com.profebot.activities.EnterEquationHandDrawActivity" android:screenOrientation="landscape"></activity>
+        <activity android:name="ar.com.profebot.activities.EnterEquationHandDrawActivity"></activity>
         <activity android:name="ar.com.profebot.activities.EnterEquationPhotoActivity" android:screenOrientation="landscape"></activity>
         <activity android:name="ar.com.profebot.activities.SolveEquationActivity" android:screenOrientation="portrait"></activity>
         <activity

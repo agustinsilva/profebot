@@ -1,7 +1,6 @@
 package ar.com.profebot.service;
 
 import android.content.Context;
-import android.view.Gravity;
 import android.widget.Toast;
 
 import ar.com.profebot.parser.container.Tree;
@@ -66,18 +65,11 @@ public class ExpressionsManager {
         try{
             setTreeOfExpression(new ParserService().parseExpression(equationDrawn));
             return true;
-        }catch (InvalidExpressionException e){
-            equationDrawn = null;
-            treeOfExpression = null;
-
+        }catch (Exception e){
+            setEquationDrawn(null);
+            setTreeOfExpression(null);
             return false;
         }
-    }
-
-    public static void showInvalidEquationMessage(Context context){
-        Toast toast = Toast.makeText(context,"Fijate si la ecuación está bien escrita!", Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
     }
 
     private static String mapPhotoToOurAlphabet(String equationPhoto) {

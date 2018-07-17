@@ -6,10 +6,15 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.myscript.atk.core.CaptureInfo;
 import com.myscript.atk.math.widget.MathWidgetApi;
 import com.profebot.activities.BuildConfig;
 import com.profebot.activities.R;
@@ -22,6 +27,8 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
         MathWidgetApi.OnRecognitionListener{
 
     private ProgressBar spinner;
+    private ImageButton playButton;
+    private Toast invalidEquationMessage;
 
     private static final String TAG = "MathDemo";
 
@@ -41,7 +48,15 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
 
         this.setUpWidget();
 
+        spinner = (ProgressBar)findViewById(R.id.progress_bar_id);
         this.setUpButtons();
+
+        ((RelativeLayout)findViewById(R.id.blackboard_layout_id)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                spinner.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     private void setUpButtons(){
@@ -53,27 +68,48 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
             }
         });
 
+        playButton = (ImageButton) findViewById(R.id.solve_equation_id);
+
         ((Button) findViewById(R.id.clear_blackboard_id)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
                 widget.clear(false);
+                disablePlayButton();
+                invalidateToast();
             }
         });
 
-        ((Button) findViewById(R.id.solve_equation_id)).setOnClickListener(new View.OnClickListener() {
+        playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
-                spinner = (ProgressBar)findViewById(R.id.progress_bar_id);
                 spinner.setVisibility(View.VISIBLE);
                 if(ExpressionsManager.expressionDrawnIsValid()){
                     Intent intent = new Intent(button.getContext(), SolveEquationActivity.class);
                     startActivity(intent);
-                    spinner.setVisibility(View.GONE);
                 }else{
-                    ExpressionsManager.showInvalidEquationMessage(button.getContext());
+                    invalidEquationMessage = Toast.makeText(button.getContext(),"Fijate si la ecuación está bien escrita!", Toast.LENGTH_LONG);
+                    invalidEquationMessage.setGravity(Gravity.CENTER, 0, 0);
+                    invalidEquationMessage.show();
                 }
+                spinner.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void disablePlayButton(){
+        playButton.setBackgroundResource(R.color.colorGreyText);
+        playButton.setEnabled(false);
+    }
+
+    private void enablePlayButton(){
+        playButton.setBackgroundResource(R.color.colorAccent);
+        playButton.setEnabled(true);
+    }
+
+    private void invalidateToast(){
+        if(invalidEquationMessage != null){
+            invalidEquationMessage.cancel();
+        }
     }
 
     private void setUpWidget(){
@@ -94,7 +130,43 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
 
         // Listen to widget events (see onConfigureEnd and onRecognitionEnd APIs)
         widget.setOnConfigureListener(this);
-        widget.setOnRecognitionListener(this);
+        widget.setOnRecognitionListener(new MathWidgetApi.OnRecognitionListener() {
+            @Override
+            public void onRecognitionBegin(MathWidgetApi mathWidgetApi) {
+            }
+
+            @Override
+            public void onRecognitionEnd(MathWidgetApi mathWidgetApi) {
+                ExpressionsManager.setEquationDrawn(widget.getResultAsText());
+                if(!"".equals(ExpressionsManager.getEquationDrawn())){
+                    enablePlayButton();
+                }
+                spinner.setVisibility(View.GONE);
+            }
+        });
+
+        widget.setOnPenListener(new MathWidgetApi.OnPenListener() {
+            @Override
+            public void onPenDown(MathWidgetApi mathWidgetApi, CaptureInfo captureInfo) {
+                spinner.setVisibility(View.GONE);
+                invalidateToast();
+            }
+
+            @Override
+            public void onPenUp(MathWidgetApi mathWidgetApi, CaptureInfo captureInfo) {
+                spinner.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onPenMove(MathWidgetApi mathWidgetApi, CaptureInfo captureInfo) {
+
+            }
+
+            @Override
+            public void onPenAbort(MathWidgetApi mathWidgetApi) {
+
+            }
+        });
 
         // references assets directly from the APK to avoid extraction in application
         // file system
@@ -139,12 +211,19 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
 
     @Override
     public void onRecognitionEnd(MathWidgetApi widget) {
-        ExpressionsManager.setEquationDrawn(widget.getResultAsText());
     }
 
     @Override
     public boolean onSupportNavigateUp() {
         startActivity(new Intent(this, EnterEquationOptionsActivity.class));
         return true;
+    }
+
+    public Toast getInvalidEquationMessage() {
+        return invalidEquationMessage;
+    }
+
+    public void setInvalidEquationMessage(Toast invalidEquationMessage) {
+        this.invalidEquationMessage = invalidEquationMessage;
     }
 }

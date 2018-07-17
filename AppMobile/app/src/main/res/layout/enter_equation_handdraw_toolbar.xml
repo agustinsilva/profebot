@@ -4,7 +4,8 @@
     android:id="@+id/toolbar_id"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorGreen">
+    android:background="@color/colorGreen"
+    android:gravity="start|center_vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,7 +26,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="end">
+            android:gravity="end|center_vertical"
+            android:layout_marginEnd="5dp">
 
             <Button
                 android:id="@+id/enter_equation_photo_id"
@@ -41,12 +43,12 @@
                 android:background="@android:drawable/ic_menu_delete"
                 android:layout_marginEnd="10dp"/>
 
-            <Button
+            <ImageButton
                 android:id="@+id/solve_equation_id"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@android:drawable/ic_media_play" />
-
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@android:drawable/ic_media_play"
+                android:background="@color/colorGreyText" />
         </LinearLayout>
 
     </LinearLayout>

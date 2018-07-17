@@ -67,6 +67,7 @@ public class SolveEquationActivity extends GlobalActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
+        ExpressionsManager.setEquationDrawn(null);
         startActivity(new Intent(this, EnterEquationOptionsActivity.class));
         return true;
     }
