@@ -1,5 +1,7 @@
 package ar.com.profebot.resolutor.service;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 import ar.com.profebot.parser.container.TreeNode;
@@ -9,9 +11,9 @@ import ar.com.profebot.resolutor.utils.TreeUtils;
 
 public class SimplifyService {
 
-    private static final Double CONSTANT_1  = new Double(1);
-    private static final Double CONSTANT_1_NEG  = new Double(-1);
-    private static final Double CONSTANT_0  = new Double(0);
+    private static final Integer CONSTANT_1  = new Integer(1);
+    private static final Integer CONSTANT_1_NEG  = new Integer(-1);
+    private static final Integer CONSTANT_0  = new Integer(0);
 
     private List<ResolutionStep> resolutionStepList;
 
@@ -324,16 +326,27 @@ public class SimplifyService {
         return NodeStatus.noChange(treeNode);
     }
 
-    public void simplifyFractions(TreeNode treeNode){
-        // TODO simplifyFractions
-        simplifyIntFractions(treeNode);
-        resolveFractionNumeratorAndDenominator(treeNode);
-        reduceFractions(treeNode);
-        resolveConstantFractionAdition(treeNode);
+    public NodeStatus simplifyFractions(TreeNode treeNode){
+        NodeStatus nodeStatus = null;
+
+        nodeStatus = simplifyIntFractions(treeNode);
+        if (nodeStatus.hasChanged()){return nodeStatus;}
+
+        nodeStatus = resolveFractionNumeratorAndDenominator(treeNode);
+        if (nodeStatus.hasChanged()){return nodeStatus;}
+
+        nodeStatus = reduceFractions(treeNode);
+        if (nodeStatus.hasChanged()){return nodeStatus;}
+
+        nodeStatus = resolveConstantFractionAdition(treeNode);
+        if (nodeStatus.hasChanged()){return nodeStatus;}
+
+        return NodeStatus.noChange(treeNode);
     }
 
     private NodeStatus simplifyIntFractions(TreeNode treeNode){
         // TODO simplifyIntFractions: Buscar fracciones, y solo simplificarlas si dan un número entero (ej: 8/4 = 2).
+
         throw new UnsupportedOperationException();
     }
 
@@ -350,14 +363,319 @@ public class SimplifyService {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Adds a constant to a fraction by:
+     * - collapsing the fraction to decimal if the constant is not an integer
+     *   e.g. 5.3 + 1/2 -> 5.3 + 0.2
+     * - turning the constant into a fraction with the same denominator if it is
+     *   an integer, e.g. 5 + 1/2 -> 10/2 + 1/2
+     * @param treeNode
+     * @return
+     */
     private NodeStatus resolveConstantFractionAdition(TreeNode treeNode){
-        // TODO resolveConstantFractionAdition: Buscar sumas de constantes/fracciones con fracciones, y generar 3 pasos:
-        // Buscar el común denominador (mínimo común divisor), y multiplicar numerador y denominador según corresponda. 2/6 + 1/4 -> (2*2)/(6*2) + (1*3)/(4*3)
-        // Simplificar la multiplicación en el numerador y denominador.
-        // Simplificar la suma del numerador.
-        // Verificar si se puede simplificar la fracción.
 
-        throw new UnsupportedOperationException();
+        // Buscar un nodo con + o -
+        if (treeNode == null || !treeNode.esAditivo()) {
+            return NodeStatus.noChange(treeNode);
+        }
+
+        TreeNode leftNode = treeNode.getLeftNode();
+        TreeNode rightNode = treeNode.getRightNode();
+
+        TreeNode constNode;
+        TreeNode fractionNode;
+        if (TreeUtils.esConstante(leftNode)){
+            if (TreeUtils.esFraccion(rightNode)) {
+                constNode = leftNode;
+                fractionNode = rightNode;
+            }else {
+                return NodeStatus.noChange(treeNode);
+            }
+        }else if (TreeUtils.esConstante(rightNode)) {
+            if (TreeUtils.esFraccion(leftNode)) {
+                constNode = rightNode;
+                fractionNode = leftNode;
+            }else {
+                return NodeStatus.noChange(treeNode);
+            }
+        }else {
+            return NodeStatus.noChange(treeNode);
+        }
+
+
+        TreeNode newNode = treeNode.cloneDeep();
+        List<NodeStatus> substeps = new ArrayList<>();
+
+        TreeNode denominatorNode = fractionNode.getRightNode();
+        Integer denominatorValue = denominatorNode.getIntegerValue();
+        Integer constNodeValue = constNode.getIntegerValue();
+        TreeNode newNumeratorNode = TreeNode.createConstant(
+                constNodeValue * denominatorValue);
+
+        TreeNode newConstNode = TreeNode.createOperator (
+                "/", newNumeratorNode, denominatorNode);
+        TreeNode newFractionNode = fractionNode;
+
+        // Conservo la posición de los nodos iniciales
+        if (TreeUtils.esConstante(leftNode)) {
+            newNode.setLeftNode(newConstNode);
+            newNode.setRightNode(newFractionNode);
+        }
+        else {
+            newNode.setLeftNode(newFractionNode);
+            newNode.setRightNode(newConstNode);
+        }
+
+        substeps.add(NodeStatus.nodeChanged(NodeStatus.ChangeTypes.CONVERT_INTEGER_TO_FRACTION, treeNode, newNode));
+        newNode = NodeStatus.resetChangeGroups(newNode);
+
+        // If we changed an integer to a fraction, we need to add the steps for
+        // adding the fractions.
+        NodeStatus addFractionStatus = addConstantFractions(newNode);
+        substeps.addAll(addFractionStatus.getSubsteps());
+
+
+        NodeStatus lastStep = substeps.get(substeps.size()-1);
+        newNode = NodeStatus.resetChangeGroups(lastStep.getNewNode());
+
+        return NodeStatus.nodeChanged(
+                NodeStatus.ChangeTypes.SIMPLIFY_ARITHMETIC, treeNode, newNode, substeps);
+    }
+
+    /**
+     // Adds constant fractions -- can start from either step 1 or 2
+     // 1A. Find the LCD if denominators are different and multiplies to make
+     //     denominators equal, e.g. 2/3 + 4/6 --> (2*2)/(3*2) + 4/6
+     // 1B. Multiplies out to make constant fractions again
+     //     e.g. (2*2)/(3*2) + 4/6 -> 4/6 + 4/6
+     // 2A. Combines numerators, e.g. 4/6 + 4/6 ->  e.g. 2/5 + 4/5 --> (2+4)/5
+     // 2B. Adds numerators together, e.g. (2+4)/5 -> 6/5
+     // Returns a Node.Status object with substeps
+     * @param node
+     * @return
+     */
+    private NodeStatus addConstantFractions(TreeNode node) {
+
+        TreeNode newNode = node.cloneDeep();
+
+        // Buscar un nodo operador
+        if (node == null || !node.esAditivo()) {
+            return NodeStatus.noChange(node);
+        }
+
+        // Si los dos nodos no son fracciones, salgo
+        if (!TreeUtils.esFraccion(node.getLeftNode()) || !TreeUtils.esFraccion(node.getRightNode())) {
+            return NodeStatus.noChange(node);
+        }
+
+        List<NodeStatus> substeps = new ArrayList<>();
+        NodeStatus status;
+
+        // 1A. First create the common denominator if needed
+        // e.g. 2/6 + 1/4 -> (2*2)/(6*2) + (1*3)/(4*3)
+        if (!node.getLeftNode().getIntegerValue().equals(node.getRightNode().getIntegerValue()) ){
+            status = makeCommonDenominator(newNode);
+            substeps.add(status);
+            newNode = NodeStatus.resetChangeGroups(status.getNewNode());
+
+            // 1B. Multiply out the denominators
+            status = evaluateDenominators(newNode);
+            substeps.add(status);
+            newNode = NodeStatus.resetChangeGroups(status.getNewNode());
+
+            // 1B. Multiply out the numerators
+            status = evaluateNumerators(newNode);
+            substeps.add(status);
+            newNode = NodeStatus.resetChangeGroups(status.getNewNode());
+        }
+
+        // 2A. Now that they all have the same denominator, combine the numerators
+        // e.g. 2/3 + 5/3 -> (2+5)/3
+        status = combineNumeratorsAboveCommonDenominator(newNode);
+        substeps.add(status);
+        newNode = NodeStatus.resetChangeGroups(status.getNewNode());
+
+        // 2B. Finally, add the numerators together
+        status = addNumeratorsTogether(newNode);
+        substeps.add(status);
+        newNode = NodeStatus.resetChangeGroups(status.getNewNode());
+
+        // 2C. If the numerator is 0, simplify to just 0
+        status = reduceNumerator(newNode);
+        if (status.hasChanged()) {
+            substeps.add(status);
+            newNode = NodeStatus.resetChangeGroups(status.getNewNode());
+        }
+
+        // 2D. If we can simplify the fraction, do so
+        status = divideByGCD(newNode);
+        if (status.hasChanged()) {
+            substeps.add(status);
+            newNode = NodeStatus.resetChangeGroups(status.getNewNode());
+        }
+
+        return NodeStatus.nodeChanged(
+                NodeStatus.ChangeTypes.ADD_FRACTIONS, node, newNode,  substeps);
+    }
+
+    /**
+     // Given a + operation node with a list of fraction nodes as args that all have
+     // the same denominator, add them together. e.g. 2/3 + 5/3 -> (2+5)/3
+     // Returns the new node.
+     * @param node
+     * @return
+     */
+    private NodeStatus combineNumeratorsAboveCommonDenominator(TreeNode node) {
+
+        TreeNode commonDenominator = TreeNode.createConstant(node.getLeftNode().getRightNode().getIntegerValue());
+
+        // Genero el nodo (numeradorIzq + NumeradorDer)
+        TreeNode newNumerator = TreeNode.createOperator("+",
+            TreeNode.createConstant(node.getLeftNode().getLeftNode().getIntegerValue()),
+            TreeNode.createConstant(node.getLeftNode().getRightNode().getIntegerValue()));
+
+        // Finalmente: (numeradorIzq + NumeradorDer) / comunDenominador
+        TreeNode newNode = TreeNode.createOperator("/", newNumerator, commonDenominator);
+        return NodeStatus.nodeChanged(
+                NodeStatus.ChangeTypes.COMBINE_NUMERATORS, node, newNode);
+    }
+
+    /**
+     // Given a node with a numerator that is an addition node, will add
+     // all the numerators and return the result
+     * @param node
+     * @return
+     */
+    private NodeStatus addNumeratorsTogether(TreeNode node) {
+
+        TreeNode newNode = node.cloneDeep();
+
+        TreeNode numeratorAditionNode = node.getLeftNode();
+        newNode.setLeftNode(TreeNode.createConstant(
+                numeratorAditionNode.getLeftNode().getIntegerValue() + numeratorAditionNode.getRightNode().getIntegerValue()));
+
+        return NodeStatus.nodeChanged(
+                NodeStatus.ChangeTypes.ADD_NUMERATORS, node, newNode);
+    }
+
+    private NodeStatus reduceNumerator(TreeNode node) {
+        // Numerador en 0?
+        if (CONSTANT_0.equals(node.getLeftNode().getIntegerValue())) {
+            TreeNode newNode = TreeNode.createConstant(CONSTANT_0);
+            return NodeStatus.nodeChanged(
+                    NodeStatus.ChangeTypes.REDUCE_ZERO_NUMERATOR, node, newNode);
+        }
+
+        return NodeStatus.noChange(node);
+    }
+
+    /**
+     // Takes `node`, a sum of fractions, and returns a node that's a sum of
+     // fractions with denominators that evaluate to the same common denominator
+     // e.g. 2/6 + 1/4 -> (2*2)/(6*2) + (1*3)/(4*3)
+     // Returns the new node.
+     * @param node
+     * @return
+     */
+    private NodeStatus makeCommonDenominator(TreeNode node) {
+
+        TreeNode newNode = node.cloneDeep();
+
+        TreeNode leftFraction = node.getLeftNode();
+        TreeNode leftDenominator = leftFraction.getRightNode();
+
+        TreeNode rightFraction = node.getRightNode();
+        TreeNode rightDenominator = rightFraction.getRightNode();
+        Integer commonDenominator = calculateLCM(leftDenominator.getIntegerValue(), rightDenominator.getIntegerValue());
+
+        // missingFactor is what we need to multiply the top and bottom by
+        // so that the denominator is the LCD
+        Integer missingFactor = commonDenominator / leftDenominator.getIntegerValue();
+        if (!CONSTANT_1 .equals(missingFactor)) {
+            // new numerador: (num * missingFactor)
+            TreeNode newNumerator = TreeNode.createOperator("*",
+                    TreeNode.createConstant(leftFraction.getLeftNode().getIntegerValue()),
+                    TreeNode.createConstant(missingFactor));
+
+            // new denominator: (num * missingFactor)
+            TreeNode newDenominator = TreeNode.createOperator("*",
+                    TreeNode.createConstant(leftFraction.getRightNode().getIntegerValue()),
+                    TreeNode.createConstant(missingFactor));
+
+            // new left fraction
+            newNode.setLeftNode(TreeNode.createOperator("/", newNumerator, newDenominator));
+        }
+
+        // Right fraction
+        missingFactor = commonDenominator / rightDenominator.getIntegerValue();
+        if (!CONSTANT_1 .equals(missingFactor)) {
+            // new numerador: (num * missingFactor)
+            TreeNode newNumerator = TreeNode.createOperator("*",
+                    TreeNode.createConstant(rightFraction.getLeftNode().getIntegerValue()),
+                    TreeNode.createConstant(missingFactor));
+
+            // new denominator: (num * missingFactor)
+            TreeNode newDenominator = TreeNode.createOperator("*",
+                    TreeNode.createConstant(rightFraction.getRightNode().getIntegerValue()),
+                    TreeNode.createConstant(missingFactor));
+
+            // new left fraction
+            newNode.setRightNode(TreeNode.createOperator("/", newNumerator, newDenominator));
+        }
+
+        return NodeStatus.nodeChanged(
+                NodeStatus.ChangeTypes.COMMON_DENOMINATOR, node, newNode);
+    }
+
+    /**
+     * (2*2)/(6*2) + (1*3)/(4*3) -> (2*2)/12 + (1*3)/12
+     * @param node
+     * @return
+     */
+    private NodeStatus evaluateDenominators(TreeNode node) {
+
+        TreeNode newNode = node.cloneDeep();
+
+        TreeNode leftFraction = newNode.getLeftNode();
+        TreeNode rightFraction = newNode.getRightNode();
+
+        // leftFraction multiply denominator
+        TreeNode newDenominator =  TreeNode.createConstant(leftFraction.getRightNode().getLeftNode().getIntegerValue()
+                * leftFraction.getRightNode().getRightNode().getIntegerValue());
+        leftFraction.setRightNode(newDenominator);
+
+        // rightFraction multiply denominator
+        newDenominator =  TreeNode.createConstant(rightFraction.getRightNode().getLeftNode().getIntegerValue()
+                * rightFraction.getRightNode().getRightNode().getIntegerValue());
+        rightFraction.setRightNode(newDenominator);
+
+        return NodeStatus.nodeChanged(
+                NodeStatus.ChangeTypes.MULTIPLY_DENOMINATORS, node, newNode);
+    }
+
+    /**
+     * (2*2)/12 + (1*3)/12 -> 4/12 + 3/12
+     * @param node
+     * @return
+     */
+    private NodeStatus evaluateNumerators(TreeNode node) {
+        TreeNode newNode = node.cloneDeep();
+
+        TreeNode leftFraction = newNode.getLeftNode();
+        TreeNode rightFraction = newNode.getRightNode();
+
+        // leftFraction multiply numerator
+        TreeNode newNumerator =  TreeNode.createConstant(leftFraction.getLeftNode().getLeftNode().getIntegerValue()
+                * leftFraction.getLeftNode().getRightNode().getIntegerValue());
+        leftFraction.setLeftNode(newNumerator);
+
+        // rightFraction multiply numerator
+        newNumerator =  TreeNode.createConstant(rightFraction.getLeftNode().getLeftNode().getIntegerValue()
+                * rightFraction.getLeftNode().getRightNode().getIntegerValue());
+        rightFraction.setLeftNode(newNumerator);
+
+        return NodeStatus.nodeChanged(
+                NodeStatus.ChangeTypes.MULTIPLY_NUMERATORS, node, newNode);
     }
 
     /**
@@ -415,8 +733,20 @@ public class SimplifyService {
         throw new UnsupportedOperationException();
     }
 
-    public NodeStatus simplifyPolynomialFraction(TreeNode treeNode){
-        // TODO simplifyPolynomialFraction:  2x/4 --> x/2    10x/5 --> 2x
+    /**
+     * Simplifies a polynomial term with a fraction as its coefficients.
+     * e.g. 2x/4 --> x/2    10x/5 --> 2x
+     * Also simplified negative signs
+     * e.g. -y/-3 --> y/3   4x/-5 --> -4x/5
+     * @param node
+     * @return the new simplified node in a Node.Status object
+     */
+    public NodeStatus simplifyPolynomialFraction(TreeNode node){
+
+        if (!TreeUtils.isPolynomialTerm(node)) {
+            return NodeStatus.noChange(node);
+        }
+
         throw new UnsupportedOperationException();
     }
 
@@ -425,9 +755,127 @@ public class SimplifyService {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Simplificar coeficientes en divisiones. Ejemplo: 2 / 4 -> 1 / 2
+     * @param treeNode
+     * @return
+     */
     private NodeStatus divideByGCD(TreeNode treeNode){
-        // TODO divideByGCD: Simplificar coeficientes en divisiones. Ejemplo: 2 / 4x -> 1 / 2x
-        throw new UnsupportedOperationException();
+
+        if (!TreeUtils.esFraccion(treeNode)){
+            return NodeStatus.noChange(treeNode);
+        }
+
+        List<NodeStatus> substeps = new ArrayList<>();
+        TreeNode newNode = treeNode.cloneDeep();
+
+        TreeNode numeratorNode =  treeNode.getLeftNode();
+        TreeNode denominatorNode =  treeNode.getLeftNode();
+
+        Integer numeratorValue = numeratorNode.getIntegerValue();
+        Integer denominatorValue = denominatorNode.getIntegerValue();
+        Integer gcd = calculateGCD(numeratorValue, denominatorValue);
+
+        if (denominatorValue < 0) {
+            gcd *= -1;
+        }
+
+        if (CONSTANT_1.equals(gcd)) {
+            return NodeStatus.noChange(treeNode);
+        }
+
+        // STEP 1: Find GCD
+        // e.g. 15/6 -> (5*3)/(2*3)
+        NodeStatus status = findGCD(newNode, gcd, numeratorValue, denominatorValue);
+        substeps.add(status);
+        newNode = NodeStatus.resetChangeGroups(status.getNewNode());
+
+        // STEP 2: Cancel GCD
+        // (5*3)/(2*3) -> 5/2
+        status = cancelGCD(newNode, gcd, numeratorValue, denominatorValue);
+        substeps.add(status);
+        newNode = NodeStatus.resetChangeGroups(status.getNewNode());
+
+        return NodeStatus.nodeChanged(
+                NodeStatus.ChangeTypes.SIMPLIFY_FRACTION, treeNode, newNode, substeps);
+    }
+
+    /**
+     * Calculates the  greatest common divisor
+     * @param a
+     * @param b
+     * @return
+     */
+    private Integer calculateGCD(Integer a, Integer b) {
+        BigInteger b1 = BigInteger.valueOf(a);
+        BigInteger b2 = BigInteger.valueOf(b);
+        BigInteger gcd = b1.gcd(b2);
+        return gcd.intValue();
+    }
+
+    /**
+     * calculates the least common multiple
+     * @param a
+     * @param b
+     * @return
+     */
+    private Integer calculateLCM(Integer a, Integer b) {
+        return a * (b / calculateGCD(a, b));
+    }
+
+    /**
+     * Returns a substep where the GCD is factored out of numerator and denominator. e.g. 15/6 -> (5*3)/(2*3)
+     * @param node
+     * @param gcd
+     * @param numeratorValue
+     * @param denominatorValue
+     * @return
+     */
+    private NodeStatus findGCD(TreeNode node, Integer gcd, Integer numeratorValue, Integer denominatorValue) {
+
+        TreeNode newNode = node.cloneDeep();
+
+        // manually set change group of the GCD nodes to be the same
+        TreeNode gcdNode = TreeNode.createConstant(gcd);
+        // gcdNode.changeGroup = 1;
+
+        TreeNode intermediateNumerator = TreeNode.createOperator("*",
+                TreeNode.createConstant(numeratorValue/gcd),
+                gcdNode);
+
+        TreeNode intermediateDenominator = TreeNode.createOperator("*",
+                TreeNode.createConstant(denominatorValue/gcd),
+                gcdNode);
+
+        newNode = TreeNode.createOperator("/",
+                intermediateNumerator, intermediateDenominator);
+
+        return NodeStatus.nodeChanged(
+                NodeStatus.ChangeTypes.FIND_GCD, node, newNode);
+    }
+
+    /**
+     * Returns a substep where the GCD is cancelled out of numerator and denominator. e.g. (5*3)/(2*3) -> 5/2
+     * @param node
+     * @param gcd
+     * @param numeratorValue
+     * @param denominatorValue
+     * @return
+     */
+    private NodeStatus  cancelGCD(TreeNode node, Integer gcd, Integer numeratorValue, Integer denominatorValue) {
+        TreeNode newNode;
+        TreeNode newNumeratorNode = TreeNode.createConstant(numeratorValue/gcd);
+        TreeNode newDenominatorNode = TreeNode.createConstant(denominatorValue/gcd);
+
+        if (CONSTANT_1.equals(newDenominatorNode.getIntegerValue())) {
+            newNode = newNumeratorNode;
+        }else {
+            newNode = TreeNode.createOperator(
+                    "/", newNumeratorNode, newDenominatorNode);
+        }
+
+        return NodeStatus.nodeChanged(
+                NodeStatus.ChangeTypes.CANCEL_GCD, node, newNode);
     }
 
 }

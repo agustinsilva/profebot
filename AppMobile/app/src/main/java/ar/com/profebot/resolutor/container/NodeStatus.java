@@ -224,9 +224,9 @@ public class NodeStatus {
     private ChangeTypes changeType;
     private TreeNode oldNode;
     private TreeNode newNode;
-    private List<ResolutionStep> substeps;
+    private List<NodeStatus> substeps;
 
-    public NodeStatus(ChangeTypes changeType, TreeNode oldNode, TreeNode newNode, List<ResolutionStep> substeps) {
+    public NodeStatus(ChangeTypes changeType, TreeNode oldNode, TreeNode newNode, List<NodeStatus> substeps) {
         this.changeType = changeType;
         this.oldNode = oldNode;
         this.newNode = newNode;
@@ -245,7 +245,7 @@ public class NodeStatus {
         return newNode;
     }
 
-    public List<ResolutionStep> getSubsteps() {
+    public List<NodeStatus> getSubsteps() {
         return substeps;
     }
 
@@ -261,11 +261,15 @@ public class NodeStatus {
     // A wrapper around the Status constructor for the case of a change
     // that is happening at the level of oldNode + newNode
     // e.g. 2 + 2 --> 4 (an addition node becomes a constant node)
-    public static NodeStatus nodeChanged(ChangeTypes changeType, TreeNode oldNode, TreeNode newNode, List<ResolutionStep> substeps) {
+    public static NodeStatus nodeChanged(ChangeTypes changeType, TreeNode oldNode, TreeNode newNode, List<NodeStatus> substeps) {
         return new NodeStatus(changeType, oldNode, newNode, substeps);
     };
     public static NodeStatus nodeChanged(ChangeTypes changeType, TreeNode oldNode, TreeNode newNode) {
         return new NodeStatus(changeType, oldNode, newNode, null);
     };
 
+    public static TreeNode resetChangeGroups(TreeNode newNode) {
+        // TODO  resetChangeGroups: Validar si nos sirve de algo
+        return newNode;
+    }
 }

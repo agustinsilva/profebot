@@ -29,6 +29,11 @@ public class TreeNode {
         return node;
     }
 
+    public TreeNode cloneDeep(){
+        // TODO Revisar si amerita redefinir el clone
+        return this.clone();
+    }
+
     public String getValue() {
         return value;
     }
@@ -106,6 +111,15 @@ public class TreeNode {
         }
     }
 
+
+    public Integer getIntegerValue(){
+        try {
+            return Integer.parseInt(this.getValue());
+        }catch (Exception e){
+            return null;
+        }
+    }
+
     public String toExpression() {
         TreeNode leftNode = this.esRaiz()?null:this.getLeftNode(); // Las raices solo tienen termino derecho
         return getNodeExpression(leftNode)  + this.getValue()  + getNodeExpression(this.getRightNode());
@@ -172,5 +186,16 @@ public class TreeNode {
 
         this.setValue(newValue);
 
+    }
+
+    public static TreeNode createConstant(Integer constant) {
+        return new TreeNode(constant.toString());
+    }
+
+    public static TreeNode createOperator(String operator, TreeNode leftNode, TreeNode rightNode) {
+        TreeNode newNode = new TreeNode(operator);
+        newNode.setLeftNode(leftNode);
+        newNode.setRightNode(rightNode);
+        return newNode;
     }
 }

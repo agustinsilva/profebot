@@ -111,4 +111,9 @@ public class TreeUtils {
         // TODO negate: negar el nodo (considerar si es X, constante o polinomio
         throw new UnsupportedOperationException();
     }
+
+    public static boolean isPolynomialTerm(TreeNode node) {
+        // TODO isPolynomialTerm:
+        throw new UnsupportedOperationException();
+    }
 }
