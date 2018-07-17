@@ -4,8 +4,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import ar.com.profebot.parser.container.TreeNode;
-
 public class TreeNodeTest {
 
     @Before

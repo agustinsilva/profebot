@@ -1,6 +1,5 @@
 package com.profebot.PhotoEcuation;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -31,12 +30,9 @@ import com.profebot.PhotoEcuation.cropcontrol.CropController;
 import com.profebot.activities.R;
 import com.squareup.picasso.Picasso;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;

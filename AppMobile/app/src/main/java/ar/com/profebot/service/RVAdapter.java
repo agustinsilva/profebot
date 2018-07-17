@@ -20,15 +20,12 @@ import java.util.List;
 import java.util.Map;
 
 import ar.com.profebot.Models.MultipleChoiceStep;
-import ar.com.profebot.activities.SolveEquationActivity;
 import io.github.kexanie.library.MathView;
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceViewHolder> {
 
     private List<MultipleChoiceStep> multipleChoiceSteps;
     private List<MultipleChoiceStep> currentMultipleChoiceSteps;
-    private static LinearLayout currentLayoutExpanded;
-    private static ImageView currentExpandCollapseIndicator;
     private static List<MultipleChoiceViewHolder> multipleChoiceViewHolders = new ArrayList<>();
 
     public static class MultipleChoiceViewHolder extends RecyclerView.ViewHolder {
@@ -63,13 +60,10 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceView
                 solveStep.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        SolveEquationActivity.refreshRV();
                         summary.setVisibility(View.VISIBLE);
                         multipleChoiceResolutionStep.setVisibility(View.GONE);
                         multipleChoiceSolvedResolutionStep.setVisibility(View.VISIBLE);
                         layoutToUse = multipleChoiceSolvedResolutionStep;
-                        currentLayoutExpanded = layoutToUse;
-                        currentExpandCollapseIndicator = expandCollapseIndicator;
 
                         correctOptionRadio.setText(correctOptionJustification);
                         if(chosenOption.equals(correctOption)){
@@ -158,24 +152,15 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceView
             }else{
                 layoutToUse = multipleChoiceSolvedResolutionStep;
             }
-
+            
             expandCollapseIndicator.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     boolean shouldExpand = layoutToUse.getVisibility() == View.GONE;
-                    SolveEquationActivity.refreshRV();
                     if(shouldExpand){
-                        if(currentLayoutExpanded != null){
-                            currentLayoutExpanded.setVisibility(View.GONE);
-                            currentExpandCollapseIndicator.setScaleY(1f);
-                        }
                         expandCollapseIndicator.setScaleY(-1f);
                         layoutToUse.setVisibility(View.VISIBLE);
-                        currentLayoutExpanded = layoutToUse;
-                        currentExpandCollapseIndicator = expandCollapseIndicator;
                     }else{
-                        currentLayoutExpanded = null;
-                        currentExpandCollapseIndicator = null;
                         layoutToUse.setVisibility(View.GONE);
                         expandCollapseIndicator.setScaleY(1f);
                     }
@@ -205,20 +190,20 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceView
     }
 
     @Override
-    public void onBindViewHolder(MultipleChoiceViewHolder multipleChoiceViewHolder, int i) {
-        multipleChoiceViewHolder.equationBase.setText("\\(" + currentMultipleChoiceSteps.get(i).getEquationBase() + "\\)");
-        multipleChoiceViewHolder.newEquationBase.setText("\\(" + currentMultipleChoiceSteps.get(i).getEquationBase() + "\\)");
-        multipleChoiceViewHolder.summary.setText(currentMultipleChoiceSteps.get(i).getSummary());
-        multipleChoiceViewHolder.optionA.setText(currentMultipleChoiceSteps.get(i).getOptionA());
-        multipleChoiceViewHolder.optionB.setText(currentMultipleChoiceSteps.get(i).getOptionB());
-        multipleChoiceViewHolder.optionC.setText(currentMultipleChoiceSteps.get(i).getOptionC());
-        multipleChoiceViewHolder.correctOption = currentMultipleChoiceSteps.get(i).getCorrectOption();
-        multipleChoiceViewHolder.correctOptionJustification = currentMultipleChoiceSteps.get(i).getCorrectOptionJustification();
-        multipleChoiceViewHolder.incorrectOptionJustification1 = currentMultipleChoiceSteps.get(i).getIncorrectOptionJustification1();
-        multipleChoiceViewHolder.incorrectOptionJustification2 = currentMultipleChoiceSteps.get(i).getIncorrectOptionJustification2();
+    public void onBindViewHolder(MultipleChoiceViewHolder multipleChoiceViewHolder, int position) {
+        multipleChoiceViewHolder.equationBase.setText("\\(" + currentMultipleChoiceSteps.get(position).getEquationBase() + "\\)");
+        multipleChoiceViewHolder.newEquationBase.setText("\\(" + currentMultipleChoiceSteps.get(position).getEquationBase() + "\\)");
+        multipleChoiceViewHolder.summary.setText(currentMultipleChoiceSteps.get(position).getSummary());
+        multipleChoiceViewHolder.optionA.setText(currentMultipleChoiceSteps.get(position).getOptionA());
+        multipleChoiceViewHolder.optionB.setText(currentMultipleChoiceSteps.get(position).getOptionB());
+        multipleChoiceViewHolder.optionC.setText(currentMultipleChoiceSteps.get(position).getOptionC());
+        multipleChoiceViewHolder.correctOption = currentMultipleChoiceSteps.get(position).getCorrectOption();
+        multipleChoiceViewHolder.correctOptionJustification = currentMultipleChoiceSteps.get(position).getCorrectOptionJustification();
+        multipleChoiceViewHolder.incorrectOptionJustification1 = currentMultipleChoiceSteps.get(position).getIncorrectOptionJustification1();
+        multipleChoiceViewHolder.incorrectOptionJustification2 = currentMultipleChoiceSteps.get(position).getIncorrectOptionJustification2();
         multipleChoiceViewHolder.currentMultipleChoiceSteps = currentMultipleChoiceSteps;
         multipleChoiceViewHolder.multipleChoiceSteps = multipleChoiceSteps;
-        multipleChoiceViewHolder.numberStep.setText((i+1) + ")");
+        multipleChoiceViewHolder.numberStep.setText((position+1) + ")");
     }
 
     @Override

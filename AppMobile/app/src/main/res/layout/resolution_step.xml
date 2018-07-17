@@ -15,7 +15,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="start"
-            android:animateLayoutChanges="true"
             android:layout_margin="10dp">
 
             <LinearLayout
@@ -23,8 +22,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="start"
-                android:layout_marginStart="10dp"
-                android:animateLayoutChanges="true">
+                android:layout_marginStart="10dp">
 
                 <TextView
                     android:id="@+id/number_step_id"
@@ -85,8 +83,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:animateLayoutChanges="true">
+                android:layout_height="wrap_content">
 
                 <include layout="@layout/multiple_choice_resolution_step"></include>
 

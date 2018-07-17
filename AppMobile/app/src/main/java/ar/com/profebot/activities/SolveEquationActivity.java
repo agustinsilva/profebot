@@ -39,11 +39,6 @@ public class SolveEquationActivity extends GlobalActivity {
         recyclerView.setAdapter(adapter);
     }
 
-    public static void refreshRV(){
-        recyclerView.scrollToPosition(0);
-        recyclerView.stopScroll();
-    }
-
     private List<MultipleChoiceStep> initializeMultipleChoiceSteps(){
         List<MultipleChoiceStep> steps = new ArrayList<>();
         //TODO: pedirle este objeto al backend
