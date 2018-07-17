@@ -19,7 +19,7 @@ public class SolveEquationActivity extends GlobalActivity {
 
     private static List<MultipleChoiceStep> multipleChoiceSteps;
     private static RVAdapter adapter;
-    private static RecyclerView recyclerView;
+    public static RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

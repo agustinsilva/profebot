@@ -12,6 +12,7 @@ public class MultipleChoiceStep {
     private String correctOptionJustification;
     private String incorrectOptionJustification1;
     private String incorrectOptionJustification2;
+    private Boolean isSolved = false;
 
     public MultipleChoiceStep(String equationBase, String newEquationBase, String summary, String optionA, String optionB, String optionC,
                               Integer correctOption, String correctOptionJustification, String incorrectOptionJustification1,
@@ -66,5 +67,13 @@ public class MultipleChoiceStep {
 
     public String getIncorrectOptionJustification2() {
         return incorrectOptionJustification2;
+    }
+
+    public Boolean getSolved() {
+        return isSolved;
+    }
+
+    public void setSolved(Boolean solved) {
+        isSolved = solved;
     }
 }

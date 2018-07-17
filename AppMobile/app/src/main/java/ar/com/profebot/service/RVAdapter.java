@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import ar.com.profebot.Models.MultipleChoiceStep;
+import ar.com.profebot.activities.SolveEquationActivity;
 import io.github.kexanie.library.MathView;
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceViewHolder> {
@@ -51,6 +52,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceView
         List<MultipleChoiceStep> multipleChoiceSteps;
         List<MultipleChoiceStep> currentMultipleChoiceSteps;
         TextView numberStep;
+        public Boolean isSolved = false;
 
         private void setUpSolveButton(){
             if(!solveStep.isEnabled()){
@@ -60,7 +62,8 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceView
                 solveStep.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        summary.setVisibility(View.VISIBLE);
+                        SolveEquationActivity.recyclerView.scrollToPosition(0);
+                        isSolved = true;
                         multipleChoiceResolutionStep.setVisibility(View.GONE);
                         multipleChoiceSolvedResolutionStep.setVisibility(View.VISIBLE);
                         layoutToUse = multipleChoiceSolvedResolutionStep;
@@ -83,9 +86,13 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceView
                             incorrectOptionRadio.setText(incorrectOptions.get(chosenOption));
                         }
 
+                        MultipleChoiceStep currentMultipleChoiceStep = multipleChoiceSteps.get(currentMultipleChoiceSteps.size()-1);
+                        currentMultipleChoiceStep.setSolved(true);
+                        summary.setText(currentMultipleChoiceStep.getSummary());
                         if(currentMultipleChoiceSteps.size() < multipleChoiceSteps.size()){
                             currentMultipleChoiceSteps.add(multipleChoiceSteps.get(currentMultipleChoiceSteps.size()));
                         }
+                        SolveEquationActivity.recyclerView.scrollToPosition(currentMultipleChoiceSteps.size()-1);
                     }
                 });
             }
@@ -108,7 +115,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceView
             correctOptionRadio = itemView.findViewById(R.id.option_correct_id);
             incorrectOptionRadio = itemView.findViewById(R.id.option_incorrect_id);
 
-            if(summary.getVisibility() == View.GONE){
+            if(!isSolved){
                 if(currentMultipleChoiceSteps.size() == 1){
                     expandCollapseIndicator.setScaleY(-1f);
                     multipleChoiceResolutionStep.setVisibility(View.VISIBLE);
@@ -193,7 +200,9 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceView
     public void onBindViewHolder(MultipleChoiceViewHolder multipleChoiceViewHolder, int position) {
         multipleChoiceViewHolder.equationBase.setText("\\(" + currentMultipleChoiceSteps.get(position).getEquationBase() + "\\)");
         multipleChoiceViewHolder.newEquationBase.setText("\\(" + currentMultipleChoiceSteps.get(position).getEquationBase() + "\\)");
-        multipleChoiceViewHolder.summary.setText(currentMultipleChoiceSteps.get(position).getSummary());
+        if(currentMultipleChoiceSteps.get(position).getSolved()){
+            multipleChoiceViewHolder.summary.setText(currentMultipleChoiceSteps.get(position).getSummary());
+        }
         multipleChoiceViewHolder.optionA.setText(currentMultipleChoiceSteps.get(position).getOptionA());
         multipleChoiceViewHolder.optionB.setText(currentMultipleChoiceSteps.get(position).getOptionB());
         multipleChoiceViewHolder.optionC.setText(currentMultipleChoiceSteps.get(position).getOptionC());
