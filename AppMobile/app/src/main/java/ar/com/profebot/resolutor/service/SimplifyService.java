@@ -38,7 +38,7 @@ public class SimplifyService {
         if (TreeUtils.esConstante(exponentNode) && TreeUtils.zeroValue(exponentNode)){
 
             // De ser así, reemplazar tod o el subárbol con la constante 1.
-            TreeNode newNode = new TreeNode("1");
+            TreeNode newNode = TreeNode.createConstant(1);
             return NodeStatus.nodeChanged(
                     NodeStatus.ChangeTypes.REDUCE_EXPONENT_BY_ZERO, treeNode, newNode);
         }else{
@@ -72,7 +72,7 @@ public class SimplifyService {
 
         if (zeroIndex > 0){
             // De ser así, reemplazar el subárbol con la constante 0.
-            TreeNode newNode = new TreeNode("0");
+            TreeNode newNode =TreeNode.createConstant(0);
             return NodeStatus.nodeChanged(
                     NodeStatus.ChangeTypes.MULTIPLY_BY_ZERO, treeNode, newNode);
         }else {
@@ -98,7 +98,7 @@ public class SimplifyService {
         if (TreeUtils.esConstante(exponentNode) && TreeUtils.zeroValue(exponentNode)){
 
             // De ser así, reemplazar tod o el subárbol con la constante 0.
-            TreeNode newNode = new TreeNode("0");
+            TreeNode newNode = TreeNode.createConstant(0);
             return NodeStatus.nodeChanged(
                     NodeStatus.ChangeTypes.REDUCE_ZERO_NUMERATOR, treeNode, newNode);
         }else{
@@ -160,7 +160,7 @@ public class SimplifyService {
         if (CONSTANT_1_NEG.equals(denominatorValue)){
 
             TreeNode numeratorNode =  treeNode.getLeftNode();
-            NodeStatus.ChangeTypes changeType = TreeUtils.esNegativo(numeratorNode)?
+            NodeStatus.ChangeTypes changeType = TreeUtils.isNegative(numeratorNode)?
                     NodeStatus.ChangeTypes.RESOLVE_DOUBLE_MINUS :
                     NodeStatus.ChangeTypes.DIVISION_BY_NEGATIVE_ONE;
 
@@ -194,7 +194,7 @@ public class SimplifyService {
         if (TreeUtils.esConstante(baseNode) &&
                 CONSTANT_1.equals(baseNode.getDoubleValue())){
 
-            TreeNode node = new TreeNode("1");
+            TreeNode node = TreeNode.createConstant(1);
             // De ser así, reemplazar el subárbol con 1
             return NodeStatus.nodeChanged(
                     NodeStatus.ChangeTypes.REMOVE_EXPONENT_BASE_ONE, treeNode, node);
@@ -219,7 +219,7 @@ public class SimplifyService {
         if (TreeUtils.esConstante(exponentNode) &&
                 CONSTANT_1.equals(exponentNode.getDoubleValue())){
 
-            TreeNode node = new TreeNode("1");
+            TreeNode node = TreeNode.createConstant(1);
             // De ser así, reemplazar el subárbol con 1
             return NodeStatus.nodeChanged(
                     NodeStatus.ChangeTypes.REMOVE_EXPONENT_BASE_ONE, treeNode, node);
@@ -329,38 +329,31 @@ public class SimplifyService {
     public NodeStatus simplifyFractions(TreeNode treeNode){
         NodeStatus nodeStatus = null;
 
-        nodeStatus = simplifyIntFractions(treeNode);
+        // e.g. 2/3 + 5/6
+        nodeStatus = addConstantFractions(treeNode);
         if (nodeStatus.hasChanged()){return nodeStatus;}
 
-        nodeStatus = resolveFractionNumeratorAndDenominator(treeNode);
+        // e.g. 4 + 5/6 or 4.5 + 6/8
+        nodeStatus = addConstantAndFraction(treeNode);
         if (nodeStatus.hasChanged()){return nodeStatus;}
 
-        nodeStatus = reduceFractions(treeNode);
+        // e.g. 2/-9  ->  -2/9      e.g. -2/-9  ->  2/9
+        nodeStatus = simplifyFractionSigns(treeNode);
         if (nodeStatus.hasChanged()){return nodeStatus;}
 
-        nodeStatus = resolveConstantFractionAdition(treeNode);
+        // e.g. 8/12  ->  2/3 (divide by GCD 4)
+        nodeStatus = divideByGCD(treeNode);
+        if (nodeStatus.hasChanged()){return nodeStatus;}
+
+        // e.g. 2x/4 -> x/2 (divideByGCD but for coefficients of polynomial terms)
+        nodeStatus = simplifyPolynomialFraction(treeNode);
+        if (nodeStatus.hasChanged()){return nodeStatus;}
+
+        // e.g. (2x * 5) / 2x  ->  5
+        nodeStatus = cancelLikeTerms(treeNode);
         if (nodeStatus.hasChanged()){return nodeStatus;}
 
         return NodeStatus.noChange(treeNode);
-    }
-
-    private NodeStatus simplifyIntFractions(TreeNode treeNode){
-        // TODO simplifyIntFractions: Buscar fracciones, y solo simplificarlas si dan un número entero (ej: 8/4 = 2).
-
-        throw new UnsupportedOperationException();
-    }
-
-    private NodeStatus resolveFractionNumeratorAndDenominator(TreeNode treeNode){
-        // TODO resolveFractionNumeratorAndDenominator: Buscar fracciones y sumar su numerador, o denominador (si son enteros).
-        throw new UnsupportedOperationException();
-    }
-
-    private NodeStatus reduceFractions(TreeNode treeNode){
-        // TODO reduceFractions: Simplificar fracciones. Ej:  2/4 --> 1/2 ; -1/-3 --> 1/3
-        // Buscar el máximo común divisor.
-        // Dividir numerador y denominador por ese valor. (o mostrar el subpaso de mostrar numerador y denominador multiplicando el MCD, ejemplo: 15/6 -> (5*3)/(2*3))
-
-        throw new UnsupportedOperationException();
     }
 
     /**
@@ -372,7 +365,7 @@ public class SimplifyService {
      * @param treeNode
      * @return
      */
-    private NodeStatus resolveConstantFractionAdition(TreeNode treeNode){
+    private NodeStatus addConstantAndFraction(TreeNode treeNode){
 
         // Buscar un nodo con + o -
         if (treeNode == null || !treeNode.esAditivo()) {
@@ -711,7 +704,144 @@ public class SimplifyService {
         return NodeStatus.noChange(treeNode);
     }
 
+    /**
+     // Evaluates a sum of constant numbers and integer fractions to a single
+     // constant number or integer fraction. e.g. e.g. 2/3 + 5 + 5/2 => 49/6
+     // Returns a Node.Status object.
+     * @param treeNode
+     * @return
+     */
     private NodeStatus evaluateConstantSum(TreeNode treeNode) {
+
+        // Buscar un suma o resta
+        if (treeNode == null || !treeNode.esAditivo()) {
+            return NodeStatus.noChange(treeNode);
+        }
+
+        // Alguno de los hijos debe ser constante o fraccion
+        if (!TreeUtils.esFraccionOConstante(treeNode.getLeftNode()) && !TreeUtils.esFraccionOConstante(treeNode.getRightNode())){
+            return NodeStatus.noChange(treeNode);
+        }
+
+        // functions needed to evaluate the sum
+        NodeStatus nodeStatus = null;
+
+        nodeStatus = arithmeticSearch(treeNode);
+        if (nodeStatus.hasChanged() && TreeUtils.esFraccionOConstante(nodeStatus.getNewNode())){return nodeStatus;}
+
+        nodeStatus = addConstantFractions(treeNode);
+        if (nodeStatus.hasChanged() && TreeUtils.esFraccionOConstante(nodeStatus.getNewNode())){return nodeStatus;}
+
+        nodeStatus = addConstantAndFraction(treeNode);
+        if (nodeStatus.hasChanged() && TreeUtils.esFraccionOConstante(nodeStatus.getNewNode())){return nodeStatus;}
+
+
+        TreeNode newNode = treeNode.cloneDeep();
+        List<NodeStatus> substeps = new ArrayList<>();
+        NodeStatus status;
+
+        /*
+        // STEP 1: group fractions and constants separately
+        status = groupConstantsAndFractions(newNode);
+        substeps.add(status);
+        newNode = NodeStatus.resetChangeGroups(status.getNewNode());
+
+  const constants = newNode.args[0];
+  const fractions = newNode.args[1];
+
+        // STEP 2A: evaluate arithmetic IF there's > 1 constant
+        // (which is the case if it's a list surrounded by parenthesis)
+        if (Node.Type.isParenthesis(constants)) {
+    const constantList = constants.content;
+    const evaluateStatus = arithmeticSearch(constantList);
+            status = Node.Status.childChanged(newNode, evaluateStatus, 0);
+            substeps.push(status);
+            newNode = Node.Status.resetChangeGroups(status.getNewNode());
+        }
+
+        // STEP 2B: add fractions IF there's > 1 fraction
+        // (which is the case if it's a list surrounded by parenthesis)
+        if (Node.Type.isParenthesis(fractions)) {
+    const fractionList = fractions.content;
+    const evaluateStatus = addConstantFractions(fractionList);
+            status = Node.Status.childChanged(newNode, evaluateStatus, 1);
+            substeps.push(status);
+            newNode = Node.Status.resetChangeGroups(status.getNewNode());
+        }
+
+        // STEP 3: combine the evaluated constant and fraction
+        // the fraction might have simplified to a constant (e.g. 1/3 + 2/3 -> 2)
+        // so we just call evaluateConstantSum again to cycle through
+        status = evaluateConstantSum(newNode);
+        substeps.push(status);
+        newNode = Node.Status.resetChangeGroups(status.getNewNode());
+
+        return Node.Status.nodeChanged(
+                ChangeTypes.SIMPLIFY_ARITHMETIC, node, newNode, true, substeps);
+                */
+        throw new UnsupportedOperationException();
+    }
+
+    private NodeStatus arithmeticSearch(TreeNode treeNode) {
+        throw new UnsupportedOperationException();
+    }
+
+
+    /**
+     // If we can't combine using one of those functions, there's a mix of > 2
+     // fractions and constants. So we need to group them together so we can later
+     // add them.
+     // Expects a node that is a sum of integer fractions and constants.
+     // Returns a Node.Status object.
+     // e.g. 2/3 + 5 + 5/2 => (2/3 + 5/2) + 5
+     * @param node
+     * @return
+     */
+    private NodeStatus groupConstantsAndFractions(TreeNode node) {
+       /*
+        let fractions = node.args.filter(Node.Type.isIntegerFraction);
+        let constants = node.args.filter(Node.Type.isConstant);
+
+        if (fractions.length === 0 || constants.length === 0) {
+            throw Error('expected both integer fractions and constants, got ' + node);
+        }
+
+        if (fractions.length + constants.length !== node.args.length) {
+            throw Error('can only evaluate integer fractions and constants');
+        }
+
+        constants = constants.map(node => {
+                // set the changeGroup - this affects both the old and new node
+                node.changeGroup = 1;
+        // clone so that node and newNode aren't stored in the same memory
+        return node.cloneDeep();
+  });
+        // wrap in parenthesis if there's more than one, to group them
+        if (constants.length > 1) {
+            constants = Node.Creator.parenthesis(Node.Creator.operator('+', constants));
+        }
+        else {
+            constants = constants[0];
+        }
+
+        fractions = fractions.map(node => {
+                // set the changeGroup - this affects both the old and new node
+                node.changeGroup = 2;
+        // clone so that node and newNode aren't stored in the same memory
+        return node.cloneDeep();
+  });
+        // wrap in parenthesis if there's more than one, to group them
+        if (fractions.length > 1) {
+            fractions = Node.Creator.parenthesis(Node.Creator.operator('+', fractions));
+        }
+        else {
+            fractions = fractions[0];
+        }
+
+        TreeNode newNode = TreeNode.createOperator("+", constants, fractions);
+        return NodeStatus.nodeChanged(
+                NodeStatus.ChangeTypes.COLLECT_LIKE_TERMS, node, newNode);
+                */
         throw new UnsupportedOperationException();
     }
 
@@ -726,6 +856,40 @@ public class SimplifyService {
     public NodeStatus multiplyLikeTerms(TreeNode treeNode){
         // TODO multiplyLikeTerms: Multiplicar terminos con X. Ejemplo: 2x * x^2 * 5x => 10 x^4
         throw new UnsupportedOperationException();
+    }
+
+    /**
+     // Simplifies negative signs if possible
+     // e.g. -1/-3 --> 1/3   4/-5 --> -4/5
+     // Note that -4/5 doesn't need to be simplified.
+     // Note that our goal is for the denominator to always be positive. If it
+     // isn't, we can simplify signs.
+     // Returns a Node.Status object
+     * @param treeNode
+     * @return
+     */
+    private NodeStatus simplifyFractionSigns(TreeNode treeNode) {
+
+        // Buscar una division
+        if (treeNode == null || !treeNode.esDivision()) {
+            return NodeStatus.noChange(treeNode);
+        }
+
+        TreeNode oldFraction = treeNode.cloneDeep();
+        TreeNode numerator = treeNode.getLeftNode();
+        TreeNode denominator = treeNode.getRightNode();
+        // The denominator should never be negative.
+        if (TreeUtils.isNegative(denominator)) {
+            denominator = TreeUtils.negate(denominator);
+            NodeStatus.ChangeTypes changeType = TreeUtils.isNegative(numerator) ?
+                    NodeStatus.ChangeTypes.CANCEL_MINUSES :
+                    NodeStatus.ChangeTypes.SIMPLIFY_SIGNS;
+            numerator = TreeUtils.negate(numerator);
+            TreeNode newFraction = TreeNode.createOperator("/", numerator, denominator);
+            return NodeStatus.nodeChanged(changeType, oldFraction, newFraction);
+        } else {
+            return NodeStatus.noChange(treeNode);
+        }
     }
 
     public NodeStatus cancelLikeTerms(TreeNode treeNode){

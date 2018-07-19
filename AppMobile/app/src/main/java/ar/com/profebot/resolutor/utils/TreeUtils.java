@@ -38,7 +38,7 @@ public class TreeUtils {
         );
     }
 
-    public static Boolean esNegativo(TreeNode treeNode){
+    public static Boolean isNegative(TreeNode treeNode){
         if (treeNode == null){return null;}
 
         if (esConstante(treeNode)){
