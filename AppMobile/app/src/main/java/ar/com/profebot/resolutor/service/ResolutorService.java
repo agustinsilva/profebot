@@ -10,9 +10,9 @@ public class ResolutorService {
 
     private List<ResolutionStep> resolutionStepList = new ArrayList<>();
 
-        public Tree resolveExpression(Tree tree){
-            // TODO resolveExpression
-            SimplifyService simplifyService = new SimplifyService(resolutionStepList);
+    public Tree resolveExpression(Tree tree){
+        // TODO resolveExpression
+        SimplifyService simplifyService = new SimplifyService();
         // TODO Ejecutar todas las simplificaciones
 
         throw new UnsupportedOperationException();

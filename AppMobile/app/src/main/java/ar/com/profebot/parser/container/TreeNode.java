@@ -72,7 +72,15 @@ public class TreeNode {
     }
 
     public Boolean esAditivo(){
-        return "+".equals(this.getValue()) || "-".equals(this.getValue());
+        return esSuma() || esResta();
+    }
+
+    public Boolean esSuma(){
+        return "+".equals(this.getValue());
+    }
+
+    public Boolean esResta(){
+        return "-".equals(this.getValue());
     }
 
     public Boolean esProducto(){
@@ -103,14 +111,14 @@ public class TreeNode {
         return this.esOperadorNoAditivo() || this.esAditivo();
     }
 
-    public Double getDoubleValue(){
+   /* public Double getDoubleValue(){
         try {
             return Double.parseDouble(this.getValue());
         }catch (Exception e){
             return null;
         }
     }
-
+*/
 
     public Integer getIntegerValue(){
         try {
@@ -197,5 +205,20 @@ public class TreeNode {
         newNode.setLeftNode(leftNode);
         newNode.setRightNode(rightNode);
         return newNode;
+    }
+
+    public Integer getOperationResult() {
+        if (esProducto()){
+            return getLeftNode().getIntegerValue() * getRightNode().getIntegerValue();
+        }else if (esDivision()){
+            return getLeftNode().getIntegerValue() / getRightNode().getIntegerValue();
+        }else if (esSuma()){
+            return getLeftNode().getIntegerValue() + getRightNode().getIntegerValue();
+        }else if (esResta()){
+            return getLeftNode().getIntegerValue() - getRightNode().getIntegerValue();
+        }else if (esPotencia()){
+            return getLeftNode().getIntegerValue() ^ getRightNode().getIntegerValue();
+        }
+        throw new UnsupportedOperationException("No existe el operador: " + getValue());
     }
 }

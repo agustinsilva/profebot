@@ -9,7 +9,6 @@ import ar.com.profebot.parser.container.TreeNode;
 public class TreeUtils {
 
     public static Boolean esConstante(TreeNode treeNode){
-        String valor = treeNode.getValue();
         return (treeNode!=null && !esIncognita(treeNode) && contieneNumero(treeNode.getValue()));
     }
 
@@ -18,6 +17,7 @@ public class TreeUtils {
         || value.contains("3") || value.contains("4") || value.contains("5") || value.contains("6")
         || value.contains("7") || value.contains("8") || value.contains("9"));
     }
+
     public static Boolean zeroValue(TreeNode treeNode){
        return hasValue(treeNode, "0");
     }
@@ -42,14 +42,14 @@ public class TreeUtils {
         if (treeNode == null){return null;}
 
         if (esConstante(treeNode)){
-            return treeNode.getDoubleValue()< 0;
+            return treeNode.getIntegerValue()< 0;
         }
 
         if (esFraccion(treeNode)){
             TreeNode numeratorTree = treeNode.getLeftNode();
             TreeNode denominatorTree = treeNode.getRightNode();
-            if (numeratorTree.getDoubleValue() < 0 || denominatorTree.getDoubleValue() < 0) {
-                return !(numeratorTree.getDoubleValue() < 0 && denominatorTree.getDoubleValue() < 0);
+            if (numeratorTree.getIntegerValue() < 0 || denominatorTree.getIntegerValue() < 0) {
+                return !(numeratorTree.getIntegerValue() < 0 && denominatorTree.getIntegerValue() < 0);
             }
         }else if (esIncognita(treeNode)){
             return treeNode.getValue().contains("-");
