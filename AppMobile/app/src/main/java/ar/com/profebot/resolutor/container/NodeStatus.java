@@ -245,6 +245,10 @@ public class NodeStatus {
         return newNode;
     }
 
+    public void setNewNode(TreeNode newNode) {
+        this.newNode = newNode;
+    }
+
     public List<NodeStatus> getSubsteps() {
         return substeps;
     }

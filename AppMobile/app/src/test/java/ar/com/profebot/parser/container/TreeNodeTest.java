@@ -25,12 +25,12 @@ public class TreeNodeTest {
         Assert.assertEquals("2", clon.getRightNode().getValue());
     }
 
-    @Test
+/*    @Test
     public void getDoubleValue_ok() {
         TreeNode nodoRaiz = new TreeNode("0.2");
         Double test = 0.2;
         Assert.assertEquals(test , nodoRaiz.getDoubleValue());
-    }
+    }*/
 
     @Test
     public void multiplyCoefficient_ok() {
