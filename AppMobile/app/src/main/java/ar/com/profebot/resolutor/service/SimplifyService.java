@@ -4,11 +4,14 @@ import android.util.Log;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import ar.com.profebot.parser.container.Tree;
 import ar.com.profebot.parser.container.TreeNode;
 import ar.com.profebot.resolutor.container.NodeStatus;
 import ar.com.profebot.resolutor.utils.TreeUtils;
@@ -18,6 +21,13 @@ public class SimplifyService {
     private static final Integer CONSTANT_1  = 1;
     private static final Integer CONSTANT_1_NEG  = -1;
     private static final Integer CONSTANT_0  = 0;
+
+    private static final String CONSTANT = "constant";
+    private static final String CONSTANT_FRACTION = "constantFraction";
+  //  private static final String NTH_ROOT = "nthRoot";
+    private static final String OTHER = "other";
+    public static final String POLYNOMIAL_TERM = "PolynomialTerm";
+    public static final String NTH_ROOT_TERM = "NthRootTerm";
 
     /**
      // Given an expression node, steps through simplifying the expression.
@@ -243,33 +253,352 @@ public class SimplifyService {
      // If `node` is a fraction with a numerator that is a sum, breaks up the
      // fraction e.g. (2+x)/5 -> (2/5 + x/5)
      // Returns a Node.Status object
-     * @param treeNode Nodo a evaluar
+     * @param node Nodo a evaluar
      * @return El estado de la simplificacion
      */
-    protected NodeStatus breakUpNumeratorSearch(TreeNode treeNode){
+    protected NodeStatus breakUpNumeratorSearch(TreeNode node){
         // TODO Busqueda postOrder
 
         // Buscar una division
-        if (treeNode == null || !treeNode.esDivision()) {
-            return NodeStatus.noChange(treeNode);
+        if (node == null || !node.esDivision()) {
+            return NodeStatus.noChange(node);
         }
 
-        // TODO breakUpNumeratorSearch Resolver esto
-        throw new UnsupportedOperationException();
+        TreeNode numerator = node.getChild(0);
+        if (!numerator.esOperador() || !numerator.esSuma()) {
+            return NodeStatus.noChange(node);
+        }
+
+        // At this point, we know that node is a fraction and its numerator is a sum
+        // of terms that can't be collected or combined, so we should break it up.
+        List<TreeNode> fractionList = new ArrayList<>();
+        TreeNode denominator = node.getRightNode();
+        for(TreeNode child: numerator.getArgs()){
+            TreeNode newFraction = TreeNode.createOperator("/", child, denominator);
+            fractionList.add(newFraction);
+        }
+
+        TreeNode newNode = TreeNode.createOperator("+", fractionList);
+        // Wrap in parens for cases like 2*(2+3)/5 => 2*(2/5 + 3/5)
+        newNode = TreeNode.createParenthesis(newNode);
+        node.setChangeGroup(1);
+
+        return NodeStatus.nodeChanged(
+                NodeStatus.ChangeTypes.BREAK_UP_FRACTION, node, newNode);
+
     }
 
     /**
      // Given an operator node, maybe collects and then combines if possible
      // e.g. 2x + 4x + y => 6x + y
      // e.g. 2x * x^2 * 5x => 10 x^4
-     * @param treeNode Nodo a evaluar
+     * @param node Nodo a evaluar
      * @return El estado de la simplificacion
      */
-    protected NodeStatus collectAndCombineSearch(TreeNode treeNode){
+    protected NodeStatus collectAndCombineSearch(TreeNode node){
         // TODO Busqueda postOrder
 
-        // TODO collectAndCombineSearch Resolver esto
-        throw new UnsupportedOperationException();
+        if (node.esSuma()) {
+            NodeStatus status = collectAndCombineOperation(node);
+            if (status.hasChanged()) {
+                return status;
+            }
+            // we might also be able to just combine if they're all the same term
+            // e.g. 2x + 4x + x (doesn't need collecting)
+            return addLikeTerms(node, true);
+        } else if (node.esProducto()) {
+            // collect and combine involves there being coefficients pulled the front
+            // e.g. 2x * x^2 * 5x => (2*5) * (x * x^2 * x) => ... => 10 x^4
+            if (TreeUtils.canMultiplyLikeTermConstantNodes(node)) {
+                return multiplyLikeTerms(node, true);
+            }
+            NodeStatus status = collectAndCombineOperation(node);
+            if (status.hasChanged()) {
+                return status;
+            }
+            // we might also be able to just combine polynomial terms
+            // e.g. x * x^2 * x => ... => x^4
+            return multiplyLikeTerms(node, true);
+        } else {
+            return NodeStatus.noChange(node);
+        }
+    }
+
+    /**
+     // Collects and combines (if possible) the arguments of an addition or
+     // multiplication
+     * @param node Nodo a evaluar
+     * @return El estado de la simplificacion
+     */
+    private NodeStatus collectAndCombineOperation(TreeNode node) {
+        List<NodeStatus> substeps = new ArrayList<>();
+
+        NodeStatus status = collectLikeTerms(node.cloneDeep());
+        if (!status.hasChanged()) {
+            return status;
+        }
+
+        // STEP 1: collect like terms, e.g. 2x + 4x^2 + 5x => 4x^2 + (2x + 5x)
+        substeps.add(status);
+        TreeNode newNode = NodeStatus.resetChangeGroups(status.getNewNode());
+
+        // STEP 2 onwards: combine like terms for each group that can be combined
+        // e.g. (x + 3x) + (2 + 2) has two groups
+        List<NodeStatus> combineSteps = combineLikeTerms(newNode);
+        if (combineSteps.size() > 0) {
+            substeps.addAll(combineSteps);
+            NodeStatus lastStep = combineSteps.get(combineSteps.size()- 1);
+            newNode = NodeStatus.resetChangeGroups(lastStep.getNewNode());
+        }
+
+        return NodeStatus.nodeChanged(
+                NodeStatus.ChangeTypes.COLLECT_AND_COMBINE_LIKE_TERMS,
+                node, newNode, substeps);
+    }
+
+    private NodeStatus collectLikeTerms(TreeNode node) {
+        if (!canCollectLikeTerms(node)) {
+            return NodeStatus.noChange(node);
+        }
+
+        Map<String, List<TreeNode>> terms;
+        if (node.esSuma()) {
+            terms = getTermsForCollectingAddition(node);
+        } else if (node.esProducto()) {
+            terms = getTermsForCollectingMultiplication(node);
+        } else {
+            throw new Error("Operation not supported: " + node.getValue());
+        }
+
+        // List the symbols alphabetically
+        LinkedList<String> termTypesSorted = new LinkedList<>();
+        for(String t: terms.keySet()){
+            if (!CONSTANT.equals(t)  && !CONSTANT_FRACTION.equals(t) && !OTHER.equals(t)){
+                termTypesSorted.add(t);
+            }
+        }
+        Collections.sort(termTypesSorted);
+
+
+        // Then add const
+        if (terms.get(CONSTANT) != null) {
+            // at the end for addition (since we'd expect x^2 + (x + x) + 4)
+            if (node.esSuma()) {
+                termTypesSorted.addLast(CONSTANT);
+            }
+            // for multipliation it should be at the front (e.g. (3*4) * x^2)
+            if (node.esProducto()) {
+                termTypesSorted.addFirst(CONSTANT);
+            }
+        }
+        if (terms.get(CONSTANT_FRACTION)!=null) {
+            termTypesSorted.addLast(CONSTANT_FRACTION);
+        }
+
+        // Collect the new operands under op.
+        List<TreeNode> newOperands = new ArrayList<>();
+
+        int changeGroup = 1;
+        for(String termType: termTypesSorted){
+            List<TreeNode> termsOfType = terms.get(termType);
+            if (termsOfType.size() == 1){
+                TreeNode singleTerm = termsOfType.get(0).cloneDeep();
+                newOperands.add(singleTerm);
+            }else{
+                TreeNode termList = TreeNode.createParenthesis(
+                        TreeNode.createOperator(node.getValue(), termsOfType)).cloneDeep();
+                newOperands.add(termList);
+            }
+            for(TreeNode t: termsOfType){
+                t.setChangeGroup(changeGroup);
+            }
+            changeGroup++;
+
+        }
+
+        // then stick anything else (paren nodes, operator nodes) at the end
+        if (terms.get(OTHER)!=null) {
+            newOperands.addAll(terms.get(OTHER));
+        }
+
+        TreeNode newNode = node.cloneDeep();
+        newNode.setArgs(newOperands);
+        return NodeStatus.nodeChanged(
+                NodeStatus.ChangeTypes.COLLECT_LIKE_TERMS, node, newNode);
+    }
+
+    // Given an expression tree, returns true if there are terms that can be
+    // collected
+    private boolean canCollectLikeTerms(TreeNode node) {
+        // We can collect like terms through + or through *
+        // Note that we never collect like terms with - or /, those expressions will
+        // always be manipulated in flattenOperands so that the top level operation is
+        // + or *.
+        if (!(node.esSuma() || node.esProducto())) {
+            return false;
+        }
+
+        Map<String, List<TreeNode>> terms;
+        if (node.esSuma()) {
+            terms = getTermsForCollectingAddition(node);
+        }
+
+        else if ( node.esProducto()) {
+            terms = getTermsForCollectingMultiplication(node);
+        }
+        else {
+            throw new Error("Operation not supported: " + node.getValue());
+        }
+
+        // Conditions we need to meet to decide to to reorganize (collect) the terms:
+        // - more than 1 term type
+        // - more than 1 of at least one type (not including other)
+        // (note that this means x^2 + x + x + 2 -> x^2 + (x + x) + 2,
+        // which will be recorded as a step, but doesn't change the order of terms)
+        Set<String> termTypes =  terms.keySet();
+        Boolean hasSomeCollectNodes = false;
+        for(String t: termTypes){
+            if (!t.equals(OTHER)) {
+                if (terms.get(t).size() > 1){
+                    hasSomeCollectNodes = true;
+                }
+            }
+        }
+
+        return (termTypes.size() > 1 &&
+                hasSomeCollectNodes);
+    }
+
+    // Collects like terms in an addition expression tree into categories.
+    // Returns a dictionary of termname to lists of nodes with that name
+    // e.g. 2x + 4 + 5x would return {'x': [2x, 5x], CONSTANT: [4]}
+    // (where 2x, 5x, and 4 would actually be expression trees)
+    private Map<String, List<TreeNode>> getTermsForCollectingAddition(TreeNode node) {
+
+        Map<String, List<TreeNode>> terms = new HashMap<>();
+
+        for (int i = 0; i < node.getArgs().size(); i++) {
+            TreeNode child = node.getChild(i);
+
+            if (TreeUtils.isPolynomialTerm(child)) {
+                String termName = "X";
+                if (child.getExponent() != 1) {
+                    termName += "^" + child.getExponent().toString();
+                }
+                appendToArrayInObject(terms, termName, child);
+            }
+            //  else if (Node.NthRootTerm.isNthRootTerm(child)) {
+            //     String termName = getTermName(child, Node.NthRootTerm, '+');
+            //     terms = appendToArrayInObject(terms, termName, child);
+            // }
+            else if (TreeUtils.isIntegerFraction(child)) {
+                appendToArrayInObject(terms, CONSTANT_FRACTION, child);
+            } else if (TreeUtils.isConstant(child)) {
+                appendToArrayInObject(terms, CONSTANT, child);
+            } else if (node.esOperador() ||
+                    node.isParenthesis() ||
+                    node.isUnaryMinus()) {
+                appendToArrayInObject(terms, OTHER, child);
+            } else {
+                // Note that we shouldn't get any symbol nodes in the switch statement
+                // since they would have been handled by isPolynomialTerm
+                throw new Error("Unsupported node type: " + child.getValue());
+            }
+        }
+        return terms;
+    }
+
+    private void appendToArrayInObject(Map<String, List<TreeNode>> terms, String termName, TreeNode child) {
+
+        List<TreeNode> nodes = terms.get(termName);
+        if (nodes == null){
+            nodes = new ArrayList<>();
+            terms.put(termName, nodes);
+        }
+        nodes.add(child);
+
+    }
+    private Map<String,List<TreeNode>> getTermsForCollectingMultiplication(TreeNode node) {
+
+        Map<String, List<TreeNode>> terms = new HashMap<>();
+
+        for (int i = 0; i < node.getArgs().size(); i++) {
+            TreeNode child = node.getChild(i);
+
+            if (child.isUnaryMinus()) {
+                appendToArrayInObject(terms, CONSTANT, TreeNode.createConstant(CONSTANT_1_NEG));
+                child = child.getChild(0);
+            }
+            if (TreeUtils.isPolynomialTerm(child)) {
+
+                String termName = "X";
+                if (child.getExponent() != 1) {
+                    termName += "^" + child.getExponent().toString();
+                }
+
+
+                if (child.getCoefficient() == 1) {
+                    appendToArrayInObject(terms, termName, child);
+                }else{
+                    // En este caso separo los terminos así se multiplican las constantes
+                    appendToArrayInObject(terms, termName, new TreeNode(termName));
+                    appendToArrayInObject(terms, CONSTANT, TreeNode.createConstant(child.getCoefficient()));
+                }
+            }
+           // else if (Node.Type.isFunction(child, 'nthRoot')) {
+           //    terms = addToTermsforNthRootMultiplication(terms, child);
+           // }
+            else if (TreeUtils.isIntegerFraction(child)) {
+                appendToArrayInObject(terms, CONSTANT, child);
+            }
+            else if (TreeUtils.isConstant(child)) {
+                appendToArrayInObject(terms, CONSTANT, child);
+            }
+            else if (node.esOperador() ||
+                    node.isParenthesis()) {
+                appendToArrayInObject(terms, OTHER, child);
+            }
+            else {
+                // Note that we shouldn't get any symbol nodes in the switch statement
+                // since they would have been handled by isPolynomialTerm
+                throw new Error("Unsupported node type: " + child.getValue());
+            }
+        }
+        return terms;
+    }
+
+    // step 2 onwards for collectAndCombineOperation
+    // combine like terms for each group that can be combined
+    // e.g. (x + 3x) + (2 + 2) has two groups
+    // returns a list of combine steps
+    private List<NodeStatus> combineLikeTerms(TreeNode node) {
+        List<NodeStatus> steps = new ArrayList<>();
+        TreeNode newNode = node.cloneDeep();
+
+        for (int i = 0; i < node.getArgs().size(); i++) {
+            TreeNode child = node.getChild(i);
+            // All groups of terms will be surrounded by parenthesis
+            if (!child.isParenthesis()) {
+                continue;
+            }
+            child = child.getChild(0);
+            NodeStatus childStatus;
+            if (newNode.esSuma()){
+                childStatus = addLikeTerms(child, false);
+            }else if (newNode.esProducto()){
+                childStatus = multiplyLikeTerms(child, false);
+            }else{
+                throw new Error("Operador no soportado: " + newNode.getValue());
+            }
+
+            if (childStatus.hasChanged()) {
+                NodeStatus status = NodeStatus.childChanged(newNode, childStatus, i);
+                steps.add(status);
+                newNode = NodeStatus.resetChangeGroups(status.getNewNode());
+            }
+        }
+
+        return steps;
     }
 
     /**
@@ -290,14 +619,86 @@ public class SimplifyService {
     /**
      // Searches for and simplifies any chains of division or nested division.
      // Returns a Node.Status object
-     * @param treeNode Nodo a evaluar
+     * @param node Nodo a evaluar
      * @return El estado de la simplificacion
      */
-    protected NodeStatus divisionSearch(TreeNode treeNode){
+    protected NodeStatus divisionSearch(TreeNode node){
         // TODO Busqueda preOrder
 
-        // TODO divisionSearch Resolver esto
-        throw new UnsupportedOperationException();
+        if (!node.esOperador() || !node.esDivision()) {
+            return NodeStatus.noChange(node);
+        }
+        // e.g. 2/(x/6) => 2 * 6/x
+        NodeStatus nodeStatus =  multiplyByInverse(node);
+        if (nodeStatus.hasChanged()) {
+            return nodeStatus;
+        }
+        // e.g. 2/x/6 -> 2/(x*6)
+        nodeStatus = simplifyDivisionChain(node);
+        if (nodeStatus.hasChanged()) {
+            return nodeStatus;
+        }
+        return NodeStatus.noChange(node);
+    }
+
+    // If `node` is a fraction with a denominator that is also a fraction, multiply
+    // by the inverse.
+    // e.g. x/(2/3) -> x * 3/2
+    private NodeStatus multiplyByInverse(TreeNode node) {
+        TreeNode denominator = node.getChild(1);
+        if (denominator.isParenthesis()) {
+            denominator = denominator.getChild(0);
+        }
+        if (!denominator.esOperador() || !denominator.esDivision()) {
+            return NodeStatus.noChange(node);
+        }
+        // At this point, we know that node is a fraction and denonimator is the
+        // fraction we need to inverse.
+        TreeNode inverseNumerator = denominator.getChild(1);
+        TreeNode inverseDenominator = denominator.getChild(0);
+        TreeNode inverseFraction = TreeNode.createOperator(
+                    "/", inverseNumerator, inverseDenominator);
+
+        TreeNode newNode = TreeNode.createOperator("*", node.getChild(0), inverseFraction);
+        return NodeStatus.nodeChanged(
+                NodeStatus.ChangeTypes.MULTIPLY_BY_INVERSE, node, newNode);
+    }
+
+    // Simplifies any chains of division into a single division operation.
+    // e.g. 2/x/6 -> 2/(x*6)
+    // Returns a Node.Status object
+    private NodeStatus simplifyDivisionChain(TreeNode node) {
+        // check for a chain of division
+        LinkedList<TreeNode> denominatorList = getDenominatorList(node);
+        // one for the numerator, and at least two terms in the denominator
+        if (denominatorList.size() > 2) {
+            TreeNode numerator = denominatorList.pollFirst();
+            // the new single denominator is all the chained denominators
+            // multiplied together, in parentheses.
+            TreeNode denominator = TreeNode.createParenthesis(
+                    TreeNode.createOperator("*", denominatorList));
+            TreeNode newNode = TreeNode.createOperator("/", numerator, denominator);
+            return NodeStatus.nodeChanged(
+                    NodeStatus.ChangeTypes.SIMPLIFY_DIVISION, node, newNode);
+        }
+        return NodeStatus.noChange(node);
+    }
+
+    // Given a the denominator of a division node, returns all the nested
+    // denominator nodess. e.g. 2/3/4/5 would return [2,3,4,5]
+    // (note: all the numbers in the example are actually constant nodes)
+    private LinkedList<TreeNode> getDenominatorList(TreeNode denominator) {
+        TreeNode node = denominator;
+        LinkedList<TreeNode> denominatorList = new LinkedList<>();
+        while (node.esDivision()) {
+            // unshift the denominator to the front of the list, and recurse on
+            // the numerator
+            denominatorList.addFirst(node.getChild(1));
+            node = node.getChild(0);
+        }
+        // unshift the final node, which wasn't a / node
+        denominatorList.addFirst(node);
+        return denominatorList;
     }
 
     /**
@@ -363,14 +764,56 @@ public class SimplifyService {
      // e.g. 3 * 1/5 * 5/9 = (3*1*5)/(5*9)
      // e.g. 2x * 1/x -> (2x*1) / x
      // Returns a Node.Status object.
-     * @param treeNode Nodo a evaluar
+     * @param node Nodo a evaluar
      * @return El estado de la simplificacion
      */
-    protected NodeStatus multiplyFractionsSearch(TreeNode treeNode){
+    protected NodeStatus multiplyFractionsSearch(TreeNode node){
         // TODO Busqueda postOrder
 
-        // TODO multiplyFractionsSearch Resolver esto
-        throw new UnsupportedOperationException();
+        if (!node.esOperador() || !node.esProducto()) {
+            return NodeStatus.noChange(node);
+        }
+
+        // we need to use the verbose syntax for `some` here because isFraction
+        // can take more than one parameter
+        Boolean atLeastOneFraction = false;
+        Boolean hasPolynomialTerms = false;
+        Boolean hasPolynomialInDenominatorTerms = false;
+        for(TreeNode child: node.getArgs()){
+            if (TreeUtils.isFraction(child)){
+                atLeastOneFraction = true;
+            }else if (TreeUtils.isPolynomialTerm(child)){
+                hasPolynomialTerms = true;
+            }else if (TreeUtils.hasPolynomialInDenominator(child)){
+                hasPolynomialInDenominatorTerms = true;
+            }
+        }
+
+        if (!atLeastOneFraction || (hasPolynomialTerms && !hasPolynomialInDenominatorTerms)) {
+            return NodeStatus.noChange(node);
+        }
+
+        List<TreeNode> numeratorArgs = new ArrayList<>();
+        List<TreeNode> denominatorArgs = new ArrayList<>();
+        for(TreeNode child: node.getArgs()){
+            if (TreeUtils.isFraction(child)){
+                TreeNode fraction = TreeUtils.getFraction(child);
+                numeratorArgs.add(fraction.getChild(0));
+                denominatorArgs.add(fraction.getChild(1));
+            }else{
+                numeratorArgs.add(child);
+            }
+        }
+
+        TreeNode newNumerator = TreeNode.createParenthesis(
+                TreeNode.createOperator("*", numeratorArgs));
+        TreeNode newDenominator = denominatorArgs.size() == 1
+                ? denominatorArgs.get(0)
+                : TreeNode.createParenthesis(TreeNode.createOperator("*", denominatorArgs));
+
+        TreeNode newNode = TreeNode.createOperator("/", newNumerator, newDenominator);
+        return NodeStatus.nodeChanged(
+                NodeStatus.ChangeTypes.MULTIPLY_FRACTIONS, node, newNode);
     }
 
     /**
@@ -521,7 +964,10 @@ public class SimplifyService {
         Integer denominatorValue = denominatorNode.getIntegerValue();
         if (CONSTANT_1_NEG.equals(denominatorValue)){
 
-            TreeNode numeratorNode =  treeNode.getLeftNode();
+            TreeNode numeratorNode =  treeNode.getLeftNode().cloneDeep();
+            if (numeratorNode.esOperador()){
+                numeratorNode = TreeNode.createParenthesis(numeratorNode);
+            }
             NodeStatus.ChangeTypes changeType = TreeUtils.isNegative(numeratorNode)?
                     NodeStatus.ChangeTypes.RESOLVE_DOUBLE_MINUS :
                     NodeStatus.ChangeTypes.DIVISION_BY_NEGATIVE_ONE;
@@ -566,9 +1012,37 @@ public class SimplifyService {
         return NodeStatus.noChange(treeNode);
     }
 
-    protected NodeStatus simplifyDoubleUnaryMinus(TreeNode treeNode) {
-        // TODO simplifyDoubleUnaryMinus
-        throw new UnsupportedOperationException();
+    // Simplifies two unary minuses in a row by removing both of them.
+    // e.g. -(- 4) --> 4
+    protected NodeStatus simplifyDoubleUnaryMinus(TreeNode node) {
+        if (!node.isUnaryMinus()) {
+            return NodeStatus.noChange(node);
+        }
+
+        TreeNode unaryArg = node.getChild(0);
+        // e.g. in - -x, -x is the unary arg, and we'd want to reduce to just x
+        if (unaryArg.isUnaryMinus()) {
+            TreeNode newNode = unaryArg.getChild(0).cloneDeep();
+            return NodeStatus.nodeChanged(
+                    NodeStatus.ChangeTypes.RESOLVE_DOUBLE_MINUS, node, newNode);
+        }
+        // e.g. - -4, -4 could be a constant with negative value
+        else if (TreeUtils.isConstant(unaryArg) && unaryArg.getIntegerValue() < 0) {
+            TreeNode newNode = TreeNode.createConstant(unaryArg.getIntegerValue() * -1);
+            return NodeStatus.nodeChanged(
+                    NodeStatus.ChangeTypes.RESOLVE_DOUBLE_MINUS, node, newNode);
+        }
+        // e.g. -(-(5+2))
+        else if (unaryArg.isParenthesis()) {
+            TreeNode parenthesisNode = unaryArg;
+            TreeNode parenthesisContent = parenthesisNode.getChild(0);
+            if (parenthesisContent.isUnaryMinus()) {
+                TreeNode newNode = TreeNode.createParenthesis(parenthesisContent.getChild(0));
+                return NodeStatus.nodeChanged(
+                        NodeStatus.ChangeTypes.RESOLVE_DOUBLE_MINUS, node, newNode);
+            }
+        }
+        return NodeStatus.noChange(node);
     }
 
     /**
@@ -897,7 +1371,8 @@ public class SimplifyService {
         }
 
         // Genero el nodo (numeradorIzq + NumeradorDer)
-        TreeNode newNumerator = TreeNode.createOperator("+", numeratorArgs);
+        TreeNode newNumerator = TreeNode.createParenthesis(
+                TreeNode.createOperator("+", numeratorArgs));
 
         // Finalmente: (numeradorIzq + NumeradorDer) / comunDenominador
         TreeNode newNode = TreeNode.createOperator("/", newNumerator, commonDenominator);
@@ -957,14 +1432,16 @@ public class SimplifyService {
             Integer missingFactor = commonDenominator / child.getRightNode().getIntegerValue();
             if (!CONSTANT_1.equals(missingFactor)) {
                 // new numerador: (num * missingFactor)
-                TreeNode newNumerator = TreeNode.createOperator("*",
+                TreeNode newNumerator = TreeNode.createParenthesis(
+                        TreeNode.createOperator("*",
                         TreeNode.createConstant(child.getLeftNode().getIntegerValue()),
-                        TreeNode.createConstant(missingFactor));
+                        TreeNode.createConstant(missingFactor)));
 
                 // new denominator: (num * missingFactor)
-                TreeNode newDenominator = TreeNode.createOperator("*",
+                TreeNode newDenominator = TreeNode.createParenthesis(
+                        TreeNode.createOperator("*",
                         TreeNode.createConstant(child.getRightNode().getIntegerValue()),
-                        TreeNode.createConstant(missingFactor));
+                        TreeNode.createConstant(missingFactor)));
 
                 // new fraction
                 newNode.setChild(i, TreeNode.createOperator("/", newNumerator, newDenominator));
@@ -1044,37 +1521,41 @@ public class SimplifyService {
      // Evaluates a sum of constant numbers and integer fractions to a single
      // constant number or integer fraction. e.g. e.g. 2/3 + 5 + 5/2 => 49/6
      // Returns a Node.Status object.
-     * @param treeNode Nodo a evaluar
+     * @param node Nodo a evaluar
      * @return El estado de la simplificacion
      */
-    private NodeStatus evaluateConstantSum(TreeNode treeNode) {
+    private NodeStatus evaluateConstantSum(TreeNode node) {
+
+        if (node.isParenthesis()) {
+            node = node.getChild(0);
+        }
 
         // Buscar un suma o resta
-        if (treeNode == null || !treeNode.esAditivo()) {
-            return NodeStatus.noChange(treeNode);
+        if (!node.esAditivo()) {
+            return NodeStatus.noChange(node);
         }
 
         // Alguno de los hijos debe ser constante o fraccion
-        for (TreeNode child: treeNode.getArgs()){
+        for (TreeNode child: node.getArgs()){
             if (!TreeUtils.isConstantOrConstantFraction(child)){
-                return NodeStatus.noChange(treeNode);
+                return NodeStatus.noChange(node);
             }
         }
 
         // functions needed to evaluate the sum
-        NodeStatus nodeStatus = null;
+        NodeStatus nodeStatus;
 
-        nodeStatus = arithmeticSearch(treeNode);
+        nodeStatus = arithmeticSearch(node);
         if (nodeStatus.hasChanged() && TreeUtils.isConstantOrConstantFraction(nodeStatus.getNewNode())){return nodeStatus;}
 
-        nodeStatus = addConstantFractions(treeNode);
+        nodeStatus = addConstantFractions(node);
         if (nodeStatus.hasChanged() && TreeUtils.isConstantOrConstantFraction(nodeStatus.getNewNode())){return nodeStatus;}
 
-        nodeStatus = addConstantAndFraction(treeNode);
+        nodeStatus = addConstantAndFraction(node);
         if (nodeStatus.hasChanged() && TreeUtils.isConstantOrConstantFraction(nodeStatus.getNewNode())){return nodeStatus;}
 
 
-        TreeNode newNode = treeNode.cloneDeep();
+        TreeNode newNode = node.cloneDeep();
         List<NodeStatus> substeps = new ArrayList<>();
         NodeStatus status;
 
@@ -1084,29 +1565,27 @@ public class SimplifyService {
         substeps.add(status);
         newNode = NodeStatus.resetChangeGroups(status.getNewNode());
 
-        // TODO evaluateConstantSum: esto se complica por no estra achatado, pensar bien como resolverlo
-        /*
-  const constants = newNode.args[0];
-  const fractions = newNode.args[1];
+        TreeNode constants = newNode.getChild(0);
+        TreeNode fractions = newNode.getChild(1);
 
         // STEP 2A: evaluate arithmetic IF there's > 1 constant
         // (which is the case if it's a list surrounded by parenthesis)
-        if (Node.Type.isParenthesis(constants)) {
-    const constantList = constants.content;
-    const evaluateStatus = arithmeticSearch(constantList);
-            status = Node.Status.childChanged(newNode, evaluateStatus, 0);
-            substeps.push(status);
-            newNode = Node.Status.resetChangeGroups(status.getNewNode());
+        if (constants.isParenthesis()) {
+            TreeNode constantList = constants.getChild(0);
+            NodeStatus evaluateStatus = arithmeticSearch(constantList);
+            status = NodeStatus.childChanged(newNode, evaluateStatus, 0);
+            substeps.add(status);
+            newNode = NodeStatus.resetChangeGroups(status.getNewNode());
         }
 
         // STEP 2B: add fractions IF there's > 1 fraction
         // (which is the case if it's a list surrounded by parenthesis)
-        if (Node.Type.isParenthesis(fractions)) {
-    const fractionList = fractions.content;
-    const evaluateStatus = addConstantFractions(fractionList);
-            status = Node.Status.childChanged(newNode, evaluateStatus, 1);
-            substeps.push(status);
-            newNode = Node.Status.resetChangeGroups(status.getNewNode());
+        if (fractions.isParenthesis()) {
+            TreeNode fractionList = fractions.getChild(0);
+            NodeStatus evaluateStatus = addConstantFractions(fractionList);
+            status = NodeStatus.childChanged(newNode, evaluateStatus, 1);
+            substeps.add(status);
+            newNode = NodeStatus.resetChangeGroups(status.getNewNode());
         }
 
         // STEP 3: combine the evaluated constant and fraction
@@ -1117,9 +1596,7 @@ public class SimplifyService {
         newNode = NodeStatus.resetChangeGroups(status.getNewNode());
 
         return NodeStatus.nodeChanged(
-                NodeStatus.ChangeTypes.SIMPLIFY_ARITHMETIC, treeNode, newNode, substeps);
-*/
-        throw new UnsupportedOperationException();
+                NodeStatus.ChangeTypes.SIMPLIFY_ARITHMETIC, node, newNode, substeps);
     }
 
     /**
@@ -1134,67 +1611,266 @@ public class SimplifyService {
      */
     private NodeStatus groupConstantsAndFractions(TreeNode node) {
 
-        // TODO verificar esto en caso de modificar el arbol al achatar
-
-        // TODO groupConstantsAndFractions: esto se complica por no estra achatado, pensar bien como resolverlo
-        /*
-        let fractions = node.args.filter(Node.Type.isIntegerFraction);
-        let constants = node.args.filter(Node.Type.isConstant);
-
-        if (fractions.length === 0 || constants.length === 0) {
-            throw Error('expected both integer fractions and constants, got ' + node);
+        List<TreeNode> fractions = new ArrayList<>();
+        List<TreeNode> constants = new ArrayList<>();
+        for(TreeNode child: node.getArgs()){
+            if (TreeUtils.isIntegerFraction(child)){
+                fractions.add(child);
+            }else if (TreeUtils.isConstant(child)){
+                constants.add(child);
+            }
         }
 
-        if (fractions.length + constants.length !== node.args.length) {
-            throw Error('can only evaluate integer fractions and constants');
+        if (fractions.isEmpty() || constants.isEmpty()) {
+            throw new Error("expected both integer fractions and constants, got " + node.toExpression());
         }
 
-        constants = constants.map(node => {
-                // set the changeGroup - this affects both the old and new node
-                node.changeGroup = 1;
-        // clone so that node and newNode aren't stored in the same memory
-        return node.cloneDeep();
-  });
+        if (fractions.size() + constants.size() != node.getArgs().size()) {
+            throw new Error("can only evaluate integer fractions and constants");
+        }
+
+
+        List<TreeNode> clonedConstants = new ArrayList<>();
+        for (TreeNode constant: constants){
+            // set the changeGroup - this affects both the old and new node
+            constant.setChangeGroup(1);
+            // clone so that node and newNode aren't stored in the same memory
+            clonedConstants.add(constant.cloneDeep());
+        }
+
         // wrap in parenthesis if there's more than one, to group them
-        if (constants.length > 1) {
-            constants = Node.Creator.parenthesis(Node.Creator.operator('+', constants));
+        TreeNode constantNode;
+        if (clonedConstants.size() > 1) {
+            constantNode = TreeNode.createParenthesis(TreeNode.createOperator("+", clonedConstants));
+
+        } else {
+            constantNode = clonedConstants.get(0);
+        }
+
+        List<TreeNode> clonedFractions = new ArrayList<>();
+        for (TreeNode fraction: fractions){
+            // set the changeGroup - this affects both the old and new node
+            fraction.setChangeGroup(2);
+            // clone so that node and newNode aren't stored in the same memory
+            clonedFractions.add(fraction.cloneDeep());
+        }
+
+        // wrap in parenthesis if there's more than one, to group them
+        TreeNode fractionNode;
+        if (clonedFractions.size() > 1) {
+            fractionNode = TreeNode.createParenthesis(TreeNode.createOperator("+", clonedFractions));
         }
         else {
-            constants = constants[0];
+            fractionNode = clonedFractions.get(0);
         }
 
-        fractions = fractions.map(node => {
-                // set the changeGroup - this affects both the old and new node
-                node.changeGroup = 2;
-        // clone so that node and newNode aren't stored in the same memory
-        return node.cloneDeep();
-  });
-        // wrap in parenthesis if there's more than one, to group them
-        if (fractions.length > 1) {
-            fractions = Node.Creator.parenthesis(Node.Creator.operator('+', fractions));
-        }
-        else {
-            fractions = fractions[0];
-        }
-
-        TreeNode newNode = TreeNode.createOperator("+", constants, fractions);
+        TreeNode newNode = TreeNode.createOperator("+", constantNode, fractionNode);
         return NodeStatus.nodeChanged(
                 NodeStatus.ChangeTypes.COLLECT_LIKE_TERMS, node, newNode);
-*/
-        throw new UnsupportedOperationException();
     }
 
-    protected NodeStatus addLikePolynomialTerms(TreeNode treeNode) {
-        // TODO addLikePolynomialTerms
-        throw new UnsupportedOperationException();
+    protected NodeStatus addLikePolynomialTerms(TreeNode node) {
+        if (!canAddLikeTermPolynomialNodes(node)) {
+            return NodeStatus.noChange(node);
+        }
+
+        return addLikeTermNodes(
+                node, POLYNOMIAL_TERM, NodeStatus.ChangeTypes.ADD_POLYNOMIAL_TERMS);
     }
 
-    protected NodeStatus addLikeNthRootTerms(TreeNode treeNode) {
-        // TODO addLikeNthRootTerms
-        throw new UnsupportedOperationException();
+    // Returns true if the nodes are polynomial terms that can be added together.
+    private boolean canAddLikeTermPolynomialNodes(TreeNode node) {
+        return canAddLikeTermNodes(node, NTH_ROOT_TERM);
     }
 
-    protected NodeStatus multiplyLikeTerms(TreeNode treeNode){
+    protected NodeStatus addLikeNthRootTerms(TreeNode node) {
+        if (!canAddLikeTermNthRootNodes(node)) {
+            return NodeStatus.noChange(node);
+        }
+
+        return addLikeTermNodes(
+                node, NTH_ROOT_TERM, NodeStatus.ChangeTypes.ADD_NTH_ROOTS);
+    }
+
+    // Returns true if the nodes are nth roots that can be added together
+    private boolean canAddLikeTermNthRootNodes(TreeNode node) {
+        return canAddLikeTermNodes(node, NTH_ROOT_TERM);
+    }
+
+    // Returns true if the nodes are terms that can be added together.
+    // The nodes need to have the same base and exponent
+    // e.g. 2x + 5x, 6x^2 + x^2, nthRoot(4,2) + nthRoot(4,2)
+    private boolean canAddLikeTermNodes(TreeNode node, String termSubclass) {
+        if (!node.esSuma()) {
+            return false;
+        }
+        List<TreeNode> args = node.getArgs();
+   //     if (!args.every(n => Node.Term.isTerm(n, termSubclass.baseNodeFunc))) {
+   //        return false;
+   //     }
+        if (args.size() == 1) {
+            return false;
+        }
+
+        // to add terms, they must have the same base *and* exponent
+        TreeNode firstTerm = args.get(0);
+        Integer sharedExponentNode = firstTerm.getExponent();
+        // Integer sharedBase = firstTerm.getBase();
+        // TODO Es necesario calcular la base?
+        for(TreeNode child: args){
+            if (!sharedExponentNode.equals(child.getExponent())){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // Helper function for adding together a list of nodes
+    // belonging to a subclass of Term
+    protected NodeStatus addLikeTermNodes(TreeNode node, String termSubclass, NodeStatus.ChangeTypes changeType) {
+        List<NodeStatus> substeps = new ArrayList<>();
+        TreeNode newNode = node.cloneDeep();
+
+        // STEP 1: If any nodes have no coefficient, make it have coefficient 1
+        // (this step only happens under certain conditions and later steps might
+        // happen even if step 1 does not)
+        NodeStatus status = addPositiveOneCoefficient(newNode, termSubclass);
+        if (status.hasChanged()) {
+            substeps.add(status);
+            newNode = NodeStatus.resetChangeGroups(status.getNewNode());
+        }
+
+        // STEP 2: If any nodes have a unary minus, make it have coefficient -1
+        // (this step only happens under certain conditions and later steps might
+        // happen even if step 2 does not)
+        status = addNegativeOneCoefficient(newNode, termSubclass);
+        if (status.hasChanged()) {
+            substeps.add(status);
+            newNode = NodeStatus.resetChangeGroups(status.getNewNode());
+        }
+
+        // STEP 3: group the coefficients in a sum
+        status = groupCoefficientsForAdding(newNode, termSubclass);
+        substeps.add(status);
+        newNode = NodeStatus.resetChangeGroups(status.getNewNode());
+
+        // STEP 4: evaluate the sum (could include fractions)
+        status = evaluateCoefficientSum(newNode, termSubclass);
+        substeps.add(status);
+        newNode = NodeStatus.resetChangeGroups(status.getNewNode());
+
+        return NodeStatus.nodeChanged(
+                changeType, node, newNode, substeps);
+    }
+
+    // Given a sum of like terms, changes any term with no coefficient
+    // into a term with an explicit coefficient of 1. This is for pedagogy, and
+    // makes the adding coefficients step clearer.
+    // e.g. 2x + x -> 2x + 1x
+    // Returns a Node.Status object.
+    private NodeStatus addPositiveOneCoefficient(TreeNode node, String termSubclass) {
+        TreeNode newNode = node.cloneDeep();
+        Boolean change = false;
+
+        Integer changeGroup = 1;
+        int i = 0;
+        for(TreeNode child: newNode.getArgs()){
+            if (CONSTANT_1.equals(child.getCoefficient())) {
+                TreeNode newChildNode = child.clone();
+                newChildNode.setExplicitCoeff(true);
+                newNode.getChild(i).setChangeGroup(changeGroup);
+                node.getChild(i).setChangeGroup(changeGroup); // note that this is the "oldNode"
+
+                change = true;
+                changeGroup++;
+            }
+            i++;
+        }
+
+        if (change) {
+            return NodeStatus.nodeChanged(
+                    NodeStatus.ChangeTypes.ADD_COEFFICIENT_OF_ONE, node, newNode);
+        }
+        else {
+            return NodeStatus.noChange(node);
+        }
+    }
+
+    // Given a sum of like terms, changes any term with a unary minus
+    // coefficient into a term with an explicit coefficient of -1. This is for
+    // pedagogy, and makes the adding coefficients step clearer.
+    // e.g. 2x - x -> 2x - 1x
+    // Returns a Node.Status object.
+    private NodeStatus addNegativeOneCoefficient(TreeNode node, String termSubclass) {
+        TreeNode newNode = node.cloneDeep();
+        Boolean change = false;
+
+        Integer changeGroup = 1;
+        int i = 0;
+        for(TreeNode child: newNode.getArgs()){
+            if (CONSTANT_1_NEG.equals(child.getCoefficient())) {
+                TreeNode newChildNode = child.clone();
+                newChildNode.setExplicitCoeff(true);
+                newNode.getChild(i).setChangeGroup(changeGroup);
+                node.getChild(i).setChangeGroup(changeGroup); // note that this is the "oldNode"
+
+                change = true;
+                changeGroup++;
+            }
+            i++;
+        }
+
+        if (change) {
+            return NodeStatus.nodeChanged(
+                    NodeStatus.ChangeTypes.UNARY_MINUS_TO_NEGATIVE_ONE, node, newNode);
+        }
+        else {
+            return NodeStatus.noChange(node);
+        }
+    }
+
+    // Given a sum of like terms, groups the coefficients
+    // e.g. 2x^2 + 3x^2 + 5x^2 -> (2+3+5)x^2
+    // Returns a Node.Status object.
+    private NodeStatus groupCoefficientsForAdding(TreeNode node, String termSubclass) {
+
+        TreeNode newNode = node.cloneDeep();
+        List<TreeNode> coefficientList = new ArrayList<>();
+        for(TreeNode child: node.getArgs()){
+            coefficientList.add(TreeNode.createConstant(child.getCoefficient()));
+        }
+
+        TreeNode sumOfCoefficents = TreeNode.createParenthesis(
+                TreeNode.createOperator("+", coefficientList));
+
+        sumOfCoefficents.setChangeGroup(1);
+
+        // terms that can be added together must share the same base
+        // name and exponent. Get that base and exponent from the first term
+        TreeNode firstTerm = node.getChild(0).clone();
+        firstTerm.setCoefficient(1);
+        firstTerm.setExplicitCoeff(false);
+        newNode = TreeNode.createOperator("*",
+                sumOfCoefficents, firstTerm);
+
+            return NodeStatus.nodeChanged(
+                    NodeStatus.ChangeTypes.GROUP_COEFFICIENTS, node, newNode);
+    }
+
+    // Given a node of the form (2 + 4 + 5)x -- ie the coefficients have been
+    // grouped for adding -- add the coefficients together to make a new coeffient
+    // that is a constant or constant fraction.
+    private NodeStatus evaluateCoefficientSum(TreeNode node, String termSubclass) {
+        // the node is now always a * node with the left child the coefficent sum
+        // e.g. (2 + 4 + 5) and the right node the symbol part e.g. x or y^2
+        // so we want to evaluate args[0]
+        TreeNode coefficientSum = node.cloneDeep().getChild(0);
+        NodeStatus childStatus = evaluateConstantSum(coefficientSum);
+        return NodeStatus.childChanged(node, childStatus, 0);
+    }
+
+    protected NodeStatus multiplyLikeTerms(TreeNode node, Boolean polynomialOnly){
         // TODO multiplyLikeTerms: Multiplicar terminos con X. Ejemplo: 2x * x^2 * 5x => 10 x^4
         throw new UnsupportedOperationException();
     }
@@ -1341,15 +2017,15 @@ public class SimplifyService {
 
         // manually set change group of the GCD nodes to be the same
         TreeNode gcdNode = TreeNode.createConstant(gcd);
-        // gcdNode.changeGroup = 1;
+         gcdNode.setChangeGroup(1);
 
-        TreeNode intermediateNumerator = TreeNode.createOperator("*",
+        TreeNode intermediateNumerator = TreeNode.createParenthesis(TreeNode.createOperator("*",
                 TreeNode.createConstant(numeratorValue/gcd),
-                gcdNode);
+                gcdNode));
 
-        TreeNode intermediateDenominator = TreeNode.createOperator("*",
+        TreeNode intermediateDenominator = TreeNode.createParenthesis(TreeNode.createOperator("*",
                 TreeNode.createConstant(denominatorValue/gcd),
-                gcdNode);
+                gcdNode));
 
         TreeNode newNode = TreeNode.createOperator("/",
                 intermediateNumerator, intermediateDenominator);
@@ -1383,3 +2059,4 @@ public class SimplifyService {
     }
 
 }
+

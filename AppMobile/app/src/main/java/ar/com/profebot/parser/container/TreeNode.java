@@ -8,6 +8,8 @@ public class TreeNode {
     private Integer coefficient;
     private Integer exponent;
     private Boolean unaryMinus;
+    private Integer changeGroup;
+    private Boolean explicitCoeff;
 
   //  private TreeNode leftNode; Los reemplazo por la lista, para unificar criterios
   //  private TreeNode rightNode;
@@ -18,6 +20,7 @@ public class TreeNode {
         super();
         this.coefficient = 1; // Por defecto
         this.exponent = 1; // Por defecto
+        this.explicitCoeff = false;
         this.args = new ArrayList<>();
         this.args.add(null); // Left node
         this.args.add(null); // Right node
@@ -126,15 +129,6 @@ public class TreeNode {
     public Boolean esOperador(){
         return this.esOperadorNoAditivo() || this.esAditivo();
     }
-
-   /* public Double getDoubleValue(){
-        try {
-            return Double.parseDouble(this.getValue());
-        }catch (Exception e){
-            return null;
-        }
-    }
-*/
 
     public Integer getIntegerValue(){
         try {
@@ -268,6 +262,12 @@ public class TreeNode {
         return newNode;
     }
 
+    public static TreeNode createParenthesis(TreeNode node) {
+        TreeNode newNode = new TreeNode("()");
+        newNode.setLeftNode(node);
+        return newNode;
+    }
+
     public TreeNode getChild(int i) {
         if (i > this.args.size()-1){return null;}
         return this.args.get(i);
@@ -290,4 +290,22 @@ public class TreeNode {
         if (i > this.args.size()-1){return;}
         this.args.remove(i);
     }
+
+    public Integer getChangeGroup() {
+        return changeGroup;
+    }
+
+    public void setChangeGroup(Integer changeGroup) {
+        this.changeGroup = changeGroup;
+    }
+
+    public Boolean getExplicitCoeff() {
+        return explicitCoeff;
+    }
+
+    public void setExplicitCoeff(Boolean explicitCoeff) {
+        this.explicitCoeff = explicitCoeff;
+    }
+
+    public boolean isParenthesis() { return "()".equals(this.getValue());    }
 }

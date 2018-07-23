@@ -3,7 +3,9 @@ package ar.com.profebot.resolutor.utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import ar.com.profebot.parser.container.TreeNode;
 
@@ -461,5 +463,86 @@ public class TreeUtils {
         }
 
         return node.getChild(0).getCoefficient() == 1;
+    }
+
+    public static boolean canMultiplyLikeTermConstantNodes(TreeNode node) {
+        if (!node.esProducto()) {
+            return false;
+        }
+
+        List<TreeNode> args = node.getArgs();
+        Boolean anyHasExponent = false;
+        Set<Integer> constantTermBaseList = new HashSet<>();
+        for(TreeNode child: args){
+            if (!isConstantOrConstantPower(child)){
+                return false;
+            }
+            if (child.esPotencia()){
+                anyHasExponent = true;
+                constantTermBaseList.add(child.getLeftNode().getIntegerValue());
+            }else{
+                // Constant
+                constantTermBaseList.add(child.getIntegerValue());
+            }
+        }
+
+        // if none of the terms have exponents, return false here,
+        // else e.g. 6*6 will become 6^1 * 6^1 => 6^2
+        if (!anyHasExponent){
+            return false;
+        }
+
+        // they're considered like terms if they have the same base value
+        return constantTermBaseList.size() == 1;
+    }
+
+    private static boolean isConstantOrConstantPower(TreeNode node) {
+        return ((node.esPotencia() &&
+                isConstant(node.getChild(0))) ||
+                isConstant(node));
+    }
+
+    public static boolean isFraction(TreeNode node) {
+        return isFraction(node, true, true);
+    }
+
+    public static boolean isFraction(TreeNode node, Boolean allowUnaryMinus, Boolean allowParens) {
+        if (node.esDivision()) {
+            return true;
+        } else if (allowUnaryMinus && node.isUnaryMinus()) {
+            return isFraction(node.getChild(0), allowUnaryMinus, allowParens);
+        } else if (allowParens && node.isParenthesis()) {
+            return isFraction(node.getChild(0), allowUnaryMinus, allowParens);
+        }
+
+        return false;
+    }
+
+    public static TreeNode getFraction(TreeNode node) {
+        return getFraction(node, true, true);
+    }
+
+    public static TreeNode getFraction(TreeNode node, Boolean allowUnaryMinus, Boolean allowParens) {
+        if (node.esDivision()) {
+            return node;
+        }else if (allowUnaryMinus && node.isUnaryMinus()) {
+
+        } else if (allowParens && node.isParenthesis()) {
+            return getFraction(node.getChild(0), allowUnaryMinus, allowParens);
+        }
+
+        throw new Error("getType called on a node that does not belong to specified type");
+    }
+
+    // Returns true if `node` has a polynomial in the denominator,
+    // e.g. 5/x or 1/2x^2
+    public static boolean hasPolynomialInDenominator(TreeNode node) {
+        if (!(isFraction(node))) {
+            return false;
+        }
+
+        TreeNode fraction = getFraction(node);
+        TreeNode denominator = fraction.getChild(1);
+        return isPolynomialTerm(denominator);
     }
 }

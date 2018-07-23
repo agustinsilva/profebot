@@ -276,4 +276,10 @@ public class NodeStatus {
         // TODO  resetChangeGroups: Validar si nos sirve de algo
         return newNode;
     }
+
+
+    public static NodeStatus childChanged(TreeNode newNode, NodeStatus childStatus, int i) {
+        // TODO childChanged
+        throw new UnsupportedOperationException();
+    }
 }
