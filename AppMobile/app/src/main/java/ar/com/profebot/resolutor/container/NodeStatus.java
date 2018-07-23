@@ -245,6 +245,10 @@ public class NodeStatus {
         return newNode;
     }
 
+    public void setNewNode(TreeNode newNode) {
+        this.newNode = newNode;
+    }
+
     public List<NodeStatus> getSubsteps() {
         return substeps;
     }
@@ -271,5 +275,11 @@ public class NodeStatus {
     public static TreeNode resetChangeGroups(TreeNode newNode) {
         // TODO  resetChangeGroups: Validar si nos sirve de algo
         return newNode;
+    }
+
+
+    public static NodeStatus childChanged(TreeNode newNode, NodeStatus childStatus, int i) {
+        // TODO childChanged
+        throw new UnsupportedOperationException();
     }
 }

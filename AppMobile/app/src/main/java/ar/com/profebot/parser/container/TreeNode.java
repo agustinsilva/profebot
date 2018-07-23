@@ -1,17 +1,29 @@
 package ar.com.profebot.parser.container;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TreeNode {
     private String value;
     private Integer coefficient;
     private Integer exponent;
-    private TreeNode leftNode;
-    private TreeNode rightNode;
+    private Boolean unaryMinus;
+    private Integer changeGroup;
+    private Boolean explicitCoeff;
+
+  //  private TreeNode leftNode; Los reemplazo por la lista, para unificar criterios
+  //  private TreeNode rightNode;
+    private List<TreeNode> args; // Usado en achatamiento
 
     //Constructor de nodo.
     public TreeNode(String value) {
         super();
         this.coefficient = 1; // Por defecto
         this.exponent = 1; // Por defecto
+        this.explicitCoeff = false;
+        this.args = new ArrayList<>();
+        this.args.add(null); // Left node
+        this.args.add(null); // Right node
         setValue(value);
     }
 
@@ -26,7 +38,14 @@ public class TreeNode {
         if(this.getRightNode() != null) {
             node.setRightNode(this.getRightNode().clone());
         }
+        for (TreeNode child: this.args) {
+            node.addChild(child.clone());
+        }
         return node;
+    }
+
+    private void addChild(TreeNode node) {
+        this.args.add(node);
     }
 
     public TreeNode cloneDeep(){
@@ -54,16 +73,16 @@ public class TreeNode {
         this.exponent = exponent;
     }
     public TreeNode getLeftNode() {
-        return leftNode;
+        return getChild(0);
     }
     public void setLeftNode(TreeNode leftNode) {
-        this.leftNode = leftNode;
+        setChild(0, leftNode);
     }
     public TreeNode getRightNode() {
-        return rightNode;
+        return getChild(1);
     }
     public void setRightNode(TreeNode rightNode) {
-        this.rightNode = rightNode;
+        setChild(1, rightNode);
     }
 
     @Override
@@ -111,15 +130,6 @@ public class TreeNode {
         return this.esOperadorNoAditivo() || this.esAditivo();
     }
 
-   /* public Double getDoubleValue(){
-        try {
-            return Double.parseDouble(this.getValue());
-        }catch (Exception e){
-            return null;
-        }
-    }
-*/
-
     public Integer getIntegerValue(){
         try {
             return Integer.parseInt(this.getValue());
@@ -152,7 +162,7 @@ public class TreeNode {
         return expression;
     }
 
-    private void updateVariableValues(){
+    public void updateVariableValues(){
 
         if (this.value == null || !this.value.contains("X")){return;}
 
@@ -208,12 +218,21 @@ public class TreeNode {
     }
 
     public Integer getOperationResult() {
+        Integer result = 0;
         if (esProducto()){
-            return getLeftNode().getIntegerValue() * getRightNode().getIntegerValue();
+            result = 1;
+            for(TreeNode child: this.getArgs()){
+                result *= child.getIntegerValue();
+            }
+            return result;
+
         }else if (esDivision()){
             return getLeftNode().getIntegerValue() / getRightNode().getIntegerValue();
         }else if (esSuma()){
-            return getLeftNode().getIntegerValue() + getRightNode().getIntegerValue();
+            for(TreeNode child: this.getArgs()){
+                result += child.getIntegerValue();
+            }
+            return result;
         }else if (esResta()){
             return getLeftNode().getIntegerValue() - getRightNode().getIntegerValue();
         }else if (esPotencia()){
@@ -221,4 +240,72 @@ public class TreeNode {
         }
         throw new UnsupportedOperationException("No existe el operador: " + getValue());
     }
+
+    public List<TreeNode> getArgs() {
+        return args;
+    }
+
+    public void setArgs(List<TreeNode> args){
+        this.args = args;
+    }
+
+    public static TreeNode createOperator(String operator, List<TreeNode> operands) {
+        TreeNode newNode = new TreeNode(operator);
+        newNode.setArgs(operands);
+        return newNode;
+    }
+
+    public static TreeNode createUnaryMinus(TreeNode node) {
+        TreeNode newNode = new TreeNode("-");
+        newNode.setLeftNode(node);
+        newNode.setUnaryMinus(true);
+        return newNode;
+    }
+
+    public static TreeNode createParenthesis(TreeNode node) {
+        TreeNode newNode = new TreeNode("()");
+        newNode.setLeftNode(node);
+        return newNode;
+    }
+
+    public TreeNode getChild(int i) {
+        if (i > this.args.size()-1){return null;}
+        return this.args.get(i);
+    }
+
+    public void setChild(int i, TreeNode node){
+        if (i > this.args.size()-1){return;}
+        this.args.set(i, node);
+    }
+
+    public Boolean isUnaryMinus() {
+        return unaryMinus;
+    }
+
+    public void setUnaryMinus(Boolean unaryMinus) {
+        this.unaryMinus = unaryMinus;
+    }
+
+    public void removeChild(int i) {
+        if (i > this.args.size()-1){return;}
+        this.args.remove(i);
+    }
+
+    public Integer getChangeGroup() {
+        return changeGroup;
+    }
+
+    public void setChangeGroup(Integer changeGroup) {
+        this.changeGroup = changeGroup;
+    }
+
+    public Boolean getExplicitCoeff() {
+        return explicitCoeff;
+    }
+
+    public void setExplicitCoeff(Boolean explicitCoeff) {
+        this.explicitCoeff = explicitCoeff;
+    }
+
+    public boolean isParenthesis() { return "()".equals(this.getValue());    }
 }

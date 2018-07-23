@@ -26,21 +26,21 @@ public class TreeUtilsTest {
     }
 
     @Test
-    public void esIncognita_ok() {
+    public void isPolynomialTerm_ok() {
         TreeNode nodoRaiz = new TreeNode("3X");
-        Assert.assertTrue(TreeUtils.esIncognita(nodoRaiz));
+        Assert.assertTrue(TreeUtils.isPolynomialTerm(nodoRaiz));
     }
 
     @Test
     public void esNegativo_ok1() {
         TreeNode nodoRaiz = new TreeNode("-2.0");
-        Assert.assertTrue(TreeUtils.esNegativo(nodoRaiz));
+        Assert.assertTrue(TreeUtils.isNegative(nodoRaiz));
     }
 
     @Test
     public void esNegativo_ok2() {
         TreeNode nodoRaiz = new TreeNode("-2X");
-        Assert.assertTrue(TreeUtils.esNegativo(nodoRaiz));
+        Assert.assertTrue(TreeUtils.isNegative(nodoRaiz));
     }
 
     @Test
@@ -51,7 +51,7 @@ public class TreeUtilsTest {
         nodoRaiz.setLeftNode(nodoIzquierdo);
         nodoRaiz.setRightNode(nodoDerecho);
 
-        Assert.assertTrue(TreeUtils.esNegativo(nodoRaiz));
+        Assert.assertTrue(TreeUtils.isNegative(nodoRaiz));
     }
 
     @Test
@@ -62,6 +62,6 @@ public class TreeUtilsTest {
         nodoRaiz.setLeftNode(nodoIzquierdo);
         nodoRaiz.setRightNode(nodoDerecho);
 
-        Assert.assertTrue(TreeUtils.esNegativo(nodoRaiz));
+        Assert.assertTrue(TreeUtils.isNegative(nodoRaiz));
     }
 }
