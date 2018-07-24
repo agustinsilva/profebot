@@ -69,11 +69,11 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
         });
 
         playButton = (ImageButton) findViewById(R.id.solve_equation_id);
-
         ((Button) findViewById(R.id.clear_blackboard_id)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
                 widget.clear(false);
+                spinner.postInvalidateOnAnimation();
                 disablePlayButton();
                 invalidateToast();
             }
@@ -137,11 +137,26 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
 
             @Override
             public void onRecognitionEnd(MathWidgetApi mathWidgetApi) {
-                ExpressionsManager.setEquationDrawn(widget.getResultAsText());
-                if(!"".equals(ExpressionsManager.getEquationDrawn())){
-                    enablePlayButton();
+                disablePlayButton();
+                if(!widget.isEmpty()){
+                    spinner.setVisibility(View.VISIBLE);
+                    spinner.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            spinner.setVisibility(View.GONE);
+                        }
+                    }, 1200L);
                 }
-                spinner.setVisibility(View.GONE);
+
+                playButton.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        ExpressionsManager.setEquationDrawn(widget.getResultAsText());
+                        if(!"".equals(ExpressionsManager.getEquationDrawn())){
+                            enablePlayButton();
+                        }
+                    }
+                }, 1200L);
             }
         });
 
@@ -149,12 +164,12 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
             @Override
             public void onPenDown(MathWidgetApi mathWidgetApi, CaptureInfo captureInfo) {
                 spinner.setVisibility(View.GONE);
+                disablePlayButton();
                 invalidateToast();
             }
 
             @Override
             public void onPenUp(MathWidgetApi mathWidgetApi, CaptureInfo captureInfo) {
-                spinner.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -164,7 +179,6 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
 
             @Override
             public void onPenAbort(MathWidgetApi mathWidgetApi) {
-
             }
         });
 
