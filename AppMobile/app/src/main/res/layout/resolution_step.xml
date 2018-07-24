@@ -112,10 +112,7 @@
 
                 <include layout="@layout/multiple_choice_resolution_step"></include>
 
-                <include
-                    layout="@layout/multiple_choice_solved_resolution_step"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"></include>
+                <include layout="@layout/multiple_choice_solved_resolution_step"></include>
             </RelativeLayout>
         </LinearLayout>
 

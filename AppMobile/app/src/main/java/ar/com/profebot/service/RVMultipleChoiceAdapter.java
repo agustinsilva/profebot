@@ -39,6 +39,7 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
         LinearLayout multipleChoiceResolutionStep;
         LinearLayout multipleChoiceSolvedResolutionStep;
         Button solveStep;
+        Button nextStep;
         LinearLayout layoutToUse;
         RadioButton optionA;
         RadioButton optionB;
@@ -94,12 +95,30 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
                         currentMultipleChoiceStep.setSolved(true);
                         summary.setText(currentMultipleChoiceStep.getSummary());
                         if(currentMultipleChoiceSteps.size() < multipleChoiceSteps.size()){
-                            currentMultipleChoiceSteps.add(multipleChoiceSteps.get(currentMultipleChoiceSteps.size()));
+                            setUpNextStepButton();
+                        }else{
+                            nextStep.setVisibility(View.GONE);
                         }
-                        SolveEquationActivity.recyclerView.scrollToPosition(currentMultipleChoiceSteps.size()-1);
+                        //SolveEquationActivity.recyclerView.scrollToPosition(currentMultipleChoiceSteps.size()-1);
                     }
                 });
             }
+        }
+
+        private void setUpNextStepButton(){
+            nextStep.setEnabled(true);
+            nextStep.setBackgroundResource(R.color.colorGreen);
+            nextStep.setTextColor(Color.WHITE);
+            nextStep.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SolveEquationActivity.recyclerView.scrollToPosition(0);
+                    nextStep.setVisibility(View.GONE);
+                    layoutToUse.setVisibility(View.GONE);
+                    expandCollapseIndicator.setScaleY(1f);
+                    currentMultipleChoiceSteps.add(multipleChoiceSteps.get(currentMultipleChoiceSteps.size()));
+                }
+            });
         }
 
         MultipleChoiceViewHolder(View itemView, List<MultipleChoiceStep> currentMultipleChoiceSteps) {
@@ -121,17 +140,15 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
             incorrectOptionRadio = itemView.findViewById(R.id.option_incorrect_id);
 
             if(!isSolved){
-                if(currentMultipleChoiceSteps.size() == 1){
-                    expandCollapseIndicator.setScaleY(-1f);
-                    multipleChoiceResolutionStep.setVisibility(View.VISIBLE);
-                }else{
-                    expandCollapseIndicator.setScaleY(1f);
-                    multipleChoiceResolutionStep.setVisibility(View.GONE);
-                }
+                // When new card is added to RV. It indicates if has to be initialized as expanded or collapsed (default expanded)
+                expandCollapseIndicator.setScaleY(-1f);
+                multipleChoiceResolutionStep.setVisibility(View.VISIBLE);
+
                 layoutToUse = multipleChoiceResolutionStep;
 
                 solveStep = itemView.findViewById(R.id.solve_step_id);
                 solveStep.setEnabled(false);
+                nextStep = itemView.findViewById(R.id.next_step_id);
 
                 MultipleChoiceViewHolder viewHolder = this;
 
