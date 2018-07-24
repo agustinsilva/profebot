@@ -68,7 +68,6 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
             }
         });
 
-        playButton = (ImageButton) findViewById(R.id.solve_equation_id);
         ((Button) findViewById(R.id.clear_blackboard_id)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
@@ -79,11 +78,12 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
             }
         });
 
+        playButton = (ImageButton) findViewById(R.id.solve_equation_id);
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
-                spinner.setVisibility(View.VISIBLE);
                 if(ExpressionsManager.expressionDrawnIsValid()){
+                    spinner.setVisibility(View.VISIBLE);
                     Intent intent = new Intent(button.getContext(), SolveEquationActivity.class);
                     startActivity(intent);
                 }else{
@@ -91,7 +91,6 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
                     invalidEquationMessage.setGravity(Gravity.CENTER, 0, 0);
                     invalidEquationMessage.show();
                 }
-                spinner.setVisibility(View.GONE);
             }
         });
     }

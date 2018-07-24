@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 
 import com.profebot.activities.R;
@@ -15,11 +16,12 @@ import ar.com.profebot.service.ExpressionsManager;
 
 public class EnterEquationOptionsActivity extends GlobalActivity {
 
-    ImageView handdrawEquationPicture;
-    ImageView photoEquationPicture;
-    RadioButton handdrawEquationOption;
-    RadioButton photoEquationOption;
-    Button startResolution;
+    private ImageView handdrawEquationPicture;
+    private ImageView photoEquationPicture;
+    private RadioButton handdrawEquationOption;
+    private RadioButton photoEquationOption;
+    private Button startResolution;
+    private ProgressBar spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,7 @@ public class EnterEquationOptionsActivity extends GlobalActivity {
         handdrawEquationOption = (RadioButton) findViewById(R.id.handdraw_equation_id);
         photoEquationOption = (RadioButton) findViewById(R.id.photo_equation_id);
         startResolution = (Button) findViewById(R.id.start_resolution_id);
+        spinner = findViewById(R.id.options_progress_bar_id);
 
         restartScreen();
 
@@ -87,6 +90,7 @@ public class EnterEquationOptionsActivity extends GlobalActivity {
             @Override
             public void onClick(View v) {
                 if(handdrawEquationOption.isChecked()){
+                    spinner.setVisibility(View.VISIBLE);
                     Intent intent = new Intent(v.getContext(), EnterEquationHandDrawActivity.class);
                     startActivity(intent);
                 }else{

@@ -12,90 +12,103 @@
 
         <include layout="@layout/main_toolbar"/>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:weightSum="100"
-            android:layout_margin="10dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="20"
-                android:text="Elegí cómo ingresar tu ecuación/inecuación"
-                android:textSize="25dp"
-                android:textColor="@color/colorBlack"
-                android:gravity="top|center_horizontal"
-                android:layout_marginBottom="10dp"
-                />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:layout_weight="50"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:weightSum="100">
-
-                <ImageView
-                    android:id="@+id/handdraw_equation_picture_id"
-                    android:layout_width="0dp"
-                    android:layout_weight="50"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/handdraw_equation"
-                    />
-
-                <ImageView
-                    android:id="@+id/photo_equation_picture_id"
-                    android:layout_width="0dp"
-                    android:layout_weight="50"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/photo_equation"
-                    />
-            </LinearLayout>
-
-            <RadioGroup
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="15"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:weightSum="100">
-
-                <RadioButton
-                    android:id="@+id/handdraw_equation_id"
-                    android:layout_width="0dp"
-                    android:layout_weight="50"
-                    android:layout_height="wrap_content"
-                    android:text="Dibujar ecuación"/>
-
-                <RadioButton
-                    android:id="@+id/photo_equation_id"
-                    android:layout_width="0dp"
-                    android:layout_weight="50"
-                    android:layout_height="wrap_content"
-                    android:text="Fotografiar ecuación"/>
-            </RadioGroup>
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="15"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:weightSum="100"
+                android:layout_margin="10dp">
 
-                <Button
-                    android:id="@+id/start_resolution_id"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="20"
+                    android:text="Elegí cómo ingresar tu ecuación/inecuación"
+                    android:textSize="25dp"
+                    android:textColor="@color/colorBlack"
+                    android:gravity="top|center_horizontal"
+                    android:layout_marginBottom="10dp"
+                    />
+
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/AppButtonDisable"
-                    android:enabled="false"
-                    android:text="Ingresar"/>
+                    android:layout_height="0dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:layout_weight="50"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:weightSum="100">
+
+                    <ImageView
+                        android:id="@+id/handdraw_equation_picture_id"
+                        android:layout_width="0dp"
+                        android:layout_weight="50"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/handdraw_equation"
+                        />
+
+                    <ImageView
+                        android:id="@+id/photo_equation_picture_id"
+                        android:layout_width="0dp"
+                        android:layout_weight="50"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/photo_equation"
+                        />
+                </LinearLayout>
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="15"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:weightSum="100">
+
+                    <RadioButton
+                        android:id="@+id/handdraw_equation_id"
+                        android:layout_width="0dp"
+                        android:layout_weight="50"
+                        android:layout_height="wrap_content"
+                        android:text="Dibujar ecuación"/>
+
+                    <RadioButton
+                        android:id="@+id/photo_equation_id"
+                        android:layout_width="0dp"
+                        android:layout_weight="50"
+                        android:layout_height="wrap_content"
+                        android:text="Fotografiar ecuación"/>
+                </RadioGroup>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="15"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <Button
+                        android:id="@+id/start_resolution_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/AppButtonDisable"
+                        android:enabled="false"
+                        android:text="Ingresar"/>
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/options_progress_bar_id"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone"/>
+        </RelativeLayout>
 
     </LinearLayout>
 </LinearLayout>
