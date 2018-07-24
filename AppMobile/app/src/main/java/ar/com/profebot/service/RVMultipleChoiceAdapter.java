@@ -23,7 +23,7 @@ import ar.com.profebot.Models.MultipleChoiceStep;
 import ar.com.profebot.activities.SolveEquationActivity;
 import io.github.kexanie.library.MathView;
 
-public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceViewHolder> {
+public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoiceAdapter.MultipleChoiceViewHolder> {
 
     private List<MultipleChoiceStep> multipleChoiceSteps;
     private List<MultipleChoiceStep> currentMultipleChoiceSteps;
@@ -88,6 +88,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceView
                             incorrectOptionRadio.setVisibility(View.VISIBLE);
                             incorrectOptionRadio.setText(incorrectOptions.get(chosenOption));
                         }
+                        expandCollapseIndicatorColor.setVisibility(View.VISIBLE);
 
                         MultipleChoiceStep currentMultipleChoiceStep = multipleChoiceSteps.get(currentMultipleChoiceSteps.size()-1);
                         currentMultipleChoiceStep.setSolved(true);
@@ -180,7 +181,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.MultipleChoiceView
         }
     }
 
-    public RVAdapter(MultipleChoiceStep firstStep, List<MultipleChoiceStep> multipleChoiceSteps){
+    public RVMultipleChoiceAdapter(MultipleChoiceStep firstStep, List<MultipleChoiceStep> multipleChoiceSteps){
         this.multipleChoiceSteps = multipleChoiceSteps;
         List<MultipleChoiceStep> steps = new ArrayList<>();
         steps.add(firstStep);

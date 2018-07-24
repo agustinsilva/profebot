@@ -13,12 +13,12 @@ import java.util.List;
 
 import ar.com.profebot.Models.MultipleChoiceStep;
 import ar.com.profebot.service.ExpressionsManager;
-import ar.com.profebot.service.RVAdapter;
+import ar.com.profebot.service.RVMultipleChoiceAdapter;
 
 public class SolveEquationActivity extends GlobalActivity {
 
     private static List<MultipleChoiceStep> multipleChoiceSteps;
-    private static RVAdapter adapter;
+    private static RVMultipleChoiceAdapter adapter;
     public static RecyclerView recyclerView;
 
     @Override
@@ -35,7 +35,7 @@ public class SolveEquationActivity extends GlobalActivity {
         LinearLayoutManager llm = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(llm);
         multipleChoiceSteps = this.initializeMultipleChoiceSteps();
-        adapter = new RVAdapter(multipleChoiceSteps.get(0), multipleChoiceSteps);
+        adapter = new RVMultipleChoiceAdapter(multipleChoiceSteps.get(0), multipleChoiceSteps);
         recyclerView.setAdapter(adapter);
     }
 
