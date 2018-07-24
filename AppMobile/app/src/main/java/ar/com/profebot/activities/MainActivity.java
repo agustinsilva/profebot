@@ -8,12 +8,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.profebot.activities.R;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    private ProgressBar spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,10 +24,13 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_id);
         setSupportActionBar(myToolbar);
 
+        spinner = findViewById(R.id.main_activity_progress_bar_id);
+
         Button enterEquation = (Button)findViewById(R.id.enter_equation_id);
         enterEquation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
+                spinner.setVisibility(View.VISIBLE);
                 Intent intent = new Intent(MainActivity.this, EnterEquationOptionsActivity.class);
                 startActivity(intent);
             }

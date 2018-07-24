@@ -16,34 +16,47 @@
 
         <include layout="@layout/main_toolbar"/>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:layout_height="match_parent">
 
-            <ImageView
-                android:layout_width="250dp"
-                android:layout_height="250dp"
-                android:src="@drawable/main_logo"
-                android:layout_marginBottom="10dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
 
-            <Button
-                android:id="@+id/enter_equation_id"
-                android:text="Ecuaciones / Inecuaciones"
-                style="@style/MainOptionButtonStyle"/>
+                <ImageView
+                    android:layout_width="250dp"
+                    android:layout_height="250dp"
+                    android:src="@drawable/main_logo"
+                    android:layout_marginBottom="10dp"/>
 
-            <Button
-                android:id="@+id/enter_polynomial_id"
-                android:text="Factoreo de polinomios"
-                style="@style/MainOptionButtonStyle"/>
+                <Button
+                    android:id="@+id/enter_equation_id"
+                    android:text="Ecuaciones / Inecuaciones"
+                    style="@style/MainOptionButtonStyle"/>
 
-            <Button
-                android:id="@+id/enter_function_id"
-                android:text="Funciones"
-                style="@style/MainOptionButtonStyle"/>
+                <Button
+                    android:id="@+id/enter_polynomial_id"
+                    android:text="Factoreo de polinomios"
+                    style="@style/MainOptionButtonStyle"/>
 
-        </LinearLayout>
+                <Button
+                    android:id="@+id/enter_function_id"
+                    android:text="Funciones"
+                    style="@style/MainOptionButtonStyle"/>
+
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/main_activity_progress_bar_id"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone"/>
+        </RelativeLayout>
     </LinearLayout>
 
 
