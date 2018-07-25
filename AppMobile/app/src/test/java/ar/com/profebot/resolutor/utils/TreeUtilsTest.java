@@ -242,6 +242,64 @@ public class TreeUtilsTest {
     }
 
     @Test
+    public void canMultiplyLikeTermConstantNodes_ok(){
+        TreeNode nodoRaiz = new TreeNode("/");
+        TreeNode nodoIzquierdoRaiz = new TreeNode("3");
+        TreeNode nodoDerechoRaiz = new TreeNode("4");
+        nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
+        nodoRaiz.setRightNode(nodoDerechoRaiz);
+        Assert.assertFalse(TreeUtils.canMultiplyLikeTermConstantNodes(nodoRaiz));
+    }
+
+    @Test
+    public void canMultiplyLikeTermConstantNodes_ok2(){
+        TreeNode nodoRaiz = new TreeNode("*");
+        TreeNode nodoIzquierdoRaiz = new TreeNode("3X");
+        TreeNode nodoDerechoRaiz = new TreeNode("4X");
+        nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
+        nodoRaiz.setRightNode(nodoDerechoRaiz);
+        Assert.assertFalse(TreeUtils.canMultiplyLikeTermConstantNodes(nodoRaiz));
+    }
+
+    @Test
+    public void canMultiplyLikeTermConstantNodes_ok3(){
+        TreeNode nodoRaiz = new TreeNode("*");
+        TreeNode nodoIzquierdoRaiz = new TreeNode("3");
+        TreeNode nodoDerechoRaiz = new TreeNode("3");
+        nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
+        nodoRaiz.setRightNode(nodoDerechoRaiz);
+        Assert.assertFalse(TreeUtils.canMultiplyLikeTermConstantNodes(nodoRaiz));
+    }
+
+    @Test
+    public void canMultiplyLikeTermConstantNodes_ok4(){
+        TreeNode nodoRaiz = new TreeNode("*");
+        TreeNode nodoIzquierdoRaiz = new TreeNode("3");
+        TreeNode nodoDerechoRaiz = new TreeNode("^");
+        TreeNode nodoIzquierdoPotencia = new TreeNode("3");
+        TreeNode nodoDerechoPotencia = new TreeNode("2");
+        nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
+        nodoRaiz.setRightNode(nodoDerechoRaiz);
+        nodoDerechoRaiz.setLeftNode(nodoIzquierdoPotencia);
+        nodoDerechoRaiz.setRightNode(nodoDerechoPotencia);
+        Assert.assertTrue(TreeUtils.canMultiplyLikeTermConstantNodes(nodoRaiz));
+    }
+
+    @Test
+    public void canMultiplyLikeTermConstantNodes_ok5(){
+        TreeNode nodoRaiz = new TreeNode("*");
+        TreeNode nodoIzquierdoRaiz = new TreeNode("3");
+        TreeNode nodoDerechoRaiz = new TreeNode("^");
+        TreeNode nodoIzquierdoPotencia = new TreeNode("4");
+        TreeNode nodoDerechoPotencia = new TreeNode("2");
+        nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
+        nodoRaiz.setRightNode(nodoDerechoRaiz);
+        nodoDerechoRaiz.setLeftNode(nodoIzquierdoPotencia);
+        nodoDerechoRaiz.setRightNode(nodoDerechoPotencia);
+        Assert.assertFalse(TreeUtils.canMultiplyLikeTermConstantNodes(nodoRaiz));
+    }
+
+    @Test
     public void isFraction_ok(){
         TreeNode nodoRaiz = new TreeNode("/");
         TreeNode nodoIzquierdoRaiz = new TreeNode("3");

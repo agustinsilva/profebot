@@ -495,31 +495,34 @@ public class TreeUtils {
                 anyHasExponent = true;
                 constantTermBaseList.add(child.getLeftNode().getIntegerValue());
             }else{
-                // Constant
+                // Constante
                 constantTermBaseList.add(child.getIntegerValue());
             }
         }
 
-        // if none of the terms have exponents, return false here,
-        // else e.g. 6*6 will become 6^1 * 6^1 => 6^2
+        //Si ninguno de los terminos tienen exponentes, retorna falso
+        //Si por ejemplo tenemos 6*6 se convierte en 6^1 * 6^1 => 6^2
         if (!anyHasExponent){
             return false;
         }
 
-        // they're considered like terms if they have the same base value
+        //Son considerados como terminos si tienen el mismo valor base
         return constantTermBaseList.size() == 1;
     }
 
+    //Valida si constante o esta elevada a una potencia.
     private static boolean isConstantOrConstantPower(TreeNode node) {
         return ((node.esPotencia() &&
                 isConstant(node.getChild(0))) ||
                 isConstant(node));
     }
 
+    //Valida si el nodo es una fraccion.
     public static boolean isFraction(TreeNode node) {
         return isFraction(node, true, true);
     }
 
+    //Valida si el nodo es una fraccion.
     public static boolean isFraction(TreeNode node, Boolean allowUnaryMinus, Boolean allowParens) {
         if (node.esDivision()) {
             return true;
@@ -531,10 +534,12 @@ public class TreeUtils {
         return false;
     }
 
+    //Obtiene la fraccion y en caso erroneo, lanza un error.
     public static TreeNode getFraction(TreeNode node) {
         return getFraction(node, true, true);
     }
 
+    //Obtiene la fraccion y en caso erroneo, lanza un error.
     public static TreeNode getFraction(TreeNode node, Boolean allowUnaryMinus, Boolean allowParens) {
         if (node.esDivision()) {
             return node;
