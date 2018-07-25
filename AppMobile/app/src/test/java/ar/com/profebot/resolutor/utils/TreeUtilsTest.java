@@ -217,4 +217,22 @@ public class TreeUtilsTest {
         Assert.assertTrue(TreeUtils.hasValue(node.getChild(1),"4"));
         Assert.assertTrue(TreeUtils.hasValue(node.getChild(2),"2"));
     }
+
+    @Test
+    public void flattenOperands_ok3(){
+        TreeNode nodoRaiz = new TreeNode("+");
+        TreeNode nodoIzquierdoRaiz = new TreeNode("3");
+        TreeNode nodoDerechoRaiz = new TreeNode("-");
+        TreeNode nodoIzquierdoSuma = new TreeNode("4");
+        TreeNode nodoDerechoSuma = new TreeNode("2");
+        nodoDerechoRaiz.setLeftNode(nodoIzquierdoSuma);
+        nodoDerechoRaiz.setRightNode(nodoDerechoSuma);
+        nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
+        nodoRaiz.setRightNode(nodoDerechoRaiz);
+        TreeNode node = TreeUtils.flattenOperands(nodoRaiz);
+        Assert.assertTrue(TreeUtils.hasValue(node,"+"));
+        Assert.assertTrue(TreeUtils.hasValue(node.getChild(0),"3"));
+        Assert.assertTrue(TreeUtils.hasValue(node.getChild(1),"4"));
+        Assert.assertTrue(TreeUtils.hasValue(node.getChild(2),"-2"));
+    }
 }
