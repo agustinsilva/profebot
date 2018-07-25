@@ -222,18 +222,66 @@ public class TreeUtilsTest {
     public void flattenOperands_ok3() {
         TreeNode nodoRaiz = new TreeNode("+");
         TreeNode nodoIzquierdoRaiz = new TreeNode("3");
-        TreeNode nodoDerechoRaiz = new TreeNode("-");
-        TreeNode nodoIzquierdoSuma = new TreeNode("4");
-        TreeNode nodoDerechoSuma = new TreeNode("2");
-        nodoDerechoRaiz.setLeftNode(nodoIzquierdoSuma);
-        nodoDerechoRaiz.setRightNode(nodoDerechoSuma);
+        TreeNode nodoDerechoRaiz = new TreeNode("+");
+        TreeNode nodoIzquierdoSuma1 = new TreeNode("4");
+        TreeNode nodoDerechoSuma1 = new TreeNode("+");
+        TreeNode nodoDerechoSuma2 = new TreeNode("5");
+        TreeNode nodoIzquierdoSuma2 = new TreeNode("6");
+        nodoDerechoSuma1.setLeftNode(nodoDerechoSuma2);
+        nodoDerechoSuma1.setRightNode(nodoIzquierdoSuma2);
+        nodoDerechoRaiz.setLeftNode(nodoIzquierdoSuma1);
+        nodoDerechoRaiz.setRightNode(nodoDerechoSuma1);
         nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
         nodoRaiz.setRightNode(nodoDerechoRaiz);
         TreeNode node = TreeUtils.flattenOperands(nodoRaiz);
         Assert.assertTrue(TreeUtils.hasValue(node, "+"));
         Assert.assertTrue(TreeUtils.hasValue(node.getChild(0), "3"));
         Assert.assertTrue(TreeUtils.hasValue(node.getChild(1), "4"));
-        Assert.assertTrue(TreeUtils.hasValue(node.getChild(2), "-2"));
+        Assert.assertTrue(TreeUtils.hasValue(node.getChild(2), "5"));
+        Assert.assertTrue(TreeUtils.hasValue(node.getChild(3), "6"));
+    }
+
+    @Test
+    public void isFraction_ok(){
+        TreeNode nodoRaiz = new TreeNode("/");
+        TreeNode nodoIzquierdoRaiz = new TreeNode("3");
+        TreeNode nodoDerechoRaiz = new TreeNode("4");
+        nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
+        nodoRaiz.setRightNode(nodoDerechoRaiz);
+        Assert.assertTrue(TreeUtils.isFraction(nodoRaiz));
+    }
+
+    @Test
+    public void isFraction_false(){
+        TreeNode nodoRaiz = new TreeNode("*");
+        TreeNode nodoIzquierdoRaiz = new TreeNode("3");
+        TreeNode nodoDerechoRaiz = new TreeNode("4");
+        nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
+        nodoRaiz.setRightNode(nodoDerechoRaiz);
+        Assert.assertFalse(TreeUtils.isFraction(nodoRaiz));
+    }
+
+    @Test
+    public void getFractions_ok(){
+        TreeNode nodoRaiz = new TreeNode("/");
+        TreeNode nodoIzquierdoRaiz = new TreeNode("3");
+        TreeNode nodoDerechoRaiz = new TreeNode("4");
+        nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
+        nodoRaiz.setRightNode(nodoDerechoRaiz);
+        TreeNode node = TreeUtils.getFraction(nodoRaiz);
+        Assert.assertTrue(TreeUtils.hasValue(node,"/"));
+        Assert.assertTrue(TreeUtils.hasValue(node.getLeftNode(),"3"));
+        Assert.assertTrue(TreeUtils.hasValue(node.getRightNode(),"4"));
+    }
+
+    @Test(expected = Error.class)
+    public void getFractions_error(){
+        TreeNode nodoRaiz = new TreeNode("*");
+        TreeNode nodoIzquierdoRaiz = new TreeNode("3");
+        TreeNode nodoDerechoRaiz = new TreeNode("4");
+        nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
+        nodoRaiz.setRightNode(nodoDerechoRaiz);
+        TreeUtils.getFraction(nodoRaiz);
     }
 
     @Test

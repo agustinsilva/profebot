@@ -539,12 +539,12 @@ public class TreeUtils {
         if (node.esDivision()) {
             return node;
         }else if (allowUnaryMinus && node.isUnaryMinus()) {
-
+            //TODO Revisar si es asi el codigo
         } else if (allowParens && node.isParenthesis()) {
             return getFraction(node.getChild(0), allowUnaryMinus, allowParens);
         }
 
-        throw new Error("getType called on a node that does not belong to specified type");
+        throw new Error("La expresion no es un nodo del tipo fraccion");
     }
 
     // Retorna verdadero si el nodo tiene un polinomio en el denominador
