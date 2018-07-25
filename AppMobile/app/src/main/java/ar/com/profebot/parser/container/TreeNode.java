@@ -38,8 +38,10 @@ public class TreeNode {
         if(this.getRightNode() != null) {
             node.setRightNode(this.getRightNode().clone());
         }
-        for (TreeNode child: this.args) {
-            node.addChild(child.clone());
+        if(this.getRightNode() != null && this.getLeftNode() != null) {
+            for (TreeNode child : this.args) {
+                node.addChild(child.clone());
+            }
         }
         return node;
     }
@@ -133,6 +135,14 @@ public class TreeNode {
     public Integer getIntegerValue(){
         try {
             return Integer.parseInt(this.getValue());
+        }catch (Exception e){
+            return null;
+        }
+    }
+
+    public Double getDoubleValue(){
+        try {
+            return Double.parseDouble(this.getValue());
         }catch (Exception e){
             return null;
         }

@@ -11,10 +11,12 @@ import ar.com.profebot.parser.container.TreeNode;
 
 public class TreeUtils {
 
+    //Valida si el valor es una constante.
     public static Boolean isConstant(TreeNode treeNode){
         return isConstant(treeNode, false);
     }
 
+    //Valida si el valor es una constante.
     public static Boolean isConstant(TreeNode treeNode, Boolean allowUnaryMinus){
 
         if (treeNode == null){return false;}
@@ -27,28 +29,34 @@ public class TreeUtils {
         return false;
     }
 
+    //Valida si el valor es un numero.
     private static Boolean contieneNumero(String value){
         return (value.contains("0") || value.contains("1") || value.contains("2")
         || value.contains("3") || value.contains("4") || value.contains("5") || value.contains("6")
         || value.contains("7") || value.contains("8") || value.contains("9"));
     }
 
+    //Valida si el nodo contiene valor 0.
     public static Boolean zeroValue(TreeNode treeNode){
        return hasValue(treeNode, "0");
     }
 
+    //Valida si el nodo contiene el valor pasado en el segundo parametro.
     public static Boolean hasValue(TreeNode treeNode, String value){
         return (treeNode!=null && value.equals(treeNode.getValue()) );
     }
 
+    //Valida si el nodo es un polinomio.
     public static Boolean isPolynomialTerm(TreeNode treeNode){
         return (treeNode!=null && treeNode.getValue().contains("X") );
     }
 
+    //Valida si el nodo es / (division) y los hijos son constantes
     public static Boolean isConstantFraction(TreeNode treeNode){
         return isConstantFraction(treeNode, false);
     }
 
+    //Valida si el nodo es / (division) y los hijos son constantes
     public static Boolean isConstantFraction(TreeNode treeNode, Boolean allowUnaryMinus){
 
         if (treeNode!=null && treeNode.esDivision() ){
@@ -63,8 +71,9 @@ public class TreeUtils {
         return false;
     }
 
+    //Valida si el nodo contiene valor negativo.
     public static Boolean isNegative(TreeNode treeNode){
-        if (treeNode == null){return null;}
+        if (treeNode == null) return null;
 
         if (isConstant(treeNode)){
             return treeNode.getIntegerValue()< 0;
@@ -83,19 +92,23 @@ public class TreeUtils {
         return false;
     }
 
+    //Valida si el nodo contiene una constante o una fraccion formada por constantes.
     public static Boolean isConstantOrConstantFraction(TreeNode treeNode){
         return isConstantOrConstantFraction(treeNode, false);
     }
 
+    //Valida si el nodo contiene una constante o una fraccion formada por constantes.
     public static Boolean isConstantOrConstantFraction(TreeNode treeNode, Boolean allowUnaryMinus){
         return TreeUtils.isConstant(treeNode, allowUnaryMinus) ||
                 TreeUtils.isConstantFraction(treeNode, allowUnaryMinus);
     }
 
+    //Valida si es una fraccion con valores enteros.
     public static Boolean isIntegerFraction(TreeNode node){
         return isIntegerFraction(node, false);
     }
 
+    //Valida si es una fraccion con valores enteros.
     public static Boolean isIntegerFraction(TreeNode node, Boolean allowUnaryMinus){
         if (!isConstantFraction(node, allowUnaryMinus)) {
             return false;
@@ -114,6 +127,7 @@ public class TreeUtils {
                 isInteger(denominator.getValue()));
     }
 
+    //Valida is el valor es un entero.
     private static Boolean isInteger(String value){
         try
         {
@@ -126,11 +140,11 @@ public class TreeUtils {
     }
 
     /**
-     // Flattens the tree accross the same operation (just + and * for now)
-     // e.g. 2+2+2 is parsed by mathjs as 2+(2+2), but this would change that to
-     // 2+2+2, ie one + node that has three children.
-     // Input: an expression tree
-     // Output: the expression tree updated with flattened operations
+     // Aplana el arbol a traves de la misma operación (por ahora solo + y *)
+     // Por ejemplo si tenemos 2+2+2 originariamente lo vemos como 2+(2+2), cuando
+     // es aplanado es un unico nodo con operador + y tres hijos de valor 2.
+     // Entrada: Una expresion con formato arbol.
+     // Salida: El mismo arbol de expresion con las operaciones aplanadas.
      * @param node Nodo a evaluar
      * @return Nodo achatado
      */
@@ -140,20 +154,20 @@ public class TreeUtils {
             if ("+-/*".contains(node.getValue())) {
                 String parentOp;
                 if (node.esDivision()) {
-                    // Division is flattened in partner with multiplication. This means
-                    // that after collecting the operands, they'll be children args of *
+                    // La division es aplanada junto a la multiplicacion. Esto significa
+                    // que despues de recolectar los operandos, seran hijos del operador *
                     parentOp = "*";
 
                 } else if (node.esResta()) {
-                    // Subtraction is flattened in partner with addition, This means that
-                    // after collecting the operands, they'll be children args of +
+                    // La resta es aplanada junto a la suma. Esto significa
+                    // que despues de recolectar los operandos, seran hijos del operador +
                     parentOp = "+";
                 } else {
                     parentOp = node.getValue();
                 }
                 return flattenSupportedOperation(node, parentOp);
             } else {
-                // If the operation is not supported, just recurse on the children
+                // Si la operacion no es soportada, itera sobre los hijos.
                 int index =0;
                 for(TreeNode child: node.getArgs()) {
                     (node.getArgs()).set(index, flattenOperands(child));
@@ -167,12 +181,12 @@ public class TreeUtils {
     }
 
     /**
-     // Flattens operations (see flattenOperands docstring) for an operator node
-     // with an operation type that can be flattened. Currently * + / are supported.
-     // Returns the updated, flattened node.
-     // NOTE: the returned node will be of operation type `parentOp`, regardless of
-     // the operation type of `node`, unless `node` wasn't changed
-     // e.g. 2 * 3 / 4 would be * of 2 and 3/4, but 2/3 would stay 2/3 and division
+     // Aplana las operaciones para un nodo operador con un tip operacion que puede ser aplanado.
+     // Por el momento * + / son soportados.
+     // Retorna el noda aplanado.
+     // NOTA: El nodo retornado sera de la operacion parentOp a pesar del tipo de operacion del nodo
+     // A menos que el nodo no sea cambiado.
+     // Por ejemplo 2 * 3 / 4 sera * de 2 y 3/4 pero 2/3 queda como 2 y 3 bajo operador /.
      * @param node Nodo a evaluar
      * @param parentOp Operador padre
      * @return Nodo achatado

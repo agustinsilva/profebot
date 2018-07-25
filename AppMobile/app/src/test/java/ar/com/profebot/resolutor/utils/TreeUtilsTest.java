@@ -14,6 +14,18 @@ public class TreeUtilsTest {
     }
 
     @Test
+    public void isConstant_ok1() {
+        TreeNode nodoRaiz = new TreeNode("5");
+        Assert.assertTrue(TreeUtils.isConstant(nodoRaiz));
+    }
+
+    @Test
+    public void isConstant_error1() {
+        TreeNode nodoRaiz = new TreeNode("X");
+        Assert.assertFalse(TreeUtils.isConstant(nodoRaiz));
+    }
+
+    @Test
     public void hasValue_ok() {
         TreeNode nodoRaiz = new TreeNode("5");
         Assert.assertTrue(TreeUtils.hasValue(nodoRaiz,"5"));
@@ -32,19 +44,45 @@ public class TreeUtilsTest {
     }
 
     @Test
-    public void esNegativo_ok1() {
-        TreeNode nodoRaiz = new TreeNode("-2.0");
+    public void isConstantFraction_ok1() {
+        TreeNode nodoRaiz = new TreeNode("/");
+        TreeNode nodoIzquierdo = new TreeNode("3");
+        TreeNode nodoDerecho = new TreeNode("2");
+        nodoRaiz.setRightNode(nodoDerecho);
+        nodoRaiz.setLeftNode(nodoIzquierdo);
+        Assert.assertTrue(TreeUtils.isConstantFraction(nodoRaiz));
+    }
+
+    @Test
+    public void isConstantFraction_error1() {
+        TreeNode nodoRaiz = new TreeNode("/");
+        TreeNode nodoIzquierdo = new TreeNode("3");
+        TreeNode nodoDerecho = new TreeNode("X");
+        Assert.assertFalse(TreeUtils.isConstantFraction(nodoRaiz));
+    }
+
+    @Test
+    public void isConstantFraction_error2() {
+        TreeNode nodoRaiz = new TreeNode("/");
+        TreeNode nodoIzquierdo = new TreeNode("X");
+        TreeNode nodoDerecho = new TreeNode("-2");
+        Assert.assertFalse(TreeUtils.isConstantFraction(nodoRaiz));
+    }
+
+    @Test
+    public void isNegative_ok1() {
+        TreeNode nodoRaiz = new TreeNode("-2");
         Assert.assertTrue(TreeUtils.isNegative(nodoRaiz));
     }
 
     @Test
-    public void esNegativo_ok2() {
+    public void isNegative_ok2() {
         TreeNode nodoRaiz = new TreeNode("-2X");
         Assert.assertTrue(TreeUtils.isNegative(nodoRaiz));
     }
 
     @Test
-    public void esNegativo_ok3() {
+    public void isNegative_ok3() {
         TreeNode nodoRaiz = new TreeNode("/");
         TreeNode nodoIzquierdo = new TreeNode("-6");
         TreeNode nodoDerecho = new TreeNode("2");
@@ -55,7 +93,7 @@ public class TreeUtilsTest {
     }
 
     @Test
-    public void esNegativo_ok4() {
+    public void isNegative_ok4() {
         TreeNode nodoRaiz = new TreeNode("/");
         TreeNode nodoIzquierdo = new TreeNode("6");
         TreeNode nodoDerecho = new TreeNode("-2");
@@ -63,5 +101,120 @@ public class TreeUtilsTest {
         nodoRaiz.setRightNode(nodoDerecho);
 
         Assert.assertTrue(TreeUtils.isNegative(nodoRaiz));
+    }
+
+    @Test
+    public void isConstantOrConstantFraction_ok1() {
+        TreeNode nodoRaiz = new TreeNode("/");
+        TreeNode nodoIzquierdo = new TreeNode("6");
+        TreeNode nodoDerecho = new TreeNode("-2");
+        nodoRaiz.setLeftNode(nodoIzquierdo);
+        nodoRaiz.setRightNode(nodoDerecho);
+
+        Assert.assertTrue(TreeUtils.isConstantOrConstantFraction(nodoRaiz));
+    }
+
+    @Test
+    public void isConstantOrConstantFraction_ok2() {
+        TreeNode nodoRaiz = new TreeNode("3");
+        Assert.assertTrue(TreeUtils.isConstantOrConstantFraction(nodoRaiz));
+    }
+
+    @Test
+    public void isConstantOrConstantFraction_ok3() {
+        TreeNode nodoRaiz = new TreeNode("-3");
+        Assert.assertTrue(TreeUtils.isConstantOrConstantFraction(nodoRaiz));
+    }
+
+    @Test
+    public void isConstantOrConstantFraction_ok4(){
+        TreeNode nodoRaiz = new TreeNode("/");
+        TreeNode nodoIzquierdo = new TreeNode("6");
+        TreeNode nodoDerecho = new TreeNode("2");
+        nodoRaiz.setLeftNode(nodoIzquierdo);
+        nodoRaiz.setRightNode(nodoDerecho);
+        Assert.assertTrue(TreeUtils.isConstantOrConstantFraction(nodoRaiz));
+    }
+
+    @Test
+    public void isConstantOrConstantFraction_error1(){
+        TreeNode nodoRaiz = new TreeNode("/");
+        TreeNode nodoIzquierdo = new TreeNode("X");
+        TreeNode nodoDerecho = new TreeNode("2");
+        nodoRaiz.setLeftNode(nodoIzquierdo);
+        nodoRaiz.setRightNode(nodoDerecho);
+        Assert.assertFalse(TreeUtils.isConstantOrConstantFraction(nodoRaiz));
+    }
+
+    @Test
+    public void isConstantOrConstantFraction_error2(){
+        TreeNode nodoRaiz = new TreeNode("X");
+        Assert.assertFalse(TreeUtils.isConstantOrConstantFraction(nodoRaiz));
+    }
+
+    @Test
+    public void isIntegerFraction_ok1(){
+        TreeNode nodoRaiz = new TreeNode("/");
+        TreeNode nodoIzquierdo = new TreeNode("4");
+        TreeNode nodoDerecho = new TreeNode("2");
+        nodoRaiz.setLeftNode(nodoIzquierdo);
+        nodoRaiz.setRightNode(nodoDerecho);
+        Assert.assertTrue(TreeUtils.isConstantOrConstantFraction(nodoRaiz));
+    }
+
+    @Test
+    public void isIntegerFraction_error1(){
+        TreeNode nodoRaiz = new TreeNode("/");
+        TreeNode nodoIzquierdo = new TreeNode("4X");
+        TreeNode nodoDerecho = new TreeNode("2");
+        nodoRaiz.setLeftNode(nodoIzquierdo);
+        nodoRaiz.setRightNode(nodoDerecho);
+        Assert.assertFalse(TreeUtils.isConstantOrConstantFraction(nodoRaiz));
+    }
+
+    @Test
+    public void isIntegerFraction_error2(){
+        TreeNode nodoRaiz = new TreeNode("/");
+        TreeNode nodoIzquierdo = new TreeNode("4");
+        TreeNode nodoDerecho = new TreeNode("2X");
+        nodoRaiz.setLeftNode(nodoIzquierdo);
+        nodoRaiz.setRightNode(nodoDerecho);
+        Assert.assertFalse(TreeUtils.isConstantOrConstantFraction(nodoRaiz));
+    }
+
+    @Test
+    public void flattenOperands_ok1(){
+        TreeNode nodoRaiz = new TreeNode("+");
+        TreeNode nodoIzquierdoRaiz = new TreeNode("3");
+        TreeNode nodoDerechoRaiz = new TreeNode("+");
+        TreeNode nodoIzquierdoSuma = new TreeNode("4");
+        TreeNode nodoDerechoSuma = new TreeNode("2");
+        nodoDerechoRaiz.setLeftNode(nodoIzquierdoSuma);
+        nodoDerechoRaiz.setRightNode(nodoDerechoSuma);
+        nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
+        nodoRaiz.setRightNode(nodoDerechoRaiz);
+        TreeNode node = TreeUtils.flattenOperands(nodoRaiz);
+        Assert.assertTrue(TreeUtils.hasValue(node,"+"));
+        Assert.assertTrue(TreeUtils.hasValue(node.getChild(0),"3"));
+        Assert.assertTrue(TreeUtils.hasValue(node.getChild(1),"4"));
+        Assert.assertTrue(TreeUtils.hasValue(node.getChild(2),"2"));
+    }
+
+    @Test
+    public void flattenOperands_ok2(){
+        TreeNode nodoRaiz = new TreeNode("*");
+        TreeNode nodoIzquierdoRaiz = new TreeNode("3");
+        TreeNode nodoDerechoRaiz = new TreeNode("*");
+        TreeNode nodoIzquierdoSuma = new TreeNode("4");
+        TreeNode nodoDerechoSuma = new TreeNode("2");
+        nodoDerechoRaiz.setLeftNode(nodoIzquierdoSuma);
+        nodoDerechoRaiz.setRightNode(nodoDerechoSuma);
+        nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
+        nodoRaiz.setRightNode(nodoDerechoRaiz);
+        TreeNode node = TreeUtils.flattenOperands(nodoRaiz);
+        Assert.assertTrue(TreeUtils.hasValue(node,"*"));
+        Assert.assertTrue(TreeUtils.hasValue(node.getChild(0),"3"));
+        Assert.assertTrue(TreeUtils.hasValue(node.getChild(1),"4"));
+        Assert.assertTrue(TreeUtils.hasValue(node.getChild(2),"2"));
     }
 }
