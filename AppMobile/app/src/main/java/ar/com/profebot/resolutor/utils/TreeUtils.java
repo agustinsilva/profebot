@@ -423,16 +423,27 @@ public class TreeUtils {
         return false;
     }
 
+    /**
+     // Dado un node, retorna el nodo negado
+     // Si el parametro naive es verdadero, solo agrega un unary minus extra a la expresion
+     // de otro modo, hace la negacion completa
+     //En este caso el parametro naive es falso por defecto.
+     // E.g.
+     //   si naive es false: -3 -> 3, x -> -x
+     //   si naive es true: -3 -> --3, x -> -x
+     * @param node nodo a negar
+     * @return El nodo negado
+     */
     public static TreeNode negate(TreeNode node) {
         return negate(node, false);
     }
     /**
-     // Given a node, returns the negated node
-     // If naive is true, then we just add an extra unary minus to the expression
-     // otherwise, we do the actual negation
+     // Dado un node, retorna el nodo negado
+     // Si el parametro naive es verdadero, solo agrega un unary minus extra a la expresion
+     // de otro modo, hace la negacion completa
      // E.g.
-     //    not naive: -3 -> 3, x -> -x
-     //    naive: -3 -> --3, x -> -x
+     //   si naive es false: -3 -> 3, x -> -x
+     //   si naive es true: -3 -> --3, x -> -x
      * @param node nodo a negar
      * @param naive el negativo se agrega al coeficiente del nodo
      * @return El nodo negado
