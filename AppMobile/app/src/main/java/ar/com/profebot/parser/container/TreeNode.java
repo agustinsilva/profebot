@@ -18,6 +18,7 @@ public class TreeNode {
     //Constructor de nodo.
     public TreeNode(String value) {
         super();
+        this.unaryMinus = false;
         this.coefficient = 1; // Por defecto
         this.exponent = 1; // Por defecto
         this.explicitCoeff = false;

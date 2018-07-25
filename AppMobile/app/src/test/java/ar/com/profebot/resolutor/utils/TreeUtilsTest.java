@@ -219,7 +219,7 @@ public class TreeUtilsTest {
     }
 
     @Test
-    public void flattenOperands_ok3(){
+    public void flattenOperands_ok3() {
         TreeNode nodoRaiz = new TreeNode("+");
         TreeNode nodoIzquierdoRaiz = new TreeNode("3");
         TreeNode nodoDerechoRaiz = new TreeNode("-");
@@ -230,9 +230,35 @@ public class TreeUtilsTest {
         nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
         nodoRaiz.setRightNode(nodoDerechoRaiz);
         TreeNode node = TreeUtils.flattenOperands(nodoRaiz);
-        Assert.assertTrue(TreeUtils.hasValue(node,"+"));
-        Assert.assertTrue(TreeUtils.hasValue(node.getChild(0),"3"));
-        Assert.assertTrue(TreeUtils.hasValue(node.getChild(1),"4"));
-        Assert.assertTrue(TreeUtils.hasValue(node.getChild(2),"-2"));
+        Assert.assertTrue(TreeUtils.hasValue(node, "+"));
+        Assert.assertTrue(TreeUtils.hasValue(node.getChild(0), "3"));
+        Assert.assertTrue(TreeUtils.hasValue(node.getChild(1), "4"));
+        Assert.assertTrue(TreeUtils.hasValue(node.getChild(2), "-2"));
+    }
+
+    @Test
+    public void hasPolynomialInDenominator_ok(){
+        TreeNode nodoRaiz = new TreeNode("/");
+        TreeNode nodoIzquierdoRaiz = new TreeNode("3");
+        TreeNode nodoDerechoRaiz = new TreeNode("4X");
+        nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
+        nodoRaiz.setRightNode(nodoDerechoRaiz);
+        Assert.assertTrue(TreeUtils.hasPolynomialInDenominator(nodoRaiz));
+    }
+
+    @Test
+    public void hasPolynomialInDenominator_error1(){
+        TreeNode nodoRaiz = new TreeNode("3");
+        Assert.assertFalse(TreeUtils.hasPolynomialInDenominator(nodoRaiz));
+    }
+
+    @Test
+    public void hasPolynomialInDenominator_error2(){
+        TreeNode nodoRaiz = new TreeNode("/");
+        TreeNode nodoIzquierdoRaiz = new TreeNode("3X");
+        TreeNode nodoDerechoRaiz = new TreeNode("4");
+        nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
+        nodoRaiz.setRightNode(nodoDerechoRaiz);
+        Assert.assertFalse(TreeUtils.hasPolynomialInDenominator(nodoRaiz));
     }
 }

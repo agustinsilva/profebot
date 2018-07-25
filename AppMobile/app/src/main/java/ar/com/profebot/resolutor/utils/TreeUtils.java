@@ -528,7 +528,6 @@ public class TreeUtils {
         } else if (allowParens && node.isParenthesis()) {
             return isFraction(node.getChild(0), allowUnaryMinus, allowParens);
         }
-
         return false;
     }
 
@@ -548,8 +547,8 @@ public class TreeUtils {
         throw new Error("getType called on a node that does not belong to specified type");
     }
 
-    // Returns true if `node` has a polynomial in the denominator,
-    // e.g. 5/x or 1/2x^2
+    // Retorna verdadero si el nodo tiene un polinomio en el denominador
+    // Ejemplo 5/x o 1/2X^2
     public static boolean hasPolynomialInDenominator(TreeNode node) {
         if (!(isFraction(node))) {
             return false;
