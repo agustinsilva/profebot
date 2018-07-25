@@ -193,34 +193,33 @@ public class TreeUtils {
      */
     private static TreeNode flattenSupportedOperation(TreeNode node, String parentOp) {
 
-        // First get the list of operands that this operator operates on.
-        // e.g. 2 + 3 + 4 + 5 is stored as (((2 + 3) + 4) + 5) in the tree and we
-        // want to get the list [2, 3, 4, 5]
+        // Primero obtener la lista de operandos sobre los que este operador actua.
+        // Por ejemplo 2+ 3+4+5 es almacenado como (((2 + 3) + 4) + 5) en el arbol  y nosotros
+        // queremos obtener la lista [2, 3, 4, 5]
         List<TreeNode> operands = getOperands(node, parentOp);
 
-        // If there's only one operand (possible if 2*x was flattened to 2x)
-        // then it's no longer an operation, so we should replace the node
-        // with the one operand.
+        // Si hay un solo operando(por ejemplo si 2*X es aplanado a 2X)
+        // entonces no es una operacion, por lo que tenemos que reemplazar
+        // el nodo con un solo operando.
         if (operands.size() == 1) {
             node = operands.get(0);
 
         }  else {
-            // When we are dealing with flattening division, and there's also
-            // multiplication involved, we might end up with a top level * instead.
-            // e.g. 2*4/5 is parsed with / at the top, but in the end we want 2 * (4/5)
-            // Check for this by first checking if we have more than two operands
-            // (which is impossible for division), then by recursing through the
-            // original tree for any multiplication node - if there was one, it would
-            // have ended up at the root.
+            // Cuando tratamos una reduccion de division, y tambien hay una multiplicacion
+            // involucrada, podemos terminar con un * como raiz.
+            // Por ejemplo 2*4/5 es parseado con / en la raiz, pero al final queremos 2 * (4/5)
+            // Realizar esta validacion si tenemos mas de 2 operandos
+            // (lo cual es imposible para una division), entonces iterando sobre el arbol original
+            // por cual nodo multiplicacion - si hay alguno, va a terminar en la raiz.
             if (node.esDivision() && (operands.size() > 2 ||
                     hasMultiplicationBesideDivision(node))) {
                 node = TreeNode.createOperator("*", operands);
             }
-            // similarily, - will become + always
+            //De manera similar, - siempre se convertira en +
             else if (node.esResta()) {
                 node = TreeNode.createOperator("+", operands);
             }
-            // otherwise keep the operator, replace operands
+            //De otra manera mantiene el operador, reemplaza los operandos.
             else {
                 node.setArgs(operands);
             }
@@ -229,24 +228,25 @@ public class TreeUtils {
     }
 
     /**
-     // Recursively finds the operands under `parentOp` in the input tree `node`.
-     // The input tree `node` will always have a parent that is an operation
-     // of type `op`.
-     // Op is a string e.g. '+' or '*'
+     // Recursivamente buscamos los operandos bajo la operacion padre 'parentOp en el nodo de
+     // entrada.
+     // El nodo de entrada tipo arbol siempre tendra un padre que es una operacion
+     //  del tipo 'op'.
+     // Op es un string por ejemplo '+' o '*'
      * @param node nodo a evaluar
      * @param parentOp operador padre
-     * @return the list of all the node operated on by `parentOp`
+     * @return una lista de todos los nodos operados por la operacion padre 'parentOp'
      */
     private static List<TreeNode> getOperands(TreeNode node, String parentOp) {
-        // We can only recurse on operations of type op.
-        // If the node is not an operator node or of the right operation type,
-        // we can't break up or flatten this tree any further, so we return just
-        // the current node, and recurse on it to flatten its ops.
+        // Solo podemos hacer recursion en operacion del tipo op.
+        // Si el nodo no es un nodo operador o el tipo operacion correcto,
+        // no podemos seguir descomponiendo o aplastando este arbol, entonces retornamos simplemente
+        // el nodo actual, e iteramos sobre el mismo para aplastar sus operaciones.
         if (!node.esOperador()) {
             return Collections.singletonList(flattenOperands(node));
         }
         switch (node.getValue()) {
-            // division is part of flattening multiplication
+            //La division es parte de la reduccion de la multiplicacion.
             case "*":
             case "/":
                 if (!"*".equals(parentOp)) {
@@ -263,10 +263,10 @@ public class TreeUtils {
                 return Collections.singletonList(flattenOperands(node));
         }
 
-        // If we're flattening over *, check for a polynomial term (ie a
-        // coefficient multiplied by a symbol such as 2x^2 or 3y)
-        // This is true if there's an implicit multiplication and the right operand
-        // is a symbol or a symbol to an exponent.
+        // Si estamos aplastando por *, validar por un termino polinomial(por ejemplo un coeficiente
+        // multiplicado por un simbol como 2x^2 o 3y).
+        // Esto es verdadero si hay una multiplicacion implicita y el operando derecho es un
+        // simbolo o un simbolo con un exponente.
         if ("*".equals(parentOp) && isPolynomialTermMultiplication(node)) {
             return maybeFlattenPolynomialTerm(node);
 
@@ -274,7 +274,7 @@ public class TreeUtils {
             return flattenDivision(node);
 
         } else if (node.esResta()) {
-            // this operation will become addition e.g. 2 - 3 -> 2 + -(-3)
+            // Esta operacion sera una suma por ejemplo 2 - 3 -> 2 + -(-3)
             TreeNode secondOperand = node.getChild(1);
             TreeNode negativeSecondOperand = negate(secondOperand, true);
 
@@ -297,64 +297,60 @@ public class TreeUtils {
     }
 
     /**
-     // This function is a helper function for getOperands.
-     // Context: Usually we'd flatten 2*2*x to a multiplication node with 3 children
-     // (2, 2, and x) but if we got 2*2x, we want to keep 2x together.
-     // 2*2*x (a tree stored in two levels because initially nodes only have two
-     // children) in the flattening process should be turned into 2*2x instead of
-     // 2*2*x (which has three children).
-     // So this function would return true for the input 2*2x, if it was stored as
-     // an expression tree with root node * and children 2*2 and x
+     // Esta funcion es auxiliar para getOperands.
+     // Contexto: Por lo general aplastamos 2*2*X a un nodo multiplicacion con 3 hijos.
+     //  (2,2 y X) pero si tenemos 2*2X, queremos dejar 2X junto.
+     // 2*2*X (Un arbol almacenado en 2 niveles porque inicialmente los nodos
+     // tienen 2 hijos) en el proceso de aplanamiento deberian ser convertidos en 2*2x en vez de
+     // 2*2*X (el cual tiene 3 hijos).
+     // Entonces esta funcion retorna true para una entrada como 2*2X , si fue almacenada como
+     // una expresion arbol con nodo raiz * e hijos 2*2 y X.
      * @param node nodo a evaluar
-     * @return true if node is a candidate for simplifying to a polynomial term.
+     * @return true si el nodo es candidato para simplificar un termino polinomial.
      */
     private static boolean isPolynomialTermMultiplication(TreeNode node) {
-        // This concept only applies when we're flattening multiplication operations
+        //Este concepto solo aplica si aplanamos operaciones de multiplicacion.
         if (!node.esProducto()) {
             return false;
         }
-        // This only makes sense when we're flattening two arguments
+        // Esto solo tiene sentido si aplanamos 2 argumentos.
         if (node.getArgs().size() != 2) {
             return false;
         }
-        // The second node should be for the form x or x^2 (ie a polynomial term
-        // with no coefficient)
+        // El segundo nodo puede ser de forma  x o x^2 (un termino polinomial sin coeficiente).
         TreeNode secondOperand = node.getChild(1);
         return (isPolynomialTerm(secondOperand) && secondOperand.getCoefficient() == 1);
     }
 
     /**
-     // Takes a node that might represent a multiplication with a polynomial term
-     // and flattens it appropriately so the coefficient and symbol are grouped
-     // together. Returns a new list of operands from this node that should be
-     // multiplied together.
+     // Toma un nodo que puede representar una multiplicacion con un termino polinomial y
+     // lo aplana apropiadamente para que el coeficiente y el simbolo sean agrupados de forma conjunta.
+     // Retorna una nueva lista de operandos de este nodo que puede ser multiplicados juntos.
      * @param node Nodo a evaluar
      * @return Nodos achatados
      */
     private static List<TreeNode> maybeFlattenPolynomialTerm(TreeNode node) {
-        // We recurse on the left side of the tree to find operands so far
+        //Realizarmos una recursividad en el lado izquierdo del arbol para encontrar operandos.
         List<TreeNode> operands = getOperands(node.getChild(0), "*");
 
-        // If the last operand (so far) under * was a constant, then it's a
-        // polynomial term.
-        // e.g. 2*5*6x creates a tree where the top node is implicit multiplcation
-        // and the left branch goes to the tree with 2*5*6, and the right operand
-        // is the symbol x. We want to check that the last argument on the left (in
-        // this example 6) is a constant.
+        //Si el ultimo operando debajo de * fue una constante, entonces es un termino polinomial.
+        // Por ejemplo 2*5*6X crea un arbol donde el nodo superior es una multiplicacion implicita
+        // y la rama izquierda va al arbol con 2*5*6, y el operando derecho es el simbolo X.
+        // Queremos validar que el ultimo argumento en la izquierda es una constante.
         TreeNode lastOperand = operands.get(operands.size()-1);
         operands.remove(operands.size()-1);
 
-        // in the above example, node.args[1] would be the symbol x
+        //En el ejemplo de arriba, el argumento 1 puede ser el simbolo X
         TreeNode nextOperand = flattenOperands(node.getChild(1));
 
-        // a coefficient can be constant or a fraction of constants
+        // Un coeficiente puede ser constante o una fraccion de constantes.
         if (isConstantOrConstantFraction(lastOperand)) {
-            // we replace the constant (which we popped) with constant*symbol
+            // Se reemplaza la constante por constante * simbolo.
             operands.add(
                     TreeNode.createOperator("*", lastOperand, nextOperand));
 
         } else {
-          // Now we know it isn't a polynomial term, it's just another seperate operand
+          //Ahora sabemos que no es termino polinomial y que es un operando separado.
             operands.add(lastOperand);
             operands.add(nextOperand);
         }
@@ -362,32 +358,32 @@ public class TreeUtils {
     }
 
     /**
-     // Takes a division node and returns a list of operands
-     // If there is multiplication in the numerator, the operands returned
-     // are to be multiplied together. Otherwise, a list of length one with
-     // just the division node is returned. getOperands might change the
-     // operator accordingly.
+     // Toma un nodo division y retorna una lista de operandos
+     // Si hay una multiplicacion en el numerador, los operandos retornados son multiplicados
+     // en conjunto.De otro modo, una lista de largo 1 con solo un nodo de division es retornado.
+     // La funcion getOperands puede cambiar el operador de acuerdo a los parametros ingresados.
      * @param node nodo a evaluar
      * @return nodos achatados
      */
     private static List<TreeNode> flattenDivision(TreeNode node) {
 
-        // We recurse on the left side of the tree to find operands so far
-        // Flattening division is always considered part of a bigger picture
-        // of multiplication, so we get operands with '*'
+        // Se realiza una recursividad sobre el lado izquierdo del arbol para buscar operandos
+        // La funcion de aplastar division es siempre considerada parte de una multiplicacion
+        // por lo que se obtienen operandos '*'
         List<TreeNode> operands = getOperands(node.getChild(0), "*");
 
         if (operands.size() == 1) {
             operands.add(flattenOperands(node.getChild(1)));
         } else {
-            // This is the last operand, the term we'll want to add our division to
+            //Este es el ultimo operando, el termino que queremos agregar a la division
             TreeNode numerator = operands.get(operands.size()-1);
             operands.remove(operands.size()-1);
 
-            // This is the denominator of the current division node we're recursing on
+            // Este es el denominador del nodo de division actual sobre el cual estamos haciendo
+            // recursion
             TreeNode denominator = flattenOperands(node.getChild(1));
-            // Note that this means 2 * 3 * 4 / 5 / 6 * 7 will flatten but keep the 4/5/6
-            // as an operand - in simplifyDivision.js this is changed to 4/(5*6)
+            // Notar que esto significa que por ejemplo 2*3*4/5/6*7 se aplanan
+            // pero mantiene la parte de 4/5/6 como operando.
             TreeNode divisionNode = TreeNode.createOperator("/", Arrays.asList(numerator, denominator));
             operands.add(divisionNode);
         }
@@ -396,11 +392,11 @@ public class TreeUtils {
     }
 
     /**
-     // e.g. returns true: 2*3/4, 2 / 5 / 6 * 7 / 8
-     // e.g. returns false: 3/4/5, ((3*2) - 5) / 7, (2*5)/6
+     // Ejemplos que retorna verdadero: 2*3/4, 2/5 / 6 * 7 / 8
+     // Ejemplos que retornan falso: 3/4/5, ((3*2) - 5) / 7, (2*5)/6
      * @param node nodo a evaluar
-     * @return true if there is a * node nested in some division, with no other
-    // operators or parentheses between them.
+     * @return Verdadero si hay un nodo * anidado en alguna division, con ningun operador
+    // o parentesis entre ellos
      */
     private static boolean hasMultiplicationBesideDivision(TreeNode node) {
         if (!node.esOperador()) {
@@ -409,7 +405,7 @@ public class TreeUtils {
         if (node.esProducto()) {
             return true;
         }
-        // we ony recurse through division
+        // solo se realizar recursion en las divisiones.
         if (!node.esDivision()) {
             return false;
         }
@@ -424,7 +420,7 @@ public class TreeUtils {
     }
 
     /**
-     // Dado un node, retorna el nodo negado
+     // Dado un nodo, retorna el nodo negado
      // Si el parametro naive es verdadero, solo agrega un unary minus extra a la expresion
      // de otro modo, hace la negacion completa
      //En este caso el parametro naive es falso por defecto.

@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import ar.com.profebot.parser.container.Tree;
 import ar.com.profebot.parser.container.TreeNode;
 
 public class TreeUtilsTest {
@@ -288,6 +289,20 @@ public class TreeUtilsTest {
         nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
         TreeNode nodoNegado = TreeUtils.negate(nodoRaiz);
         Assert.assertEquals(nodoRaiz.getLeftNode(),nodoNegado);
+    }
+
+    @Test
+    public void negate_ok4(){
+        TreeNode nodoRaiz = new TreeNode("4");
+        TreeNode nodoNegado = TreeUtils.negate(nodoRaiz);
+        Assert.assertTrue(TreeUtils.hasValue(nodoNegado,"-4"));
+    }
+
+    @Test
+    public void negate_ok5(){
+        TreeNode nodoRaiz = new TreeNode("-4");
+        TreeNode nodoNegado = TreeUtils.negate(nodoRaiz);
+        Assert.assertTrue(TreeUtils.hasValue(nodoNegado,"4"));
     }
 
     @Test
