@@ -260,6 +260,46 @@ public class TreeUtilsTest {
     }
 
     @Test
+    public void canRearrangeCoefficient_ok(){
+        TreeNode nodoRaiz = new TreeNode("*");
+        TreeNode nodoIzquierdoRaiz = new TreeNode("X");
+        TreeNode nodoDerechoRaiz = new TreeNode("3");
+        nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
+        nodoRaiz.setRightNode(nodoDerechoRaiz);
+        Assert.assertTrue(TreeUtils.canRearrangeCoefficient(nodoRaiz));
+    }
+
+    @Test
+    public void canRearrangeCoefficient_ok2(){
+        TreeNode nodoRaiz = new TreeNode("/");
+        TreeNode nodoIzquierdoRaiz = new TreeNode("3");
+        TreeNode nodoDerechoRaiz = new TreeNode("X");
+        nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
+        nodoRaiz.setRightNode(nodoDerechoRaiz);
+        Assert.assertFalse(TreeUtils.canRearrangeCoefficient(nodoRaiz));
+    }
+
+    @Test
+    public void canRearrangeCoefficient_ok3(){
+        TreeNode nodoRaiz = new TreeNode("+");
+        TreeNode nodoIzquierdoRaiz = new TreeNode("3");
+        TreeNode nodoDerechoRaiz = new TreeNode("X");
+        nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
+        nodoRaiz.setRightNode(nodoDerechoRaiz);
+        Assert.assertFalse(TreeUtils.canRearrangeCoefficient(nodoRaiz));
+    }
+
+    @Test
+    public void canRearrangeCoefficient_ok4(){
+        TreeNode nodoRaiz = new TreeNode("*");
+        TreeNode nodoIzquierdoRaiz = new TreeNode("3");
+        TreeNode nodoDerechoRaiz = new TreeNode("X");
+        nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
+        nodoRaiz.setRightNode(nodoDerechoRaiz);
+        Assert.assertFalse(TreeUtils.canRearrangeCoefficient(nodoRaiz));
+    }
+
+    @Test
     public void canMultiplyLikeTermConstantNodes_ok(){
         TreeNode nodoRaiz = new TreeNode("/");
         TreeNode nodoIzquierdoRaiz = new TreeNode("3");

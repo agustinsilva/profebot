@@ -458,11 +458,11 @@ public class TreeUtils {
         return TreeNode.createUnaryMinus(node);
     }
 
-    // Returns true if the expression is a multiplication between a constant
-    // and polynomial without a coefficient.
+    // Retorna verdadero si la expresion es una multiplicacion entre una connstante
+    // y un polinomio sin coeficiente.
     public static Boolean canRearrangeCoefficient(TreeNode node) {
-        // implicit multiplication doesn't count as multiplication here, since it
-        // represents a single term.
+        //Una multiplicacion implicita no cuenta como multiplicacion, dado que representa un
+        // unico termino.
         if (!node.esProducto()) {
             return false;
         }
