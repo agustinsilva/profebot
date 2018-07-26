@@ -276,7 +276,7 @@ public class TreeUtils {
         } else if (node.esResta()) {
             // Esta operacion sera una suma por ejemplo 2 - 3 -> 2 + -(-3)
             TreeNode secondOperand = node.getChild(1);
-            TreeNode negativeSecondOperand = negate(secondOperand, true);
+            TreeNode negativeSecondOperand = negate(secondOperand, false);
 
             List<TreeNode> leftOperandsList = getOperands(node.getChild(0), parentOp);
             List<TreeNode> rightOperandsList = getOperands(negativeSecondOperand, parentOp);
@@ -451,8 +451,7 @@ public class TreeUtils {
             return node;
         }
         else if (isPolynomialTerm(node)) {
-            node.setCoefficient(node.getCoefficient() * -1);
-            node.updateVariableValues();
+            node.multiplyCoefficient("-1");
             return  node;
         }
         else if (!naive) {

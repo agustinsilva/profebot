@@ -48,6 +48,7 @@ captures/
 .idea/dictionaries
 .idea/libraries
 AppMobile/.idea/*
+AppMobile/.idea/caches/build_file_checksums.ser
 
 # Keystore files
 *.jks

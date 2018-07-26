@@ -90,7 +90,7 @@ public class TreeNode {
 
     @Override
     public String toString() {
-        return "TreeNode [value=" + value + "]";
+        return "value=" + value + "; exp= " + toExpression() ;
     }
 
     public Boolean esAditivo(){
