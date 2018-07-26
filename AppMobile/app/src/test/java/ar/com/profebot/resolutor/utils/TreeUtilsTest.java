@@ -444,6 +444,81 @@ public class TreeUtilsTest {
     }
 
     @Test
+    public void canMultiplyLikeTermConstantNodes_ok6(){
+        TreeNode nodoRaiz = new TreeNode("*");
+        TreeNode nodoIzquierdoRaiz = new TreeNode("^");
+        TreeNode nodoDerechoRaiz = new TreeNode("^");
+        TreeNode nodoIzquierdoHijoIzquierdo = new TreeNode("3");
+        TreeNode nodoIzquierdoHijoDerecho = new TreeNode("2");
+        TreeNode nodoDerechoHijoIzquierdo = new TreeNode("3");
+        TreeNode nodoDerechoHijoDerecho = new TreeNode("5");
+        nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
+        nodoRaiz.setRightNode(nodoDerechoRaiz);
+        nodoIzquierdoRaiz.setLeftNode(nodoIzquierdoHijoIzquierdo);
+        nodoIzquierdoRaiz.setRightNode(nodoIzquierdoHijoDerecho);
+        nodoDerechoRaiz.setLeftNode(nodoDerechoHijoIzquierdo);
+        nodoDerechoRaiz.setRightNode(nodoDerechoHijoDerecho);
+        Assert.assertTrue(TreeUtils.canMultiplyLikeTermConstantNodes(nodoRaiz));
+    }
+
+    @Test
+    public void canMultiplyLikeTermConstantNodes_ok7(){
+        TreeNode nodoRaiz = new TreeNode("*");
+        TreeNode nodoIzquierdoRaiz = new TreeNode("^");
+        TreeNode nodoDerechoRaiz = new TreeNode("^");
+        TreeNode nodoIzquierdoHijoIzquierdo = new TreeNode("2");
+        TreeNode nodoIzquierdoHijoDerecho = new TreeNode("3");
+        TreeNode nodoDerechoHijoIzquierdo = new TreeNode("3");
+        TreeNode nodoDerechoHijoDerecho = new TreeNode("2");
+        nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
+        nodoRaiz.setRightNode(nodoDerechoRaiz);
+        nodoIzquierdoRaiz.setLeftNode(nodoIzquierdoHijoIzquierdo);
+        nodoIzquierdoRaiz.setRightNode(nodoIzquierdoHijoDerecho);
+        nodoDerechoRaiz.setLeftNode(nodoDerechoHijoIzquierdo);
+        nodoDerechoRaiz.setRightNode(nodoDerechoHijoDerecho);
+        Assert.assertFalse(TreeUtils.canMultiplyLikeTermConstantNodes(nodoRaiz));
+    }
+
+    @Test
+    public void canMultiplyLikeTermConstantNodes_ok8(){
+        TreeNode nodoRaiz = new TreeNode("*");
+        TreeNode nodoIzquierdoRaiz = new TreeNode("^");
+        TreeNode nodoDerechoRaiz = new TreeNode("^");
+        TreeNode nodoIzquierdoHijoIzquierdo = new TreeNode("10");
+        TreeNode nodoIzquierdoHijoDerecho = new TreeNode("3");
+        TreeNode nodoDerechoHijoIzquierdo = new TreeNode("10");
+        TreeNode nodoDerechoHijoDerecho = new TreeNode("2");
+        nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
+        nodoRaiz.setRightNode(nodoDerechoRaiz);
+        nodoIzquierdoRaiz.setLeftNode(nodoIzquierdoHijoIzquierdo);
+        nodoIzquierdoRaiz.setRightNode(nodoIzquierdoHijoDerecho);
+        nodoDerechoRaiz.setLeftNode(nodoDerechoHijoIzquierdo);
+        nodoDerechoRaiz.setRightNode(nodoDerechoHijoDerecho);
+        Assert.assertTrue(TreeUtils.canMultiplyLikeTermConstantNodes(nodoRaiz));
+    }
+    @Test
+    public void canMultiplyLikeTermConstantNodes_ok9(){
+        TreeNode nodoRaiz = new TreeNode("*");
+        TreeNode nodoIzquierdoRaiz = new TreeNode("^");
+        TreeNode nodoDerechoRaiz = new TreeNode("*");
+        TreeNode nodoIzquierdoHijoIzquierdo = new TreeNode("10");
+        TreeNode nodoIzquierdoHijoDerecho = new TreeNode("2");
+        TreeNode nodoDerechoHijoIzquierdo = new TreeNode("10");
+        TreeNode nodoDerechoHijoDerecho = new TreeNode("^");
+        TreeNode hijoFondoIzquierdo = new TreeNode("10");
+        TreeNode hijoFondoDerecho = new TreeNode("4");
+        nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
+        nodoRaiz.setRightNode(nodoDerechoRaiz);
+        nodoIzquierdoRaiz.setLeftNode(nodoIzquierdoHijoIzquierdo);
+        nodoIzquierdoRaiz.setRightNode(nodoIzquierdoHijoDerecho);
+        nodoDerechoRaiz.setLeftNode(nodoDerechoHijoIzquierdo);
+        nodoDerechoRaiz.setRightNode(nodoDerechoHijoDerecho);
+        nodoDerechoHijoDerecho.setLeftNode(hijoFondoIzquierdo);
+        nodoDerechoHijoDerecho.setRightNode(hijoFondoDerecho);
+        Assert.assertTrue(TreeUtils.canMultiplyLikeTermConstantNodes(nodoRaiz));
+    }
+
+    @Test
     public void isFraction_ok(){
         TreeNode nodoRaiz = new TreeNode("/");
         TreeNode nodoIzquierdoRaiz = new TreeNode("3");
