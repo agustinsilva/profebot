@@ -306,6 +306,46 @@ public class TreeUtilsTest {
     }
 
     @Test
+    public void negate_ok6(){
+        TreeNode nodoRaiz = new TreeNode("+");
+        TreeNode nodoIzquierdoRaiz = new TreeNode("X");
+        TreeNode nodoDerechoRaiz = new TreeNode("2");
+        nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
+        nodoRaiz.setRightNode(nodoDerechoRaiz);
+        TreeNode nodoNegado = TreeUtils.negate(nodoRaiz);
+        Assert.assertTrue(TreeUtils.hasValue(nodoNegado,"-"));
+        Assert.assertTrue(TreeUtils.hasValue(nodoNegado.getLeftNode(),"+"));
+        Assert.assertTrue(TreeUtils.hasValue(nodoNegado.getLeftNode().getLeftNode(),"X"));
+        Assert.assertTrue(TreeUtils.hasValue(nodoNegado.getLeftNode().getRightNode(),"2"));
+    }
+
+    @Test
+    public void negate_ok7(){
+        TreeNode nodoRaiz = new TreeNode("X");
+        TreeNode nodoNegado = TreeUtils.negate(nodoRaiz);
+        boolean value = nodoNegado.getCoefficient() == -1;
+        Assert.assertTrue(value);
+    }
+
+    @Test
+    public void negate_ok8(){
+        TreeNode nodoRaiz = new TreeNode("X");
+        nodoRaiz.setExponent(2);
+        TreeNode nodoNegado = TreeUtils.negate(nodoRaiz);
+        boolean value = nodoNegado.getCoefficient() == -1 && nodoNegado.getExponent() == 2;
+        Assert.assertTrue(value);
+    }
+
+    @Test
+    public void negate_ok9(){
+        TreeNode nodoRaiz = new TreeNode("X");
+        nodoRaiz.setExponent(2);
+        nodoRaiz.setCoefficient(-1);
+        TreeNode nodoNegado = TreeUtils.negate(nodoRaiz);
+        boolean value = nodoNegado.getCoefficient() == 1 && nodoNegado.getExponent() == 2;
+        Assert.assertTrue(value);
+    }
+    @Test
     public void canRearrangeCoefficient_ok(){
         TreeNode nodoRaiz = new TreeNode("*");
         TreeNode nodoIzquierdoRaiz = new TreeNode("X");
