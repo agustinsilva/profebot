@@ -48,7 +48,16 @@ public class TreeUtils {
 
     //Valida si el nodo es un polinomio.
     public static Boolean isPolynomialTerm(TreeNode treeNode){
-        return (treeNode!=null && treeNode.getValue().contains("X") );
+        return (treeNode!=null && isSymbol(treeNode, false) );
+    }
+
+    public static Boolean isSymbol(TreeNode treeNode, Boolean allowUnaryMinus){
+        if (treeNode!=null && treeNode.getValue().contains("X")){
+            return true;
+        }else if (allowUnaryMinus && treeNode.isUnaryMinus()) {
+            return isSymbol(treeNode.getChild(0), false);
+        }
+        return false;
     }
 
     //Valida si el nodo es / (division) y los hijos son constantes

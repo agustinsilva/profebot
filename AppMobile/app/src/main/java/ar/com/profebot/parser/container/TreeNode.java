@@ -279,6 +279,14 @@ public class TreeNode {
         return newNode;
     }
 
+    public static TreeNode createPolynomialTerm(String x, TreeNode exponent, Integer coefficient) {
+        return createOperator("^", new TreeNode(coefficient.toString() + x), exponent);
+    }
+
+    public static TreeNode createPolynomialTerm(String x, Integer exponent, Integer coefficient) {
+        return new TreeNode(coefficient.toString() + x + "^" + exponent.toString());
+    }
+
     public TreeNode getChild(int i) {
         if (i > this.args.size()-1){return null;}
         return this.args.get(i);
@@ -319,4 +327,8 @@ public class TreeNode {
     }
 
     public boolean isParenthesis() { return "()".equals(this.getValue());    }
+
+    public Integer getExponent(boolean defaultOne) {
+        return getExponent() == null && defaultOne? 1: getExponent();
+    }
 }

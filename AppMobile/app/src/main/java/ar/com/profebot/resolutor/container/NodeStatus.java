@@ -237,6 +237,10 @@ public class NodeStatus {
         return changeType;
     }
 
+    public void setChangeType(ChangeTypes changeType) {
+        this.changeType = changeType;
+    }
+
     public TreeNode getOldNode() {
         return oldNode;
     }
@@ -266,20 +270,119 @@ public class NodeStatus {
     // that is happening at the level of oldNode + newNode
     // e.g. 2 + 2 --> 4 (an addition node becomes a constant node)
     public static NodeStatus nodeChanged(ChangeTypes changeType, TreeNode oldNode, TreeNode newNode, List<NodeStatus> substeps) {
-        return new NodeStatus(changeType, oldNode, newNode, substeps);
+        return nodeChanged(changeType, oldNode, newNode, true, substeps);
     };
     public static NodeStatus nodeChanged(ChangeTypes changeType, TreeNode oldNode, TreeNode newNode) {
-        return new NodeStatus(changeType, oldNode, newNode, null);
+        return nodeChanged(changeType, oldNode, newNode, true, null);
     };
+    public static NodeStatus nodeChanged(ChangeTypes changeType, TreeNode oldNode, TreeNode newNode, Boolean defaultChangeGroup, List<NodeStatus> substeps) {
+        if (defaultChangeGroup) {
+            oldNode.setChangeGroup(1);
+            newNode.setChangeGroup(1);
+        }
+        return new NodeStatus(changeType, oldNode, newNode, substeps);
+    };
+    public static TreeNode resetChangeGroups(TreeNode node) {
+        node = node.cloneDeep();
+        node.setChangeGroup(null);
+        List<TreeNode> args = node.getArgs();
+        if (args!=null){
+            for(TreeNode n: args){
+                resetChangeGroups(n);
+            }
+        }
 
-    public static TreeNode resetChangeGroups(TreeNode newNode) {
-        // TODO  resetChangeGroups: Validar si nos sirve de algo
-        return newNode;
+        return node;
     }
 
-
-    public static NodeStatus childChanged(TreeNode newNode, NodeStatus childStatus, int i) {
-        // TODO childChanged
-        throw new UnsupportedOperationException();
+    public static NodeStatus childChanged(TreeNode newNode, NodeStatus childStatus) {
+        return childChanged(newNode, childStatus, null);
     }
+
+    // A wrapper around the Status constructor for the case where there was
+    // a change that happened deeper `node`'s tree, and `node`'s children must be
+    // updated to have the newNode/oldNode metadata (changeGroups)
+    // e.g. (2 + 2) + x --> 4 + x has to update the left argument
+    public static NodeStatus childChanged(TreeNode node, NodeStatus childStatus, Integer i) {
+
+        /*TreeNode oldNode = node.cloneDeep();
+        TreeNode newNode = node.cloneDeep();
+        List<NodeStatus> substeps = childStatus.getSubsteps();
+
+        if (childStatus.getOldNode() == null) {
+            throw new Error ("Expected old node for changeType: " + childStatus.getChangeType());
+        }
+
+        function updateSubsteps(substeps, fn) {
+            substeps.map((step) => {
+                    step = fn(step);
+                 step.substeps = updateSubsteps(step.substeps, fn);
+            });
+            return substeps;
+        }
+
+        if (node.isParenthesis()) {
+            oldNode.setArgs(Collections.singletonList(childStatus.getOldNode());
+            newNode.setArgs(Collections.singletonList(childStatus.getNewNode());
+            substeps = updateSubstepsInParenthesis(substeps);
+
+            (substeps, (step) => {
+                TreeNode oldNode = node.cloneDeep();
+                TreeNode newNode = node.cloneDeep();
+                oldNode.content = step.oldNode;
+                newNode.content = step.newNode;
+                step.oldNode = oldNode;
+                step.newNode = newNode;
+            return step;
+            });
+        }
+        else if ((Type.isOperator(node) || Type.isFunction(node) &&
+                childArgIndex !== null)) {
+            oldNode.args[childArgIndex] = childStatus.oldNode;
+            newNode.args[childArgIndex] = childStatus.newNode;
+            substeps = updateSubsteps(substeps, (step) => {
+              const oldNode = node.cloneDeep();
+              const newNode = node.cloneDeep();
+                    oldNode.args[childArgIndex] = step.oldNode;
+                    newNode.args[childArgIndex] = step.newNode;
+                    step.oldNode = oldNode;
+                    step.newNode = newNode;
+                    return step;
+            });
+        }
+        else if (Type.isUnaryMinus(node)) {
+            oldNode.args[0] = childStatus.oldNode;
+            newNode.args[0] = childStatus.newNode;
+            substeps = updateSubsteps(substeps, (step) => {
+              const oldNode = node.cloneDeep();
+              const newNode = node.cloneDeep();
+                    oldNode.args[0] = step.oldNode;
+                    newNode.args[0] = step.newNode;
+                    step.oldNode = oldNode;
+                    step.newNode = newNode;
+            return step;
+             });
+        }
+        else {
+            throw new Error("Unexpected node type: " + node);
+        }
+
+        return new NodeStatus(childStatus.changeType, oldNode, newNode, substeps);*/
+        return null; // TODO REVISAR ESTE CODIGO DE childChanged
+    }
+
+    /*
+    private static List<NodeStatus> updateSubstepsInParenthesis(List<NodeStatus> substeps) {
+
+        List<NodeStatus> updatedStates = new ArrayList<>();
+
+        for(NodeStatus s: substeps)
+        TreeNode oldNode = node.cloneDeep();
+        TreeNode newNode = node.cloneDeep();
+        oldNode.content = step.oldNode;
+        newNode.content = step.newNode;
+        step.oldNode = oldNode;
+        step.newNode = newNode;
+        return step;
+    }*/
 }
