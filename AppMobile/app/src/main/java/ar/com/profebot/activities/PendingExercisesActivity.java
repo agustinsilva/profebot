@@ -1,10 +1,12 @@
 package ar.com.profebot.activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 
 import com.profebot.activities.R;
 import com.x5.util.Base64;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ar.com.profebot.Models.PendingExercise;
+import ar.com.profebot.service.ExpressionsManager;
 import ar.com.profebot.service.PendingExerciseAdapter;
 
 public class PendingExercisesActivity extends AppCompatActivity {
@@ -28,6 +31,9 @@ private static final String URL_DATA = "imagen";
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pending_exercises_layout);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_id);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -59,19 +65,25 @@ private static final String URL_DATA = "imagen";
                     "  \"pendingExercises\": [\n" +
                     "    {\n" +
                     "      \"id\": 0,\n" +
-                    "      \"equation\": \"X+3=10\",\n" +
+                    "      \"equation\": \"(X+3)*2=10\",\n" +
                     "      \"difficulty\": 3,\n" +
                     "      \"subject\": \"Distributiva\"\n" +
                     "    },\n" +
                     "    {\n" +
                     "      \"id\": 1,\n" +
-                    "      \"equation\": \"X+3=10\",\n" +
+                    "      \"equation\": \"(X+3)/2=10*X\",\n" +
                     "      \"difficulty\": 3,\n" +
                     "      \"subject\": \"Operacion Fraccionaria\"\n" +
                     "    },\n" +
                     "    {\n" +
                     "      \"id\": 2,\n" +
-                    "      \"equation\": \"X+3+1=10\",\n" +
+                    "      \"equation\": \"(X+3)*(X+1)=610\",\n" +
+                    "      \"difficulty\": 3,\n" +
+                    "      \"subject\": \"Distributiva - Ecuacion Cuadratica\"\n" +
+                    "    },\n" +
+                    "    {\n" +
+                    "      \"id\": 3,\n" +
+                    "      \"equation\": \"(X+3)*(X-10)=60\",\n" +
                     "      \"difficulty\": 3,\n" +
                     "      \"subject\": \"Distributiva - Ecuacion Cuadratica\"\n" +
                     "    }\n" +
@@ -123,5 +135,16 @@ private static final String URL_DATA = "imagen";
 //                });
 //        RequestQueue requestQueue = Volley.newRequestQueue(this);
 //        requestQueue.add(stringRequestToIAModule);
+    }
+
+    @Override
+    public void onBackPressed() {
+        ExpressionsManager.setEquationDrawn(null);
+        startActivity(new Intent(this, MainActivity.class));
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        startActivity(new Intent(this, MainActivity.class));
+        return true;
     }
 }
