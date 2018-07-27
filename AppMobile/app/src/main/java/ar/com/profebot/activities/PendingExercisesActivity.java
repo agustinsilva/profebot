@@ -7,7 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.profebot.activities.R;
-
+import com.x5.util.Base64;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,19 +59,19 @@ private static final String URL_DATA = "imagen";
                     "  \"pendingExercises\": [\n" +
                     "    {\n" +
                     "      \"id\": 0,\n" +
-                    "      \"equation\": \"X+3 = 10\",\n" +
+                    "      \"equation\": \"X+3=10\",\n" +
                     "      \"difficulty\": 3,\n" +
                     "      \"subject\": \"Distributiva\"\n" +
                     "    },\n" +
                     "    {\n" +
                     "      \"id\": 1,\n" +
-                    "      \"equation\": \"(X+3)/2 = 10\",\n" +
+                    "      \"equation\": \"X+3=10\",\n" +
                     "      \"difficulty\": 3,\n" +
                     "      \"subject\": \"Operacion Fraccionaria\"\n" +
                     "    },\n" +
                     "    {\n" +
                     "      \"id\": 2,\n" +
-                    "      \"equation\": \"(X+3).(X+1) = 10\",\n" +
+                    "      \"equation\": \"X+3+1=10\",\n" +
                     "      \"difficulty\": 3,\n" +
                     "      \"subject\": \"Distributiva - Ecuacion Cuadratica\"\n" +
                     "    }\n" +
