@@ -1,42 +1,65 @@
 package ar.com.profebot.ia;
 
 import ia.module.genetic.algorithm.GeneticAlgorithm;
+import org.springframework.stereotype.Service;
 
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
+@Service
 public class GeneticAlgorithmExecutor {
 
-    private static String baseExpression;
-    private GeneticAlgorithm geneticAlgorithm;
-
-    public GeneticAlgorithmExecutor(String aBaseExpression){
-        baseExpression = aBaseExpression;
-        this.geneticAlgorithm = null != baseExpression && !"".equals(baseExpression) ? new GeneticAlgorithm(baseExpression) : null;
+    public static EquationsResponse execute(String aTermExpression, String aContextExpression, String root){
+        return new EquationsResponse(getMostSimilarExpressionTo(aTermExpression, "".equals(aContextExpression) ? aTermExpression : aContextExpression), root);
     }
 
-    public Expression execute(){
+    private static List<ExpressionResponse> getMostSimilarExpressionTo(String aTermExpression, String aContextExpression){
+        List<ExpressionResponse> responses = new ArrayList<>();
+        responses.add(getNewExpressionFrom(aTermExpression));
+        responses.add(getNewExpressionFrom(aContextExpression));
+        responses.add(getNewExpressionFrom(aContextExpression));
+        responses.add(getNewExpressionFrom(aContextExpression));
+        return responses;
+    }
+
+    private static ExpressionResponse getNewExpressionFrom(String baseExpression){
         ExecutorService executor = Executors.newSingleThreadExecutor();
-        Future<Expression> future = executor.submit(new Task());
-        try {
-            return future.get(5, TimeUnit.SECONDS);
-        } catch (Exception e) {
-            future.cancel(true);
-        }
-        return new Expression("", 0.0);
+        ExpressionResponse response = ExpressionResponse.empty();
+        do {
+            try {
+                response = executor.submit(new Task(baseExpression)).get(5, TimeUnit.SECONDS);
+            } catch (Exception e) {
+                System.out.println("\n\n\n\nTimeout\n\n\n\n");
+                for (Thread thread : Thread.getAllStackTraces().keySet()) {
+                    if (thread.getName().contains("pool-") && thread.getName().contains("thread-")) {
+                        System.out.println("Thread stopped: " + thread.getName());
+                        thread.stop();
+                    }
+                }
+            }
+        }while (!response.isValid());
+
+        return response;
     }
 
-    public Expression getMostSimilarExpression(){
-        if(geneticAlgorithm != null) {
-            String mostSimilarExpression = geneticAlgorithm.getExpressionMostSimilar();
-            return new Expression(mostSimilarExpression, geneticAlgorithm.getSimilarExpressionCalculator().similarityWith(mostSimilarExpression));
-        }
-        return new Expression("", 0.0);
-    }
+    static class Task implements Callable<ExpressionResponse> {
 
-    class Task implements Callable<Expression> {
+        private String baseExpression;
+
+        public Task(String aBaseExpression){
+            baseExpression = aBaseExpression;
+        }
+
         @Override
-        public Expression call() throws Exception {
-            return new GeneticAlgorithmExecutor(baseExpression).getMostSimilarExpression();
+        public ExpressionResponse call() throws Exception {
+            GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(this.baseExpression);
+            String mostSimilarExpression = geneticAlgorithm.getExpressionMostSimilar();
+            Double similarity = geneticAlgorithm.getSimilarExpressionCalculator().similarityWith(mostSimilarExpression);
+            return new ExpressionResponse(mostSimilarExpression, similarity);
         }
     }
 }

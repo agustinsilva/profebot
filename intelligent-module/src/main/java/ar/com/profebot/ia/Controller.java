@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class Controller {
 
     @RequestMapping(method = RequestMethod.GET)
-    public String getMostSimilarExpressionTo() {
-        String baseExpression = "x^2+2x+1";
-        GeneticAlgorithmExecutor executor = new GeneticAlgorithmExecutor(baseExpression);
-        Expression result = executor.execute();
-        return "Expresión: " + result.getExpressionAsInfix() + " Similarity: " + result.getSimilarity();
+    public EquationsResponse getMostSimilarExpressionTo() {
+        String termExpression = "3(x+1)";
+        String contextExpression = "3(x+1)+5";
+        String root = "=";
+        return GeneticAlgorithmExecutor.execute(termExpression, contextExpression, root);
     }
 }
