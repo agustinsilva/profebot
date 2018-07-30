@@ -1,12 +1,8 @@
 package ar.com.profebot.ia;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class ExpressionResponse {
 
-    @JsonProperty("expression")
     private String expressionAsInfix;
-    @JsonProperty("similarity")
     private Double similarity;
 
     public ExpressionResponse(String expressionAsInfix, Double similarity) {
@@ -24,5 +20,9 @@ public class ExpressionResponse {
 
     public Double getSimilarity() {
         return similarity;
+    }
+
+    public Boolean isValid(){
+        return !this.expressionAsInfix.equals("") && this.similarity >= 0.6;
     }
 }

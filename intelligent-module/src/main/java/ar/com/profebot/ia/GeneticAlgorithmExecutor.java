@@ -5,44 +5,45 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class GeneticAlgorithmExecutor {
 
-    public static List<ExpressionResponse> execute(String aTermExpression, String aContextExpression){
-        return getMostSimilarExpressionTo(aTermExpression, "".equals(aContextExpression) ? aTermExpression : aContextExpression);
+    public static EquationsResponse execute(String aTermExpression, String aContextExpression, String root){
+        return new EquationsResponse(getMostSimilarExpressionTo(aTermExpression, "".equals(aContextExpression) ? aTermExpression : aContextExpression), root);
     }
 
     private static List<ExpressionResponse> getMostSimilarExpressionTo(String aTermExpression, String aContextExpression){
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-
-        List<Task> tasks = new ArrayList<>();
-        tasks.add(new Task(aTermExpression));
-        tasks.add(new Task(aContextExpression));
-        tasks.add(new Task(aContextExpression));
-        tasks.add(new Task(aContextExpression));
-
         List<ExpressionResponse> responses = new ArrayList<>();
+        responses.add(getNewExpressionFrom(aTermExpression));
+        responses.add(getNewExpressionFrom(aContextExpression));
+        responses.add(getNewExpressionFrom(aContextExpression));
+        responses.add(getNewExpressionFrom(aContextExpression));
+        return responses;
+    }
 
-        try {
-            List<Future<ExpressionResponse>> futures = executor.invokeAll(tasks, 10, TimeUnit.SECONDS);
-            for(Future future : futures){
-                responses.add((ExpressionResponse) future.get());
-            }
-            return responses;
-        } catch (Exception e) {
-            System.out.println("\n\n\n\nTimeout\n\n\n\n");
-            for(Thread thread : Thread.getAllStackTraces().keySet()){
-                if(thread.getName().contains("pool-") && thread.getName().contains("thread-")){
-                    System.out.println("Thread stopped: " + thread.getName());
-                    thread.stop();
+    private static ExpressionResponse getNewExpressionFrom(String baseExpression){
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        ExpressionResponse response = ExpressionResponse.empty();
+        do {
+            try {
+                response = executor.submit(new Task(baseExpression)).get(5, TimeUnit.SECONDS);
+            } catch (Exception e) {
+                System.out.println("\n\n\n\nTimeout\n\n\n\n");
+                for (Thread thread : Thread.getAllStackTraces().keySet()) {
+                    if (thread.getName().contains("pool-") && thread.getName().contains("thread-")) {
+                        System.out.println("Thread stopped: " + thread.getName());
+                        thread.stop();
+                    }
                 }
             }
-            responses = new ArrayList<>();
-            responses.add(ExpressionResponse.empty());
-            return responses;
-        }
+        }while (!response.isValid());
+
+        return response;
     }
 
     static class Task implements Callable<ExpressionResponse> {
@@ -55,12 +56,10 @@ public class GeneticAlgorithmExecutor {
 
         @Override
         public ExpressionResponse call() throws Exception {
-            if(null != this.baseExpression && !"".equals(this.baseExpression)){
-                GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(this.baseExpression);
-                String mostSimilarExpression = geneticAlgorithm.getExpressionMostSimilar();
-                return new ExpressionResponse(mostSimilarExpression, geneticAlgorithm.getSimilarExpressionCalculator().similarityWith(mostSimilarExpression));
-            }
-            return new ExpressionResponse("", 0.0);
+            GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(this.baseExpression);
+            String mostSimilarExpression = geneticAlgorithm.getExpressionMostSimilar();
+            Double similarity = geneticAlgorithm.getSimilarExpressionCalculator().similarityWith(mostSimilarExpression);
+            return new ExpressionResponse(mostSimilarExpression, similarity);
         }
     }
 }
