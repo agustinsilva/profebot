@@ -8,24 +8,28 @@ import java.util.Random;
 
 public class EquationsResponse {
 
+    private List<String> equationsList;
+
     @JsonProperty("equations")
-    private List<String> equations;
+    private String equations;
 
     public EquationsResponse(List<ExpressionResponse> expressionResponse, String root) {
-        equations = new ArrayList<>();
+        equationsList = new ArrayList<>();
         if(!expressionResponse.isEmpty()){
             if(expressionResponse.get(0).isValid()){
-                equations.add(newEquation(expressionResponse.get(0), root));
+                equationsList.add(newEquation(expressionResponse.get(0), root));
             }
 
             if(expressionResponse.get(1).isValid()){
-                equations.add(newEquation(expressionResponse.get(1), root));
+                equationsList.add(newEquation(expressionResponse.get(1), root));
             }
 
             if(expressionResponse.get(2).isValid() && expressionResponse.get(3).isValid()){
-                equations.add(newEquation(expressionResponse.get(2), expressionResponse.get(3), root));
+                equationsList.add(newEquation(expressionResponse.get(2), expressionResponse.get(3), root));
             }
         }
+
+        equations = String.join(";", this.equationsList);
     }
 
     private String newEquation(ExpressionResponse expressionResponse, String root){

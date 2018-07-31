@@ -31,7 +31,7 @@
             android:screenOrientation="portrait" />
         <activity android:name="ar.com.profebot.activities.EnterEquationHandDrawActivity" />
         <activity
-            android:name="ar.com.profebot.activities.EnterEquationPhotoActivity"
+            android:name="ar.com.profebot.activities.ModuloInteligenteTestActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name="ar.com.profebot.activities.SolveEquationActivity"

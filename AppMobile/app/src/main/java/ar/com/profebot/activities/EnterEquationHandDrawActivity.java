@@ -60,10 +60,11 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
     }
 
     private void setUpButtons(){
-        ((Button) findViewById(R.id.enter_equation_photo_id)).setOnClickListener(new View.OnClickListener() {
+        // TODO: este botón va a dejar de existir --> es para probar la integración con el módulo inteligente
+        ((Button) findViewById(R.id.modulo_inteligente_test_id)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
-                Intent intent = new Intent(button.getContext(), EnterEquationPhotoActivity.class);
+                Intent intent = new Intent(button.getContext(), ModuloInteligenteTestActivity.class);
                 startActivity(intent);
             }
         });

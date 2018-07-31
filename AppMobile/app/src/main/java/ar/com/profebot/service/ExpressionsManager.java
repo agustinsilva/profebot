@@ -41,11 +41,15 @@ public class ExpressionsManager {
         ExpressionsManager.equationDrawn = mapToOurAlphabet(equationDrawn);
     }
 
-    public static String getEquationAsLatex() {
-        String infixEquation = treeOfExpression.toExpression()
+    public static String getEquationAsInfix(){
+        return treeOfExpression.toExpression()
                 .replaceAll("R", "sqrt")
                 .replaceAll("X", "x");
-        String[] expressions = infixEquation.split("=");
+    }
+
+    public static String getEquationAsLatex() {
+        String infixEquation = getEquationAsInfix();
+        String[] expressions = infixEquation.split("="); // TODO: se necesita el rool parametrizable
         return FormulaParser.parseToLatex(expressions[0]) + "=" + FormulaParser.parseToLatex(expressions[1]);
     }
 

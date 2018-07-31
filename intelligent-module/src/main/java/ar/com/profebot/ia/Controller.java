@@ -1,5 +1,6 @@
 package ar.com.profebot.ia;
 
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,10 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class Controller {
 
     @RequestMapping(method = RequestMethod.GET)
-    public EquationsResponse getMostSimilarExpressionTo() {
-        String termExpression = "3(x+1)";
-        String contextExpression = "3(x+1)+5";
-        String root = "=";
-        return GeneticAlgorithmExecutor.execute(termExpression, contextExpression, root);
+    public EquationsResponse newEquationsSimilarTo() {
+        return GeneticAlgorithmExecutor.execute("3(x+1)", "3(x+1)+5", "=");
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public EquationsResponse newEquationsSimilarTo(@RequestBody IAModuleParams params) {
+        return GeneticAlgorithmExecutor.execute(params.getTerm(), params.getContext(), params.getRoot());
     }
 }

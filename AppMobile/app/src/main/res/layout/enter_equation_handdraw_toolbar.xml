@@ -30,10 +30,10 @@
             android:layout_marginEnd="5dp">
 
             <Button
-                android:id="@+id/enter_equation_photo_id"
+                android:id="@+id/modulo_inteligente_test_id"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:background="@android:drawable/ic_menu_camera"
+                android:background="@android:drawable/star_big_on"
                 android:layout_marginEnd="10dp"/>
 
             <Button
