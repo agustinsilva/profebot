@@ -3,10 +3,14 @@ package ar.com.profebot.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.widget.TextView;
 
 import com.profebot.activities.R;
 import com.x5.util.Base64;
@@ -41,6 +45,23 @@ private static final String URL_DATA = "imagen";
         pendingExerciseList = new ArrayList<>();
         //aca fetcheo la data a las Cards
         loadRecyclerViewData();
+
+        final SwipeRefreshLayout swipeView = (SwipeRefreshLayout)findViewById(R.id.swipe_exercises);
+        swipeView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeView.setRefreshing(true);
+                Log.d("Swipe","Cargando nuevos ejercicios..");
+                (new Handler()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeView.setRefreshing(false);
+                        pendingExerciseList.clear();
+                        loadRecyclerViewData();
+                    }
+                },300);
+            }
+        });
 //
 //        for (int i = 0; i<= 10; i++){
 //            PendingExercise pendingExercise = new PendingExercise("Ejercicio: "+(i+1),"Ecuaciones");
@@ -54,54 +75,64 @@ private static final String URL_DATA = "imagen";
     private void loadRecyclerViewData() {
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Cargando ejercicios...");
+        progressDialog.setMax(5);
         progressDialog.show();
         //Codigo para leer de un JSON
         String json = null;
-
-        progressDialog.dismiss();
+        String jsonHARDCODE = "{\n" +
+                "  \"_id\": \"5b53c0e07ed96c51ba2f1757\",\n" +
+                "  \"pendingExercises\": [\n" +
+                "    {\n" +
+                "      \"id\": 0,\n" +
+                "      \"equation\": \"(X+3)*2=10\",\n" +
+                "      \"difficulty\": 3,\n" +
+                "      \"subject\": \"Distributiva\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"id\": 1,\n" +
+                "      \"equation\": \"(X+3)/2=10*X\",\n" +
+                "      \"difficulty\": 3,\n" +
+                "      \"subject\": \"Operacion Fraccionaria\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"id\": 2,\n" +
+                "      \"equation\": \"(X+3)*(X+1)=610\",\n" +
+                "      \"difficulty\": 3,\n" +
+                "      \"subject\": \"Distributiva - Ecuacion Cuadratica\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"id\": 3,\n" +
+                "      \"equation\": \"(X+3)*(X-10)=60\",\n" +
+                "      \"difficulty\": 3,\n" +
+                "      \"subject\": \"Distributiva - Ecuacion Cuadratica\"\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}";
         try {
-            String jsonHARDCODE = "{\n" +
-                    "  \"_id\": \"5b53c0e07ed96c51ba2f1757\",\n" +
-                    "  \"pendingExercises\": [\n" +
-                    "    {\n" +
-                    "      \"id\": 0,\n" +
-                    "      \"equation\": \"(X+3)*2=10\",\n" +
-                    "      \"difficulty\": 3,\n" +
-                    "      \"subject\": \"Distributiva\"\n" +
-                    "    },\n" +
-                    "    {\n" +
-                    "      \"id\": 1,\n" +
-                    "      \"equation\": \"(X+3)/2=10*X\",\n" +
-                    "      \"difficulty\": 3,\n" +
-                    "      \"subject\": \"Operacion Fraccionaria\"\n" +
-                    "    },\n" +
-                    "    {\n" +
-                    "      \"id\": 2,\n" +
-                    "      \"equation\": \"(X+3)*(X+1)=610\",\n" +
-                    "      \"difficulty\": 3,\n" +
-                    "      \"subject\": \"Distributiva - Ecuacion Cuadratica\"\n" +
-                    "    },\n" +
-                    "    {\n" +
-                    "      \"id\": 3,\n" +
-                    "      \"equation\": \"(X+3)*(X-10)=60\",\n" +
-                    "      \"difficulty\": 3,\n" +
-                    "      \"subject\": \"Distributiva - Ecuacion Cuadratica\"\n" +
-                    "    }\n" +
-                    "  ]\n" +
-                    "}";
-            JSONObject jsonObject = new JSONObject(jsonHARDCODE);
-            JSONArray array = jsonObject.getJSONArray("pendingExercises");
-            for (int i = 0; i < array.length(); i++) {
-                JSONObject o = array.getJSONObject(i);
-                PendingExercise item = new PendingExercise(o.getString("equation"), o.getString("subject"));
-                pendingExerciseList.add(item);
+        JSONObject jsonObject = new JSONObject(jsonHARDCODE);
+        JSONArray array = jsonObject.getJSONArray("pendingExercises");
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject o = array.getJSONObject(i);
+            PendingExercise item = new PendingExercise(o.getString("equation"), o.getString("subject"));
+            pendingExerciseList.add(item);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    adapter = new PendingExerciseAdapter(pendingExerciseList, getApplicationContext());
+                    recyclerView.setAdapter(adapter);
+                    if (progressDialog.getProgress() == progressDialog.getMax()) {
+                        progressDialog.dismiss();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-            adapter = new PendingExerciseAdapter(pendingExerciseList, getApplicationContext());
-            recyclerView.setAdapter(adapter);
-        }
-        catch  (JSONException e) {
-            e.printStackTrace();
-        }
+        }).start();
 
         //deberia ser un POST la request
 //        StringRequest stringRequestToIAModule = new StringRequest(Request.Method.GET,
