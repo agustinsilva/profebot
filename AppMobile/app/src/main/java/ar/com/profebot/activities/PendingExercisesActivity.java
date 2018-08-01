@@ -20,6 +20,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import ar.com.profebot.Models.PendingExercise;
 import ar.com.profebot.service.ExpressionsManager;
@@ -29,7 +31,9 @@ public class PendingExercisesActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private List<PendingExercise> pendingExerciseList;
-private static final String URL_DATA = "imagen";
+    ProgressDialog progressDialog;
+
+    private static final String URL_DATA = "imagen";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,7 @@ private static final String URL_DATA = "imagen";
         loadRecyclerViewData();
 
         final SwipeRefreshLayout swipeView = (SwipeRefreshLayout)findViewById(R.id.swipe_exercises);
+
         swipeView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -59,7 +64,7 @@ private static final String URL_DATA = "imagen";
                         pendingExerciseList.clear();
                         loadRecyclerViewData();
                     }
-                },300);
+                },3000);
             }
         });
 //
@@ -72,11 +77,9 @@ private static final String URL_DATA = "imagen";
 //         recyclerView.setAdapter(adapter);
     }
 
-    private void loadRecyclerViewData() {
-        ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Cargando ejercicios...");
-        progressDialog.setMax(5);
-        progressDialog.show();
+    private void loadRecyclerViewData()
+    {
+        progressDialog = ProgressDialog.show(PendingExercisesActivity.this,"Generando nuevos ejercicios","Cargando...");
         //Codigo para leer de un JSON
         String json = null;
         String jsonHARDCODE = "{\n" +
@@ -105,6 +108,12 @@ private static final String URL_DATA = "imagen";
                 "      \"equation\": \"(X+3)*(X-10)=60\",\n" +
                 "      \"difficulty\": 3,\n" +
                 "      \"subject\": \"Distributiva - Ecuacion Cuadratica\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"id\": 3,\n" +
+                "      \"equation\": \"x+6-(x+3+5)*7=(4*5)*(x)-5\",\n" +
+                "      \"difficulty\": 3,\n" +
+                "      \"subject\": \"Distributiva - Ecuacion Cuadratica\"\n" +
                 "    }\n" +
                 "  ]\n" +
                 "}";
@@ -116,23 +125,21 @@ private static final String URL_DATA = "imagen";
             PendingExercise item = new PendingExercise(o.getString("equation"), o.getString("subject"));
             pendingExerciseList.add(item);
         }
+            adapter = new PendingExerciseAdapter(pendingExerciseList, getApplicationContext());
+            recyclerView.setAdapter(adapter);
     } catch (Exception e) {
         e.printStackTrace();
     }
-        new Thread(new Runnable() {
-            @Override
+        final Timer t = new Timer();
+        t.schedule(new TimerTask() {
             public void run() {
-                try {
-                    adapter = new PendingExerciseAdapter(pendingExerciseList, getApplicationContext());
-                    recyclerView.setAdapter(adapter);
-                    if (progressDialog.getProgress() == progressDialog.getMax()) {
-                        progressDialog.dismiss();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                progressDialog.dismiss(); // when the task active then close the dialog
+                t.cancel(); // also just top the timer thread, otherwise, you may receive a crash report
             }
-        }).start();
+        }, 3000); // after 2 second (or 2000 miliseconds), the task will be active.
+//        if (progressDialog.isShowing()) {
+//            progressDialog.dismiss();
+//        }
 
         //deberia ser un POST la request
 //        StringRequest stringRequestToIAModule = new StringRequest(Request.Method.GET,
