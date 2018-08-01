@@ -1,20 +1,15 @@
 package ar.com.profebot.ia;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class EquationsResponse {
 
-    private List<String> equationsList;
-
-    @JsonProperty("equations")
     private String equations;
 
     public EquationsResponse(List<ExpressionResponse> expressionResponse, String root) {
-        equationsList = new ArrayList<>();
+        List<String> equationsList = new ArrayList<>();
         if(!expressionResponse.isEmpty()){
             if(expressionResponse.get(0).isValid()){
                 equationsList.add(newEquation(expressionResponse.get(0), root));
@@ -29,7 +24,7 @@ public class EquationsResponse {
             }
         }
 
-        equations = String.join(";", this.equationsList);
+        equations = String.join(";", equationsList);
     }
 
     private String newEquation(ExpressionResponse expressionResponse, String root){
@@ -42,5 +37,9 @@ public class EquationsResponse {
 
     private Integer getRandomNumber(){
         return new Random().nextInt(10) + 1;
+    }
+
+    public String getEquations(){
+        return this.equations;
     }
 }

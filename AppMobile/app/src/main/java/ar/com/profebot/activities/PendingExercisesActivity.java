@@ -13,7 +13,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.profebot.activities.R;
-import com.x5.util.Base64;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
