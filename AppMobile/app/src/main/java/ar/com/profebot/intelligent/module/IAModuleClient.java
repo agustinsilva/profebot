@@ -1,7 +1,9 @@
-package ar.com.profebot.service;
+package ar.com.profebot.intelligent.module;
 
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.profebot.activities.R;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,30 +17,23 @@ import ar.com.profebot.activities.ModuloInteligenteTestActivity;
 
 public class IAModuleClient extends AsyncTask<String, Void, Void> {
 
-    private String response;
     private String json;
-    private String method;
     private Integer timeout;
     private ModuloInteligenteTestActivity context;
 
-    public IAModuleClient(String json, String method, Integer timeout, ModuloInteligenteTestActivity context) {
-        this.json = json;
-        this.method = method;
-        this.timeout = timeout;
+    public IAModuleClient(String root, String term, String termContext, ModuloInteligenteTestActivity context) {
+        this.json = "{\"root\": \"" + root + "\",\"term\":\"" + term + "\",\"context\":\"" + termContext + "\"}";
+        this.timeout = 3600000;
         this.context = context;
-    }
-
-    public String getResponse() {
-        return response;
     }
 
     @Override
     protected Void doInBackground(String... params) {
         HttpURLConnection connection = null;
         try {
-            URL u = new URL(params[0]);
+            URL u = new URL(context.getString(R.string.url));
             connection = (HttpURLConnection) u.openConnection();
-            connection.setRequestMethod(method);
+            connection.setRequestMethod(context.getString(R.string.method));
 
             //set the sending type and receiving type to json
             connection.setRequestProperty("Content-Type", "application/json");
@@ -85,7 +80,6 @@ public class IAModuleClient extends AsyncTask<String, Void, Void> {
                         }
                     });
             }
-
         } catch (MalformedURLException ex) {
             Log.e("HTTP Client", "Error in http connection" + ex.toString());
         } catch (IOException ex) {

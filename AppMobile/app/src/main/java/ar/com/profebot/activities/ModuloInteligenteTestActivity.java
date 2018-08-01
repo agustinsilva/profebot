@@ -7,8 +7,8 @@ import android.widget.TextView;
 
 import com.profebot.activities.R;
 
+import ar.com.profebot.intelligent.module.IAModuleClient;
 import ar.com.profebot.service.ExpressionsManager;
-import ar.com.profebot.service.IAModuleClient;
 
 public class ModuloInteligenteTestActivity extends GlobalActivity{
     @Override
@@ -25,9 +25,8 @@ public class ModuloInteligenteTestActivity extends GlobalActivity{
             String root = "="; // TODO: parametrizar el root
             // TODO: cambiar a la lógica real que toma el término y el contexto
             String[] expressions = ExpressionsManager.getEquationAsInfix().split(root);
-            String jsonBody = "{\"root\": \"" + root + "\",\"term\":\"" + expressions[0] + "\",\"context\":\"" + expressions[1] + "\"}";
-            IAModuleClient client = new IAModuleClient(jsonBody, "POST", 3600000, this);
-            client.execute("http://10.0.2.2:8080/more/practice");
+            IAModuleClient client = new IAModuleClient(root, expressions[0], expressions[1], this);
+            client.execute();
         }
     }
 

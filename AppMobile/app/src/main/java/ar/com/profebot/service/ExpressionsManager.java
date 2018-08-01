@@ -207,6 +207,7 @@ public class ExpressionsManager {
         return equationWellWritten
                 .replaceAll("\\[", "(")
                 .replaceAll("]", ")")
+                .replaceAll("\\)\\(", ")*(")
                 .replaceAll(":", "/")
                 .replaceAll(",", ".")
                 .replaceAll("\\^\\(\\*\\)", "*") // After replacing [] by (), we must search ^(*)
