@@ -23,6 +23,6 @@ public class ExpressionResponse {
     }
 
     public Boolean isValid(){
-        return !this.expressionAsInfix.equals("") && this.similarity >= 0.6;
+        return !this.expressionAsInfix.equals("") && this.similarity >= 0.75;
     }
 }
