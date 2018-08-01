@@ -1,10 +1,20 @@
 package ar.com.profebot.resolutor;
 
+import android.support.v4.app.INotificationSideChannel;
+
+import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
+import ar.com.profebot.parser.container.Tree;
 import ar.com.profebot.parser.container.TreeNode;
+import ar.com.profebot.parser.exception.InvalidExpressionException;
 import ar.com.profebot.resolutor.service.SimplifyService;
+import ar.com.profebot.parser.service.ParserService;
+import ar.com.profebot.resolutor.container.NodeStatus;
 
 public class SimplifyServiceTest extends SimplifyService {
 
@@ -14,228 +24,293 @@ public class SimplifyServiceTest extends SimplifyService {
     }
 
     @Test
-    public void stepThrough() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.stepThrough(node);
+    public void stepThrough_ok1()  throws InvalidExpressionException {
+        String expression = "(2+2) = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        List<NodeStatus> listaNodos =  super.stepThrough(node);
+        NodeStatus estadoSimple = listaNodos.get(0);
+        Assert.assertTrue(listaNodos.size() == 1);
+        Assert.assertTrue(estadoSimple.getChangeType() == NodeStatus.ChangeTypes.SIMPLIFY_ARITHMETIC);
     }
 
     @Test
-    public void step() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.step(node);
+    public void step_ok1() throws InvalidExpressionException {
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.step(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void arithmeticSearch() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.arithmeticSearch(node);
+    public void arithmeticSearch() throws InvalidExpressionException{
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.arithmeticSearch(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void basicSearch() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.basicSearch(node);
+    public void basicSearch() throws InvalidExpressionException {
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.basicSearch(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void breakUpNumeratorSearch() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.breakUpNumeratorSearch(node);
+    public void breakUpNumeratorSearch() throws InvalidExpressionException{
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.breakUpNumeratorSearch(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void collectAndCombineSearch() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.collectAndCombineSearch(node);
+    public void collectAndCombineSearch() throws InvalidExpressionException{
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.collectAndCombineSearch(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void distributeSearch() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.distributeSearch(node);
+    public void distributeSearch() throws InvalidExpressionException {
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.distributeSearch(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void divisionSearch() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.divisionSearch(node);
+    public void divisionSearch() throws InvalidExpressionException{
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.divisionSearch(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void fractionsSearch() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.fractionsSearch(node);
+    public void fractionsSearch() throws InvalidExpressionException{
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.fractionsSearch(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void functionsSearch() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.functionsSearch(node);
+    public void functionsSearch() throws InvalidExpressionException {
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.functionsSearch(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void multiplyFractionsSearch() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.multiplyFractionsSearch(node);
+    public void multiplyFractionsSearch() throws InvalidExpressionException{
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.multiplyFractionsSearch(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void reduceExponentByZero() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.reduceExponentByZero(node);
+    public void reduceExponentByZero() throws InvalidExpressionException {
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.reduceExponentByZero(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void reduceMultiplicationByZero() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.reduceMultiplicationByZero(node);
+    public void reduceMultiplicationByZero() throws InvalidExpressionException{
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.reduceMultiplicationByZero(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void reduceZeroDividedByAnything() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.reduceZeroDividedByAnything(node);
+    public void reduceZeroDividedByAnything() throws InvalidExpressionException {
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.reduceZeroDividedByAnything(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void removeAdditionOfZero() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.removeAdditionOfZero(node);
+    public void removeAdditionOfZero() throws InvalidExpressionException{
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.removeAdditionOfZero(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void removeDivisionByOne() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.removeDivisionByOne(node);
+    public void removeDivisionByOne() throws InvalidExpressionException{
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.removeDivisionByOne(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void removeExponentBaseOne() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.removeExponentBaseOne(node);
+    public void removeExponentBaseOne() throws InvalidExpressionException {
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.removeExponentBaseOne(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void simplifyDoubleUnaryMinus() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.simplifyDoubleUnaryMinus(node);
+    public void simplifyDoubleUnaryMinus() throws InvalidExpressionException{
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.simplifyDoubleUnaryMinus(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void removeExponentByOne() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.removeExponentByOne(node);
+    public void removeExponentByOne() throws InvalidExpressionException{
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.removeExponentByOne(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void removeMultiplicationByNegativeOne() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.removeMultiplicationByNegativeOne(node);
+    public void removeMultiplicationByNegativeOne() throws InvalidExpressionException {
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.removeMultiplicationByNegativeOne(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void removeMultiplicationByOne() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.removeMultiplicationByOne(node);
+    public void removeMultiplicationByOne() throws InvalidExpressionException{
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.removeMultiplicationByOne(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void rearrangeCoefficient() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.rearrangeCoefficient(node);
+    public void rearrangeCoefficient() throws InvalidExpressionException {
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.rearrangeCoefficient(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void addConstantAndFraction() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.addConstantAndFraction(node);
+    public void addConstantAndFraction() throws InvalidExpressionException{
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.addConstantAndFraction(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void addConstantFractions() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.addConstantFractions(node);
+    public void addConstantFractions() throws InvalidExpressionException {
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.addConstantFractions(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void addLikeTerms() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.addLikeTerms(node, false);
+    public void addLikeTerms() throws InvalidExpressionException {
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.addLikeTerms(node,true);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void addLikePolynomialTerms() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.addLikePolynomialTerms(node);
+    public void addLikePolynomialTerms() throws InvalidExpressionException {
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.addLikePolynomialTerms(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void addLikeNthRootTerms() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.addLikeNthRootTerms(node);
+    public void addLikeNthRootTerms() throws InvalidExpressionException{
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.addLikeNthRootTerms(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void addLikeTermNodes() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        String termSubclass = "";
-        super.addLikeTermNodes(node, termSubclass, null);
+    public void addLikeTermNodes() throws InvalidExpressionException {
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.addLikeTermNodes(node,"",null);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void multiplyLikeTerms() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.multiplyLikeTerms(node, false);
+    public void multiplyLikeTerms() throws InvalidExpressionException {
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.multiplyLikeTerms(node,true);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void simplifyFractionSigns() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.simplifyFractionSigns(node);
+    public void simplifyFractionSigns() throws InvalidExpressionException {
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.simplifyFractionSigns(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void cancelLikeTerms() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.cancelLikeTerms(node);
+    public void cancelLikeTerms() throws InvalidExpressionException {
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.cancelLikeTerms(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
     @Test
-    public void simplifyPolynomialFraction() {
-        // TODO generar test
-        TreeNode node = new TreeNode("");
-        super.simplifyPolynomialFraction(node);
+    public void simplifyPolynomialFraction() throws InvalidExpressionException {
+        String expression = "4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.simplifyPolynomialFraction(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
 }

@@ -31,8 +31,8 @@ public class SimplifyService {
     private static final String NTH_ROOT_TERM = "NthRootTerm";
 
     /**
-     // Given an expression node, steps through simplifying the expression.
-     // Returns a list of details about each step.
+     // Dado un nodo expresion, dada una lista de paso a paso simplificando la expresion.
+     // Retorna una lista de detalles acerca del paso.
      * @param node Nodo a evaluar
      * @return Lista de pasos
      */
@@ -43,9 +43,8 @@ public class SimplifyService {
         Integer iters = 0;
 
         String originalExpressionStr = node.toExpression();
-        Log.d("debugTag","\n\nSimplifying: " + originalExpressionStr);
 
-        // Now, step through the math expression until nothing changes
+        // Ahora, simplifica la expresion matematica hasta que no pueda cambiar más.
         NodeStatus nodeStatus = step(node);
         while (nodeStatus.hasChanged()) {
             logSteps(nodeStatus);
@@ -56,7 +55,6 @@ public class SimplifyService {
             nodeStatus = step(node);
 
             if (MAX_STEP_COUNT.equals(iters++)) {
-                // eslint-disable-next-line
                 Log.e("errorTag","Math error: Potential infinite loop for expression: " +
                         originalExpressionStr + ", returning no steps");
                 return new ArrayList<>();
