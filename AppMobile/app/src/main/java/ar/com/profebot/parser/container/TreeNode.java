@@ -39,8 +39,9 @@ public class TreeNode {
         if(this.getRightNode() != null) {
             node.setRightNode(this.getRightNode().clone());
         }
+        List<TreeNode> otrosArgs = this.args.subList(2,this.args.size());
         if(this.getRightNode() != null && this.getLeftNode() != null) {
-            for (TreeNode child : this.args) {
+            for (TreeNode child : otrosArgs) {
                 node.addChild(child.clone());
             }
         }
@@ -274,9 +275,27 @@ public class TreeNode {
     }
 
     public static TreeNode createParenthesis(TreeNode node) {
-        TreeNode newNode = new TreeNode("()");
-        newNode.setLeftNode(node);
-        return newNode;
+        node.setLeftestNode(node,"(");
+        node.setRightestNode(node,")");
+        return node;
+    }
+
+    private static void setLeftestNode(TreeNode node,String value){
+        if(node.getLeftNode() != null){
+            node.setLeftestNode(node.getLeftNode(),value);
+        }else{
+            TreeNode newNode = new TreeNode((value));
+            node.setLeftNode(newNode);
+        }
+    }
+
+    private static void setRightestNode(TreeNode node,String value){
+        if(node.getRightNode() != null){
+            node.setRightestNode(node.getRightNode(),value);
+        }else{
+            TreeNode newNode = new TreeNode((value));
+            node.setRightNode(newNode);
+        }
     }
 
     public static TreeNode createPolynomialTerm(String x, TreeNode exponent, Integer coefficient) {

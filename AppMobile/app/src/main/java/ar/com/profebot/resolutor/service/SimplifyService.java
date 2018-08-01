@@ -31,8 +31,8 @@ public class SimplifyService {
     private static final String NTH_ROOT_TERM = "NthRootTerm";
 
     /**
-     // Given an expression node, steps through simplifying the expression.
-     // Returns a list of details about each step.
+     // Dado un nodo expresion, dada una lista de paso a paso simplificando la expresion.
+     // Retorna una lista de detalles acerca del paso.
      * @param node Nodo a evaluar
      * @return Lista de pasos
      */
@@ -43,20 +43,18 @@ public class SimplifyService {
         Integer iters = 0;
 
         String originalExpressionStr = node.toExpression();
-        Log.d("debugTag","\n\nSimplifying: " + originalExpressionStr);
 
-        // Now, step through the math expression until nothing changes
+        // Ahora, simplifica la expresion matematica hasta que no pueda cambiar más.
         NodeStatus nodeStatus = step(node);
         while (nodeStatus.hasChanged()) {
             logSteps(nodeStatus);
 
             steps.add(nodeStatus);
-
-            node = NodeStatus.resetChangeGroups(nodeStatus.getNewNode());
+            TreeNode newNode = nodeStatus.getNewNode();
+            node = NodeStatus.resetChangeGroups(newNode);
             nodeStatus = step(node);
 
             if (MAX_STEP_COUNT.equals(iters++)) {
-                // eslint-disable-next-line
                 Log.e("errorTag","Math error: Potential infinite loop for expression: " +
                         originalExpressionStr + ", returning no steps");
                 return new ArrayList<>();
@@ -1097,9 +1095,32 @@ public class SimplifyService {
      */
     protected NodeStatus functionsSearch(TreeNode treeNode){
         // TODO Busqueda postOrder
+        if(TreeUtils.isConstant(treeNode) || TreeUtils.isSymbol(treeNode,false)) {
+            return NodeStatus.noChange(treeNode);
+        }
+        if(treeNode.isUnaryMinus()) {
+            NodeStatus status = functionsSearch(treeNode.getLeftNode());
+            if (status.hasChanged()) {
+                return NodeStatus.childChanged(treeNode, status);
+            }
+        }
+        // TODO preguntar aca si nodo es funcion
+        if(treeNode.esOperador()){
+            for (TreeNode arg: treeNode.getArgs()) {
+                NodeStatus status = functionsSearch(arg);
+                if(status.hasChanged()){
+                    return NodeStatus.childChanged(arg,status);
+                }
+            }
+        }
+        if(treeNode.isParenthesis()){
+            NodeStatus status = functionsSearch(treeNode.getLeftNode());
+            if(status.hasChanged()){
+                return NodeStatus.childChanged(treeNode,status);
+            }
+        }
 
-        // TODO functionsSearch Resolver esto
-        throw new UnsupportedOperationException();
+        return NodeStatus.noChange(treeNode);
     }
 
     /**
@@ -2085,7 +2106,8 @@ public class SimplifyService {
         NodeStatus status = addPositiveOneCoefficient(newNode, termSubclass);
         if (status.hasChanged()) {
             substeps.add(status);
-            newNode = NodeStatus.resetChangeGroups(status.getNewNode());
+            TreeNode statusNewNode = status.getNewNode();
+            newNode = NodeStatus.resetChangeGroups(statusNewNode);
         }
 
         // STEP 2: If any nodes have a unary minus, make it have coefficient -1
@@ -2094,18 +2116,21 @@ public class SimplifyService {
         status = addNegativeOneCoefficient(newNode, termSubclass);
         if (status.hasChanged()) {
             substeps.add(status);
-            newNode = NodeStatus.resetChangeGroups(status.getNewNode());
+            TreeNode statusNewNode = status.getNewNode();
+            newNode = NodeStatus.resetChangeGroups(statusNewNode);
         }
 
         // STEP 3: group the coefficients in a sum
         status = groupCoefficientsForAdding(newNode, termSubclass);
         substeps.add(status);
-        newNode = NodeStatus.resetChangeGroups(status.getNewNode());
+        TreeNode statusNewNode = status.getNewNode();
+        newNode = NodeStatus.resetChangeGroups(statusNewNode);
 
         // STEP 4: evaluate the sum (could include fractions)
         status = evaluateCoefficientSum(newNode, termSubclass);
         substeps.add(status);
-        newNode = NodeStatus.resetChangeGroups(status.getNewNode());
+        TreeNode evalateStatusNewNode = status.getNewNode();
+        newNode = NodeStatus.resetChangeGroups(evalateStatusNewNode);
 
         return NodeStatus.nodeChanged(
                 changeType, node, newNode, substeps);

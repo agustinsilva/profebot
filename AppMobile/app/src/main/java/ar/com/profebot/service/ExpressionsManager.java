@@ -207,11 +207,33 @@ public class ExpressionsManager {
         return equationWellWritten
                 .replaceAll("\\[", "(")
                 .replaceAll("]", ")")
+                .replaceAll("\\)\\(", ")*(")
+                .replaceAll("\\.\\(", "*(")
+                .replaceAll("\\)\\.", ")*")
                 .replaceAll(":", "/")
                 .replaceAll(",", ".")
                 .replaceAll("\\^\\(\\*\\)", "*") // After replacing [] by (), we must search ^(*)
                 .replaceAll("x", "X")
+
+                .replaceAll("\\.X", "*X")
+                .replaceAll("X\\.", "X*")
                 .replaceAll("\\)X", ")*X")
+
+                .replaceAll("^\\+\\(", "0+(")
+                .replaceAll("^-\\(", "0-(")
+
+                .replaceAll("^\\+X", "X")
+                .replaceAll("^-X", "0-X")
+
+                .replaceAll("\\(\\+", "(0+")
+                .replaceAll("\\(-", "(0-")
+
+                .replaceAll("=\\+\\(", "=(")
+                .replaceAll("=-\\(", "=0-(")
+
+                .replaceAll("=\\+X", "=X")
+                .replaceAll("=-X", "=0-X")
+
                 .replaceAll("×", "*")
                 .replaceAll("√", "R")
                 .replaceAll("e", "2.718281828459045235360")

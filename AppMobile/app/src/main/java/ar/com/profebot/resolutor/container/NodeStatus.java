@@ -286,7 +286,8 @@ public class NodeStatus {
         node = node.cloneDeep();
         node.setChangeGroup(null);
         List<TreeNode> args = node.getArgs();
-        if (args!=null){
+        TreeNode arg = args.get(0);
+        if (arg != null){
             for(TreeNode n: args){
                 resetChangeGroups(n);
             }

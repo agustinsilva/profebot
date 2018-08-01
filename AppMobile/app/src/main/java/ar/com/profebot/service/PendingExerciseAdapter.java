@@ -1,4 +1,5 @@
 package ar.com.profebot.service;
+
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -6,10 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.profebot.activities.R;
+
 import java.util.List;
+
 import ar.com.profebot.Models.PendingExercise;
-import de.uni_bielefeld.cebitec.mzurowie.pretty_formula.main.FormulaParser;
 import io.github.kexanie.library.MathView;
 
 public class PendingExerciseAdapter extends RecyclerView.Adapter<PendingExerciseAdapter.ViewHolder>{
