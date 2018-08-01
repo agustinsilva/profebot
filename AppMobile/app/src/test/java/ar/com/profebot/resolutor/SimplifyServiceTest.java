@@ -270,11 +270,11 @@ public class SimplifyServiceTest extends SimplifyService {
 
     @Test
     public void addLikeTermNodes() throws InvalidExpressionException {
-        String expression = "4 = 4";
+        String expression = "2X + X = 4";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
         NodeStatus estado = super.addLikeTermNodes(node,"",null);
-        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.ADD_COEFFICIENT_OF_ONE);
     }
 
     @Test

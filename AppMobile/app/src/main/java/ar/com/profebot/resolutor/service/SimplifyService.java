@@ -50,8 +50,8 @@ public class SimplifyService {
             logSteps(nodeStatus);
 
             steps.add(nodeStatus);
-
-            node = NodeStatus.resetChangeGroups(nodeStatus.getNewNode());
+            TreeNode newNode = nodeStatus.getNewNode();
+            node = NodeStatus.resetChangeGroups(newNode);
             nodeStatus = step(node);
 
             if (MAX_STEP_COUNT.equals(iters++)) {
@@ -1095,9 +1095,32 @@ public class SimplifyService {
      */
     protected NodeStatus functionsSearch(TreeNode treeNode){
         // TODO Busqueda postOrder
+        if(TreeUtils.isConstant(treeNode) || TreeUtils.isSymbol(treeNode,false)) {
+            return NodeStatus.noChange(treeNode);
+        }
+        if(treeNode.isUnaryMinus()) {
+            NodeStatus status = functionsSearch(treeNode.getLeftNode());
+            if (status.hasChanged()) {
+                return NodeStatus.childChanged(treeNode, status);
+            }
+        }
+        // TODO preguntar aca si nodo es funcion
+        if(treeNode.esOperador()){
+            for (TreeNode arg: treeNode.getArgs()) {
+                NodeStatus status = functionsSearch(arg);
+                if(status.hasChanged()){
+                    return NodeStatus.childChanged(arg,status);
+                }
+            }
+        }
+        if(treeNode.isParenthesis()){
+            NodeStatus status = functionsSearch(treeNode.getLeftNode());
+            if(status.hasChanged()){
+                return NodeStatus.childChanged(treeNode,status);
+            }
+        }
 
-        // TODO functionsSearch Resolver esto
-        throw new UnsupportedOperationException();
+        return NodeStatus.noChange(treeNode);
     }
 
     /**
@@ -2083,7 +2106,8 @@ public class SimplifyService {
         NodeStatus status = addPositiveOneCoefficient(newNode, termSubclass);
         if (status.hasChanged()) {
             substeps.add(status);
-            newNode = NodeStatus.resetChangeGroups(status.getNewNode());
+            TreeNode statusNewNode = status.getNewNode();
+            newNode = NodeStatus.resetChangeGroups(statusNewNode);
         }
 
         // STEP 2: If any nodes have a unary minus, make it have coefficient -1
@@ -2092,18 +2116,21 @@ public class SimplifyService {
         status = addNegativeOneCoefficient(newNode, termSubclass);
         if (status.hasChanged()) {
             substeps.add(status);
-            newNode = NodeStatus.resetChangeGroups(status.getNewNode());
+            TreeNode statusNewNode = status.getNewNode();
+            newNode = NodeStatus.resetChangeGroups(statusNewNode);
         }
 
         // STEP 3: group the coefficients in a sum
         status = groupCoefficientsForAdding(newNode, termSubclass);
         substeps.add(status);
-        newNode = NodeStatus.resetChangeGroups(status.getNewNode());
+        TreeNode statusNewNode = status.getNewNode();
+        newNode = NodeStatus.resetChangeGroups(statusNewNode);
 
         // STEP 4: evaluate the sum (could include fractions)
         status = evaluateCoefficientSum(newNode, termSubclass);
         substeps.add(status);
-        newNode = NodeStatus.resetChangeGroups(status.getNewNode());
+        TreeNode evalateStatusNewNode = status.getNewNode();
+        newNode = NodeStatus.resetChangeGroups(evalateStatusNewNode);
 
         return NodeStatus.nodeChanged(
                 changeType, node, newNode, substeps);
