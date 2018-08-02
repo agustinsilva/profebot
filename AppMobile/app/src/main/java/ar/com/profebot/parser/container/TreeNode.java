@@ -275,27 +275,9 @@ public class TreeNode {
     }
 
     public static TreeNode createParenthesis(TreeNode node) {
-        node.setLeftestNode(node,"(");
-        node.setRightestNode(node,")");
-        return node;
-    }
-
-    private static void setLeftestNode(TreeNode node,String value){
-        if(node.getLeftNode() != null){
-            node.setLeftestNode(node.getLeftNode(),value);
-        }else{
-            TreeNode newNode = new TreeNode((value));
-            node.setLeftNode(newNode);
-        }
-    }
-
-    private static void setRightestNode(TreeNode node,String value){
-        if(node.getRightNode() != null){
-            node.setRightestNode(node.getRightNode(),value);
-        }else{
-            TreeNode newNode = new TreeNode((value));
-            node.setRightNode(newNode);
-        }
+        TreeNode newNode = new TreeNode("()");
+        newNode.setLeftNode(node);
+        return newNode;
     }
 
     public static TreeNode createPolynomialTerm(String x, TreeNode exponent, Integer coefficient) {

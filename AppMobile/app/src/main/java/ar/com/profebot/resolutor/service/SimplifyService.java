@@ -209,7 +209,7 @@ public class SimplifyService {
         if (nodeStatus.hasChanged()){return nodeStatus;}
 
         // ____^0 --> 1
-                nodeStatus = reduceExponentByZero(treeNode);
+        nodeStatus = reduceExponentByZero(treeNode);
         if (nodeStatus.hasChanged()){return nodeStatus;}
 
         // Check for x^1 which should be reduced to x
