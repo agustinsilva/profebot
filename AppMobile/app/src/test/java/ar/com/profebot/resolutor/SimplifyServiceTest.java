@@ -15,6 +15,7 @@ import ar.com.profebot.parser.exception.InvalidExpressionException;
 import ar.com.profebot.resolutor.service.SimplifyService;
 import ar.com.profebot.parser.service.ParserService;
 import ar.com.profebot.resolutor.container.NodeStatus;
+import ar.com.profebot.resolutor.utils.TreeUtils;
 
 public class SimplifyServiceTest extends SimplifyService {
 
@@ -74,10 +75,11 @@ public class SimplifyServiceTest extends SimplifyService {
 
     @Test
     public void arithmeticSearch_ok2() throws InvalidExpressionException{
-        String expression = "(3+5) / 3 = 8/3";
+        String expression = "3*5*2 = 30";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.arithmeticSearch(node);
+        TreeNode flattedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.arithmeticSearch(flattedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.SIMPLIFY_ARITHMETIC);
     }
 
@@ -415,24 +417,6 @@ public class SimplifyServiceTest extends SimplifyService {
     }
 
     @Test
-    public void addConstantAndFraction_ok1() throws InvalidExpressionException{
-        String expression = "4 = 4";
-        Tree tree = (new ParserService()).parseExpression(expression);
-        TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.addConstantAndFraction(node);
-        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
-    }
-
-    @Test
-    public void addConstantAndFraction_ok2() throws InvalidExpressionException{
-        String expression = "5.3 + 1/2 = 11/2";
-        Tree tree = (new ParserService()).parseExpression(expression);
-        TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.addConstantAndFraction(node);
-        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.CONVERT_INTEGER_TO_FRACTION);
-    }
-
-    @Test
     public void addConstantFractions_ok1() throws InvalidExpressionException {
         String expression = "2/5 + 4/5 = 6/5";
         Tree tree = (new ParserService()).parseExpression(expression);
@@ -555,7 +539,16 @@ public class SimplifyServiceTest extends SimplifyService {
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
         NodeStatus estado = super.simplifyFractionSigns(node);
-        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.SIMPLIFY_FRACTION);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.CANCEL_MINUSES);
+    }
+
+    @Test
+    public void simplifyFractionSigns_ok3() throws InvalidExpressionException {
+        String expression = "3/-1 = 3";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        NodeStatus estado = super.simplifyFractionSigns(node);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.SIMPLIFY_SIGNS);
     }
 
     @Test

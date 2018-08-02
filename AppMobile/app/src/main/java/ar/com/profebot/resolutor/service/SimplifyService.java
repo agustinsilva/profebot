@@ -148,8 +148,8 @@ public class SimplifyService {
     protected NodeStatus arithmeticSearch(TreeNode treeNode) {
 
         // TODO Busqueda postOrder
-        // Buscar una suma, producto o potencia de constantes
-        if (treeNode == null || !treeNode.esAditivo() || !treeNode.esMultiplicativo() || !treeNode.esPotencia()) {
+        boolean noEsOperador = !treeNode.esOperador();
+        if (noEsOperador) {
             return NodeStatus.noChange(treeNode);
         }
 
@@ -179,7 +179,7 @@ public class SimplifyService {
                 return NodeStatus.nodeChanged(
                         NodeStatus.ChangeTypes.SIMPLIFY_ARITHMETIC, treeNode, newNode);
             }else{
-                // Elr esultado no es entero
+                // El resultado no es entero
                 return NodeStatus.noChange(treeNode);
             }
         }else{
@@ -1424,7 +1424,7 @@ public class SimplifyService {
             return NodeStatus.noChange(treeNode);
         }
 
-        TreeNode exponentNode = treeNode.getLeftNode();
+        TreeNode exponentNode = treeNode.getRightNode();
         if (TreeUtils.isConstant(exponentNode) &&
                 CONSTANT_1.equals(exponentNode.getIntegerValue())){
 
@@ -1509,7 +1509,7 @@ public class SimplifyService {
         int i = 0;
         int oneIndex = -1;
         for(TreeNode child: treeNode.getArgs()){
-            if (TreeUtils.isConstant(child) && TreeUtils.hasValue(child, "-1")) {
+            if (TreeUtils.isConstant(child) && TreeUtils.hasValue(child, "1")) {
                 oneIndex = i;
                 break;
             }
