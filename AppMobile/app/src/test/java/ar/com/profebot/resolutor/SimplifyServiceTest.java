@@ -450,7 +450,8 @@ public class SimplifyServiceTest extends SimplifyService {
         String expression = "2X + 4X = 6X";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.addLikeTerms(node,true);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.addLikeTerms(flattenedNode,true);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.ADD_POLYNOMIAL_TERMS);
     }
 
@@ -468,7 +469,8 @@ public class SimplifyServiceTest extends SimplifyService {
         String expression = "X + 2X = 3X";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.addLikePolynomialTerms(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.addLikePolynomialTerms(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.ADD_POLYNOMIAL_TERMS);
     }
 
@@ -496,7 +498,8 @@ public class SimplifyServiceTest extends SimplifyService {
         String expression = "4 = 4";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.addLikeTermNodes(node,"",null);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.addLikeTermNodes(flattenedNode,"",null);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
@@ -505,7 +508,8 @@ public class SimplifyServiceTest extends SimplifyService {
         String expression = "2X + X = 4";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.addLikeTermNodes(node,"",null);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.addLikeTermNodes(flattenedNode,"",null);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.ADD_COEFFICIENT_OF_ONE);
     }
 
@@ -588,7 +592,8 @@ public class SimplifyServiceTest extends SimplifyService {
         String expression = "10X / 5 = 2";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.simplifyPolynomialFraction(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.simplifyPolynomialFraction(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.SIMPLIFY_FRACTION);
     }
 }

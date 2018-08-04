@@ -371,19 +371,25 @@ public class NodeStatus {
         if(node.isParenthesis()){
            oldNode = childStatus.getOldNode();
            newNode = childStatus.getNewNode();
-           substeps = updateSubsteps(substeps,node,i);
+           if(substeps != null) {
+               substeps = updateSubsteps(substeps, node, i);
+           }
         }
 
         if(node.esOperador() && i != null){
             oldNode.getArgs().set(i,childStatus.getOldNode());
             newNode.getArgs().set(i,childStatus.getNewNode());
-            substeps = updateSubsteps(substeps,node,i);
+            if(substeps != null) {
+                substeps = updateSubsteps(substeps, node, i);
+            }
         }
 
         if(node.isUnaryMinus()){
             oldNode.getArgs().set(0,childStatus.getOldNode());
             newNode.getArgs().set(0,childStatus.getNewNode());
-            substeps = updateSubsteps(substeps,node,i);
+            if(substeps != null) {
+                substeps = updateSubsteps(substeps, node, i);
+            }
         }
 
         return new NodeStatus(childStatus.changeType, oldNode, newNode, substeps);
