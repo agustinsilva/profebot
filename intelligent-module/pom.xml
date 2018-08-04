@@ -35,6 +35,36 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>ar.com.profebot</groupId>
+			<artifactId>most-similar-expression-calculator</artifactId>
+			<version>1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.jenetics</groupId>
+			<artifactId>jenetics</artifactId>
+			<version>4.2.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.jenetics</groupId>
+			<artifactId>jenetics.ext</artifactId>
+			<version>4.2.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.jenetics</groupId>
+			<artifactId>jenetics.prog</artifactId>
+			<version>4.2.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>tools</groupId>
+			<artifactId>tools</artifactId>
+			<version>1.8</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -42,6 +72,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<executable>true</executable>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

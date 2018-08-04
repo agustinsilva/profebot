@@ -4,15 +4,16 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-
+import android.app.AlertDialog;
 import com.profebot.activities.R;
-
+import android.content.DialogInterface;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -77,100 +78,44 @@ public class PendingExercisesActivity extends AppCompatActivity {
 
     private void loadRecyclerViewData()
     {
-        progressDialog = ProgressDialog.show(PendingExercisesActivity.this,"Generando nuevos ejercicios","Cargando...");
         //Codigo para leer de un JSON
-        String json = null;
-        String jsonHARDCODE = "{\n" +
-                "  \"_id\": \"5b53c0e07ed96c51ba2f1757\",\n" +
-                "  \"pendingExercises\": [\n" +
-                "    {\n" +
-                "      \"id\": 0,\n" +
-                "      \"equation\": \"(X+3)*2=10\",\n" +
-                "      \"difficulty\": 3,\n" +
-                "      \"subject\": \"Distributiva\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"id\": 1,\n" +
-                "      \"equation\": \"(X+3)/2=10*X\",\n" +
-                "      \"difficulty\": 3,\n" +
-                "      \"subject\": \"Operacion Fraccionaria\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"id\": 2,\n" +
-                "      \"equation\": \"(X+3)*(X+1)=610\",\n" +
-                "      \"difficulty\": 3,\n" +
-                "      \"subject\": \"Distributiva - Ecuacion Cuadratica\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"id\": 3,\n" +
-                "      \"equation\": \"(X+3)*(X-10)=60\",\n" +
-                "      \"difficulty\": 3,\n" +
-                "      \"subject\": \"Distributiva - Ecuacion Cuadratica\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"id\": 3,\n" +
-                "      \"equation\": \"x+6-(x+3+5)*7=(4*5)*(x)-5\",\n" +
-                "      \"difficulty\": 3,\n" +
-                "      \"subject\": \"Distributiva - Ecuacion Cuadratica\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}";
-        try {
-        JSONObject jsonObject = new JSONObject(jsonHARDCODE);
-        JSONArray array = jsonObject.getJSONArray("pendingExercises");
-        for (int i = 0; i < array.length(); i++) {
-            JSONObject o = array.getJSONObject(i);
-            PendingExercise item = new PendingExercise(o.getString("equation"), o.getString("subject"));
-            pendingExerciseList.add(item);
-        }
-            adapter = new PendingExerciseAdapter(pendingExerciseList, getApplicationContext());
-            recyclerView.setAdapter(adapter);
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-        final Timer t = new Timer();
-        t.schedule(new TimerTask() {
-            public void run() {
-                progressDialog.dismiss(); // when the task active then close the dialog
-                t.cancel(); // also just top the timer thread, otherwise, you may receive a crash report
+        String pendingExercisesJson = PreferenceManager.getDefaultSharedPreferences(this).getString("pendingExercises","");
+        if (pendingExercisesJson != "") {
+        progressDialog = ProgressDialog.show(PendingExercisesActivity.this,"Generando nuevos ejercicios","Cargando...");
+            try {
+                JSONObject jsonObject = new JSONObject(pendingExercisesJson);
+                JSONArray array = jsonObject.getJSONArray("pendingExercises");
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject o = array.getJSONObject(i);
+                    PendingExercise item = new PendingExercise(o.getString("equation"), o.getString("subject"));
+                    pendingExerciseList.add(item);
+                }
+                adapter = new PendingExerciseAdapter(pendingExerciseList, getApplicationContext());
+                recyclerView.setAdapter(adapter);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        }, 3000); // after 2 second (or 2000 miliseconds), the task will be active.
-//        if (progressDialog.isShowing()) {
-//            progressDialog.dismiss();
-//        }
-
-        //deberia ser un POST la request
-//        StringRequest stringRequestToIAModule = new StringRequest(Request.Method.GET,
-//                URL_DATA,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        try {
-//                            progressDialog.dismiss();
-//                            JSONObject jsonObject = new JSONObject(response);
-//                            JSONArray array = jsonObject.getJSONArray("pendingExercises");
-//
-//                            for (int i = 0; i<array.length(); i++){
-//                                JSONObject o = array.getJSONObject(i);
-//                                PendingExercise item = new PendingExercise(o.getString("equation"),o.getString("subject"));
-//                                pendingExerciseList.add(item);
-//                            }
-//                            adapter = new PendingExerciseAdapter(pendingExerciseList,getApplicationContext());
-//                            recyclerView.setAdapter(adapter);
-//
-//                        } catch (JSONException e){
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                },
-//                new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        Toast.makeText(getApplicationContext(), error.getMessage(),Toast.LENGTH_LONG).show();
-//                    }
-//                });
-//        RequestQueue requestQueue = Volley.newRequestQueue(this);
-//        requestQueue.add(stringRequestToIAModule);
+            final Timer t = new Timer();
+            t.schedule(new TimerTask() {
+                public void run() {
+                    progressDialog.dismiss(); // when the task active then close the dialog
+                    t.cancel(); // also just top the timer thread, otherwise, you may receive a crash report
+                }
+            }, 3000); // after 2 second (or 2000 miliseconds), the task will be active.
+        }
+        else{
+            new AlertDialog.Builder(PendingExercisesActivity.this)
+                    .setTitle("Todavía no tenes ejercicios")
+                    .setMessage("Una vez que ejercites, te recomendaremos ejercicios para mejorar tus errores.")
+                    .setNeutralButton("Ok",new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,int id) {
+                            // if this button is clicked, close
+                            // current activity
+                            PendingExercisesActivity.this.finish();
+                        }
+                    })
+                    .show();
+        }
     }
 
     @Override
