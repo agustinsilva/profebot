@@ -2106,6 +2106,9 @@ public class SimplifyService {
         List<NodeStatus> substeps = new ArrayList<>();
         TreeNode newNode = node.cloneDeep();
 
+        if(TreeUtils.isConstant(node)){
+            return NodeStatus.noChange(node);
+        }
         // STEP 1: If any nodes have no coefficient, make it have coefficient 1
         // (this step only happens under certain conditions and later steps might
         // happen even if step 1 does not)
