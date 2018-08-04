@@ -185,7 +185,7 @@ public class SimplifyServiceTest extends SimplifyService {
 
     @Test
     public void fractionsSearch_ok2() throws InvalidExpressionException{
-        String expression = "2/3 + 4/6 = X";
+        String expression = "2/3 + 4/6 = 8/6";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
         NodeStatus estado = super.fractionsSearch(node);

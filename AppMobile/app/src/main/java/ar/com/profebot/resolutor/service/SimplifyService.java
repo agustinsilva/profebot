@@ -1830,7 +1830,10 @@ public class SimplifyService {
 
         TreeNode newNode = node.cloneDeep();
         for(TreeNode child: newNode.getArgs()){
-            child.setRightNode(TreeNode.createConstant(child.getRightNode().getOperationResult()));
+            TreeNode rightChild = child.getRightNode();
+            Integer value;
+            value = TreeUtils.isConstant(rightChild) ? rightChild.getIntegerValue() : rightChild.getOperationResult();
+            child.setRightNode(TreeNode.createConstant(value));
         }
 
         return NodeStatus.nodeChanged(
@@ -1844,8 +1847,11 @@ public class SimplifyService {
      */
     private NodeStatus evaluateNumerators(TreeNode node) {
         TreeNode newNode = node.cloneDeep();
+        Integer value;
         for(TreeNode child: newNode.getArgs()){
-            child.setLeftNode(TreeNode.createConstant(child.getLeftNode().getOperationResult()));
+            TreeNode leftChild = child.getLeftNode();
+            value = TreeUtils.isConstant(leftChild) ? leftChild.getIntegerValue() : leftChild.getOperationResult();
+            child.setLeftNode(TreeNode.createConstant(value));
         }
 
         return NodeStatus.nodeChanged(
