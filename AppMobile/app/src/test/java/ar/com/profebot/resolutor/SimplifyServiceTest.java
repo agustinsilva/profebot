@@ -483,10 +483,11 @@ public class SimplifyServiceTest extends SimplifyService {
 
     @Test
     public void addLikeNthRootTerms_ok2() throws InvalidExpressionException{
-        String expression = "2X + X = 4";
+        String expression = "2X^2 + X^2 = 27";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.addLikeNthRootTerms(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.addLikeNthRootTerms(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.ADD_NTH_ROOTS);
     }
 

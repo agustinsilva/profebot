@@ -3,6 +3,7 @@ package ar.com.profebot.resolutor.container;
 import java.util.List;
 
 import ar.com.profebot.parser.container.TreeNode;
+import ar.com.profebot.resolutor.utils.TreeUtils;
 
 public class NodeStatus {
 
@@ -245,6 +246,10 @@ public class NodeStatus {
         return oldNode;
     }
 
+    public void setOldNode(TreeNode newNode) {
+        this.oldNode = newNode;
+    }
+
     public TreeNode getNewNode() {
         return newNode;
     }
@@ -300,13 +305,62 @@ public class NodeStatus {
         return childChanged(newNode, childStatus, null);
     }
 
+    private static List<NodeStatus> updateSubsteps(List<NodeStatus> substeps, TreeNode originalNode,Integer i){
+        for (NodeStatus step: substeps) {
+            updateSubsteps(step.getSubsteps(),originalNode,i);
+            updateStep(step,originalNode,i);
+        }
+        return substeps;
+    }
+    private static void updateStep(NodeStatus step, TreeNode originalNode,Integer i){
+        if(originalNode.isParenthesis()){
+            parenthesisUpdate(step,originalNode);
+        }
+        if(originalNode.esOperador() && i != null){
+            operatorUpdate(step,originalNode,i);
+        }
+
+        if(originalNode.isUnaryMinus()){
+            unaryMinusUpdate(step,originalNode);
+        }
+    };
+
+    private static void parenthesisUpdate(NodeStatus status, TreeNode node){
+        TreeNode oldNode = node.cloneDeep();
+        TreeNode newNode = node.cloneDeep();
+        oldNode.setValue(status.getOldNode().getValue());
+        newNode.setValue(status.getNewNode().getValue());
+        status.setOldNode(oldNode);
+        status.setNewNode(newNode);
+    };
+
+    private static void operatorUpdate(NodeStatus status, TreeNode originalNode,Integer index){
+        TreeNode oldNode = originalNode.cloneDeep();
+        TreeNode newNode = originalNode.cloneDeep();
+        oldNode.getArgs().set(index,status.getOldNode());
+        newNode.getArgs().set(index,status.getNewNode());
+
+        oldNode.setValue(status.getOldNode().getValue());
+        newNode.setValue(status.getNewNode().getValue());
+        status.setOldNode(oldNode);
+        status.setNewNode(newNode);
+    };
+
+    private static void unaryMinusUpdate(NodeStatus status,TreeNode originalNode){
+        TreeNode oldNode = originalNode.cloneDeep();
+        TreeNode newNode = originalNode.cloneDeep();
+        oldNode.getArgs().set(0,status.getOldNode());
+        newNode.getArgs().set(0,status.getNewNode());
+        status.setOldNode(oldNode);
+        status.setNewNode(newNode);
+    }
     // A wrapper around the Status constructor for the case where there was
     // a change that happened deeper `node`'s tree, and `node`'s children must be
     // updated to have the newNode/oldNode metadata (changeGroups)
     // e.g. (2 + 2) + x --> 4 + x has to update the left argument
     public static NodeStatus childChanged(TreeNode node, NodeStatus childStatus, Integer i) {
 
-        /*TreeNode oldNode = node.cloneDeep();
+        TreeNode oldNode = node.cloneDeep();
         TreeNode newNode = node.cloneDeep();
         List<NodeStatus> substeps = childStatus.getSubsteps();
 
@@ -314,76 +368,24 @@ public class NodeStatus {
             throw new Error ("Expected old node for changeType: " + childStatus.getChangeType());
         }
 
-        function updateSubsteps(substeps, fn) {
-            substeps.map((step) => {
-                    step = fn(step);
-                 step.substeps = updateSubsteps(step.substeps, fn);
-            });
-            return substeps;
+        if(node.isParenthesis()){
+           oldNode = childStatus.getOldNode();
+           newNode = childStatus.getNewNode();
+           substeps = updateSubsteps(substeps,node,i);
         }
 
-        if (node.isParenthesis()) {
-            oldNode.setArgs(Collections.singletonList(childStatus.getOldNode());
-            newNode.setArgs(Collections.singletonList(childStatus.getNewNode());
-            substeps = updateSubstepsInParenthesis(substeps);
-
-            (substeps, (step) => {
-                TreeNode oldNode = node.cloneDeep();
-                TreeNode newNode = node.cloneDeep();
-                oldNode.content = step.oldNode;
-                newNode.content = step.newNode;
-                step.oldNode = oldNode;
-                step.newNode = newNode;
-            return step;
-            });
-        }
-        else if ((Type.isOperator(node) || Type.isFunction(node) &&
-                childArgIndex !== null)) {
-            oldNode.args[childArgIndex] = childStatus.oldNode;
-            newNode.args[childArgIndex] = childStatus.newNode;
-            substeps = updateSubsteps(substeps, (step) => {
-              const oldNode = node.cloneDeep();
-              const newNode = node.cloneDeep();
-                    oldNode.args[childArgIndex] = step.oldNode;
-                    newNode.args[childArgIndex] = step.newNode;
-                    step.oldNode = oldNode;
-                    step.newNode = newNode;
-                    return step;
-            });
-        }
-        else if (Type.isUnaryMinus(node)) {
-            oldNode.args[0] = childStatus.oldNode;
-            newNode.args[0] = childStatus.newNode;
-            substeps = updateSubsteps(substeps, (step) => {
-              const oldNode = node.cloneDeep();
-              const newNode = node.cloneDeep();
-                    oldNode.args[0] = step.oldNode;
-                    newNode.args[0] = step.newNode;
-                    step.oldNode = oldNode;
-                    step.newNode = newNode;
-            return step;
-             });
-        }
-        else {
-            throw new Error("Unexpected node type: " + node);
+        if(node.esOperador() && i != null){
+            oldNode.getArgs().set(i,childStatus.getOldNode());
+            newNode.getArgs().set(i,childStatus.getNewNode());
+            substeps = updateSubsteps(substeps,node,i);
         }
 
-        return new NodeStatus(childStatus.changeType, oldNode, newNode, substeps);*/
-        return null; // TODO REVISAR ESTE CODIGO DE childChanged
+        if(node.isUnaryMinus()){
+            oldNode.getArgs().set(0,childStatus.getOldNode());
+            newNode.getArgs().set(0,childStatus.getNewNode());
+            substeps = updateSubsteps(substeps,node,i);
+        }
+
+        return new NodeStatus(childStatus.changeType, oldNode, newNode, substeps);
     }
-
-    /*
-    private static List<NodeStatus> updateSubstepsInParenthesis(List<NodeStatus> substeps) {
-
-        List<NodeStatus> updatedStates = new ArrayList<>();
-
-        for(NodeStatus s: substeps)
-        TreeNode oldNode = node.cloneDeep();
-        TreeNode newNode = node.cloneDeep();
-        oldNode.content = step.oldNode;
-        newNode.content = step.newNode;
-        step.oldNode = oldNode;
-        step.newNode = newNode;
-        return step;
-    }*/
-}
+};
