@@ -510,7 +510,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.addLikeTermNodes(flattenedNode,"",null);
-        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.ADD_COEFFICIENT_OF_ONE);
+        Assert.assertTrue(estado.getSubsteps().get(0).getChangeType() == NodeStatus.ChangeTypes.ADD_COEFFICIENT_OF_ONE);
     }
 
     @Test
