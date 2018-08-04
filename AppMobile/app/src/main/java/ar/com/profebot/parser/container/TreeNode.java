@@ -275,8 +275,8 @@ public class TreeNode {
     }
 
     public static TreeNode createParenthesis(TreeNode node) {
-        node.setLeftestNode(node,"(");
-        node.setRightestNode(node,")");
+        //node.setLeftestNode(node,"(");
+        //node.setRightestNode(node,")");
         return node;
     }
 

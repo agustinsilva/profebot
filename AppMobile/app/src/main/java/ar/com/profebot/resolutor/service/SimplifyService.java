@@ -1533,7 +1533,7 @@ public class SimplifyService {
     }
 
     /**
-     * Arreglar coeficientes: ej: X*5 = 5X
+     * Reordena coeficientes: ej: X*5 = 5X
      * @param treeNode Nodo a evaluar
      * @return El estado de la simplificacion
      */
@@ -1550,7 +1550,7 @@ public class SimplifyService {
 
         // Tiene que ser 1 de los 2 nodos constante, y el otro una X (En ese caso agrupo)
         TreeNode leftNode = treeNode.getLeftNode();
-        TreeNode rightNode = treeNode.getLeftNode();
+        TreeNode rightNode = treeNode.getRightNode();
 
         TreeNode newNode = leftNode.clone();
         newNode.multiplyCoefficient(rightNode.getValue());

@@ -133,7 +133,8 @@ public class SimplifyServiceTest extends SimplifyService {
         String expression = "2X + 4X + X = 7";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.collectAndCombineSearch(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.collectAndCombineSearch(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.ADD_POLYNOMIAL_TERMS);
     }
 
@@ -422,7 +423,7 @@ public class SimplifyServiceTest extends SimplifyService {
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
         NodeStatus estado = super.addConstantFractions(node);
-        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.COMBINE_NUMERATORS);
+        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.ADD_FRACTIONS);
     }
 
     @Test
