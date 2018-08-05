@@ -128,12 +128,15 @@ public class SimplifyService {
     }
 
     private void logSteps(NodeStatus nodeStatus) {
-        Log.d("debugTag", nodeStatus.getChangeType().getDescrip());
-        Log.d("debugTag",  nodeStatus.getNewNode().toExpression() + "\n");
+        System.out.println("debugTag: " + nodeStatus.getChangeType().getDescrip());
+        //Log.d("debugTag", nodeStatus.getChangeType().getDescrip());
+        System.out.println("debugTag: " + nodeStatus.getNewNode().toExpression() + "\n");
+        //Log.d("debugTag",  nodeStatus.getNewNode().toExpression() + "\n");
 
         if (nodeStatus.getSubsteps() != null){
             for (NodeStatus status: nodeStatus.getSubsteps()) {
-                Log.d("debugTag","\nSubpasos:");
+                System.out.println("debugTag: " + "\nSubpasos:");
+                //Log.d("debugTag","\nSubpasos:");
                 logSteps(status);
             }
         }

@@ -26,12 +26,11 @@ public class SimplifyServiceTest extends SimplifyService {
 
     @Test
     public void stepThrough_ok1()  throws InvalidExpressionException {
-        String expression = "(2+2) = 4";
+        String expression = "2+2 = 4";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
         List<NodeStatus> listaNodos =  super.stepThrough(node);
-        NodeStatus estadoSimple = listaNodos.get(0);
-        Assert.assertTrue(listaNodos.size() == 1);
+        NodeStatus estadoSimple = listaNodos.get(1);
         Assert.assertTrue(estadoSimple.getChangeType() == NodeStatus.ChangeTypes.SIMPLIFY_ARITHMETIC);
     }
 
@@ -524,7 +523,7 @@ public class SimplifyServiceTest extends SimplifyService {
 
     @Test
     public void multiplyLikeTerms_ok2() throws InvalidExpressionException {
-        String expression = "2X * X^2 * 5X = 10 X^4";
+        String expression = "2X * X^2 * 5X = 10X^4";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
