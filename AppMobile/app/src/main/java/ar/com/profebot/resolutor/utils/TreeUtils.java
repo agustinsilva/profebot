@@ -1,5 +1,6 @@
 package ar.com.profebot.resolutor.utils;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -7,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import ar.com.profebot.parser.container.Tree;
 import ar.com.profebot.parser.container.TreeNode;
 
 public class TreeUtils {
@@ -49,6 +51,10 @@ public class TreeUtils {
     //Valida si el nodo es un polinomio.
     public static Boolean isPolynomialTerm(TreeNode treeNode){
         return (treeNode!=null && isSymbol(treeNode, false) );
+    }
+
+    public static Boolean isSymbol(TreeNode treeNode){
+        return isSymbol(treeNode, false);
     }
 
     public static Boolean isSymbol(TreeNode treeNode, Boolean allowUnaryMinus){
@@ -137,7 +143,7 @@ public class TreeUtils {
     }
 
     //Valida is el valor es un entero.
-    private static Boolean isInteger(String value){
+    public static Boolean isInteger(String value){
         try
         {
             Integer.parseInt(value);
@@ -578,4 +584,246 @@ public class TreeUtils {
         TreeNode denominator = fraction.getChild(1);
         return isPolynomialTerm(denominator);
     }
+
+    public static TreeNode removeUnnecessaryParens(TreeNode node) {
+        return removeUnnecessaryParens(node, false);
+    }
+
+    /*
+      Return true if the equation is of the form factor * factor = 0 or factor^power = 0
+      // e.g (x - 2)^2 = 0, x(x + 2)(x - 2) = 0
+    */
+    public static boolean canFindRoots(Tree equation) {
+        TreeNode left = equation.getLeftNode();
+        TreeNode right = equation.getRightNode();
+
+        Boolean zeroRightSide = isConstant(right)
+                && right.getIntegerValue() == 0;
+
+        Boolean isMulOrPower = left.esProducto() || left.esPotencia();
+
+        if (!(zeroRightSide && isMulOrPower)) {
+            return false;
+        }
+
+        // If the left side of the equation is multiplication, filter out all the factors
+        // that do evaluate to constants because they do not have roots. If the
+        // resulting array is empty, there is no roots to be found. Do a similiar check
+        // for when the left side is a power node.
+        // e.g 2^7 and (33 + 89) do not have solutions when set equal to 0
+
+        if (left.esProducto()) {
+            for(TreeNode arg: left.getArgs()){
+                if (!resolvesToConstant(arg)){
+                    return true;
+                }
+            }
+            return false;
+        } else if (left.esPotencia()) {
+            return !resolvesToConstant(left);
+        }else{
+            return false;
+        }
+    }
+
+    // Returns true if the node is a constant or can eventually be resolved to
+    // a constant.
+    // e.g. 2, 2+4, (2+4)^2 would all return true. x + 4 would return false
+    public static boolean resolvesToConstant(TreeNode node) {
+        if (node.esOperador()) {
+
+            for(TreeNode child:  node.getArgs() ){
+                if (!resolvesToConstant(child)){
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        else if (node.isParenthesis()) {
+            return resolvesToConstant(node.getChild(0));
+        }
+        else if (TreeUtils.isConstant(node, true)) {
+            return true;
+        }
+        else if (TreeUtils.isSymbol(node, true)) {
+            return false;
+        }
+        else if (node.isUnaryMinus()) {
+            return resolvesToConstant(node.getChild(0));
+        }
+        else {
+            throw new Error("Unsupported node type: " + node.toExpression());
+        }
+    }
+
+    // Iterates through a node and returns the last term with the symbol name
+    // Returns null if no terms with the symbol name are in the node.
+    // e.g. 4x^2 + 2x + y + 2 with `symbolName=x` would return 2x
+    public static TreeNode getLastSymbolTerm(TreeNode node, String symbolName) {
+
+        // First check if the node itself is a polyomial term with symbolName
+        if (isSymbolTerm(node)) {
+            return node;
+        }
+        // If it's a sum of terms, look through the operands for a term
+        // with `symbolName`
+        else if (node.esSuma()) {
+            for (int i = node.getArgs().size() - 1; i >= 0 ; i--) {
+                TreeNode child = node.getChild(i);
+                if (child.esSuma()) {
+                    return getLastSymbolTerm(child, symbolName);
+                }
+                else if (isSymbolTerm(child)) {
+                    return child;
+                }
+            }
+        }
+        return null;
+    }
+
+    // Returns if `node` is a term with symbol `symbolName`
+    public static Boolean isSymbolTerm(TreeNode node){
+        return isPolynomialTerm(node) ||
+                hasDenominatorSymbol(node);
+    }
+
+    // Return if `node` has a symbol in its denominator
+    // e.g. true for 1/(2x)
+    // e.g. false for 5x
+    private static boolean hasDenominatorSymbol(TreeNode node) {
+        if (node.esDivision()) {
+            return node.getChild(1).toExpression().contains("X");
+        }
+        return false;
+    }
+
+    // Iterates through a node and returns the denominator if it has a
+    // symbolName in its denominator
+    // e.g. 1/(2x) with `symbolName=x` would return 2x
+    // e.g. 1/(x+2) with `symbolName=x` would return x+2
+    // e.g. 1/(x+2) + (x+1)/(2x+3) with `symbolName=x` would return (2x+3)
+    public static TreeNode getLastDenominatorWithSymbolTerm(TreeNode node) {
+
+        // First check if the node itself has a symbol in the denominator
+        if (hasDenominatorSymbol(node)) {
+            return node.getChild(1);
+        }
+        // Otherwise, it's a sum of terms. e.g. 1/x + 1(2+x)
+        // Look through the operands for a
+        // denominator term with `symbolName`
+        else if (node.esSuma()) {
+            for (int i = node.getArgs().size()- 1; i >= 0 ; i--) {
+                TreeNode child = node.getChild(i);
+                if (child.esSuma()) {
+                    return getLastDenominatorWithSymbolTerm(child);
+                }
+                else if (hasDenominatorSymbol(child)) {
+                    return child.getChild(1);
+                }
+            }
+        }
+        return null;
+    }
+
+    // Iterates through a node and returns the last term that does not have the
+    // symbolName including other polynomial terms, and constants or constant
+    // fractions
+    // e.g. 4x^2 with `symbolName=x` would return 4
+    // e.g. 4x^2 + 2x + 2/4 with `symbolName=x` would return 2/4
+    // e.g. 4x^2 + 2x + y with `symbolName=x` would return y
+    public static TreeNode getLastNonSymbolTerm(TreeNode node) {
+        if (isPolynomialTerm(node)) {
+            return TreeNode.createConstant(node.getCoefficient());
+        }
+        else if (hasDenominatorSymbol(node)) {
+            return null;
+        }
+        else if (node.esOperador()) {
+            for (int i = node.getArgs().size() - 1; i >= 0 ; i--) {
+                TreeNode child = node.getChild(i);
+                if (child.esSuma()) {
+                    return getLastNonSymbolTerm(child);
+                }
+                else if (!isSymbolTerm(child)) {
+                    return child;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    // Given a node, will determine if the expression is in the form of a quadratic
+    // e.g. `x^2 + 2x + 1` OR `x^2 - 1` but not `x^3 + x^2 + x + 1`
+    public static boolean isQuadratic(TreeNode node) {
+        if (!node.esSuma()) {
+            return false;
+        }
+
+        if (node.getArgs().size() > 3) {
+            return false;
+        }
+
+        List<TreeNode> secondDegreeTerms = new ArrayList<>();
+        List<TreeNode> firstDegreeTerms = new ArrayList<>();
+        List<TreeNode> constantTerms = new ArrayList<>();
+
+        for(TreeNode child: node.getArgs()){
+            if (isPolynomialTermOfDegree(child, 2)){
+                secondDegreeTerms.add(child);
+            }else if (isPolynomialTermOfDegree(child, 1)){
+                firstDegreeTerms.add(child);
+            }else if (isConstant(child, true)){
+                constantTerms.add(child);
+            }
+        }
+
+        // Check that there is one second degree term and at most one first degree
+        // term and at most one constant term
+        if (secondDegreeTerms.size() != 1 || firstDegreeTerms.size() > 1 ||
+                constantTerms.size() > 1) {
+            return false;
+        }
+
+        // check that there are no terms that don't fall into these groups
+        if ((secondDegreeTerms.size() + firstDegreeTerms.size() +
+                constantTerms.size()) != node.getArgs().size()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    // Given a degree, returns a function that checks if a node
+    // is a polynomial term of the given degree.
+    private static boolean isPolynomialTermOfDegree(TreeNode node, int degree) {
+        if (isPolynomialTerm(node)) {
+            Integer exponent = node.getExponent();
+            return exponent!= null && exponent.equals(degree);
+        }
+        return false;
+    }
+
+    /**
+     * Calculates the  greatest common divisor
+     * @param a First value
+     * @param b Second Value
+     * @return El estado de la simplificacion
+     */
+    public static Integer calculateGCD(Integer a, Integer b) {
+        BigInteger b1 = BigInteger.valueOf(a);
+        BigInteger b2 = BigInteger.valueOf(b);
+        BigInteger gcd = b1.gcd(b2);
+        return gcd.intValue();
+    }
+
+    // Removes any parenthesis around nodes that can't be resolved further.
+    // Input must be a top level expression.
+    // Returns a node.
+    public static TreeNode removeUnnecessaryParens(TreeNode node, Boolean rootNode) {
+        // TODO removeUnnecessaryParens ./util/removeUnnecessaryParens
+         throw new UnsupportedOperationException();
+    }
+
 }

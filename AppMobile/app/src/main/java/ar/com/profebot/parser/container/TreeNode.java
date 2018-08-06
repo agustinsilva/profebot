@@ -48,7 +48,7 @@ public class TreeNode {
         return node;
     }
 
-    private void addChild(TreeNode node) {
+    public void addChild(TreeNode node) {
         this.args.add(node);
     }
 
@@ -229,6 +229,12 @@ public class TreeNode {
         return newNode;
     }
 
+    public static TreeNode createOperator(String operator, TreeNode leftNode, TreeNode rightNode, TreeNode extraNode) {
+        TreeNode newNode = createOperator(operator, leftNode, rightNode);
+        newNode.addChild(extraNode);
+        return newNode;
+    }
+
     public Integer getOperationResult() {
         Integer result = 0;
         if (esProducto()){
@@ -274,28 +280,18 @@ public class TreeNode {
         return newNode;
     }
 
+    // TODO createParenthesis: parsear mejor estoen el toExpresion
     public static TreeNode createParenthesis(TreeNode node) {
-        node.setLeftestNode(node,"(");
-        node.setRightestNode(node,")");
-        return node;
+        TreeNode newNode = new TreeNode("()");
+        newNode.setLeftNode(node);
+        return newNode;
     }
 
-    private static void setLeftestNode(TreeNode node,String value){
-        if(node.getLeftNode() != null){
-            node.setLeftestNode(node.getLeftNode(),value);
-        }else{
-            TreeNode newNode = new TreeNode((value));
-            node.setLeftNode(newNode);
-        }
-    }
-
-    private static void setRightestNode(TreeNode node,String value){
-        if(node.getRightNode() != null){
-            node.setRightestNode(node.getRightNode(),value);
-        }else{
-            TreeNode newNode = new TreeNode((value));
-            node.setRightNode(newNode);
-        }
+    // TODO createList: revisar como se parsearia esto
+    public static TreeNode createList(List<TreeNode> nodes) {
+        TreeNode newNode = new TreeNode("LIST");
+        newNode.setArgs(nodes);
+        return newNode;
     }
 
     public static TreeNode createPolynomialTerm(String x, TreeNode exponent, Integer coefficient) {
@@ -346,6 +342,8 @@ public class TreeNode {
     }
 
     public boolean isParenthesis() { return "()".equals(this.getValue());    }
+
+    public boolean isList() { return "LIST".equals(this.getValue());    }
 
     public Integer getExponent(boolean defaultOne) {
         return getExponent() == null && defaultOne? 1: getExponent();

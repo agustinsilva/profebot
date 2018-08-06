@@ -2,7 +2,6 @@ package ar.com.profebot.resolutor.service;
 
 import android.util.Log;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -3060,7 +3059,7 @@ public class SimplifyService {
 
         Integer numeratorValue = numeratorNode.getIntegerValue();
         Integer denominatorValue = denominatorNode.getIntegerValue();
-        Integer gcd = calculateGCD(numeratorValue, denominatorValue);
+        Integer gcd = TreeUtils.calculateGCD(numeratorValue, denominatorValue);
 
         if (denominatorValue < 0) {
             gcd *= -1;
@@ -3086,18 +3085,6 @@ public class SimplifyService {
                 NodeStatus.ChangeTypes.SIMPLIFY_FRACTION, treeNode, newNode, substeps);
     }
 
-    /**
-     * Calculates the  greatest common divisor
-     * @param a First value
-     * @param b Second Value
-     * @return El estado de la simplificacion
-     */
-    private Integer calculateGCD(Integer a, Integer b) {
-        BigInteger b1 = BigInteger.valueOf(a);
-        BigInteger b2 = BigInteger.valueOf(b);
-        BigInteger gcd = b1.gcd(b2);
-        return gcd.intValue();
-    }
 
     /**
      * calculates the least common multiple
@@ -3106,7 +3093,7 @@ public class SimplifyService {
      * @return El estado de la simplificacion
      */
     private Integer calculateLCM(Integer a, Integer b) {
-        return a * (b / calculateGCD(a, b));
+        return a * (b / TreeUtils.calculateGCD(a, b));
     }
 
     /**
