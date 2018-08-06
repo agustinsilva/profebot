@@ -33,7 +33,7 @@ public class GeneticAlgorithmExecutor {
             try {
                 response = executor.submit(new Task(baseExpression)).get(5, TimeUnit.SECONDS);
             } catch (Exception e) {
-                System.out.println("\n\n\n\nTimeout\n\n\n\n");
+                System.out.println("\n\n\n\nTimeout: " + e.getMessage() + "\n\n\n\n");
                 for (Thread thread : Thread.getAllStackTraces().keySet()) {
                     if (thread.getName().contains("pool-") && thread.getName().contains("thread-")) {
                         System.out.println("Thread stopped: " + thread.getName());

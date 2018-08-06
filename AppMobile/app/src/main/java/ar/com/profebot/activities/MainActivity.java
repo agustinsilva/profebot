@@ -2,6 +2,7 @@ package ar.com.profebot.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -37,6 +38,44 @@ public class MainActivity extends AppCompatActivity {
         });
 
         this.setMainMenuShortCut();
+        //save Pending exercises json data
+//        String jsonHARDCODE = "{\n" +
+//                "  \"_id\": \"5b53c0e07ed96c51ba2f1757\",\n" +
+//                "  \"pendingExercises\": [\n" +
+//                "    {\n" +
+//                "      \"id\": 0,\n" +
+//                "      \"equation\": \"(X+3)*2=30\",\n" +
+//                "      \"difficulty\": 3,\n" +
+//                "      \"subject\": \"Distributiva\"\n" +
+//                "    },\n" +
+//                "    {\n" +
+//                "      \"id\": 1,\n" +
+//                "      \"equation\": \"(X+3)/2=10*X\",\n" +
+//                "      \"difficulty\": 3,\n" +
+//                "      \"subject\": \"Operacion Fraccionaria\"\n" +
+//                "    },\n" +
+//                "    {\n" +
+//                "      \"id\": 2,\n" +
+//                "      \"equation\": \"(X+3)*(X+1)=610\",\n" +
+//                "      \"difficulty\": 3,\n" +
+//                "      \"subject\": \"Distributiva - Ecuacion Cuadratica\"\n" +
+//                "    },\n" +
+//                "    {\n" +
+//                "      \"id\": 3,\n" +
+//                "      \"equation\": \"(X+3)*(X-10)=60\",\n" +
+//                "      \"difficulty\": 3,\n" +
+//                "      \"subject\": \"Distributiva - Ecuacion Cuadratica\"\n" +
+//                "    },\n" +
+//                "    {\n" +
+//                "      \"id\": 3,\n" +
+//                "      \"equation\": \"x+6-(x+3+5)*7=(4*5)*(x)-5\",\n" +
+//                "      \"difficulty\": 3,\n" +
+//                "      \"subject\": \"Distributiva - Ecuacion Cuadratica\"\n" +
+//                "    }\n" +
+//                "  ]\n" +
+//                "}";
+//        PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).edit()
+//                .putString("pendingExercises",jsonHARDCODE.toString()).apply();
     }
 
     private void setMainMenuShortCut(){

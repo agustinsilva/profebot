@@ -127,12 +127,15 @@ public class SimplifyService {
     }
 
     private void logSteps(NodeStatus nodeStatus) {
-        Log.d("debugTag", nodeStatus.getChangeType().getDescrip());
-        Log.d("debugTag",  nodeStatus.getNewNode().toExpression() + "\n");
+        System.out.println("debugTag: " + nodeStatus.getChangeType().getDescrip());
+        //Log.d("debugTag", nodeStatus.getChangeType().getDescrip());
+        System.out.println("debugTag: " + nodeStatus.getNewNode().toExpression() + "\n");
+        //Log.d("debugTag",  nodeStatus.getNewNode().toExpression() + "\n");
 
         if (nodeStatus.getSubsteps() != null){
             for (NodeStatus status: nodeStatus.getSubsteps()) {
-                Log.d("debugTag","\nSubpasos:");
+                System.out.println("debugTag: " + "\nSubpasos:");
+                //Log.d("debugTag","\nSubpasos:");
                 logSteps(status);
             }
         }
@@ -147,8 +150,8 @@ public class SimplifyService {
     protected NodeStatus arithmeticSearch(TreeNode treeNode) {
 
         // TODO Busqueda postOrder
-        // Buscar una suma, producto o potencia de constantes
-        if (treeNode == null || !treeNode.esAditivo() || !treeNode.esMultiplicativo() || !treeNode.esPotencia()) {
+        boolean noEsOperador = !treeNode.esOperador();
+        if (noEsOperador) {
             return NodeStatus.noChange(treeNode);
         }
 
@@ -178,7 +181,7 @@ public class SimplifyService {
                 return NodeStatus.nodeChanged(
                         NodeStatus.ChangeTypes.SIMPLIFY_ARITHMETIC, treeNode, newNode);
             }else{
-                // Elr esultado no es entero
+                // El resultado no es entero
                 return NodeStatus.noChange(treeNode);
             }
         }else{
@@ -1423,7 +1426,7 @@ public class SimplifyService {
             return NodeStatus.noChange(treeNode);
         }
 
-        TreeNode exponentNode = treeNode.getLeftNode();
+        TreeNode exponentNode = treeNode.getRightNode();
         if (TreeUtils.isConstant(exponentNode) &&
                 CONSTANT_1.equals(exponentNode.getIntegerValue())){
 
@@ -1508,7 +1511,7 @@ public class SimplifyService {
         int i = 0;
         int oneIndex = -1;
         for(TreeNode child: treeNode.getArgs()){
-            if (TreeUtils.isConstant(child) && TreeUtils.hasValue(child, "-1")) {
+            if (TreeUtils.isConstant(child) && TreeUtils.hasValue(child, "1")) {
                 oneIndex = i;
                 break;
             }
@@ -1532,7 +1535,7 @@ public class SimplifyService {
     }
 
     /**
-     * Arreglar coeficientes: ej: X*5 = 5X
+     * Reordena coeficientes: ej: X*5 = 5X
      * @param treeNode Nodo a evaluar
      * @return El estado de la simplificacion
      */
@@ -1549,7 +1552,7 @@ public class SimplifyService {
 
         // Tiene que ser 1 de los 2 nodos constante, y el otro una X (En ese caso agrupo)
         TreeNode leftNode = treeNode.getLeftNode();
-        TreeNode rightNode = treeNode.getLeftNode();
+        TreeNode rightNode = treeNode.getRightNode();
 
         TreeNode newNode = leftNode.clone();
         newNode.multiplyCoefficient(rightNode.getValue());
@@ -1829,7 +1832,10 @@ public class SimplifyService {
 
         TreeNode newNode = node.cloneDeep();
         for(TreeNode child: newNode.getArgs()){
-            child.setRightNode(TreeNode.createConstant(child.getRightNode().getOperationResult()));
+            TreeNode rightChild = child.getRightNode();
+            Integer value;
+            value = TreeUtils.isConstant(rightChild) ? rightChild.getIntegerValue() : rightChild.getOperationResult();
+            child.setRightNode(TreeNode.createConstant(value));
         }
 
         return NodeStatus.nodeChanged(
@@ -1843,8 +1849,11 @@ public class SimplifyService {
      */
     private NodeStatus evaluateNumerators(TreeNode node) {
         TreeNode newNode = node.cloneDeep();
+        Integer value;
         for(TreeNode child: newNode.getArgs()){
-            child.setLeftNode(TreeNode.createConstant(child.getLeftNode().getOperationResult()));
+            TreeNode leftChild = child.getLeftNode();
+            value = TreeUtils.isConstant(leftChild) ? leftChild.getIntegerValue() : leftChild.getOperationResult();
+            child.setLeftNode(TreeNode.createConstant(value));
         }
 
         return NodeStatus.nodeChanged(
@@ -2099,6 +2108,9 @@ public class SimplifyService {
         List<NodeStatus> substeps = new ArrayList<>();
         TreeNode newNode = node.cloneDeep();
 
+        if(TreeUtils.isConstant(node)){
+            return NodeStatus.noChange(node);
+        }
         // STEP 1: If any nodes have no coefficient, make it have coefficient 1
         // (this step only happens under certain conditions and later steps might
         // happen even if step 1 does not)

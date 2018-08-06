@@ -258,24 +258,36 @@ public class TreeUtils {
         // no podemos seguir descomponiendo o aplastando este arbol, entonces retornamos simplemente
         // el nodo actual, e iteramos sobre el mismo para aplastar sus operaciones.
         if (!node.esOperador()) {
-            return Collections.singletonList(flattenOperands(node));
+            ArrayList<TreeNode> operandsList =  new ArrayList<TreeNode>();
+            operandsList.add(flattenOperands(node));
+            return operandsList;
+            //return Collections.singletonList(flattenOperands(node));
         }
         switch (node.getValue()) {
             //La division es parte de la reduccion de la multiplicacion.
             case "*":
             case "/":
                 if (!"*".equals(parentOp)) {
-                    return Collections.singletonList(flattenOperands(node));
+                    ArrayList<TreeNode> operandsList =  new ArrayList<TreeNode>();
+                    operandsList.add(flattenOperands(node));
+                    return operandsList;
+                    //return Collections.singletonList(flattenOperands(node));
                 }
                 break;
             case "+":
             case "-":
                 if (!"+".equals(parentOp)) {
-                    return Collections.singletonList(flattenOperands(node));
+                    ArrayList<TreeNode> operandsList =  new ArrayList<TreeNode>();
+                    operandsList.add(flattenOperands(node));
+                    return operandsList;
+                    //return Collections.singletonList(flattenOperands(node));
                 }
                 break;
             default:
-                return Collections.singletonList(flattenOperands(node));
+                ArrayList<TreeNode> operandsList =  new ArrayList<TreeNode>();
+                operandsList.add(flattenOperands(node));
+                return operandsList;
+                //return Collections.singletonList(flattenOperands(node));
         }
 
         // Si estamos aplastando por *, validar por un termino polinomial(por ejemplo un coeficiente
