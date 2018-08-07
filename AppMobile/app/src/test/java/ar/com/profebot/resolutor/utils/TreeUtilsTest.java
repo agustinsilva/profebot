@@ -207,7 +207,150 @@ public class TreeUtilsTest {
         Assert.assertTrue(TreeUtils.hasValue(node.getChild(0),"3"));
         Assert.assertTrue(TreeUtils.hasValue(node.getChild(1),"4"));
         Assert.assertTrue(TreeUtils.hasValue(node.getChild(2),"-2"));
+    }
 
+    @Test
+    public void flattenOperands_ok5() throws InvalidExpressionException {
+        String expression = "2+2=0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(tree.getRootNode().getLeftNode());
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode,"+"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(0),"2"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(1),"2"));
+    }
+
+    @Test
+    public void flattenOperands_ok6() throws InvalidExpressionException {
+        String expression = "2+2+7=0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(tree.getRootNode().getLeftNode());
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode,"+"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(0),"2"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(1),"2"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(2),"7"));
+    }
+
+    @Test
+    public void flattenOperands_ok7() throws InvalidExpressionException {
+        String expression = "5*(2+3+2)*10=0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(tree.getRootNode().getLeftNode());
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode,"*"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(0),"5"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(1),"+"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(1).getChild(0),"2"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(1).getChild(1),"3"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(1).getChild(2),"2"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(2),"10"));
+    }
+
+    @Test
+    public void flattenOperands_ok8() throws InvalidExpressionException {
+        String expression = "9*8*6+3+4=0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(tree.getRootNode().getLeftNode());
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode,"+"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(0),"*"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(0).getChild(0),"9"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(0).getChild(1),"8"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(0).getChild(2),"6"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(1),"3"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(2),"4"));
+    }
+
+    @Test
+    public void flattenOperands_ok9() throws InvalidExpressionException {
+        String expression = "9X*8*6+3+4=0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(tree.getRootNode().getLeftNode());
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode,"+"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(0),"*"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(0).getChild(0),"9X"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(0).getChild(1),"8"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(0).getChild(2),"6"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(1),"3"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(2),"4"));
+    }
+
+    @Test
+    public void flattenOperands_ok10() throws InvalidExpressionException {
+        String expression = "3x*4x=0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(tree.getRootNode().getLeftNode());
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode,"*"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(0),"3X"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(1),"4X"));
+    }
+
+    @Test
+    public void flattenOperands_ok11() throws InvalidExpressionException {
+        String expression = "2 * X / 4 * 6  =0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(tree.getRootNode().getLeftNode());
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode,"*"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(0),"/"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(0).getChild(0),"2X"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(0).getChild(1),"4"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(1),"6"));
+    }
+
+    @Test
+    public void flattenOperands_ok12() throws InvalidExpressionException {
+        String expression = "2*3/4/5*6  =0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(tree.getRootNode().getLeftNode());
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode,"*"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(0),"2"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(1),"/"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(1).getChild(0),"3"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(1).getChild(1),"4"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(1).getChild(2),"5"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(2),"6"));
+    }
+
+    @Test
+    public void flattenOperands_ok13() throws InvalidExpressionException {
+        String expression = "X / (4 * X) / 8  =0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(tree.getRootNode().getLeftNode());
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(0),"X"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(1),"4X"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(2),"8"));
+    }
+
+    @Test
+    public void flattenOperands_ok14() throws InvalidExpressionException {
+        String expression = "2X * 4X / 8  =0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(tree.getRootNode().getLeftNode());
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode,"*"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(0),"2X"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(1),"/"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(1).getChild(0),"4X"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(1).getChild(1),"8"));
+    }
+
+    @Test
+    public void flattenOperands_ok15() throws InvalidExpressionException {
+        String expression = "1 + 2 - 3 - 4 + 5  =0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(tree.getRootNode().getLeftNode());
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode,"+"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(0),"1"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(1),"2"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(2),"-3"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(3),"-4"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(4),"5"));
+    }
+
+    @Test
+    public void flattenOperands_ok16() throws InvalidExpressionException {
+        String expression = "x - 3 = 0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(tree.getRootNode().getLeftNode());
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode,"+"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(0),"X"));
+        Assert.assertTrue(TreeUtils.hasValue(flattenedNode.getChild(1),"-3"));
     }
 
     @Test
@@ -303,6 +446,15 @@ public class TreeUtilsTest {
         TreeNode node = tree.getRootNode().getLeftNode();
         Assert.assertFalse(TreeUtils.canRearrangeCoefficient(node));
     }
+
+    @Test
+    public void canRearrangeCoefficient_ok5() throws InvalidExpressionException {
+        String expression = "X^3 * 7 =0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        Assert.assertTrue(TreeUtils.canRearrangeCoefficient(node));
+    }
+
 
     @Test
     public void canMultiplyLikeTermConstantNodes_ok() throws InvalidExpressionException {
@@ -510,5 +662,125 @@ public class TreeUtilsTest {
         TreeNode outputNode = TreeUtils.getLastNonSymbolTerm(node);
         String outputExpression = outputNode.toExpression();
         Assert.assertEquals("4",outputExpression);
+    }
+
+    @Test
+    public void removeUnnecessaryParens_ok1() throws InvalidExpressionException {
+        String expression = " (X+4) + 12 = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode outputNode = TreeUtils.removeUnnecessaryParens(node);
+        String outputExpression = outputNode.toExpression();
+        Assert.assertEquals("X + 4 + 12",outputExpression);
+    }
+
+    @Test
+    public void removeUnnecessaryParens_ok2() throws InvalidExpressionException {
+        String expression = " -(X+4X) + 12 = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode outputNode = TreeUtils.removeUnnecessaryParens(node);
+        String outputExpression = outputNode.toExpression();
+        Assert.assertEquals("-(X + 4X) + 12",outputExpression);
+    }
+
+    @Test
+    public void removeUnnecessaryParens_ok3() throws InvalidExpressionException {
+        String expression = " X + (12) = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode outputNode = TreeUtils.removeUnnecessaryParens(node);
+        String outputExpression = outputNode.toExpression();
+        Assert.assertEquals("X + 12",outputExpression);
+    }
+
+    @Test
+    public void removeUnnecessaryParens_ok4() throws InvalidExpressionException {
+        String expression = " X + (X) = 2X";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode outputNode = TreeUtils.removeUnnecessaryParens(node);
+        String outputExpression = outputNode.toExpression();
+        Assert.assertEquals("X + X",outputExpression);
+    }
+
+    @Test
+    public void removeUnnecessaryParens_ok5() throws InvalidExpressionException {
+        String expression = " X + -(X) = 2X";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode outputNode = TreeUtils.removeUnnecessaryParens(node);
+        String outputExpression = outputNode.toExpression();
+        Assert.assertEquals("X - X",outputExpression);
+    }
+
+    @Test
+    public void removeUnnecessaryParens_ok6() throws InvalidExpressionException {
+        String expression = " ((3 - 5)) * x = 2X";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode outputNode = TreeUtils.removeUnnecessaryParens(node);
+        String outputExpression = outputNode.toExpression();
+        Assert.assertEquals("(3 - 5) * x",outputExpression);
+    }
+
+    @Test
+    public void removeUnnecessaryParens_ok7() throws InvalidExpressionException {
+        String expression = " (((-5))) = 2X";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode outputNode = TreeUtils.removeUnnecessaryParens(node);
+        String outputExpression = outputNode.toExpression();
+        Assert.assertEquals("-5",outputExpression);
+    }
+
+    @Test
+    public void removeUnnecessaryParens_ok8() throws InvalidExpressionException {
+        String expression = " ((4+5)) + ((2^3)) = 2X";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode outputNode = TreeUtils.removeUnnecessaryParens(node);
+        String outputExpression = outputNode.toExpression();
+        Assert.assertEquals("(4 + 5) + 2^3",outputExpression);
+    }
+
+    @Test
+    public void removeUnnecessaryParens_ok9() throws InvalidExpressionException {
+        String expression = " (2X^6 + -50 X^2) - (X^4) = 2X";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode outputNode = TreeUtils.removeUnnecessaryParens(node);
+        String outputExpression = outputNode.toExpression();
+        Assert.assertEquals("2X^6 - 50X^2 - X^4", outputExpression);
+    }
+
+    @Test
+    public void removeUnnecessaryParens_ok10() throws InvalidExpressionException {
+        String expression = " (X+4) - (12 + X) = 2X";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode outputNode = TreeUtils.removeUnnecessaryParens(node);
+        String outputExpression = outputNode.toExpression();
+        Assert.assertEquals("X + 4 - (12 + X)",outputExpression);
+    }
+
+    @Test
+    public void removeUnnecessaryParens_ok11() throws InvalidExpressionException {
+        String expression = " (2X)^2 = 2X";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode outputNode = TreeUtils.removeUnnecessaryParens(node);
+        String outputExpression = outputNode.toExpression();
+        Assert.assertEquals("(2X)^2",outputExpression);
+    }
+
+    @Test
+    public void removeUnnecessaryParens_ok12() throws InvalidExpressionException {
+        String expression = " ((4+x)-5)^(2) = 2X";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode outputNode = TreeUtils.removeUnnecessaryParens(node);
+        String outputExpression = outputNode.toExpression();
+        Assert.assertEquals("(4 + X - 5)^2",outputExpression);
     }
 }

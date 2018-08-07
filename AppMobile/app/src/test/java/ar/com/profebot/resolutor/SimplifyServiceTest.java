@@ -523,7 +523,7 @@ public class SimplifyServiceTest extends SimplifyService {
 
     @Test
     public void multiplyLikeTerms_ok2() throws InvalidExpressionException {
-        String expression = "2X * X^2 * 5X = 10X^4";
+        String expression = "X * X^2 * X = X^4";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
