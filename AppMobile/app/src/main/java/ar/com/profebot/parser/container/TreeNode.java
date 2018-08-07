@@ -152,7 +152,13 @@ public class TreeNode {
 
     public String toExpression() {
         TreeNode leftNode = this.esRaiz()?null:this.getLeftNode(); // Las raices solo tienen termino derecho
-        return getNodeExpression(leftNode)  + this.getValue()  + getNodeExpression(this.getRightNode());
+
+        // Si es parentesis, o unaryMinus, envuelve
+        if (this.isParenthesis() || this.isUnaryMinus()){
+            return (this.isUnaryMinus()?"-":"") + "(" + this.getChild(0).toExpression()  + ")";
+        }else{
+            return getNodeExpression(leftNode)  + this.getValue()  + getNodeExpression(this.getRightNode());
+        }
     }
 
     private String getNodeExpression(TreeNode treeNode){
@@ -255,8 +261,11 @@ public class TreeNode {
             return getLeftNode().getIntegerValue() - getRightNode().getIntegerValue();
         }else if (esPotencia()){
             return getLeftNode().getIntegerValue() ^ getRightNode().getIntegerValue();
+        }else if (isParenthesis()){
+            return this.getChild(0).getOperationResult();
         }
-        throw new UnsupportedOperationException("No existe el operador: " + getValue());
+
+        throw new UnsupportedOperationException("No existe el operador: " + getValue() + ", Parseando: " + this.toExpression());
     }
 
     public List<TreeNode> getArgs() {
