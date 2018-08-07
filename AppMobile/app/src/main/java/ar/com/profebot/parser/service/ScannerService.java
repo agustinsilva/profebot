@@ -293,4 +293,8 @@ public class ScannerService {
         return resultado;
     }
 
+    public boolean isFirstChar() {
+        return previousToken == null ||
+                Token.IGUAL.equals(previousToken);
+    }
 }

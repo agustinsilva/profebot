@@ -95,6 +95,13 @@ public class ParserService {
             primaria.setLeftNode(new TreeNode("2")); // TODO definir si no es cuadrada
             primaria.setRightNode(getPrimaria());
         }else{
+
+            // Si viene luego de un igual o al principio, puede ser un "-" valido
+            Boolean addUnaryMinus = false;
+            if (scannerService.isFirstChar() && Token.RESTA.equals(Token)){
+                scannerService.match(Token.RESTA);
+                addUnaryMinus = true;
+            }
             scannerService.match(Token.PARENIZQUIERDO);
             primaria = getExpression();
             scannerService.match(Token.PARENDERECHO);
@@ -102,6 +109,10 @@ public class ParserService {
             // Si sigue una potencia, encierra el parentesis, tiene q venir una constante
             if (Token.POTENCIA.equals(scannerService.prox_Token())){
                 primaria = getPotencia(primaria);
+            }
+
+            if (addUnaryMinus){
+                primaria = TreeNode.createUnaryMinus(primaria);
             }
         }
         return primaria;

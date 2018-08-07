@@ -211,7 +211,7 @@ public class SimplifyService {
         if (nodeStatus.hasChanged()){return nodeStatus;}
 
         // ____^0 --> 1
-                nodeStatus = reduceExponentByZero(treeNode);
+        nodeStatus = reduceExponentByZero(treeNode);
         if (nodeStatus.hasChanged()){return nodeStatus;}
 
         // Check for x^1 which should be reduced to x
@@ -636,9 +636,9 @@ public class SimplifyService {
             return NodeStatus.noChange(node);
         }
         TreeNode unaryContent = node.getChild(0);
-        if (!unaryContent.isParenthesis()) {
+        /*if (!unaryContent.isParenthesis()) {
             return NodeStatus.noChange(node);
-        }
+        }*/
         TreeNode content = unaryContent.getChild(0);
         if (!content.esOperador()) {
             return NodeStatus.noChange(node);
@@ -2471,7 +2471,7 @@ public class SimplifyService {
     // Returns true if the nodes are symbolic terms with the same symbol and no
     // coefficients.
     private boolean canMultiplyLikeTermPolynomialNodes(TreeNode node) {
-        if (!node.esOperador() || node.esProducto()) {
+        if (!node.esOperador() || !node.esProducto()) {
             return false;
         }
         List<TreeNode> args = node.getArgs();
@@ -3024,7 +3024,8 @@ public class SimplifyService {
         // TODO puede pasar esto? Revisar si hay que hacer un refactor de los coeficientes:
         // se podria hacer el ceoficiente sea un nodo en vez de un int
 
-        /*if (!node.hasFractionCoeff()) {
+        /*
+        if (!node.hasFractionCoeff()) {
             return NodeStatus.noChange(node);
         }
 
@@ -3034,18 +3035,18 @@ public class SimplifyService {
           ];
 
         for (int i = 0; i < coefficientSimplifications.length; i++) {
-    const coefficientFraction = polyNode.getCoeffNode(); // a division node
-    const newCoeffStatus = coefficientSimplifications[i](coefficientFraction);
+            const coefficientFraction = polyNode.getCoeffNode(); // a division node
+            const newCoeffStatus = coefficientSimplifications[i](coefficientFraction);
             if (newCoeffStatus.hasChanged()) {
                 // we need to reset change groups because we're creating a new node
                 let newCoeff = Node.Status.resetChangeGroups(newCoeffStatus.newNode);
                 if (newCoeff.value === '1') {
                     newCoeff = null;
                 }
-      const exponentNode = polyNode.getExponentNode();
-      const newNode = Node.Creator.polynomialTerm(
-                        polyNode.getSymbolNode(), exponentNode, newCoeff);
-                return Node.Status.nodeChanged(newCoeffStatus.changeType, node, newNode);
+              const exponentNode = polyNode.getExponentNode();
+              TreeNode newNode = TreeNode.createPolynomialTerm(
+                        "X", exponentNode, newCoeff);
+                return NodeStatus.nodeChanged(newCoeffStatus.changeType, node, newNode);
             }
         }
 */

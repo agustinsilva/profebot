@@ -65,7 +65,7 @@ public class IAModuleClient extends AsyncTask<String, Void, Void> {
                 case 200:
                 case 201:
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                    StringBuilder sb = new StringBuilder();
+                    final StringBuilder sb = new StringBuilder();
                     String line;
                     while ((line = bufferedReader.readLine()) != null) {
                         sb.append(line + "\n");
