@@ -1,24 +1,52 @@
 package ar.com.profebot.parser.container;
 
-import java.util.List;
-
 public class Tree {
     private TreeNode rootNode;
-    private List<TreeNode> nodes;
+
+    public Tree() {
+    }
+
+    public Tree(TreeNode leftNode, TreeNode rightNode, String operator) {
+        Tree tree = new Tree();
+        TreeNode rootNode = new TreeNode(operator);
+        rootNode.setLeftNode(leftNode);
+        rootNode.setRightNode(rightNode);
+        tree.setRootNode(rootNode);
+    }
+
     public TreeNode getRootNode() {
         return rootNode;
     }
     public void setRootNode(TreeNode rootNode) {
         this.rootNode = rootNode;
     }
-    public List<TreeNode> getNodes() {
-        return nodes;
-    }
-    public void setNodes(List<TreeNode> nodes) {
-        this.nodes = nodes;
-    }
     public String toExpression(){
         return rootNode.toExpression();
     }
+    public TreeNode getLeftNode() {
+        return rootNode.getLeftNode();
+    }
+    public TreeNode getRightNode() {
+        return rootNode.getRightNode();
+    }
+    public void setLeftNode(TreeNode node) {
+        rootNode.setLeftNode(node);
+    }
+    public void setRightNode(TreeNode node) {
+        rootNode.setRightNode(node);
+    }
+    public Boolean hasAnySymbol(){
+        return this.toExpression().contains("X");
+    }
 
+    //Realiza el clon de un arbol.
+    public Tree clone(){
+        Tree tree = new Tree();
+        tree.setRootNode(this.getRootNode().cloneDeep());
+        return tree;
+    }
+
+    public String getComparator() {
+        return this.getRootNode().getValue();
+    }
 }

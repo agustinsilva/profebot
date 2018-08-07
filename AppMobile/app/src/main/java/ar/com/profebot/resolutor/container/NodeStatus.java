@@ -290,6 +290,7 @@ public class NodeStatus {
     public static TreeNode resetChangeGroups(TreeNode node) {
 
         if (node == null) return null;
+
         node = node.cloneDeep();
         node.setChangeGroup(null);
         List<TreeNode> args = node.getArgs();
