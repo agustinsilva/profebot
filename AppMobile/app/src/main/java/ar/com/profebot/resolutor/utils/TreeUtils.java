@@ -669,12 +669,12 @@ public class TreeUtils {
         }
     }
 
-    // Iterates through a node and returns the last term with the symbol name
-    // Returns null if no terms with the symbol name are in the node.
-    // e.g. 4x^2 + 2x + y + 2 with `symbolName=x` would return 2x
+    // Itera a traves de un nodo y retorna el ultimo termino con el nombre del simbolo
+    // Retorna nulo si no hay terminos con el simbolo en el nodo.
+    //Ejemplo 4x^2 + 2x + y + 2 con nombre de simbolo x retorna 2 x
     public static TreeNode getLastSymbolTerm(TreeNode node, String symbolName) {
 
-        // First check if the node itself is a polyomial term with symbolName
+        //Primero valida si el mismo es un termino polinomial con un nombre de simbolo
         if (isSymbolTerm(node)) {
             return node;
         }

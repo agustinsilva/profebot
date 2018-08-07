@@ -212,86 +212,65 @@ public class TreeUtilsTest {
 
     @Test
     public void negate_ok() throws InvalidExpressionException {
-        String expression = "3/2=0";
+        String expression = "1 = 1";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode nodoNegado = TreeUtils.negate(node);
-        Assert.assertTrue(TreeUtils.hasValue(nodoNegado.getLeftNode(),"-3"));
-        Assert.assertTrue(TreeUtils.hasValue(nodoNegado.getRightNode(),"2"));
+        Assert.assertEquals("-1",nodoNegado.toExpression());
     }
 
     @Test
     public void negate_ok2() throws InvalidExpressionException {
-        String expression = "2X=0";
+        String expression = "-1 = -1";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode nodoNegado = TreeUtils.negate(node);
-        boolean value = nodoNegado.getCoefficient() == -2;
-        Assert.assertTrue(value);
+        Assert.assertEquals("1",nodoNegado.toExpression());
     }
 
     @Test
-    public void negate_ok3(){
-        TreeNode nodoRaiz = new TreeNode("-");
-        TreeNode nodoIzquierdoRaiz = new TreeNode("3");
-        nodoRaiz.setUnaryMinus(true);
-        nodoRaiz.setLeftNode(nodoIzquierdoRaiz);
-        TreeNode nodoNegado = TreeUtils.negate(nodoRaiz);
-        Assert.assertEquals(nodoRaiz.getLeftNode(),nodoNegado);
+    public void negate_ok3() throws InvalidExpressionException {
+        String expression = "1/2 = 1/2";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode nodoNegado = TreeUtils.negate(node);
+        Assert.assertEquals("-1/2",nodoNegado.toExpression());
     }
 
     @Test
-    public void negate_ok4(){
-        TreeNode nodoRaiz = new TreeNode("4");
-        TreeNode nodoNegado = TreeUtils.negate(nodoRaiz);
-        Assert.assertTrue(TreeUtils.hasValue(nodoNegado,"-4"));
+    public void negate_ok4() throws InvalidExpressionException {
+        String expression = "(X + 2) = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode nodoNegado = TreeUtils.negate(node);
+        Assert.assertEquals("-(X + 2)",nodoNegado.toExpression());
     }
 
     @Test
-    public void negate_ok5(){
-        TreeNode nodoRaiz = new TreeNode("-4");
-        TreeNode nodoNegado = TreeUtils.negate(nodoRaiz);
-        Assert.assertTrue(TreeUtils.hasValue(nodoNegado,"4"));
+    public void negate_ok5() throws InvalidExpressionException {
+        String expression = "X = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode nodoNegado = TreeUtils.negate(node);
+        Assert.assertEquals("-X",nodoNegado.toExpression());
     }
 
     @Test
     public void negate_ok6() throws InvalidExpressionException {
-        String expression = "X+2=0";
+        String expression = "X^2 = 4";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode nodoNegado = TreeUtils.negate(node);
-        Assert.assertTrue(TreeUtils.hasValue(nodoNegado,"-"));
-        Assert.assertTrue(TreeUtils.hasValue(nodoNegado.getLeftNode(),"+"));
-        Assert.assertTrue(TreeUtils.hasValue(nodoNegado.getLeftNode().getLeftNode(),"X"));
-        Assert.assertTrue(TreeUtils.hasValue(nodoNegado.getLeftNode().getRightNode(),"2"));
+        Assert.assertEquals("-X^2",nodoNegado.toExpression());
     }
 
     @Test
-    public void negate_ok7(){
-        TreeNode nodoRaiz = new TreeNode("X");
-        TreeNode nodoNegado = TreeUtils.negate(nodoRaiz);
-        boolean value = nodoNegado.getCoefficient() == -1;
-        Assert.assertTrue(value);
-    }
-
-    @Test
-    public void negate_ok8() throws InvalidExpressionException {
-        String expression = "X^2=0";
+    public void negate_ok7() throws InvalidExpressionException {
+        String expression = "2/3 X = 4";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode nodoNegado = TreeUtils.negate(node);
-        boolean value = nodoNegado.getCoefficient() == -1 && nodoNegado.getExponent() == 2;
-        Assert.assertTrue(value);
-    }
-
-    @Test
-    public void negate_ok9() throws InvalidExpressionException {
-        String expression = "-X^2=0";
-        Tree tree = (new ParserService()).parseExpression(expression);
-        TreeNode node = tree.getRootNode().getLeftNode();
-        TreeNode nodoNegado = TreeUtils.negate(node);
-        boolean value = nodoNegado.getCoefficient() == 1 && nodoNegado.getExponent() == 2;
-        Assert.assertTrue(value);
+        Assert.assertEquals("-2/3X",nodoNegado.toExpression());
     }
     @Test
     public void canRearrangeCoefficient_ok() throws InvalidExpressionException {
@@ -451,5 +430,85 @@ public class TreeUtilsTest {
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
         Assert.assertFalse(TreeUtils.hasPolynomialInDenominator(node));
+    }
+
+    @Test
+    public void getLastSymbolTerm_ok1() throws InvalidExpressionException {
+        String expression = "1/X = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode outputNode = TreeUtils.getLastSymbolTerm(node,"X");
+        String outputExpression = outputNode.toExpression();
+        Assert.assertEquals("1/X",outputExpression);
+    }
+
+    @Test
+    public void getLastSymbolTerm_ok2() throws InvalidExpressionException {
+        String expression = " 1/3x = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode outputNode = TreeUtils.getLastSymbolTerm(node,"X");
+        String outputString = outputNode.toExpression();
+        Assert.assertEquals("1/3X",outputString);
+    }
+
+    @Test
+    public void getLastSymbolTerm_ok3() throws InvalidExpressionException {
+        String expression = " 3x = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode outputNode = TreeUtils.getLastSymbolTerm(node,"X");
+        String outputExpression = outputNode.toExpression();
+        Assert.assertEquals("3X",outputExpression);
+    }
+
+    @Test
+    public void getLastSymbolTerm_ok4() throws InvalidExpressionException {
+        String expression = " x + 3x + 2 = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode outputNode = TreeUtils.getLastSymbolTerm(node,"X");
+        String outputExpression = outputNode.toExpression();
+        Assert.assertEquals("3X",outputExpression);
+    }
+
+    @Test
+    public void getLastSymbolTerm_ok5() throws InvalidExpressionException {
+        String expression = " x/(x+3) = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode outputNode = TreeUtils.getLastSymbolTerm(node,"X");
+        String outputExpression = outputNode.toExpression();
+        Assert.assertEquals("X/(X+3)",outputExpression);
+    }
+
+    @Test
+    public void getLastNonSymbolTerm_ok1() throws InvalidExpressionException {
+        String expression = " 4x^2 + 2x + 2/4 = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode outputNode = TreeUtils.getLastNonSymbolTerm(node);
+        String outputExpression = outputNode.toExpression();
+        Assert.assertEquals("2/4",outputExpression);
+    }
+
+    @Test
+    public void getLastNonSymbolTerm_ok2() throws InvalidExpressionException {
+        String expression = " 4x^2 + 2/4 + x = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode outputNode = TreeUtils.getLastNonSymbolTerm(node);
+        String outputExpression = outputNode.toExpression();
+        Assert.assertEquals("2/4",outputExpression);
+    }
+
+    @Test
+    public void getLastNonSymbolTerm_ok3() throws InvalidExpressionException {
+        String expression = " 4x^2 = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode outputNode = TreeUtils.getLastNonSymbolTerm(node);
+        String outputExpression = outputNode.toExpression();
+        Assert.assertEquals("4",outputExpression);
     }
 }
