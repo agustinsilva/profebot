@@ -165,7 +165,16 @@ public class TreeUtils {
      */
     public static TreeNode flattenOperands(TreeNode node){
 
-        if (node.esOperador()) {
+        if (TreeUtils.isConstant(node, true)) {
+            // the evaluate() changes unary minuses around constant nodes to constant nodes
+            // with negative values.
+            TreeNode constNode = TreeNode.createConstant(node.getOperationResult());
+            if (node.getChangeGroup() != null) {
+                constNode.setChangeGroup(node.getChangeGroup());
+            }
+            return constNode;
+        }
+        else if (node.esOperador()) {
             if ("+-/*".contains(node.getValue())) {
                 String parentOp;
                 if (node.esDivision()) {
@@ -189,6 +198,19 @@ public class TreeUtils {
                     index++;
                 }
             }
+            return node;
+        } else if (node.isParenthesis()) {
+            node.setChild(0, flattenOperands(node.getChild(0)));
+            return node;
+        } else if (node.isUnaryMinus()) {
+            TreeNode arg = flattenOperands(node.getChild(0));
+            TreeNode flattenedNode = TreeUtils.negate(arg, true);
+            if (node.getChangeGroup() !=null) {
+                flattenedNode.setChangeGroup(node.getChangeGroup());
+            }
+            return flattenedNode;
+        } else if (node.esRaiz()) {
+            node.setChild(1, flattenOperands(node.getChild(1)));
             return node;
         }
 
@@ -290,11 +312,22 @@ public class TreeUtils {
                 //return Collections.singletonList(flattenOperands(node));
         }
 
+        if (TreeUtils.isPolynomialTerm(node)) {
+            for (int i=0; i < node.getArgs().size(); i++){
+                TreeNode arg = node.getChild(i);
+                if (arg != null){
+                    node.setChild(i, flattenOperands(arg));
+                }
+            }
+            ArrayList<TreeNode> operandsList =  new ArrayList<TreeNode>();
+            operandsList.add(node);
+            return operandsList;
+        }
         // Si estamos aplastando por *, validar por un termino polinomial(por ejemplo un coeficiente
         // multiplicado por un simbol como 2x^2 o 3y).
         // Esto es verdadero si hay una multiplicacion implicita y el operando derecho es un
         // simbolo o un simbolo con un exponente.
-        if ("*".equals(parentOp) && isPolynomialTermMultiplication(node)) {
+        else if ("*".equals(parentOp) && isPolynomialTermMultiplication(node)) {
             return maybeFlattenPolynomialTerm(node);
 
         } else if ("*".equals(parentOp) && node.esDivision()) {

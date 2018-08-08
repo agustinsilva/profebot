@@ -386,7 +386,7 @@ public class TreeUtilsTest {
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode nodoNegado = TreeUtils.negate(node);
-        Assert.assertEquals("-(X + 2)",nodoNegado.toExpression());
+        Assert.assertEquals("-(X+2)",nodoNegado.toExpression());
     }
 
     @Test
@@ -409,7 +409,7 @@ public class TreeUtilsTest {
 
     @Test
     public void negate_ok7() throws InvalidExpressionException {
-        String expression = "2/3 X = 4";
+        String expression = "(2/3) * X = 4";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode nodoNegado = TreeUtils.negate(node);

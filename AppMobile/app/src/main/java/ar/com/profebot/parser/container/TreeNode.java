@@ -3,6 +3,8 @@ package ar.com.profebot.parser.container;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.com.profebot.resolutor.utils.TreeUtils;
+
 public class TreeNode {
     private String value;
     private Integer coefficient;
@@ -216,7 +218,14 @@ public class TreeNode {
     //Actualiza el valor del nodo en funcion del coeficiente y el exponente por ejemplo si el
     //coeficiente es 3 y exponente es 2 cambiaria el valor a 3X^2
     private void updateValue(){
-        String newValue = (coefficient!=null && coefficient!=1?coefficient.toString(): "")
+        String coefficientString = "";
+        if (coefficient != null && coefficient != 1 && coefficient != -1) {
+            coefficientString = coefficient.toString();
+        }else if (coefficient == -1){
+            coefficientString = "-";
+        }
+
+            String newValue = coefficientString
                             + "X"
                             + (exponent!=null && exponent!=1? "^" + exponent.toString(): "");
 
@@ -243,7 +252,9 @@ public class TreeNode {
 
     public Integer getOperationResult() {
         Integer result = 0;
-        if (esProducto()){
+        if (TreeUtils.isConstant(this)){
+            return getIntegerValue();
+        } else if (esProducto()){
             result = 1;
             for(TreeNode child: this.getArgs()){
                 result *= child.getIntegerValue();
@@ -263,6 +274,8 @@ public class TreeNode {
             return getLeftNode().getIntegerValue() ^ getRightNode().getIntegerValue();
         }else if (isParenthesis()){
             return this.getChild(0).getOperationResult();
+        }else if (isUnaryMinus()){
+            return this.getChild(0).getOperationResult() * (-1);
         }
 
         throw new UnsupportedOperationException("No existe el operador: " + getValue() + ", Parseando: " + this.toExpression());
