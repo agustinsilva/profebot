@@ -1078,7 +1078,7 @@ public class ResolutorService {
         return NodeStatus.noChange(node);
     }
 
-    private List<Integer[]> getFactorPairs(Integer product, boolean b) {
+    protected List<Integer[]> getFactorPairs(Integer product, boolean b) {
         // TODO getFactorPairs
         throw new UnsupportedOperationException();
     }

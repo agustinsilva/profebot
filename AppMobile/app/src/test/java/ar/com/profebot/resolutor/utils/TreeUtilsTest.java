@@ -783,4 +783,175 @@ public class TreeUtilsTest {
         String outputExpression = outputNode.toExpression();
         Assert.assertEquals("(4 + X - 5)^2",outputExpression);
     }
+
+    @Test
+    public void isQuadratic_ok1() throws InvalidExpressionException {
+        String expression = " 2 + 2 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertFalse(TreeUtils.isQuadratic(flattenedNode));
+    }
+
+    @Test
+    public void isQuadratic_ok2() throws InvalidExpressionException {
+        String expression = " X = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertFalse(TreeUtils.isQuadratic(flattenedNode));
+    }
+
+    @Test
+    public void isQuadratic_ok3() throws InvalidExpressionException {
+        String expression = " X^2 - 4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(TreeUtils.isQuadratic(flattenedNode));
+    }
+
+    @Test
+    public void isQuadratic_ok4() throws InvalidExpressionException {
+        String expression = " X^2 + 2X + 1 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(TreeUtils.isQuadratic(flattenedNode));
+    }
+
+    @Test
+    public void isQuadratic_ok5() throws InvalidExpressionException {
+        String expression = " X^2 - 2x + 1 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(TreeUtils.isQuadratic(flattenedNode));
+    }
+
+    @Test
+    public void isQuadratic_ok6() throws InvalidExpressionException {
+        String expression = " X^2 + 3X + 2 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(TreeUtils.isQuadratic(flattenedNode));
+    }
+
+    @Test
+    public void isQuadratic_ok7() throws InvalidExpressionException {
+        String expression = " X^2 - 3X + 2 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(TreeUtils.isQuadratic(flattenedNode));
+    }
+
+    @Test
+    public void isQuadratic_ok8() throws InvalidExpressionException {
+        String expression = " X^2 + X - 2 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(TreeUtils.isQuadratic(flattenedNode));
+    }
+
+    @Test
+    public void isQuadratic_ok9() throws InvalidExpressionException {
+        String expression = " X^2 + X = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(TreeUtils.isQuadratic(flattenedNode));
+    }
+
+    @Test
+    public void isQuadratic_ok10() throws InvalidExpressionException {
+        String expression = " X^2 + 4 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(TreeUtils.isQuadratic(flattenedNode));
+    }
+
+    @Test
+    public void isQuadratic_ok11() throws InvalidExpressionException {
+        String expression = " X^2 + 4X + 1 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(TreeUtils.isQuadratic(flattenedNode));
+    }
+
+    @Test
+    public void isQuadratic_ok12() throws InvalidExpressionException {
+        String expression = " X^2 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertFalse(TreeUtils.isQuadratic(flattenedNode));
+    }
+
+    @Test
+    public void isQuadratic_ok13() throws InvalidExpressionException {
+        String expression = " X^3 + X^2 + X + 1 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertFalse(TreeUtils.isQuadratic(flattenedNode));
+    }
+
+    @Test
+    public void isQuadratic_ok14() throws InvalidExpressionException {
+        String expression = " X^2 + 4 + 2^X = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertFalse(TreeUtils.isQuadratic(flattenedNode));
+    }
+
+    @Test
+    public void resolvesToConstant_ok1() throws InvalidExpressionException {
+        String expression = " (2+2) = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(TreeUtils.resolvesToConstant(flattenedNode));
+    }
+
+    @Test
+    public void resolvesToConstant_ok2() throws InvalidExpressionException {
+        String expression = " 10 = 10";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(TreeUtils.resolvesToConstant(flattenedNode));
+    }
+
+    @Test
+    public void resolvesToConstant_ok3() throws InvalidExpressionException {
+        String expression = " ((2^2 + 4)) * 7 / 8 = 7";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(TreeUtils.resolvesToConstant(flattenedNode));
+    }
+
+    @Test
+    public void resolvesToConstant_ok4() throws InvalidExpressionException {
+        String expression = " 2 * 3^X = 7";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertFalse(TreeUtils.resolvesToConstant(flattenedNode));
+    }
+
+    @Test
+    public void resolvesToConstant_ok5() throws InvalidExpressionException {
+        String expression = " -(2) * -3 = 6";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(TreeUtils.resolvesToConstant(flattenedNode));
+    }
 }
