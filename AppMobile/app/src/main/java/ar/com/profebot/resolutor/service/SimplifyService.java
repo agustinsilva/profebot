@@ -430,7 +430,7 @@ public class SimplifyService {
 
     // Given an expression tree, returns true if there are terms that can be
     // collected
-    private boolean canCollectLikeTerms(TreeNode node) {
+    public boolean canCollectLikeTerms(TreeNode node) {
         // We can collect like terms through + or through *
         // Note that we never collect like terms with - or /, those expressions will
         // always be manipulated in flattenOperands so that the top level operation is
@@ -2055,7 +2055,7 @@ public class SimplifyService {
     }
 
     // Returns true if the nodes are polynomial terms that can be added together.
-    private boolean canAddLikeTermPolynomialNodes(TreeNode node) {
+    public boolean canAddLikeTermPolynomialNodes(TreeNode node) {
         return canAddLikeTermNodes(node, NTH_ROOT_TERM);
     }
 
@@ -2470,7 +2470,7 @@ public class SimplifyService {
 
     // Returns true if the nodes are symbolic terms with the same symbol and no
     // coefficients.
-    private boolean canMultiplyLikeTermPolynomialNodes(TreeNode node) {
+    public boolean canMultiplyLikeTermPolynomialNodes(TreeNode node) {
         if (!node.esOperador() || !node.esProducto()) {
             return false;
         }
@@ -3018,38 +3018,42 @@ public class SimplifyService {
      */
     protected NodeStatus simplifyPolynomialFraction(TreeNode node){
 
-        if (!TreeUtils.isPolynomialTerm(node)) {
-            return NodeStatus.noChange(node);
-        }
-        // TODO puede pasar esto? Revisar si hay que hacer un refactor de los coeficientes:
-        // se podria hacer el ceoficiente sea un nodo en vez de un int
-
-        /*
-        if (!node.hasFractionCoeff()) {
+        if (!node.esDivision()) {
             return NodeStatus.noChange(node);
         }
 
-          const coefficientSimplifications = [
-                divideByGCD, // for integer fractions
-                        arithmeticSearch, // for decimal fractions
-          ];
-
-        for (int i = 0; i < coefficientSimplifications.length; i++) {
-            const coefficientFraction = polyNode.getCoeffNode(); // a division node
-            const newCoeffStatus = coefficientSimplifications[i](coefficientFraction);
-            if (newCoeffStatus.hasChanged()) {
-                // we need to reset change groups because we're creating a new node
-                let newCoeff = Node.Status.resetChangeGroups(newCoeffStatus.newNode);
-                if (newCoeff.value === '1') {
-                    newCoeff = null;
-                }
-              const exponentNode = polyNode.getExponentNode();
-              TreeNode newNode = TreeNode.createPolynomialTerm(
-                        "X", exponentNode, newCoeff);
-                return NodeStatus.nodeChanged(newCoeffStatus.changeType, node, newNode);
-            }
+        if (!TreeUtils.isPolynomialTerm(node.getLeftNode()) || !TreeUtils.isConstant(node.getRightNode())) {
+            return NodeStatus.noChange(node);
         }
-*/
+
+        // Coeficiente de la X / Constante
+        TreeNode coefficientFraction = TreeNode.createOperator("/",
+                TreeNode.createConstant(node.getLeftNode().getCoefficient()), node.getRightNode()) ; // a division node
+
+
+        // for integer fractions
+        NodeStatus newCoeffStatus = divideByGCD(coefficientFraction);
+        if (newCoeffStatus.hasChanged()) {
+            // we need to reset change groups because we're creating a new node
+            TreeNode newCoeff = NodeStatus.resetChangeGroups(newCoeffStatus.getNewNode());
+
+            TreeNode newNode = TreeNode.createPolynomialTerm(
+                    "X", node.getLeftNode().getExponent(), newCoeff.getIntegerValue());
+            return NodeStatus.nodeChanged(newCoeffStatus.getChangeType(), node, newNode);
+        }
+
+        // for decimal fractions
+        newCoeffStatus = arithmeticSearch(coefficientFraction);
+        if (newCoeffStatus.hasChanged()) {
+            // we need to reset change groups because we're creating a new node
+            TreeNode newCoeff = NodeStatus.resetChangeGroups(newCoeffStatus.getNewNode());
+
+            TreeNode newNode = TreeNode.createPolynomialTerm(
+                    "X", node.getLeftNode().getExponent(), newCoeff.getIntegerValue());
+            return NodeStatus.nodeChanged(newCoeffStatus.getChangeType(), node, newNode);
+        }
+
+
         return NodeStatus.noChange(node);
     }
 
@@ -3060,7 +3064,11 @@ public class SimplifyService {
      */
     private NodeStatus divideByGCD(TreeNode treeNode){
 
-        if (!TreeUtils.isConstantFraction(treeNode)){
+        if (!treeNode.esOperador() || !treeNode.esDivision()){
+            return NodeStatus.noChange(treeNode);
+        }
+
+        if (!TreeUtils.isIntegerFraction(treeNode)){
             return NodeStatus.noChange(treeNode);
         }
 
@@ -3068,7 +3076,7 @@ public class SimplifyService {
         TreeNode newNode = treeNode.cloneDeep();
 
         TreeNode numeratorNode =  treeNode.getLeftNode();
-        TreeNode denominatorNode =  treeNode.getLeftNode();
+        TreeNode denominatorNode =  treeNode.getRightNode();
 
         Integer numeratorValue = numeratorNode.getIntegerValue();
         Integer denominatorValue = denominatorNode.getIntegerValue();

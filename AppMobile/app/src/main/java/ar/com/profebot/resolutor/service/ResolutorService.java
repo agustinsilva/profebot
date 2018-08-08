@@ -1078,8 +1078,23 @@ public class ResolutorService {
         return NodeStatus.noChange(node);
     }
 
-    protected List<Integer[]> getFactorPairs(Integer product, boolean b) {
-        // TODO getFactorPairs
-        throw new UnsupportedOperationException();
+    // Given a number, will return all the factor pairs for that number as a list
+    // of 2-item lists
+    protected List<Integer[]> getFactorPairs(Integer number, boolean b) {
+
+        List<Integer[]> factors = new ArrayList<>();
+
+        Integer bound = (int )Math.floor(Math.sqrt(Math.abs(number)));
+        for (Integer divisor = -bound; divisor <= bound; divisor++) {
+            if (divisor == 0) {
+                continue;
+            }
+            if (number % divisor == 0) {
+                Integer quotient = number / divisor;
+                factors.add(new Integer[]{divisor, quotient});
+            }
+        }
+
+        return factors;
     }
 }

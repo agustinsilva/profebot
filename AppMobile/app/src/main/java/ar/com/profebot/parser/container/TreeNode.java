@@ -129,7 +129,7 @@ public class TreeNode {
     }
 
     public Boolean esOperadorNoAditivo(){
-        return this.esMultiplicativo() || this.esPotencia() || this.esRaiz();
+        return this.esMultiplicativo() || this.esPotencia();
     }
 
     public Boolean esOperador(){
@@ -157,13 +157,24 @@ public class TreeNode {
 
         // Si es parentesis, o unaryMinus, envuelve
         if (this.isParenthesis() || this.isUnaryMinus()){
-            return (this.isUnaryMinus()?"-":"") + "(" + this.getChild(0).toExpression()  + ")";
+            return (this.isUnaryMinus()?"-":"") + "(" + this.getContent().toExpression()  + ")";
+        }else if (this.getArgs().size() > 2){
+            // Si tiene mas de 2 hijos, se parsea distinto
+            String childExpression = "";
+            for(TreeNode child: this.getArgs()){
+                childExpression+= getNodeExpression(child, false) + this.getValue();
+            }
+
+            return childExpression.substring(0, childExpression.length()- this.getValue().length());
+
         }else{
-            return getNodeExpression(leftNode)  + this.getValue()  + getNodeExpression(this.getRightNode());
+            return getNodeExpression(leftNode, false)  +
+                    this.getValue()  +
+                    getNodeExpression(this.getRightNode(), true);
         }
     }
 
-    private String getNodeExpression(TreeNode treeNode){
+    private String getNodeExpression(TreeNode treeNode, Boolean eshijoDerecho){
 
         if (treeNode == null) return "";
         String expression = treeNode.toExpression();
@@ -176,6 +187,19 @@ public class TreeNode {
         if (usaParentesis && treeNode.esProducto() && this.esProducto()){
             usaParentesis = false; // padre: * hijo: *
         }
+
+        // Caso especial, si el padre es un signo menos, y el hijo DERECHO es un operador, se envuelve entre parentesis
+        else if (this.esResta() && eshijoDerecho && treeNode.esOperador()) {
+            usaParentesis = true; // padre: - hijo: operador. Ej: -(5*8+3)
+        }
+            // Caso especial, si el padre es una potencia, y el hijo izquierdo es una X con ieficiente != 1
+        else if (this.esPotencia() && !eshijoDerecho &&
+                ((treeNode.getCoefficient() != null && treeNode.getCoefficient() != 1) ||
+                        (treeNode.getExponent() != null && treeNode.getExponent() != 1))){
+
+            usaParentesis = true; // padre: ^ hijo: X c/Coef. Ej: (3X)^3
+        }
+
         if (usaParentesis){
             expression = "(" + expression + ")";
         }
@@ -302,7 +326,6 @@ public class TreeNode {
         return newNode;
     }
 
-    // TODO createParenthesis: parsear mejor estoen el toExpresion
     public static TreeNode createParenthesis(TreeNode node) {
         TreeNode newNode = new TreeNode("()");
         newNode.setLeftNode(node);
@@ -317,11 +340,14 @@ public class TreeNode {
     }
 
     public static TreeNode createPolynomialTerm(String x, TreeNode exponent, Integer coefficient) {
-        return createOperator("^", new TreeNode(coefficient.toString() + x), exponent);
+
+        String coefficientStr = (coefficient !=null? coefficient.toString() : "");
+        return createOperator("^", new TreeNode(coefficientStr + x), exponent);
     }
 
     public static TreeNode createPolynomialTerm(String x, Integer exponent, Integer coefficient) {
-        return new TreeNode(coefficient.toString() + x + "^" + exponent.toString());
+        String exponentStr = (exponent==1? "":"^" + exponent.toString());
+        return new TreeNode(coefficient.toString() + x + exponentStr);
     }
 
     public TreeNode getChild(int i) {
@@ -369,5 +395,13 @@ public class TreeNode {
 
     public Integer getExponent(boolean defaultOne) {
         return getExponent() == null && defaultOne? 1: getExponent();
+    }
+
+    public TreeNode getContent() {
+        return this.getChild(0);
+    }
+
+    public void setContent(TreeNode node) {
+        this.setChild(0, node);
     }
 }

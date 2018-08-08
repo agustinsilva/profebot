@@ -13,10 +13,14 @@ public class ResolutorServiceTest extends ResolutorService {
     @Test
     public void getFactorPairs_ok1() {
         List<Integer[]> factors = super.getFactorPairs(1,true);
-        List<Integer[]> expected = new ArrayList<Integer[]>();
+        List<Integer[]> expected = new ArrayList<>();
         expected.add(new Integer[]{-1,-1});
         expected.add(new Integer[] {1,1});
-        Assert.assertEquals(expected,factors);
+
+        Assert.assertEquals(expected.size(), factors.size());
+        for (int i=0; i <factors.size(); i++){
+            Assert.assertArrayEquals(factors.get(i), expected.get(i));
+        }
     }
 
     @Test
@@ -25,7 +29,12 @@ public class ResolutorServiceTest extends ResolutorService {
         List<Integer[]> expected = new ArrayList<Integer[]>();
         expected.add(new Integer[]{-1,-5});
         expected.add(new Integer[] {1,5});
-        Assert.assertEquals(expected,factors);
+
+        Assert.assertEquals(expected.size(), factors.size());
+        for (int i=0; i <factors.size(); i++){
+            Assert.assertArrayEquals(factors.get(i), expected.get(i));
+        }
+
     }
 
     @Test
@@ -38,7 +47,11 @@ public class ResolutorServiceTest extends ResolutorService {
         expected.add(new Integer[] {1,12});
         expected.add(new Integer[] {2,6});
         expected.add(new Integer[] {3,4});
-        Assert.assertEquals(expected,factors);
+
+        Assert.assertEquals(expected.size(), factors.size());
+        for (int i=0; i <factors.size(); i++){
+            Assert.assertArrayEquals(factors.get(i), expected.get(i));
+        }
     }
 
     @Test
@@ -51,7 +64,11 @@ public class ResolutorServiceTest extends ResolutorService {
         expected.add(new Integer[] {1,-12});
         expected.add(new Integer[] {2,-6});
         expected.add(new Integer[] {3,-4});
-        Assert.assertEquals(expected,factors);
+
+        Assert.assertEquals(expected.size(), factors.size());
+        for (int i=0; i <factors.size(); i++){
+            Assert.assertArrayEquals(factors.get(i), expected.get(i));
+        }
     }
 
     @Test
@@ -62,7 +79,11 @@ public class ResolutorServiceTest extends ResolutorService {
         expected.add(new Integer[] {-1,-15});
         expected.add(new Integer[]{1,15});
         expected.add(new Integer[] {3,5});
-        Assert.assertEquals(expected,factors);
+
+        Assert.assertEquals(expected.size(), factors.size());
+        for (int i=0; i <factors.size(); i++){
+            Assert.assertArrayEquals(factors.get(i), expected.get(i));
+        }
     }
 
     @Test
@@ -79,7 +100,11 @@ public class ResolutorServiceTest extends ResolutorService {
         expected.add(new Integer[]{3,12});
         expected.add(new Integer[] {4,9});
         expected.add(new Integer[]{6,6});
-        Assert.assertEquals(expected,factors);
+
+        Assert.assertEquals(expected.size(), factors.size());
+        for (int i=0; i <factors.size(); i++){
+            Assert.assertArrayEquals(factors.get(i), expected.get(i));
+        }
     }
 
     @Test
@@ -90,7 +115,11 @@ public class ResolutorServiceTest extends ResolutorService {
         expected.add(new Integer[] {-1,-49});
         expected.add(new Integer[]{1,49});
         expected.add(new Integer[] {7,7});
-        Assert.assertEquals(expected,factors);
+
+        Assert.assertEquals(expected.size(), factors.size());
+        for (int i=0; i <factors.size(); i++){
+            Assert.assertArrayEquals(factors.get(i), expected.get(i));
+        }
     }
 
     @Test
@@ -111,10 +140,11 @@ public class ResolutorServiceTest extends ResolutorService {
         expected.add(new Integer[] {-7,-180});
         expected.add(new Integer[]{-6,-210});
         expected.add(new Integer[] {-5,-252});
+        expected.add(new Integer[] {-4,-315});
         expected.add(new Integer[]{-3,-420});
         expected.add(new Integer[] {-2,-630});
         expected.add(new Integer[] {-1,-1260});
-        expected.add(new Integer[]{1,260});
+        expected.add(new Integer[]{1,1260});
         expected.add(new Integer[] {2,630});
         expected.add(new Integer[]{3,420});
         expected.add(new Integer[] {4,315});
@@ -132,7 +162,12 @@ public class ResolutorServiceTest extends ResolutorService {
         expected.add(new Integer[] {28,45});
         expected.add(new Integer[] {30,42});
         expected.add(new Integer[] {35,36});
-        Assert.assertEquals(expected,factors);
+
+
+        Assert.assertEquals(expected.size(), factors.size());
+        for (int i=0; i <factors.size(); i++){
+            Assert.assertArrayEquals(expected.get(i), factors.get(i));
+        }
     }
 
     @Test
@@ -141,6 +176,10 @@ public class ResolutorServiceTest extends ResolutorService {
         List<Integer[]> expected = new ArrayList<Integer[]>();
         expected.add(new Integer[]{-1,-1234567891});
         expected.add(new Integer[] {1,1234567891});
-        Assert.assertEquals(expected,factors);
+
+        Assert.assertEquals(expected.size(), factors.size());
+        for (int i=0; i <factors.size(); i++){
+            Assert.assertArrayEquals(factors.get(i), expected.get(i));
+        }
     }
 }

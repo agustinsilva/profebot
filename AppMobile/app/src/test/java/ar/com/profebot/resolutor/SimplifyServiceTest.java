@@ -1,7 +1,5 @@
 package ar.com.profebot.resolutor;
 
-import android.support.v4.app.INotificationSideChannel;
-
 import junit.framework.Assert;
 
 import org.junit.Before;
@@ -12,9 +10,9 @@ import java.util.List;
 import ar.com.profebot.parser.container.Tree;
 import ar.com.profebot.parser.container.TreeNode;
 import ar.com.profebot.parser.exception.InvalidExpressionException;
-import ar.com.profebot.resolutor.service.SimplifyService;
 import ar.com.profebot.parser.service.ParserService;
 import ar.com.profebot.resolutor.container.NodeStatus;
+import ar.com.profebot.resolutor.service.SimplifyService;
 import ar.com.profebot.resolutor.utils.TreeUtils;
 
 public class SimplifyServiceTest extends SimplifyService {
@@ -594,5 +592,6 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.simplifyPolynomialFraction(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.SIMPLIFY_FRACTION);
+        Assert.assertEquals("2X", estado.getNewNode().toExpression());
     }
 }

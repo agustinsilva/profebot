@@ -2,16 +2,17 @@ package ar.com.profebot.resolutor.utils;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import ar.com.profebot.parser.container.Tree;
 import ar.com.profebot.parser.container.TreeNode;
+import ar.com.profebot.resolutor.service.SimplifyService;
 
 public class TreeUtils {
+
+    private static SimplifyService simplifyService = new SimplifyService();
 
     //Valida si el valor es una constante.
     public static Boolean isConstant(TreeNode treeNode){
@@ -275,6 +276,9 @@ public class TreeUtils {
      * @return una lista de todos los nodos operados por la operacion padre 'parentOp'
      */
     private static List<TreeNode> getOperands(TreeNode node, String parentOp) {
+
+        if (node == null){return new ArrayList<>();}
+
         // Solo podemos hacer recursion en operacion del tipo op.
         // Si el nodo no es un nodo operador o el tipo operacion correcto,
         // no podemos seguir descomponiendo o aplastando este arbol, entonces retornamos simplemente
@@ -406,8 +410,11 @@ public class TreeUtils {
         // Un coeficiente puede ser constante o una fraccion de constantes.
         if (isConstantOrConstantFraction(lastOperand)) {
             // Se reemplaza la constante por constante * simbolo.
-            operands.add(
-                    TreeNode.createOperator("*", lastOperand, nextOperand));
+            /*operands.add(
+                    TreeNode.createOperator("*", lastOperand, nextOperand));*/
+            TreeNode newOperand = (nextOperand.cloneDeep());
+            newOperand.multiplyCoefficient(lastOperand.getValue());
+            operands.add(newOperand);
 
         } else {
           //Ahora sabemos que no es termino polinomial y que es un operando separado.
@@ -433,7 +440,10 @@ public class TreeUtils {
         List<TreeNode> operands = getOperands(node.getChild(0), "*");
 
         if (operands.size() == 1) {
-            operands.add(flattenOperands(node.getChild(1)));
+            node.setChild(0, operands.get(0));
+            node.setChild(1, flattenOperands(node.getChild(1)));
+            operands.clear();
+            operands.add(node);
         } else {
             //Este es el ultimo operando, el termino que queremos agregar a la division
             TreeNode numerator = operands.get(operands.size()-1);
@@ -444,7 +454,7 @@ public class TreeUtils {
             TreeNode denominator = flattenOperands(node.getChild(1));
             // Notar que esto significa que por ejemplo 2*3*4/5/6*7 se aplanan
             // pero mantiene la parte de 4/5/6 como operando.
-            TreeNode divisionNode = TreeNode.createOperator("/", Arrays.asList(numerator, denominator));
+            TreeNode divisionNode = TreeNode.createOperator("/", numerator, denominator);
             operands.add(divisionNode);
         }
 
@@ -506,6 +516,8 @@ public class TreeUtils {
      */
     public static TreeNode negate(TreeNode node, Boolean naive) {
 
+        if (node == null) return null;
+
         if (isConstantFraction(node)) {
             node.setLeftNode(negate(node.getLeftNode(), naive));
             return node;
@@ -519,6 +531,9 @@ public class TreeUtils {
                 return node.getChild(0);
             } else if (isConstant(node)) {
                 return TreeNode.createConstant(0 - node.getIntegerValue());
+            } else if ((node.esProducto() || node.esDivision()) &&  isConstantOrConstantFraction(node.getLeftNode())) {
+                node.setLeftNode(negate(node.getLeftNode(), naive));
+                return node;
             }
         }
         return TreeNode.createUnaryMinus(node);
@@ -867,8 +882,179 @@ public class TreeUtils {
     // Input must be a top level expression.
     // Returns a node.
     public static TreeNode removeUnnecessaryParens(TreeNode node, Boolean rootNode) {
-        // TODO removeUnnecessaryParens ./util/removeUnnecessaryParens
-         throw new UnsupportedOperationException();
+        // Parens that wrap everything are redundant.
+        // NOTE: removeUnnecessaryParensSearch recursively removes parens that aren't
+        // needed, while this step only applies to the very top level expression.
+        // e.g. (2 + 3) * 4 can't become 2 + 3 * 4, but if (2 + 3) as a top level
+        // expression can become 2 + 3
+        if (rootNode) {
+            while (node.isParenthesis()) {
+                node = node.getChild(0);
+            }
+        }
+        return removeUnnecessaryParensSearch(node);
     }
 
+    // Recursively moves parenthesis around nodes that can't be resolved further if
+    // it doesn't change the value of the expression. Returns a node.
+    // NOTE: after this function is called, every parenthesis node in the
+    // tree should always have an operator node or unary minus as its child.
+    private static TreeNode removeUnnecessaryParensSearch(TreeNode node) {
+        if (node == null){return null;}
+
+        if (node.esRaiz()) {
+            return removeUnnecessaryParensInFunctionNode(node);
+        }else  if (node.esOperador()) {
+            return removeUnnecessaryParensInOperatorNode(node);
+        }else if (node.isParenthesis()) {
+            return removeUnnecessaryParensInParenthesisNode(node);
+        }
+        else if (TreeUtils.isConstant(node, true) || TreeUtils.isSymbol(node)) {
+            return node;
+        }
+        else if (node.isUnaryMinus()) {
+            TreeNode content = node.getChild(0);
+            node.setChild(0,removeUnnecessaryParensSearch(content));
+            return node;
+        }
+        else {
+            throw new Error("Unsupported node type: " + node.toExpression());
+        }
+    }
+
+    // Removes unncessary parens for each operator in an operator node, and removes
+    // unncessary parens around operators that can't be simplified further.
+    // Returns a node.
+    private static TreeNode removeUnnecessaryParensInOperatorNode(TreeNode node) {
+        // Special case: if the node is an exponent node and the base
+        // is an operator, we should keep the parentheses for the base.
+        // e.g. (2x)^2 -> (2x)^2 instead of 2x^2
+        if (node.esPotencia() && node.getChild(0).isParenthesis()) {
+            TreeNode base = node.getChild(0);
+            if (base.getChild(0).esOperador()) {
+                base.setChild(0, removeUnnecessaryParensSearch(base.getChild(0)));
+                node.setChild(1, removeUnnecessaryParensSearch(node.getChild(1)));
+
+                return node;
+            }
+        }
+
+        for(int i=0; i < node.getArgs().size(); i++){
+            node.setChild(i, removeUnnecessaryParensSearch(node.getChild(i)));
+        }
+
+        // Sometimes, parens are around expressions that have been simplified
+        // all they can be. If that expression is part of an addition or subtraction
+        // operation, we can remove the parenthesis.
+        // e.g. (x+4) + 12 -> x+4 + 12
+        if (node.esSuma()) {
+            for(int i=0; i < node.getArgs().size(); i++){
+                TreeNode child = node.getChild(i);
+                if (child.isParenthesis() && !canCollectOrCombine(child.getContent())){
+                    // remove the parens by replacing the child node (in its args list)
+                    // with its content
+                    node.setChild(i,child.getContent());
+                }
+                node.setChild(i, removeUnnecessaryParensSearch(node.getChild(i)));
+            }
+        }
+        // This is different from addition because when subtracting a group of terms
+        //in parenthesis, we want to distribute the subtraction.
+        // e.g. `(2 + x) - (1 + x)` => `2 + x - (1 + x)` not `2 + x - 1 + x`
+        else if (node.esResta()) {
+            if (node.getChild(0).isParenthesis() &&
+                    !canCollectOrCombine(node.getChild(0).getContent())) {
+                node.setChild(0,  node.getChild(0).getContent());
+            }
+        }
+
+        return node;
+    }
+
+    // Returns true if any of the collect or combine steps can be applied to the
+    // expression tree `node`.
+    private static boolean canCollectOrCombine(TreeNode node) {
+        return simplifyService.canCollectLikeTerms(node) ||
+                resolvesToConstant(node) ||
+                canSimplifyPolynomialTerms(node);
+    }
+
+    // Returns true if the node is an operation node with parameters that are
+    // polynomial terms that can be combined in some way.
+    private static boolean canSimplifyPolynomialTerms(TreeNode node) {
+        return (simplifyService.canAddLikeTermPolynomialNodes(node) ||
+                simplifyService.canMultiplyLikeTermPolynomialNodes(node) ||
+                canRearrangeCoefficient(node));
+    }
+
+    // Parentheses are unnecessary when their content is a constant e.g. (2)
+    // or also a parenthesis node, e.g. ((2+3)) - this removes those parentheses.
+    // Note that this means that the type of the content of a ParenthesisNode after
+    // this step should now always be an OperatorNode (including unary minus).
+    // Returns a node.
+    private static TreeNode removeUnnecessaryParensInParenthesisNode(TreeNode node) {
+        // polynomials terms can be complex trees (e.g. 3x^2/5) but don't need parens
+        // around them
+        if (TreeUtils.isPolynomialTerm(node.getContent())) {
+            // also recurse to remove any unnecessary parens within the term
+            // (e.g. the exponent might have parens around it)
+            if (node.getContent().getArgs() != null) {
+                TreeNode nodeContent = node.getContent();
+                for(int i=0; i < nodeContent.getArgs().size(); i++){
+                    nodeContent.setChild(i, removeUnnecessaryParensSearch(nodeContent.getChild(i)));
+                }
+            }
+            node = node.getContent();
+        }
+        // If the content is just one symbol or constant, the parens are not
+        // needed.
+        else if (TreeUtils.isConstant(node.getContent(), true) ||
+                TreeUtils.isIntegerFraction(node.getContent()) ||
+                TreeUtils.isSymbol(node.getContent())) {
+            node = node.getContent();
+        }
+        // If the content is just one function call, the parens are not needed.
+        else if (node.getContent().esRaiz()) {
+            node = node.getContent();
+            node = removeUnnecessaryParensSearch(node);
+        }
+        // If there is an operation within the parens, then the parens are
+        // likely needed. So, recurse.
+        else if (node.getContent().esOperador()) {
+            node.setChild(0, removeUnnecessaryParensSearch(node.getContent()));
+            // exponent nodes don't need parens around them
+            if (node.getContent().esPotencia()) {
+                node = node.getContent();
+            }
+        }
+        // If the content is also parens, we have doubly nested parens. First
+        // recurse on the child node, then set the current node equal to its child
+        // to get rid of the extra parens.
+        else if (node.getContent().isParenthesis()) {
+            node = removeUnnecessaryParensSearch(node.getContent());
+        }
+        else if (node.getContent().isUnaryMinus()) {
+            node.setContent(removeUnnecessaryParensSearch(node.getContent()));
+        }
+        else {
+            throw new Error("Unsupported node type: " + node.getContent().toExpression());
+        }
+
+        return node;
+    }
+
+    // Removes unncessary parens for each argument in a function node.
+    // Returns a node.
+    private static TreeNode removeUnnecessaryParensInFunctionNode(TreeNode node) {
+
+        for(int i=0; i < node.getArgs().size(); i++){
+            TreeNode child = node.getChild(i);
+            if (child != null && child.isParenthesis()){
+                child = child.getContent();
+            }
+            node.setChild(i, removeUnnecessaryParensSearch(child));
+        }
+
+        return node;
+    }
 }
