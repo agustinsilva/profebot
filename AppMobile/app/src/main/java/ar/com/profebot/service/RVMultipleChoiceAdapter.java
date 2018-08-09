@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.profebot.activities.R;
 
@@ -88,6 +89,8 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
                             }
                             incorrectOptionRadio.setVisibility(View.VISIBLE);
                             incorrectOptionRadio.setText(incorrectOptions.get(chosenOption));
+
+                            ExpressionsManager.requestNewExercises(getAsInfix(equationBase.getText()), getAsInfix(newEquationBase.getText()), equationBase.getContext());
                         }
                         expandCollapseIndicatorColor.setVisibility(View.VISIBLE);
 
@@ -103,6 +106,12 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
                     }
                 });
             }
+        }
+
+        private String getAsInfix(String equation){
+            return equation
+                    .replace("\\(", "")
+                    .replace("\\)", "");
         }
 
         private void setUpNextStepButton(){

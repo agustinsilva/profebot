@@ -3,6 +3,13 @@ package ar.com.profebot.service;
 import android.content.Context;
 import android.widget.Toast;
 
+import org.abego.treelayout.internal.util.java.lang.string.StringUtil;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import ar.com.profebot.intelligent.module.IAModuleClient;
 import ar.com.profebot.parser.container.Tree;
 import ar.com.profebot.parser.exception.InvalidExpressionException;
 import ar.com.profebot.parser.service.ParserService;
@@ -250,5 +257,83 @@ public class ExpressionsManager {
         }
 
         return equationDrawn;
+    }
+
+    public static void requestNewExercises(String equationBase, String newEquationBase, Context context){
+        List<String> paramsToSend = getTermAndContextFromReduction(equationBase, newEquationBase);
+        IAModuleClient client = new IAModuleClient(paramsToSend.get(0), paramsToSend.get(1), paramsToSend.get(2), context);
+        client.execute();
+    }
+
+    public static List<String> getTermAndContextFromReduction(String equationBase, String newEquationBase){
+        String root = equationBase.contains("=") ? "=" : (equationBase.contains(">") ? ">" : "<");
+        List<String> equationBaseMembers = Arrays.asList(equationBase.split(root));
+        List<String> newEquationBaseMembers = Arrays.asList(newEquationBase.split(root));
+        List<String> result = new ArrayList<>();
+        result.add(root);
+
+        if(isTermPassage(equationBaseMembers, newEquationBaseMembers)){
+            result.add(longestEquationMember(equationBaseMembers));
+            result.add(longestEquationMember(newEquationBaseMembers));
+            return result;
+        }
+
+        String originalBase;
+        String newBase;
+        if(!counterPartIsEquals(equationBaseMembers, newEquationBaseMembers, 0)){
+            originalBase = equationBaseMembers.get(0);
+            newBase = newEquationBaseMembers.get(0);
+        }else{
+            originalBase = equationBaseMembers.get(1);
+            newBase = newEquationBaseMembers.get(1);
+        }
+
+        String baseFixed = originalBase.replace("-", "+!");
+        String newBaseFixed = newBase.replace("-", "+!");
+
+        List<String> baseFixedTokens = Arrays.asList(baseFixed.split("\\+"));
+        List<String> newBaseFixedTokens = Arrays.asList(newBaseFixed.split("\\+"));
+        List<Integer> indexesToRemove = new ArrayList<>();
+
+        for(int i = 0 ; i < baseFixedTokens.size() ; i++){
+            if(newBaseFixedTokens.contains(baseFixedTokens.get(i))){
+                for(int j = 0 ; j < newBaseFixedTokens.size() ; j++){
+                    if(newBaseFixedTokens.get(j).equals(baseFixedTokens.get(i))){
+                        newBaseFixedTokens.remove(j);
+                    }
+                    break;
+                }
+                indexesToRemove.add(i);
+            }
+        }
+
+        for(Integer index : indexesToRemove){
+            baseFixedTokens.remove((int)index);
+        }
+
+        StringBuilder builder = new StringBuilder("");
+        for(int i = 0 ; i < baseFixedTokens.size() ; i++){
+            builder.append(baseFixedTokens.get(i));
+            if(i + 1 < baseFixedTokens.size()){
+                builder.append("+");
+            }
+        }
+
+        result.add(builder.toString().replace("+!", "-"));
+        result.add(originalBase);
+        return result;
+    }
+
+    private static Boolean isTermPassage(List<String> equationBaseMembers, List<String> newEquationBaseMembers){
+         return !counterPartIsEquals(equationBaseMembers, newEquationBaseMembers, 0) &&
+                 !counterPartIsEquals(equationBaseMembers, newEquationBaseMembers, 1);
+    }
+
+    private static Boolean counterPartIsEquals(List<String> equationBaseMembers, List<String> newEquationBaseMembers, Integer position){
+         return equationBaseMembers.get(position).equals(newEquationBaseMembers.get(position));
+    }
+
+    private static String longestEquationMember(List<String> baseMembers){
+         return baseMembers.get(0).length() >= baseMembers.get(1).length() ? baseMembers.get(0) : baseMembers.get(1);
     }
 }

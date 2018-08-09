@@ -1,5 +1,6 @@
 package ar.com.profebot.intelligent.module;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -19,9 +20,9 @@ public class IAModuleClient extends AsyncTask<String, Void, Void> {
 
     private String json;
     private Integer timeout;
-    private ModuloInteligenteTestActivity context;
+    private Context context;
 
-    public IAModuleClient(String root, String term, String termContext, ModuloInteligenteTestActivity context) {
+    public IAModuleClient(String root, String term, String termContext, Context context) {
         this.json = "{\"root\": \"" + root + "\",\"term\":\"" + term + "\",\"context\":\"" + termContext + "\"}";
         this.timeout = 3600000;
         this.context = context;
@@ -73,12 +74,12 @@ public class IAModuleClient extends AsyncTask<String, Void, Void> {
                     bufferedReader.close();
                     Log.i("HTTP Client", "Received String : " + sb.toString());
                     //return received string
-                    context.runOnUiThread(new Runnable() {
+                    /*context.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             context.updateUI(sb.toString());
                         }
-                    });
+                    });*/
             }
         } catch (MalformedURLException ex) {
             Log.e("HTTP Client", "Error in http connection" + ex.toString());
