@@ -3,8 +3,6 @@ package ar.com.profebot.service;
 import android.content.Context;
 import android.widget.Toast;
 
-import org.abego.treelayout.internal.util.java.lang.string.StringUtil;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -293,33 +291,34 @@ public class ExpressionsManager {
 
         List<String> baseFixedTokens = Arrays.asList(baseFixed.split("\\+"));
         List<String> newBaseFixedTokens = Arrays.asList(newBaseFixed.split("\\+"));
-        List<Integer> indexesToRemove = new ArrayList<>();
 
         for(int i = 0 ; i < baseFixedTokens.size() ; i++){
             if(newBaseFixedTokens.contains(baseFixedTokens.get(i))){
                 for(int j = 0 ; j < newBaseFixedTokens.size() ; j++){
                     if(newBaseFixedTokens.get(j).equals(baseFixedTokens.get(i))){
-                        newBaseFixedTokens.remove(j);
+                        newBaseFixedTokens.set(j, "");
                     }
                     break;
                 }
-                indexesToRemove.add(i);
+                baseFixedTokens.set(i, "");
             }
-        }
-
-        for(Integer index : indexesToRemove){
-            baseFixedTokens.remove((int)index);
         }
 
         StringBuilder builder = new StringBuilder("");
         for(int i = 0 ; i < baseFixedTokens.size() ; i++){
-            builder.append(baseFixedTokens.get(i));
-            if(i + 1 < baseFixedTokens.size()){
-                builder.append("+");
+            if(!baseFixedTokens.get(i).equals("")){
+                builder.append(baseFixedTokens.get(i));
+                if(i + 1 < baseFixedTokens.size()){
+                    builder.append("+");
+                }
             }
         }
+        String term = builder.toString().replace("+!", "-");
+        if(term.substring(term.length() - 1).equals("+")){
+            term = term.substring(0, term.length() - 1);
+        }
 
-        result.add(builder.toString().replace("+!", "-"));
+        result.add(term);
         result.add(originalBase);
         return result;
     }

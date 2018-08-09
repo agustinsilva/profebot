@@ -3,7 +3,6 @@ package ar.com.profebot.resolutor.container;
 import java.util.List;
 
 import ar.com.profebot.parser.container.TreeNode;
-import ar.com.profebot.resolutor.utils.TreeUtils;
 
 public class NodeStatus {
 

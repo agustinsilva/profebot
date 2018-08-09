@@ -13,10 +13,12 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
 import com.myscript.atk.core.CaptureInfo;
 import com.myscript.atk.math.widget.MathWidgetApi;
 import com.profebot.activities.BuildConfig;
 import com.profebot.activities.R;
+
 import ar.com.profebot.certificate.MyCertificate;
 import ar.com.profebot.service.ExpressionsManager;
 

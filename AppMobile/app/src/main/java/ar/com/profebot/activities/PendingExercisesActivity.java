@@ -1,6 +1,8 @@
 package ar.com.profebot.activities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,9 +13,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.app.AlertDialog;
+
 import com.profebot.activities.R;
-import android.content.DialogInterface;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 

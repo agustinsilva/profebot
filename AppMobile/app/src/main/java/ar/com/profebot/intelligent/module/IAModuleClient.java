@@ -14,8 +14,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import ar.com.profebot.activities.ModuloInteligenteTestActivity;
-
 public class IAModuleClient extends AsyncTask<String, Void, Void> {
 
     private String json;

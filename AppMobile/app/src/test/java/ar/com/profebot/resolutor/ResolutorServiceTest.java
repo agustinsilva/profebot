@@ -3,8 +3,8 @@ package ar.com.profebot.resolutor;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import ar.com.profebot.parser.container.Tree;
 import ar.com.profebot.parser.container.TreeNode;
