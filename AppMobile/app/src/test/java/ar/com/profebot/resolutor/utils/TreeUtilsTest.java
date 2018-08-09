@@ -29,6 +29,22 @@ public class TreeUtilsTest {
     }
 
     @Test
+    public void isConstant_ok2() throws InvalidExpressionException {
+        String expression = "10 = 10";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        Assert.assertTrue(TreeUtils.isConstant(node));
+    }
+
+    @Test
+    public void isConstant_ok3() throws InvalidExpressionException {
+        String expression = "-2 = 10";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        Assert.assertTrue(TreeUtils.isConstant(node));
+    }
+
+    @Test
     public void hasValue_ok() {
         TreeNode nodoRaiz = new TreeNode("5");
         Assert.assertTrue(TreeUtils.hasValue(nodoRaiz,"5"));
@@ -41,9 +57,90 @@ public class TreeUtilsTest {
     }
 
     @Test
+    public void isSymbol_ok1() throws InvalidExpressionException {
+        String expression = "X = 0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        Assert.assertTrue(TreeUtils.isSymbol(node));
+    }
+
+    @Test
+    public void isSymbol_ok2() throws InvalidExpressionException {
+        String expression = "-X = 0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        Assert.assertTrue(TreeUtils.isSymbol(node));
+    }
+
+    @Test
     public void isPolynomialTerm_ok() {
         TreeNode nodoRaiz = new TreeNode("3X");
         Assert.assertTrue(TreeUtils.isPolynomialTerm(nodoRaiz));
+    }
+
+    @Test
+    public void isPolynomialTerm_ok2() throws InvalidExpressionException {
+        String expression = "X = 0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        Assert.assertTrue(TreeUtils.isPolynomialTerm(node));
+    }
+
+    @Test
+    public void isPolynomialTerm_ok3() throws InvalidExpressionException {
+        String expression = "X^2 = 0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        Assert.assertTrue(TreeUtils.isPolynomialTerm(node));
+    }
+
+    @Test
+    public void isPolynomialTerm_ok4() throws InvalidExpressionException {
+        String expression = "X^55 = 0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        Assert.assertTrue(TreeUtils.isPolynomialTerm(node));
+    }
+
+    @Test
+    public void isPolynomialTerm_ok5() throws InvalidExpressionException {
+        String expression = "X^4/4 = 0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        Assert.assertTrue(TreeUtils.isPolynomialTerm(node));
+    }
+
+    @Test
+    public void isPolynomialTerm_ok6() throws InvalidExpressionException {
+        String expression = "5X/3 = 0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        Assert.assertTrue(TreeUtils.isPolynomialTerm(node));
+    }
+
+    @Test
+    public void isPolynomialTerm_ok7() throws InvalidExpressionException {
+        String expression = "3 = 3";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        Assert.assertFalse(TreeUtils.isPolynomialTerm(node));
+    }
+
+    @Test
+    public void isPolynomialTerm_ok8() throws InvalidExpressionException {
+        String expression = "2^5 = 32";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        Assert.assertFalse(TreeUtils.isPolynomialTerm(node));
+    }
+
+    @Test
+    public void isParenthesis() throws InvalidExpressionException {
+        String expression = "2^5 = 32";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        node.setValue("()");
+        Assert.assertTrue(node.isParenthesis());
     }
 
     @Test
@@ -53,6 +150,7 @@ public class TreeUtilsTest {
         TreeNode node = tree.getRootNode().getLeftNode();
         Assert.assertTrue(TreeUtils.isConstantFraction(node));
     }
+
 
     @Test
     public void isConstantFraction_error1() throws InvalidExpressionException {
@@ -141,11 +239,59 @@ public class TreeUtilsTest {
     }
 
     @Test
+    public void isConstantOrConstantFraction_ok5() throws InvalidExpressionException {
+        String expression = "2 = 2";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        Assert.assertTrue(TreeUtils.isConstantOrConstantFraction(node));
+    }
+
+    @Test
+    public void isConstantOrConstantFraction_ok6() throws InvalidExpressionException {
+        String expression = "4/9 = 4/9";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        Assert.assertTrue(TreeUtils.isConstantOrConstantFraction(node));
+    }
+
+    @Test
+    public void isConstantOrConstantFraction_ok7() throws InvalidExpressionException {
+        String expression = "X/2 = 4/9";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        Assert.assertFalse(TreeUtils.isConstantOrConstantFraction(node));
+    }
+
+    @Test
     public void isIntegerFraction_ok1() throws InvalidExpressionException {
         String expression = "4/2=0";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        Assert.assertTrue(TreeUtils.isConstantOrConstantFraction(node));
+        Assert.assertTrue(TreeUtils.isIntegerFraction(node));
+    }
+
+    @Test
+    public void isIntegerFraction_ok2() throws InvalidExpressionException {
+        String expression = "4/5 = 0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        Assert.assertTrue(TreeUtils.isIntegerFraction(node));
+    }
+
+    @Test
+    public void isIntegerFraction_ok3() throws InvalidExpressionException {
+        String expression = "4X/5 = 0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        Assert.assertFalse(TreeUtils.isIntegerFraction(node));
+    }
+
+    @Test
+    public void isIntegerFraction_ok4() throws InvalidExpressionException {
+        String expression = "5 = 5";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        Assert.assertFalse(TreeUtils.isIntegerFraction(node));
     }
 
     @Test
@@ -153,7 +299,7 @@ public class TreeUtilsTest {
         String expression = "4X/2=0";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        Assert.assertFalse(TreeUtils.isConstantOrConstantFraction(node));
+        Assert.assertFalse(TreeUtils.isIntegerFraction(node));
     }
 
     @Test
@@ -161,7 +307,7 @@ public class TreeUtilsTest {
         String expression = "4/2X=0";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        Assert.assertFalse(TreeUtils.isConstantOrConstantFraction(node));
+        Assert.assertFalse(TreeUtils.isIntegerFraction(node));
     }
 
     @Test
@@ -421,6 +567,25 @@ public class TreeUtilsTest {
         TreeNode nodoNegado = TreeUtils.negate(node);
         Assert.assertEquals("(5/6)*X",nodoNegado.toExpression());
     }
+
+    @Test
+    public void negate_ok9() throws InvalidExpressionException {
+        String expression = "-X^3 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode nodoNegado = TreeUtils.negate(node);
+        Assert.assertEquals("X^3",nodoNegado.toExpression());
+    }
+
+    @Test
+    public void negate_ok10() throws InvalidExpressionException {
+        String expression = "-5/6 X = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode nodoNegado = TreeUtils.negate(node);
+        Assert.assertEquals("5/6 X",nodoNegado.toExpression());
+    }
+
     @Test
     public void canRearrangeCoefficient_ok() throws InvalidExpressionException {
         String expression = "X*3=0";
@@ -447,10 +612,11 @@ public class TreeUtilsTest {
 
     @Test
     public void canRearrangeCoefficient_ok4() throws InvalidExpressionException {
-        String expression = "3*X=0";
+        String expression = "X*2 =0";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        Assert.assertFalse(TreeUtils.canRearrangeCoefficient(node));
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(TreeUtils.canRearrangeCoefficient(flattenedNode));
     }
 
     @Test
@@ -458,7 +624,8 @@ public class TreeUtilsTest {
         String expression = "X^3 * 7 =0";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        Assert.assertTrue(TreeUtils.canRearrangeCoefficient(node));
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(TreeUtils.canRearrangeCoefficient(flattenedNode));
     }
 
 
@@ -467,7 +634,8 @@ public class TreeUtilsTest {
         String expression = "3/4=0";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        Assert.assertFalse(TreeUtils.canMultiplyLikeTermConstantNodes(node));
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertFalse(TreeUtils.canMultiplyLikeTermConstantNodes(flattenedNode));
     }
 
     @Test
@@ -475,7 +643,8 @@ public class TreeUtilsTest {
         String expression = "3X*4X=0";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        Assert.assertFalse(TreeUtils.canMultiplyLikeTermConstantNodes(node));
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertFalse(TreeUtils.canMultiplyLikeTermConstantNodes(flattenedNode));
     }
 
     @Test
@@ -483,7 +652,8 @@ public class TreeUtilsTest {
         String expression = "3*3=0";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        Assert.assertFalse(TreeUtils.canMultiplyLikeTermConstantNodes(node));
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertFalse(TreeUtils.canMultiplyLikeTermConstantNodes(flattenedNode));
     }
 
     @Test
@@ -491,7 +661,8 @@ public class TreeUtilsTest {
         String expression = "3*3^2=0";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        Assert.assertTrue(TreeUtils.canMultiplyLikeTermConstantNodes(node));
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(TreeUtils.canMultiplyLikeTermConstantNodes(flattenedNode));
     }
 
     @Test
@@ -499,7 +670,8 @@ public class TreeUtilsTest {
         String expression = "3*4^2=0";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        Assert.assertFalse(TreeUtils.canMultiplyLikeTermConstantNodes(node));
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertFalse(TreeUtils.canMultiplyLikeTermConstantNodes(flattenedNode));
     }
 
     @Test
@@ -507,7 +679,8 @@ public class TreeUtilsTest {
         String expression = "3^2*3^5=0";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        Assert.assertTrue(TreeUtils.canMultiplyLikeTermConstantNodes(node));
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(TreeUtils.canMultiplyLikeTermConstantNodes(flattenedNode));
     }
 
     @Test
@@ -515,7 +688,8 @@ public class TreeUtilsTest {
         String expression = "2^3*3^2=0";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        Assert.assertFalse(TreeUtils.canMultiplyLikeTermConstantNodes(node));
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertFalse(TreeUtils.canMultiplyLikeTermConstantNodes(flattenedNode));
     }
 
     @Test
@@ -523,19 +697,53 @@ public class TreeUtilsTest {
         String expression = "10^3*10^2=0";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        Assert.assertTrue(TreeUtils.canMultiplyLikeTermConstantNodes(node));
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(TreeUtils.canMultiplyLikeTermConstantNodes(flattenedNode));
     }
     @Test
     public void canMultiplyLikeTermConstantNodes_ok9() throws InvalidExpressionException {
         String expression = "10^2*10*10^4=0";
         Tree tree = (new ParserService()).parseExpression(expression);
-        TreeNode node = TreeUtils.flattenOperands(tree.getRootNode().getLeftNode());
-        Assert.assertTrue(TreeUtils.canMultiplyLikeTermConstantNodes(node));
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(TreeUtils.canMultiplyLikeTermConstantNodes(flattenedNode));
     }
 
     @Test
     public void isFraction_ok() throws InvalidExpressionException {
         String expression = "3/4=0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        Assert.assertTrue(TreeUtils.isFraction(node));
+    }
+
+    @Test
+    public void isFraction_ok2() throws InvalidExpressionException {
+        String expression = "2/3 = 2/3";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        Assert.assertTrue(TreeUtils.isFraction(node));
+    }
+
+    @Test
+    public void isFraction_ok3() throws InvalidExpressionException {
+        String expression = "-2/3 = -2/3";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        Assert.assertTrue(TreeUtils.isFraction(node));
+    }
+
+    @Test
+    public void isFraction_ok4() throws InvalidExpressionException {
+        String expression = "-(2/3) = -2/3";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        Assert.assertTrue(TreeUtils.isFraction(node));
+    }
+
+    @Test
+    public void isFraction_ok5() throws InvalidExpressionException {
+        String expression = "(2/3) = 2/3";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
         Assert.assertTrue(TreeUtils.isFraction(node));
@@ -558,6 +766,22 @@ public class TreeUtilsTest {
         Assert.assertTrue(TreeUtils.hasValue(fractionNode,"/"));
         Assert.assertTrue(TreeUtils.hasValue(fractionNode.getLeftNode(),"3"));
         Assert.assertTrue(TreeUtils.hasValue(fractionNode.getRightNode(),"4"));
+    }
+
+    @Test
+    public void getFractions_ok2() throws InvalidExpressionException {
+        String expression = "2/3 = 2/3";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        Assert.assertEquals("2/3",TreeUtils.getFraction(node).toExpression());
+    }
+
+    @Test
+    public void getFractions_ok3() throws InvalidExpressionException {
+        String expression = "-(2/3) = -2/3";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        Assert.assertEquals("-2/3",TreeUtils.getFraction(node).toExpression());
     }
 
     @Test(expected = Error.class)
@@ -950,5 +1174,95 @@ public class TreeUtilsTest {
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         Assert.assertTrue(TreeUtils.resolvesToConstant(flattenedNode));
+    }
+
+    @Test
+    public void canSimplifyPolynomialTerms_ok1() throws InvalidExpressionException {
+        String expression = " X^2 * X * X = 6";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(TreeUtils.canSimplifyPolynomialTerms(flattenedNode));
+    }
+
+    @Test
+    public void canSimplifyPolynomialTerms_ok2() throws InvalidExpressionException {
+        String expression = " X^2 * 3X * X = 6";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertFalse(TreeUtils.canSimplifyPolynomialTerms(flattenedNode));
+    }
+
+    @Test
+    public void canSimplifyPolynomialTerms_ok3() throws InvalidExpressionException {
+        String expression = " X * X^3 = 6";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(TreeUtils.canSimplifyPolynomialTerms(flattenedNode));
+    }
+
+    @Test
+    public void canSimplifyPolynomialTerms_ok4() throws InvalidExpressionException {
+        String expression = " 5 * X^3 = 6";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertFalse(TreeUtils.canSimplifyPolynomialTerms(flattenedNode));
+    }
+
+    @Test
+    public void canSimplifyPolynomialTerms_ok5() throws InvalidExpressionException {
+        String expression = " 5/7 * X = 6";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertFalse(TreeUtils.canSimplifyPolynomialTerms(flattenedNode));
+    }
+
+    @Test
+    public void canSimplifyPolynomialTerms_ok6() throws InvalidExpressionException {
+        String expression = " 5/7 * 9 * X = 6";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertFalse(TreeUtils.canSimplifyPolynomialTerms(flattenedNode));
+    }
+
+    @Test
+    public void canSimplifyPolynomialTerms_ok7() throws InvalidExpressionException {
+        String expression = " X + X = 6";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(TreeUtils.canSimplifyPolynomialTerms(flattenedNode));
+    }
+
+    @Test
+    public void canSimplifyPolynomialTerms_ok8() throws InvalidExpressionException {
+        String expression = " 4X^2 + 7X^2 + X^2 = 6";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(TreeUtils.canSimplifyPolynomialTerms(flattenedNode));
+    }
+
+    @Test
+    public void canSimplifyPolynomialTerms_ok9() throws InvalidExpressionException {
+        String expression = " 4X^2 + 7X^2 + X^2 + X = 6";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertFalse(TreeUtils.canSimplifyPolynomialTerms(flattenedNode));
+    }
+
+    @Test
+    public void canSimplifyPolynomialTerms_ok10() throws InvalidExpressionException {
+        String expression = " X = 6";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertFalse(TreeUtils.canSimplifyPolynomialTerms(flattenedNode));
     }
 }

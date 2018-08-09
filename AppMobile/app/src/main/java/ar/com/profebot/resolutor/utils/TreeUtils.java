@@ -981,7 +981,7 @@ public class TreeUtils {
 
     // Returns true if the node is an operation node with parameters that are
     // polynomial terms that can be combined in some way.
-    private static boolean canSimplifyPolynomialTerms(TreeNode node) {
+    protected static boolean canSimplifyPolynomialTerms(TreeNode node) {
         return (simplifyService.canAddLikeTermPolynomialNodes(node) ||
                 simplifyService.canMultiplyLikeTermPolynomialNodes(node) ||
                 canRearrangeCoefficient(node));

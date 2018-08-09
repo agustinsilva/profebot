@@ -689,7 +689,7 @@ public class ResolutorService {
     // Given a mathjs expression node, steps through factoring the expression.
     // Currently only supports factoring quadratics.
     // Returns a list of details about each step.
-    private List<NodeStatus> factorStepThrough(TreeNode node, boolean debug) {
+    protected List<NodeStatus> factorStepThrough(TreeNode node, boolean debug) {
         if (debug) {
             // eslint-disable-next-line
             System.out.println("\n\nFactoring: " + node.toExpression());
@@ -721,7 +721,7 @@ public class ResolutorService {
     //    - TODO: quadratic formula
     //        requires us simplify the following only within the parens:
     //        a(x - (-b + sqrt(b^2 - 4ac)) / 2a)(x - (-b - sqrt(b^2 - 4ac)) / 2a)
-    private NodeStatus factorQuadratic(TreeNode node) {
+    protected NodeStatus factorQuadratic(TreeNode node) {
         // get a, b and c
         String symbol = "X";
         Integer aValue = 0;

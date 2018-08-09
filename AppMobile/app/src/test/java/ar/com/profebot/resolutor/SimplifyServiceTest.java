@@ -594,4 +594,67 @@ public class SimplifyServiceTest extends SimplifyService {
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.SIMPLIFY_FRACTION);
         Assert.assertEquals("2X", estado.getNewNode().toExpression());
     }
+
+    @Test
+    public void canMultiplyLikeTermPolynomialNodes_ok1() throws InvalidExpressionException {
+        String expression = "X^2 * X * X = 2";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(super.canMultiplyLikeTermPolynomialNodes(flattenedNode));
+    }
+
+    @Test
+    public void canMultiplyLikeTermPolynomialNodes_ok2() throws InvalidExpressionException {
+        String expression = "X^2 * 3X * X = 2";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertFalse(super.canMultiplyLikeTermPolynomialNodes(flattenedNode));
+    }
+
+    @Test
+    public void canMultiplyLikeTermPolynomialNodes_ok3() throws InvalidExpressionException {
+        String expression = "X * X^3 = 2";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(super.canMultiplyLikeTermPolynomialNodes(flattenedNode));
+    }
+
+    @Test
+    public void canMultiplyLikeTermPolynomialNodes_ok4() throws InvalidExpressionException {
+        String expression = "X^3 * X^2 = 2";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(super.canMultiplyLikeTermPolynomialNodes(flattenedNode));
+    }
+
+    @Test
+    public void canAddLikeTermPolynomialNodes_ok1() throws InvalidExpressionException {
+        String expression = "X^2 + X^2 = 2";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(super.canAddLikeTermPolynomialNodes(flattenedNode));
+    }
+
+    @Test
+    public void canAddLikeTermPolynomialNodes_ok2() throws InvalidExpressionException {
+        String expression = "X + X = 2";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertTrue(super.canAddLikeTermPolynomialNodes(flattenedNode));
+    }
+
+    @Test
+    public void canAddLikeTermPolynomialNodes_ok3() throws InvalidExpressionException {
+        String expression = "X^3 + X = 2";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        Assert.assertFalse(super.canAddLikeTermPolynomialNodes(flattenedNode));
+    }
 }
