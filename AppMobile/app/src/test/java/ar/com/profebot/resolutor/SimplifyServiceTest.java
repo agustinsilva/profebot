@@ -81,6 +81,56 @@ public class SimplifyServiceTest extends SimplifyService {
     }
 
     @Test
+    public void arithmeticSearch_ok3() throws InvalidExpressionException{
+        String expression = "2+2 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.arithmeticSearch(flattedNode);
+        Assert.assertEquals("4",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void arithmeticSearch_ok4() throws InvalidExpressionException{
+        String expression = "2*3*5 = 30";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.arithmeticSearch(flattedNode);
+        Assert.assertEquals("30",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void arithmeticSearch_ok5() throws InvalidExpressionException{
+        String expression = "6*6 = 30";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.arithmeticSearch(flattedNode);
+        Assert.assertEquals("36",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void arithmeticSearch_ok6() throws InvalidExpressionException{
+        String expression = "9/4 = 9/4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.arithmeticSearch(flattedNode);
+        Assert.assertEquals("9/4",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void arithmeticSearch_ok7() throws InvalidExpressionException{
+        String expression = "16 - 1953125 = -1953109";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.arithmeticSearch(flattedNode);
+        Assert.assertEquals("-1953109",estado.getNewNode().toExpression());
+    }
+
+    @Test
     public void basicSearch_ok1() throws InvalidExpressionException {
         String expression = "4 = 4";
         Tree tree = (new ParserService()).parseExpression(expression);
@@ -103,7 +153,8 @@ public class SimplifyServiceTest extends SimplifyService {
         String expression = "4 = 4";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.breakUpNumeratorSearch(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.breakUpNumeratorSearch(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
@@ -112,8 +163,69 @@ public class SimplifyServiceTest extends SimplifyService {
         String expression = "(2+X)/5 = 25";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.breakUpNumeratorSearch(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.breakUpNumeratorSearch(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.BREAK_UP_FRACTION);
+    }
+
+    @Test
+    public void breakUpNumeratorSearch_ok3() throws InvalidExpressionException{
+        String expression = " (X+3+X)/3 = (X / 3 + 3/3 + X / 3)";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.breakUpNumeratorSearch(flattenedNode);
+        Assert.assertEquals("(X / 3 + 3/3 + X / 3", estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void breakUpNumeratorSearch_ok4() throws InvalidExpressionException{
+        String expression = " (2+X)/4 = (2/4 + X/4)";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.breakUpNumeratorSearch(flattenedNode);
+        Assert.assertEquals("(2/4 + X/4)", estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void breakUpNumeratorSearch_ok5() throws InvalidExpressionException{
+        String expression = " 2(X+3)/3 = 2 * (X/3 + 3/3)";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.breakUpNumeratorSearch(flattenedNode);
+        Assert.assertEquals("2 * (X/3 + 3/3)", estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void evaluateConstantSum_ok1() throws InvalidExpressionException{
+        String expression = " 4/10 + 3/5 = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.evaluateConstantSum(flattenedNode);
+        Assert.assertEquals("1", estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void evaluateConstantSum_ok2() throws InvalidExpressionException{
+        String expression = " 4/5 + 3/5 + 2 = 17/5";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.evaluateConstantSum(flattenedNode);
+        Assert.assertEquals("17/5", estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void evaluateConstantSum_ok3() throws InvalidExpressionException{
+        String expression = " 9 + 4/5 + 1/5 + 2 = 12";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.evaluateConstantSum(flattenedNode);
+        Assert.assertEquals("12", estado.getNewNode().toExpression());
     }
 
     @Test
@@ -236,6 +348,16 @@ public class SimplifyServiceTest extends SimplifyService {
     }
 
     @Test
+    public void reduceExponentByZero_ok3() throws InvalidExpressionException {
+        String expression = "4^0 = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.reduceExponentByZero(flattenedNode);
+        Assert.assertEquals("1",estado.getNewNode().toExpression());
+    }
+
+    @Test
     public void reduceMultiplicationByZero_ok1() throws InvalidExpressionException{
         String expression = "4 = 4";
         Tree tree = (new ParserService()).parseExpression(expression);
@@ -251,6 +373,36 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         NodeStatus estado = super.reduceMultiplicationByZero(node);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.MULTIPLY_BY_ZERO);
+    }
+
+    @Test
+    public void reduceMultiplicationByZero_ok3() throws InvalidExpressionException{
+        String expression = "0 * 5 = 0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.reduceMultiplicationByZero(flattenedNode);
+        Assert.assertEquals("0",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void reduceMultiplicationByZero_ok4() throws InvalidExpressionException{
+        String expression = "0X = 0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.reduceMultiplicationByZero(flattenedNode);
+        Assert.assertEquals("0",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void reduceMultiplicationByZero_ok5() throws InvalidExpressionException{
+        String expression = "2*0*X^2 = 0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.reduceMultiplicationByZero(flattenedNode);
+        Assert.assertEquals("0",estado.getNewNode().toExpression());
     }
 
     @Test
@@ -272,6 +424,26 @@ public class SimplifyServiceTest extends SimplifyService {
     }
 
     @Test
+    public void reduceZeroDividedByAnything_ok3() throws InvalidExpressionException {
+        String expression = " 0 / 5 = 0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.reduceZeroDividedByAnything(flattenedNode);
+        Assert.assertEquals("0",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void reduceZeroDividedByAnything_ok4() throws InvalidExpressionException {
+        String expression = "0/(X+6+7+X^2) = 0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.reduceZeroDividedByAnything(flattenedNode);
+        Assert.assertEquals("0",estado.getNewNode().toExpression());
+    }
+
+    @Test
     public void removeAdditionOfZero_ok1() throws InvalidExpressionException{
         String expression = "4 = 4";
         Tree tree = (new ParserService()).parseExpression(expression);
@@ -290,11 +462,42 @@ public class SimplifyServiceTest extends SimplifyService {
     }
 
     @Test
+    public void removeAdditionOfZero_ok3() throws InvalidExpressionException{
+        String expression = "2+0+X = 2 + X";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.removeAdditionOfZero(flattenedNode);
+        Assert.assertEquals("2 + X",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void removeAdditionOfZero_ok4() throws InvalidExpressionException{
+        String expression = "2+X+0 = 2 + X";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.removeAdditionOfZero(flattenedNode);
+        Assert.assertEquals("2 + X",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void removeAdditionOfZero_ok5() throws InvalidExpressionException{
+        String expression = "0+2+X = 2 + X";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.removeAdditionOfZero(flattenedNode);
+        Assert.assertEquals("2 + X",estado.getNewNode().toExpression());
+    }
+
+    @Test
     public void removeDivisionByOne_ok1() throws InvalidExpressionException{
         String expression = "4 = 4";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.removeDivisionByOne(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.removeDivisionByOne(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
@@ -303,8 +506,19 @@ public class SimplifyServiceTest extends SimplifyService {
         String expression = " 5 / 1 = 5";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.removeDivisionByOne(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.removeDivisionByOne(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.DIVISION_BY_ONE);
+    }
+
+    @Test
+    public void removeDivisionByOne_ok3() throws InvalidExpressionException{
+        String expression = " X/1 = X";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.removeDivisionByOne(flattenedNode);
+        Assert.assertEquals("X",estado.getNewNode().toExpression());
     }
 
     @Test
@@ -312,7 +526,8 @@ public class SimplifyServiceTest extends SimplifyService {
         String expression = "4 = 4";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.removeExponentBaseOne(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.removeExponentBaseOne(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
@@ -321,8 +536,29 @@ public class SimplifyServiceTest extends SimplifyService {
         String expression = "1^99 = 1";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.removeExponentBaseOne(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.removeExponentBaseOne(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.REMOVE_EXPONENT_BASE_ONE);
+    }
+
+    @Test
+    public void removeExponentBaseOne_ok3() throws InvalidExpressionException {
+        String expression = "1^3 = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.removeExponentBaseOne(flattenedNode);
+        Assert.assertEquals("1",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void removeExponentBaseOne_ok4() throws InvalidExpressionException {
+        String expression = "1^(2 + 3 + 5/4 + 7 - 6/7) = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.removeExponentBaseOne(flattenedNode);
+        Assert.assertEquals("1",estado.getNewNode().toExpression());
     }
 
     @Test
@@ -330,7 +566,8 @@ public class SimplifyServiceTest extends SimplifyService {
         String expression = "4 = 4";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.simplifyDoubleUnaryMinus(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.simplifyDoubleUnaryMinus(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
@@ -339,8 +576,29 @@ public class SimplifyServiceTest extends SimplifyService {
         String expression = "-(-4) = 4";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.simplifyDoubleUnaryMinus(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.simplifyDoubleUnaryMinus(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.RESOLVE_DOUBLE_MINUS);
+    }
+
+    @Test
+    public void simplifyDoubleUnaryMinus_ok3() throws InvalidExpressionException{
+        String expression = "--5 = 5";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.simplifyDoubleUnaryMinus(flattenedNode);
+        Assert.assertEquals("5",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void simplifyDoubleUnaryMinus_ok4() throws InvalidExpressionException{
+        String expression = "--X = X";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.simplifyDoubleUnaryMinus(flattenedNode);
+        Assert.assertEquals("X",estado.getNewNode().toExpression());
     }
 
     @Test
@@ -348,7 +606,8 @@ public class SimplifyServiceTest extends SimplifyService {
         String expression = "4 = 4";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.removeExponentByOne(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.removeExponentByOne(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
@@ -357,8 +616,19 @@ public class SimplifyServiceTest extends SimplifyService {
         String expression = "(X+5)^1 = 6";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.removeExponentByOne(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.removeExponentByOne(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.REMOVE_EXPONENT_BASE_ONE);
+    }
+
+    @Test
+    public void removeExponentByOne_ok3() throws InvalidExpressionException{
+        String expression = "X^1 = 6";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.removeExponentByOne(flattenedNode);
+        Assert.assertEquals("X",estado.getNewNode().toExpression());
     }
 
     @Test
@@ -366,7 +636,8 @@ public class SimplifyServiceTest extends SimplifyService {
         String expression = "4 = 4";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.removeMultiplicationByNegativeOne(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.removeMultiplicationByNegativeOne(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
@@ -375,8 +646,39 @@ public class SimplifyServiceTest extends SimplifyService {
         String expression = "(X + 5) * -1 = -X - 5";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.removeMultiplicationByNegativeOne(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.removeMultiplicationByNegativeOne(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.REMOVE_MULTIPLYING_BY_NEGATIVE_ONE);
+    }
+
+    @Test
+    public void removeMultiplicationByNegativeOne_ok3() throws InvalidExpressionException {
+        String expression = "-1*X = -X - 5";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.removeMultiplicationByNegativeOne(flattenedNode);
+        Assert.assertEquals("-X",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void removeMultiplicationByNegativeOne_ok4() throws InvalidExpressionException {
+        String expression = "X^2*-1 = -X - 5";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.removeMultiplicationByNegativeOne(flattenedNode);
+        Assert.assertEquals("-X^2",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void removeMultiplicationByNegativeOne_ok5() throws InvalidExpressionException {
+        String expression = "2X*2*-1 = -X - 5";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.removeMultiplicationByNegativeOne(flattenedNode);
+        Assert.assertEquals("2X * 2 * -1",estado.getNewNode().toExpression());
     }
 
     @Test
@@ -384,7 +686,8 @@ public class SimplifyServiceTest extends SimplifyService {
         String expression = "4 = 4";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.removeMultiplicationByOne(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.removeMultiplicationByOne(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
@@ -393,8 +696,49 @@ public class SimplifyServiceTest extends SimplifyService {
         String expression = "(5x+1) * 1 = 6";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.removeMultiplicationByOne(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.removeMultiplicationByOne(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.REMOVE_MULTIPLYING_BY_ONE);
+    }
+
+    @Test
+    public void removeMultiplicationByOne_ok3() throws InvalidExpressionException{
+        String expression = "X*1 = X";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.removeMultiplicationByOne(flattenedNode);
+        Assert.assertEquals("X",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void removeMultiplicationByOne_ok4() throws InvalidExpressionException{
+        String expression = "1X = X";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.removeMultiplicationByOne(flattenedNode);
+        Assert.assertEquals("X",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void removeMultiplicationByOne_ok5() throws InvalidExpressionException{
+        String expression = "1*X^2 = X^2";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.removeMultiplicationByOne(flattenedNode);
+        Assert.assertEquals("X^2",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void removeMultiplicationByOne_ok6() throws InvalidExpressionException{
+        String expression = "2*1*X^2 = 2 * 1X^2";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.removeMultiplicationByOne(flattenedNode);
+        Assert.assertEquals("2 * 1X^2",estado.getNewNode().toExpression());
     }
 
     @Test
@@ -416,11 +760,32 @@ public class SimplifyServiceTest extends SimplifyService {
     }
 
     @Test
+    public void rearrangeCoefficient_ok3() throws InvalidExpressionException {
+        String expression = "2 * X^2 = 2X^2";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.rearrangeCoefficient(flattenedNode);
+        Assert.assertEquals("2X^2",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void rearrangeCoefficient_ok4() throws InvalidExpressionException {
+        String expression = "X^3 * 5 = 5X^3";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.rearrangeCoefficient(flattenedNode);
+        Assert.assertEquals("5X^3",estado.getNewNode().toExpression());
+    }
+
+    @Test
     public void addConstantFractions_ok1() throws InvalidExpressionException {
         String expression = "2/5 + 4/5 = 6/5";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.addConstantFractions(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.addConstantFractions(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.ADD_FRACTIONS);
     }
 
@@ -429,8 +794,49 @@ public class SimplifyServiceTest extends SimplifyService {
         String expression = "4 = 4";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.addConstantFractions(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.addConstantFractions(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
+    }
+
+    @Test
+    public void addConstantFractions_ok3() throws InvalidExpressionException {
+        String expression = "4/5 + 3/5 = 7/5";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.addConstantFractions(flattenedNode);
+        Assert.assertEquals("7/5",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void addConstantFractions_ok4() throws InvalidExpressionException {
+        String expression = "4/10 + 3/5 = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.addConstantFractions(flattenedNode);
+        Assert.assertEquals("1",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void addConstantFractions_ok5() throws InvalidExpressionException {
+        String expression = "4/9 + 3/5 = 47/45";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.addConstantFractions(flattenedNode);
+        Assert.assertEquals("47/45",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void addConstantFractions_ok6() throws InvalidExpressionException {
+        String expression = "4/5 - 4/5 = 0";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.addConstantFractions(flattenedNode);
+        Assert.assertEquals("0",estado.getNewNode().toExpression());
     }
 
     @Test
@@ -534,7 +940,8 @@ public class SimplifyServiceTest extends SimplifyService {
         String expression = "4 = 4";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.simplifyFractionSigns(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.simplifyFractionSigns(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
@@ -543,7 +950,8 @@ public class SimplifyServiceTest extends SimplifyService {
         String expression = "-3/-1 = 3";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.simplifyFractionSigns(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.simplifyFractionSigns(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.CANCEL_MINUSES);
     }
 
@@ -552,8 +960,49 @@ public class SimplifyServiceTest extends SimplifyService {
         String expression = "3/-1 = 3";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.simplifyFractionSigns(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.simplifyFractionSigns(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.SIMPLIFY_SIGNS);
+    }
+
+    @Test
+    public void simplifyFractionSigns_ok4() throws InvalidExpressionException {
+        String expression = "-12x / -27 = 3";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.simplifyFractionSigns(flattenedNode);
+        Assert.assertEquals("12x/27",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void simplifyFractionSigns_ok5() throws InvalidExpressionException {
+        String expression = "X / -X = -X / X";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.simplifyFractionSigns(flattenedNode);
+        Assert.assertEquals("-X/X",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void addConstantAndFraction_ok1() throws InvalidExpressionException {
+        String expression = "7 + 1/2 = 15/2";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.addConstantAndFraction(flattenedNode);
+        Assert.assertEquals("15/2",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void addConstantAndFraction_ok2() throws InvalidExpressionException {
+        String expression = "5/6 + 3 = 23/6";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.addConstantAndFraction(flattenedNode);
+        Assert.assertEquals("23/6",estado.getNewNode().toExpression());
     }
 
     @Test

@@ -1900,7 +1900,7 @@ public class SimplifyService {
      * @param node Nodo a evaluar
      * @return El estado de la simplificacion
      */
-    private NodeStatus evaluateConstantSum(TreeNode node) {
+    protected NodeStatus evaluateConstantSum(TreeNode node) {
 
         if (node.isParenthesis()) {
             node = node.getChild(0);

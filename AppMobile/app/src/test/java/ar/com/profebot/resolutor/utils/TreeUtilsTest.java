@@ -583,7 +583,7 @@ public class TreeUtilsTest {
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode nodoNegado = TreeUtils.negate(node);
-        Assert.assertEquals("5/6 X",nodoNegado.toExpression());
+        Assert.assertEquals("5/6X",nodoNegado.toExpression());
     }
 
     @Test
