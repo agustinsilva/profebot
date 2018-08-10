@@ -37,9 +37,7 @@ public class PendingExerciseAdapter extends RecyclerView.Adapter<PendingExercise
         PendingExercise listPendingExercises = listExercise.get(position);
         /*holder.textViewHead.setText(listPendingExercises.getHead());*/
         holder.textViewEquation.setText(listPendingExercises.getDesc());
-        ExpressionsManager.setEquationDrawn(listPendingExercises.getHead().toString());
-        ExpressionsManager.expressionDrawnIsValid();
-        holder.mathViewEquation.setText("\\(" + ExpressionsManager.getEquationAsLatex() + "\\)");
+        holder.mathViewEquation.setText(listPendingExercises.getHead());
     }
 
     @Override
@@ -50,13 +48,13 @@ public class PendingExerciseAdapter extends RecyclerView.Adapter<PendingExercise
     public class ViewHolder extends RecyclerView.ViewHolder{
         /*public TextView textViewHead;*/
         public TextView textViewEquation;
-        public MathView mathViewEquation;
+        public TextView mathViewEquation;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             /*textViewHead = (TextView) itemView.findViewById(R.id.textViewHead);*/
-            mathViewEquation = ((MathView) itemView.findViewById(R.id.new_pending_equation));
+            mathViewEquation = ((TextView) itemView.findViewById(R.id.new_pending_equation));
             textViewEquation = (TextView) itemView.findViewById(R.id.textViewEquation);
         }
     }

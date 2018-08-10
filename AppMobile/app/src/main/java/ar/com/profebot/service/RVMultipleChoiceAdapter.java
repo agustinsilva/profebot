@@ -228,7 +228,7 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
     @Override
     public void onBindViewHolder(MultipleChoiceViewHolder multipleChoiceViewHolder, int position) {
         multipleChoiceViewHolder.equationBase.setText("\\(" + currentMultipleChoiceSteps.get(position).getEquationBase() + "\\)");
-        multipleChoiceViewHolder.newEquationBase.setText("\\(" + currentMultipleChoiceSteps.get(position).getEquationBase() + "\\)");
+        multipleChoiceViewHolder.newEquationBase.setText("\\(" + currentMultipleChoiceSteps.get(position).getNewEquationBase() + "\\)");
         if(currentMultipleChoiceSteps.get(position).getSolved()){
             multipleChoiceViewHolder.summary.setText(currentMultipleChoiceSteps.get(position).getSummary());
         }

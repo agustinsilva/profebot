@@ -42,26 +42,21 @@ public class SolveEquationActivity extends GlobalActivity {
     private List<MultipleChoiceStep> initializeMultipleChoiceSteps(){
         List<MultipleChoiceStep> steps = new ArrayList<>();
         //TODO: pedirle este objeto al backend
-        steps.add(new MultipleChoiceStep(ExpressionsManager.getEquationAsLatex(), ExpressionsManager.getEquationAsLatex(), "Pasar restando el 1",
-                "Pasar restando el 1 para reducir la suma", "Distribuir el cuadrado en la suma",
-                "Pasar multiplicando el 3 que divide a la X", 1, "A - era la opción correcta",
-                "B no era la opción correcta porque no se puede distribuir el cuadrado en una suma o resta",
-                "C no era la correcta porque no se puede pasar dividiendo el 3 si antes no se despeja el término con X"));
-        steps.add(new MultipleChoiceStep(ExpressionsManager.getEquationAsLatex(), ExpressionsManager.getEquationAsLatex(), "Pasar restando el 2",
-                "Pasar restando el 2 para reducir la suma", "Distribuir el cuadrado en la suma",
-                "Pasar multiplicando el 3 que divide a la X", 1, "A - era la opción correcta",
-                "B no era la opción correcta porque no se puede distribuir el cuadrado en una suma o resta",
-                "C no era la correcta porque no se puede pasar dividiendo el 3 si antes no se despeja el término con X"));
-        steps.add(new MultipleChoiceStep(ExpressionsManager.getEquationAsLatex(), ExpressionsManager.getEquationAsLatex(), "Pasar restando el 3",
-                "Pasar restando el 3 para reducir la suma", "Distribuir el cuadrado en la suma",
-                "Pasar multiplicando el 3 que divide a la X", 1, "A - era la opción correcta",
-                "B no era la opción correcta porque no se puede distribuir el cuadrado en una suma o resta",
-                "C no era la correcta porque no se puede pasar dividiendo el 3 si antes no se despeja el término con X"));
-        steps.add(new MultipleChoiceStep(ExpressionsManager.getEquationAsLatex(), ExpressionsManager.getEquationAsLatex(), "Pasar restando el 4",
-                "Pasar restando el 4 para reducir la suma", "Distribuir el cuadrado en la suma",
-                "Pasar multiplicando el 3 que divide a la X", 1, "A - era la opción correcta",
-                "B no era la opción correcta porque no se puede distribuir el cuadrado en una suma o resta",
-                "C no era la correcta porque no se puede pasar dividiendo el 3 si antes no se despeja el término con X"));
+        steps.add(new MultipleChoiceStep("x+3*(2+x)=4", "x+6+3x=4", "Distribuir el 3",
+                "Multiplicar por 3 a cada término del binomio 2+x", "Pasar el 3 dividiendo",
+                "Pasar el (2+x) dividiendo", 1, "Se puede aplicar distributiva",
+                "No se puede pasar el 3 dividiendo por separación de términos",
+                "No se puede pasar el (2+x) dividiendo por separación de términos"));
+        steps.add(new MultipleChoiceStep("x+6+3x=4", "x+3x=4-6", "Pasar el 6 restando",
+                "Pasar el 6 sumando", "Pasar el 6 restando",
+                "Pasar el 3 dividiendo", 2, "Separando en términos, se puede pasar el término del 6 con el signo contrario",
+                "No se puede pasar el 6 sumando porque se debe invertir la operación. Si esta sumando, debe pasar restando.",
+                "No se puede pasar el 3 dividiendo por separación de términos."));
+        steps.add(new MultipleChoiceStep("x+3x=4-6", "x+3x=-2", "Aplicar la resta",
+                "Pasar el 3 dividiendo", "Aplicar la resta, dando -3 como resultado",
+                "Aplicar la resta, dando -2 como resultado", 3, "La diferencia entre 4 y 6 es 2, con signo negativo, por ser el 4 menor que 6",
+                "No se puede pasar el 3 dividiendo por separación de términos.",
+                "La resta no da -3. Para calcularlo, se hacer la resta 6-4, y cambiar de signo al resultado."));
         return steps;
     }
 

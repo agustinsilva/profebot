@@ -78,7 +78,7 @@ public class IAModuleClient extends AsyncTask<String, Void, Void> {
                     bufferedReader.close();
                     Log.i("HTTP Client", "Received String : " + sb.toString());
                     // Save received string
-                    saveEquationsFromIAModule(sb.toString().split(";"), context);
+                    saveEquationsFromIAModule(sb.toString(), context);
             }
         } catch (MalformedURLException ex) {
             Log.e("HTTP Client", "Error in http connection" + ex.toString());
@@ -98,7 +98,7 @@ public class IAModuleClient extends AsyncTask<String, Void, Void> {
         return null;
     }
 
-    private void saveEquationsFromIAModule(String[] equations, Context context) {
+    private void saveEquationsFromIAModule(String equations, Context context) {
         //Get equations from memory
         String pendingExercisesJson = PreferenceManager.getDefaultSharedPreferences(context).getString("pendingExercises","");
         JSONObject equationsJsonToStore = new JSONObject();
@@ -110,7 +110,8 @@ public class IAModuleClient extends AsyncTask<String, Void, Void> {
             }
         }
         try{
-            JSONObject equationsJson = new JSONObject(equations.toString());
+            String json = "{\"equations\":\"" + equations + "\"}";
+            JSONObject equationsJson = new JSONObject(json);
             String equationStr = equationsJson.getString("equations");
             List<String> equationItems = Arrays.asList(equationStr.split("\\s*;\\s*"));
             for (Iterator<String> equationString = equationItems.iterator(); equationString.hasNext();) {

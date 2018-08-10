@@ -291,7 +291,6 @@ public class ExpressionsManager {
 
         List<String> baseFixedTokens = Arrays.asList(baseFixed.split("\\+"));
         List<String> newBaseFixedTokens = Arrays.asList(newBaseFixed.split("\\+"));
-
         for(int i = 0 ; i < baseFixedTokens.size() ; i++){
             if(newBaseFixedTokens.contains(baseFixedTokens.get(i))){
                 for(int j = 0 ; j < newBaseFixedTokens.size() ; j++){
