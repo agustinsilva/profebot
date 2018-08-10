@@ -5,14 +5,15 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
+
+import com.profebot.activities.R;
+
+import org.json.JSONObject;
+
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import com.profebot.activities.R;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import ar.com.profebot.Models.ExercisesJson.*;
 import ar.com.profebot.intelligent.module.IAModuleClient;
 import ar.com.profebot.service.ExpressionsManager;
 
