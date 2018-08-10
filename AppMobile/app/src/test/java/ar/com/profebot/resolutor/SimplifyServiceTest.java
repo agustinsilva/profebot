@@ -45,6 +45,157 @@ public class SimplifyServiceTest extends SimplifyService {
     }
 
     @Test
+    public void stepThrough_ok3()  throws InvalidExpressionException {
+        String expression = "2+2 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        List<NodeStatus> listaNodos =  super.stepThrough(node);
+        NodeStatus estadoSimple = listaNodos.get(0);
+        Assert.assertTrue(listaNodos.size() == 1);
+        Assert.assertEquals("4",estadoSimple.getNewNode().toExpression());
+    }
+
+    @Test
+    public void stepThrough_ok4()  throws InvalidExpressionException {
+        String expression = "(2+2)*5 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        List<NodeStatus> listaNodos =  super.stepThrough(node);
+        NodeStatus estadoSimple = listaNodos.get(0);
+        Assert.assertEquals("4 * 5",estadoSimple.getNewNode().toExpression());
+    }
+
+    @Test
+    public void stepThrough_ok5()  throws InvalidExpressionException {
+        String expression = "(2+2)*5 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        List<NodeStatus> listaNodos =  super.stepThrough(node);
+        NodeStatus estadoSimple = listaNodos.get(0);
+        Assert.assertEquals("4 * 5",estadoSimple.getNewNode().toExpression());
+    }
+
+    @Test
+    public void stepThrough_ok6()  throws InvalidExpressionException {
+        String expression = "5*(2+2) = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        List<NodeStatus> listaNodos =  super.stepThrough(node);
+        NodeStatus estadoSimple = listaNodos.get(0);
+        Assert.assertEquals("5 * 4",estadoSimple.getNewNode().toExpression());
+    }
+
+    @Test
+    public void stepThrough_ok7()  throws InvalidExpressionException {
+        String expression = "2*(2+2) + 2^3 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        List<NodeStatus> listaNodos =  super.stepThrough(node);
+        NodeStatus estadoSimple = listaNodos.get(0);
+        Assert.assertEquals("2 * 4 + 2^3",estadoSimple.getNewNode().toExpression());
+    }
+
+    @Test
+    public void stepThrough_ok8()  throws InvalidExpressionException {
+        String expression = "6*6 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        List<NodeStatus> listaNodos =  super.stepThrough(node);
+        NodeStatus estadoSimple = listaNodos.get(0);
+        Assert.assertEquals("36",estadoSimple.getNewNode().toExpression());
+    }
+
+    @Test
+    public void stepThrough_ok9()  throws InvalidExpressionException {
+        String expression = "2+X = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        List<NodeStatus> listaNodos =  super.stepThrough(node);
+        NodeStatus estadoSimple = listaNodos.get(0);
+        Assert.assertEquals("2+X",estadoSimple.getNewNode().toExpression());
+    }
+
+    @Test
+    public void stepThrough_ok10()  throws InvalidExpressionException {
+        String expression = "(2+2)*X = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        List<NodeStatus> listaNodos =  super.stepThrough(node);
+        NodeStatus estadoSimple = listaNodos.get(0);
+        Assert.assertEquals("4X",estadoSimple.getNewNode().toExpression());
+    }
+
+    @Test
+    public void stepThrough_ok11()  throws InvalidExpressionException {
+        String expression = "(2+2)*X+3 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        List<NodeStatus> listaNodos =  super.stepThrough(node);
+        NodeStatus estadoSimple = listaNodos.get(0);
+        Assert.assertEquals("4x + 3",estadoSimple.getNewNode().toExpression());
+    }
+
+    @Test
+    public void stepThrough_ok12()  throws InvalidExpressionException {
+        String expression = "2+X+7 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        List<NodeStatus> listaNodos =  super.stepThrough(node);
+        NodeStatus estadoSimple = listaNodos.get(0);
+        Assert.assertEquals("X + 9",estadoSimple.getNewNode().toExpression());
+    }
+
+    @Test
+    public void stepThrough_ok13()  throws InvalidExpressionException {
+        String expression = "(X + X) + (X^2 + X^2) = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        List<NodeStatus> listaNodos =  super.stepThrough(node);
+        NodeStatus estadoSimple = listaNodos.get(0);
+        Assert.assertEquals("2X + (X^2 + X^2)",estadoSimple.getNewNode().toExpression());
+    }
+
+    @Test
+    public void stepThrough_ok14()  throws InvalidExpressionException {
+        String expression = "10 + (X^2 + X^2) = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        List<NodeStatus> listaNodos =  super.stepThrough(node);
+        NodeStatus estadoSimple = listaNodos.get(0);
+        Assert.assertEquals("10 + 2X^2",estadoSimple.getNewNode().toExpression());
+    }
+
+    @Test
+    public void stepThrough_ok15()  throws InvalidExpressionException {
+        String expression = "10X^2 + 1/2 X^2 + 3/2 X^2 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        List<NodeStatus> listaNodos =  super.stepThrough(node);
+        NodeStatus estadoSimple = listaNodos.get(0);
+        Assert.assertEquals("12X^2",estadoSimple.getNewNode().toExpression());
+    }
+
+    @Test
+    public void stepThrough_ok16()  throws InvalidExpressionException {
+        String expression = "2X^(2+1)= 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        List<NodeStatus> listaNodos =  super.stepThrough(node);
+        NodeStatus estadoSimple = listaNodos.get(0);
+        Assert.assertEquals("2X^3",estadoSimple.getNewNode().toExpression());
+    }
+
+    @Test
+    public void stepThrough_ok17()  throws InvalidExpressionException {
+        String expression = "2 + 5/2 + 3= 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        List<NodeStatus> listaNodos =  super.stepThrough(node);
+        NodeStatus estadoSimple = listaNodos.get(0);
+        Assert.assertEquals("5 + 5/2",estadoSimple.getNewNode().toExpression());
+    }
+
+    @Test
     public void step_ok1() throws InvalidExpressionException {
         String expression = "4 = 4";
         Tree tree = (new ParserService()).parseExpression(expression);
