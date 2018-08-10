@@ -157,20 +157,40 @@ public class TreeNode {
 
         // Si es parentesis, o unaryMinus, envuelve
         if (this.isParenthesis() || this.isUnaryMinus()){
-            return (this.isUnaryMinus()?"-":"") + "(" + this.getContent().toExpression()  + ")";
+
+            if (this.isUnaryMinus()){
+                if (TreeUtils.isConstant(this.getContent())){
+                    return TreeUtils.negate(this.getContent()).toExpression();
+                }else{
+                    return "-(" + this.getContent().toExpression()  + ")";
+                }
+            }else{
+                return (this.isUnaryMinus()?"-":"") + "(" + this.getContent().toExpression()  + ")";
+            }
+
         }else if (this.getArgs().size() > 2){
             // Si tiene mas de 2 hijos, se parsea distinto
             String childExpression = "";
             for(TreeNode child: this.getArgs()){
-                childExpression+= getNodeExpression(child, false) + this.getValue();
+
+                if (!TreeUtils.isNegative(child)){
+                    if (childExpression.length() != 0){childExpression+=this.getValue();}
+                }
+                childExpression+= getNodeExpression(child, false);
             }
 
-            return childExpression.substring(0, childExpression.length()- this.getValue().length());
+            return childExpression;
 
         }else{
-            return getNodeExpression(leftNode, false)  +
-                    this.getValue()  +
-                    getNodeExpression(this.getRightNode(), true);
+
+            // Evito que quede "+-"
+            String exp = getNodeExpression(leftNode, false);
+            if (!this.esSuma() || !TreeUtils.isNegative(this.getRightNode())){
+                exp+=this.getValue();
+            }
+            exp+=getNodeExpression(this.getRightNode(), true);
+
+            return exp;
         }
     }
 
@@ -341,13 +361,14 @@ public class TreeNode {
 
     public static TreeNode createPolynomialTerm(String x, TreeNode exponent, Integer coefficient) {
 
-        String coefficientStr = (coefficient !=null? coefficient.toString() : "");
+        String coefficientStr = (coefficient !=null && !coefficient.equals(1)? coefficient.toString() : "");
         return createOperator("^", new TreeNode(coefficientStr + x), exponent);
     }
 
     public static TreeNode createPolynomialTerm(String x, Integer exponent, Integer coefficient) {
         String exponentStr = (exponent==1? "":"^" + exponent.toString());
-        return new TreeNode(coefficient.toString() + x + exponentStr);
+        String coefficientStr = (coefficient==1? "":coefficient.toString());
+        return new TreeNode(coefficientStr + x + exponentStr);
     }
 
     public TreeNode getChild(int i) {

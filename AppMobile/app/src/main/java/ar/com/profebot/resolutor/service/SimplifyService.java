@@ -1300,7 +1300,7 @@ public class SimplifyService {
         if (zeroIndex >= 0) {
             TreeNode newNode = treeNode.cloneDeep();
             // remove the 0 node
-            treeNode.removeChild(zeroIndex);
+            newNode.removeChild(zeroIndex);
 
             // if there's only one operand left, there's nothing left to add it to,
             // so move it up the tree

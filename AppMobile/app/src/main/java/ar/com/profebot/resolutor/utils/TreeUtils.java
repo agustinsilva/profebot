@@ -51,7 +51,21 @@ public class TreeUtils {
 
     //Valida si el nodo es un polinomio.
     public static Boolean isPolynomialTerm(TreeNode treeNode){
-        return (treeNode!=null && isSymbol(treeNode, false) );
+        return (treeNode!=null && (isSymbol(treeNode, false) || isSymbolFraction(treeNode, false)) );
+    }
+
+    /**
+     * X / Cte
+     * @param node
+     * @param allowUnaryMinus
+     * @return
+     */
+    private static boolean isSymbolFraction(TreeNode node, Boolean allowUnaryMinus) {
+        if (!node.esDivision()){return false;}
+
+        if (!isSymbol(node.getLeftNode(), allowUnaryMinus)){return false;}
+
+        return isConstant(node.getRightNode());
     }
 
     public static Boolean isSymbol(TreeNode treeNode){
@@ -175,6 +189,14 @@ public class TreeUtils {
             }
             return constNode;
         }
+        else if (node.isUnaryMinus()) {
+            TreeNode arg = flattenOperands(node.getChild(0));
+            TreeNode flattenedNode = TreeUtils.negate(arg, true);
+            if (node.getChangeGroup() != null) {
+                flattenedNode.setChangeGroup(node.getChangeGroup());
+            }
+            return flattenedNode;
+        }
         else if (node.esOperador()) {
             if ("+-/*".contains(node.getValue())) {
                 String parentOp;
@@ -203,13 +225,6 @@ public class TreeUtils {
         } else if (node.isParenthesis()) {
             node.setChild(0, flattenOperands(node.getChild(0)));
             return node;
-        } else if (node.isUnaryMinus()) {
-            TreeNode arg = flattenOperands(node.getChild(0));
-            TreeNode flattenedNode = TreeUtils.negate(arg, true);
-            if (node.getChangeGroup() !=null) {
-                flattenedNode.setChangeGroup(node.getChangeGroup());
-            }
-            return flattenedNode;
         } else if (node.esRaiz()) {
             node.setChild(1, flattenOperands(node.getChild(1)));
             return node;
@@ -408,14 +423,20 @@ public class TreeUtils {
         TreeNode nextOperand = flattenOperands(node.getChild(1));
 
         // Un coeficiente puede ser constante o una fraccion de constantes.
-        if (isConstantOrConstantFraction(lastOperand)) {
+        if (isConstant(lastOperand)) {
             // Se reemplaza la constante por constante * simbolo.
-            /*operands.add(
-                    TreeNode.createOperator("*", lastOperand, nextOperand));*/
             TreeNode newOperand = (nextOperand.cloneDeep());
             newOperand.multiplyCoefficient(lastOperand.getValue());
             operands.add(newOperand);
 
+        } else if (isConstantFraction(lastOperand)) {
+
+            // Se reemplaza la constante/constante por (constante * simbolo) / constante.
+            TreeNode newOperand = (nextOperand.cloneDeep());
+            newOperand.multiplyCoefficient(lastOperand.getLeftNode().getValue());
+            newOperand = TreeNode.createOperator("/", newOperand, lastOperand.getRightNode().cloneDeep());
+
+            operands.add(newOperand);
         } else {
           //Ahora sabemos que no es termino polinomial y que es un operando separado.
             operands.add(lastOperand);
@@ -625,9 +646,9 @@ public class TreeUtils {
         if (node.esDivision()) {
             return node;
         }else if (allowUnaryMinus && node.isUnaryMinus()) {
-            //TODO Revisar si es asi el codigo
+            return TreeUtils.negate(getFraction(node.getContent(), allowUnaryMinus, allowParens));
         } else if (allowParens && node.isParenthesis()) {
-            return getFraction(node.getChild(0), allowUnaryMinus, allowParens);
+            return getFraction(node.getContent(), allowUnaryMinus, allowParens);
         }
 
         throw new Error("La expresion no es un nodo del tipo fraccion");

@@ -218,7 +218,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else {
             lastStep = estados.get(estados.size() - 1).getNewNode().toExpression();
         }
-        Assert.assertEquals("X * (X + 2)", lastStep);
+        Assert.assertEquals("X*(X+2)", lastStep);
     }
 
     @Test
@@ -234,7 +234,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else {
             lastStep = estados.get(estados.size() - 1).getNewNode().toExpression();
         }
-        Assert.assertEquals("(X + 2) * (X - 2)", lastStep);
+        Assert.assertEquals("(X+2)*(X-2)", lastStep);
     }
 
     @Test
@@ -266,7 +266,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else {
             lastStep = estados.get(estados.size() - 1).getNewNode().toExpression();
         }
-        Assert.assertEquals("(X + 1)^2", lastStep);
+        Assert.assertEquals("(X+1)^2", lastStep);
     }
 
     @Test
@@ -282,7 +282,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else {
             lastStep = estados.get(estados.size() - 1).getNewNode().toExpression();
         }
-        Assert.assertEquals("(X + 1) * (X + 2)", lastStep);
+        Assert.assertEquals("(X+1)*(X+2)", lastStep);
     }
 
     @Test
@@ -352,7 +352,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("X^2 + X^2", newExpression);
+        Assert.assertEquals("X^2+X^2", newExpression);
     }
 
     @Test
@@ -363,7 +363,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("X^2 + 2 - 3", newExpression);
+        Assert.assertEquals("X^2+2-3", newExpression);
     }
 
     @Test
@@ -374,7 +374,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("X^2 + 4", newExpression);
+        Assert.assertEquals("X^2+4", newExpression);
     }
 
     @Test
@@ -385,7 +385,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("-X^2 - 1", newExpression);
+        Assert.assertEquals("-X^2-1", newExpression);
     }
 
     @Test
@@ -396,7 +396,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("X * (X + 2)", newExpression);
+        Assert.assertEquals("X*(X+2)", newExpression);
     }
 
     @Test
@@ -407,7 +407,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("-X * (X + 2)", newExpression);
+        Assert.assertEquals("-X*(X+2)", newExpression);
     }
 
     @Test
@@ -418,7 +418,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("X * (X - 3)", newExpression);
+        Assert.assertEquals("X*(X-3)", newExpression);
     }
 
     @Test
@@ -429,7 +429,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("2X * (X + 2)", newExpression);
+        Assert.assertEquals("2X*(X+2)", newExpression);
     }
 
     @Test
@@ -440,7 +440,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("(X + 2) * (X - 2)", newExpression);
+        Assert.assertEquals("(X-2)*(X+2)", newExpression);
     }
 
     @Test
@@ -451,7 +451,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("-(X + 1) * (X - 1)", newExpression);
+        Assert.assertEquals("-(X+1)*(X-1)", newExpression);
     }
 
     @Test
@@ -462,7 +462,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("(2X + 3) * (2X - 3)", newExpression);
+        Assert.assertEquals("(2X-3)*(2X+3)", newExpression);
     }
 
     @Test
@@ -473,7 +473,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("4 * (X + 2) * (X - 2)", newExpression);
+        Assert.assertEquals("4*(X-2)*(X+2)", newExpression);
     }
 
     @Test
@@ -484,7 +484,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("-4 * (X + 2) * (X - 2)", newExpression);
+        Assert.assertEquals("-4*(X-2)*(X+2)", newExpression);
     }
 
     @Test
@@ -495,7 +495,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("(X + 1)^2", newExpression);
+        Assert.assertEquals("(X+1)^2", newExpression);
     }
 
     @Test
@@ -506,7 +506,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("(X - 1)^2", newExpression);
+        Assert.assertEquals("(X-1)^2", newExpression);
     }
 
     @Test
@@ -517,7 +517,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("-(X + 1)^2", newExpression);
+        Assert.assertEquals("-(X+1)^2", newExpression);
     }
 
     @Test
@@ -528,7 +528,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("(2X + 1)^2", newExpression);
+        Assert.assertEquals("(2X+1)^2", newExpression);
     }
 
     @Test
@@ -539,7 +539,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("3 * (2X + 1)^2", newExpression);
+        Assert.assertEquals("3*(2X+1)^2", newExpression);
     }
 
     @Test
@@ -550,7 +550,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("(X + 1) * (X + 2)", newExpression);
+        Assert.assertEquals("(X+1)*(X+2)", newExpression);
     }
 
     @Test
@@ -561,7 +561,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("(X - 1) * (X - 2)", newExpression);
+        Assert.assertEquals("(X-1)*(X-2)", newExpression);
     }
 
     @Test
@@ -572,7 +572,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("(X - 1) * (X + 2)", newExpression);
+        Assert.assertEquals("(X-1)*(X+2)", newExpression);
     }
 
     @Test
@@ -583,7 +583,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("(-(X + 1) * (X + 2)", newExpression);
+        Assert.assertEquals("-(X+1)*(X+2)", newExpression);
     }
 
     @Test
@@ -594,7 +594,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("(X + 1) * (2X + 3)", newExpression);
+        Assert.assertEquals("(X+1)*(2X+3)", newExpression);
     }
 
     @Test
@@ -605,7 +605,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("(2X + 1) * (X - 3)", newExpression);
+        Assert.assertEquals("(2X+1)*(X-3)", newExpression);
     }
 
     @Test
@@ -616,7 +616,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("(X - 1) * (2X - 3)", newExpression);
+        Assert.assertEquals("(X-1)*(2X-3)", newExpression);
     }
 
     @Test
@@ -627,7 +627,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("X^2 + 4X + 1", newExpression);
+        Assert.assertEquals("X^2+4X+1", newExpression);
     }
 
     @Test
@@ -638,7 +638,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("X^2 - 3X + 1", newExpression);
+        Assert.assertEquals("X^2-3X+1", newExpression);
     }
 
     @Test
@@ -650,11 +650,11 @@ public class ResolutorServiceTest extends ResolutorService {
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         List<NodeStatus> subpasos = estado.getSubsteps();
         ArrayList<String> expectedResults = new ArrayList<String>();
-        expectedResults.add("X^2 + X + 2X + 2");
-        expectedResults.add("(X^2 + X) + (2X + 2)");
-        expectedResults.add("X * (X + 1) + (2X + 2)");
-        expectedResults.add("X * (X + 1) + 2 * (X + 1)");
-        expectedResults.add("(X + 1) * (X + 2)");
+        expectedResults.add("X^2+X+2X+2");
+        expectedResults.add("(X^2+X)+(2X+2)");
+        expectedResults.add("X*(X+1)+(2X+2)");
+        expectedResults.add("X*(X+1)+2*(X+1)");
+        expectedResults.add("(X+1)*(X+2)");
         for (int i=0; i <subpasos.size(); i++){
             Assert.assertEquals(expectedResults.get(i), subpasos.get(i).getNewNode().toExpression());
         };
@@ -669,11 +669,11 @@ public class ResolutorServiceTest extends ResolutorService {
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         List<NodeStatus> subpasos = estado.getSubsteps();
         ArrayList<String> expectedResults = new ArrayList<String>();
-        expectedResults.add("X^2 - X - 2X + 2");
-        expectedResults.add("(X^2 - X) + (-2X + 2)");
-        expectedResults.add("X * (X - 1) + (-2X + 2)");
-        expectedResults.add("X * (X - 1) - 2 * (X - 1)");
-        expectedResults.add("(X - 1) * (X - 2)");
+        expectedResults.add("X^2-X-2X+2");
+        expectedResults.add("(X^2-X)+(-2X+2)");
+        expectedResults.add("X*(X-1)+(-2X+2)");
+        expectedResults.add("X*(X-1)-2*(X-1)");
+        expectedResults.add("(X-1)*(X-2)");
         for (int i=0; i <subpasos.size(); i++){
             Assert.assertEquals(expectedResults.get(i), subpasos.get(i).getNewNode().toExpression());
         };
@@ -688,11 +688,11 @@ public class ResolutorServiceTest extends ResolutorService {
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         List<NodeStatus> subpasos = estado.getSubsteps();
         ArrayList<String> expectedResults = new ArrayList<String>();
-        expectedResults.add("X^2 - X + 2X - 2");
-        expectedResults.add("(X^2 - X) + (2X - 2)");
-        expectedResults.add("X * (X - 1) + (2X - 2)");
-        expectedResults.add("X * (X - 1) + 2 * (X - 1)");
-        expectedResults.add("(X - 1) * (X + 2)");
+        expectedResults.add("X^2-X+2X-2");
+        expectedResults.add("(X^2-X)+(2X-2)");
+        expectedResults.add("X*(X-1)+(2X-2)");
+        expectedResults.add("X*(X-1)+2*(X-1)");
+        expectedResults.add("(X-1)*(X+2)");
         for (int i=0; i <subpasos.size(); i++){
             Assert.assertEquals(expectedResults.get(i), subpasos.get(i).getNewNode().toExpression());
         };
@@ -707,12 +707,12 @@ public class ResolutorServiceTest extends ResolutorService {
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         List<NodeStatus> subpasos = estado.getSubsteps();
         ArrayList<String> expectedResults = new ArrayList<String>();
-        expectedResults.add("-(X^2 + 3X + 2)");
-        expectedResults.add("-(X^2 + X + 2X + 2)");
-        expectedResults.add("-((X^2 + X) + (2X + 2))");
-        expectedResults.add("-(X * (X + 1) + (2X + 2))");
-        expectedResults.add("-(X * (X + 1) + 2 * (X + 1))");
-        expectedResults.add("-(X + 1) * (X + 2)");
+        expectedResults.add("-(X^2+3X+2)");
+        expectedResults.add("-(X^2+X+2X+2)");
+        expectedResults.add("-((X^2+X)+(2X+2))");
+        expectedResults.add("-(X*(X+1)+(2X+2))");
+        expectedResults.add("-(X*(X+1)+2*(X+1))");
+        expectedResults.add("-(X+1)*(X+2)");
         for (int i=0; i <subpasos.size(); i++){
             Assert.assertEquals(expectedResults.get(i), subpasos.get(i).getNewNode().toExpression());
         };
@@ -727,11 +727,11 @@ public class ResolutorServiceTest extends ResolutorService {
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         List<NodeStatus> subpasos = estado.getSubsteps();
         ArrayList<String> expectedResults = new ArrayList<String>();
-        expectedResults.add("2X^2 + 2X + 3X + 3");
-        expectedResults.add("(2X^2 + 2X) + (3X + 3)");
-        expectedResults.add("2X * (X + 1) + (3X + 3)");
-        expectedResults.add("2X * (X + 1) + 3 * (X + 1)");
-        expectedResults.add("(X + 1) * (2X + 3)");
+        expectedResults.add("2X^2+2X+3X+3");
+        expectedResults.add("(2X^2+2X)+(3X+3)");
+        expectedResults.add("2X*(X+1)+(3X+3)");
+        expectedResults.add("2X*(X+1)+3*(X+1)");
+        expectedResults.add("(X+1)*(2X+3)");
         for (int i=0; i <subpasos.size(); i++){
             Assert.assertEquals(expectedResults.get(i), subpasos.get(i).getNewNode().toExpression());
         };
@@ -746,11 +746,11 @@ public class ResolutorServiceTest extends ResolutorService {
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         List<NodeStatus> subpasos = estado.getSubsteps();
         ArrayList<String> expectedResults = new ArrayList<String>();
-        expectedResults.add("2X^2 + X - 6X - 3");
-        expectedResults.add("(2X^2 + X) + (-6X - 3)");
-        expectedResults.add("X * (2X + 1) + (-6X - 3)");
-        expectedResults.add("X * (2X + 1) - 3 * (2X + 1)");
-        expectedResults.add("(2X + 1) * (X - 3)");
+        expectedResults.add("2X^2+X-6X-3");
+        expectedResults.add("(2X^2+X)+(-6X-3)");
+        expectedResults.add("X*(2X+1)+(-6X-3)");
+        expectedResults.add("X*(2X+1)-3*(2X+1)");
+        expectedResults.add("(2X+1)*(X-3)");
         for (int i=0; i <subpasos.size(); i++){
             Assert.assertEquals(expectedResults.get(i), subpasos.get(i).getNewNode().toExpression());
         };
@@ -765,11 +765,11 @@ public class ResolutorServiceTest extends ResolutorService {
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         List<NodeStatus> subpasos = estado.getSubsteps();
         ArrayList<String> expectedResults = new ArrayList<String>();
-        expectedResults.add("2X^2 - 2X - 3X + 3");
-        expectedResults.add("(2X^2 - 2X) + (-3X + 3)");
-        expectedResults.add("2X * (X - 1) + (-3X + 3)");
-        expectedResults.add("2X * (X - 1) - 3 * (X - 1)");
-        expectedResults.add("(X - 1) * (2X - 3)");
+        expectedResults.add("2X^2-2X-3X+3");
+        expectedResults.add("(2X^2-2X)+(-3X+3)");
+        expectedResults.add("2X*(X-1)+(-3X+3)");
+        expectedResults.add("2X*(X-1)-3*(X-1)");
+        expectedResults.add("(X-1)*(2X-3)");
         for (int i=0; i <subpasos.size(); i++){
             Assert.assertEquals(expectedResults.get(i), subpasos.get(i).getNewNode().toExpression());
         };
