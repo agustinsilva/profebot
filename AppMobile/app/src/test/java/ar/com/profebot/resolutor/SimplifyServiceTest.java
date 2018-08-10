@@ -234,7 +234,8 @@ public class SimplifyServiceTest extends SimplifyService {
         String expression = "4 = 4";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.collectAndCombineSearch(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.collectAndCombineSearch(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
@@ -249,11 +250,281 @@ public class SimplifyServiceTest extends SimplifyService {
     }
 
     @Test
+    public void collectAndCombineSearch_ok3() throws InvalidExpressionException{
+        String expression = "10^3 * 10^2 = 10^5";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.collectAndCombineSearch(flattenedNode);
+        Assert.assertEquals("10^5",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void collectAndCombineSearch_ok4() throws InvalidExpressionException{
+        String expression = "2^4 * 2 * 2^4 * 2 = 2^10";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.collectAndCombineSearch(flattenedNode);
+        Assert.assertEquals("2^10",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void collectAndCombineSearch_ok5() throws InvalidExpressionException{
+        String expression = "2X + 4X + X = 7X";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.collectAndCombineSearch(flattenedNode);
+        Assert.assertEquals("7X",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void collectAndCombineSearch_ok6() throws InvalidExpressionException{
+        String expression = "X * X^2 * X = X^4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.collectAndCombineSearch(flattenedNode);
+        Assert.assertEquals("X^4",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void collectAndCombineSearch_ok7() throws InvalidExpressionException{
+        String expression = "3 * R(11) - 2 * R(11)= 1* R(11)";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.collectAndCombineSearch(flattenedNode);
+        Assert.assertEquals("1* R(11)",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void collectAndCombineSearch_ok8() throws InvalidExpressionException{
+        String expression = "3 * R(11) - 2 * R(11)= 1* R(11)";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.collectAndCombineSearch(flattenedNode);
+        Assert.assertEquals("1* R(11)",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void collectAndCombineSearch_ok9() throws InvalidExpressionException{
+        String expression = "10^2 * 10 = 10^3";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.collectAndCombineSearch(flattenedNode);
+
+        List<NodeStatus> subpasos = estado.getSubsteps();
+        ArrayList<String> expectedResults = new ArrayList<String>();
+        expectedResults.add("10^2 * 10^1");
+        expectedResults.add("10^(2 + 1)");
+        expectedResults.add("10^3");
+
+        for (int i=0; i <subpasos.size(); i++){
+            Assert.assertEquals(expectedResults.get(i),subpasos.get(i).getNewNode().toExpression());
+        };
+
+    }
+
+    @Test
+    public void collectAndCombineSearch_ok10() throws InvalidExpressionException{
+        String expression = "2 * 2^3 = 2^4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.collectAndCombineSearch(flattenedNode);
+
+        List<NodeStatus> subpasos = estado.getSubsteps();
+        ArrayList<String> expectedResults = new ArrayList<String>();
+        expectedResults.add("2^1 * 2^3");
+        expectedResults.add("2^(1 + 3)");
+        expectedResults.add("2^4");
+
+        for (int i=0; i <subpasos.size(); i++){
+            Assert.assertEquals(expectedResults.get(i),subpasos.get(i).getNewNode().toExpression());
+        };
+    }
+
+    @Test
+    public void collectAndCombineSearch_ok11() throws InvalidExpressionException{
+        String expression = "3^3 * 3 * 3 = 3^5";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.collectAndCombineSearch(flattenedNode);
+
+        List<NodeStatus> subpasos = estado.getSubsteps();
+        ArrayList<String> expectedResults = new ArrayList<String>();
+        expectedResults.add("3^3 * 3^1 * 3^1");
+        expectedResults.add("3^(3 + 1 + 1)");
+        expectedResults.add("3^5");
+
+        for (int i=0; i <subpasos.size(); i++){
+            Assert.assertEquals(expectedResults.get(i),subpasos.get(i).getNewNode().toExpression());
+        };
+    }
+
+    @Test
+    public void collectAndCombineSearch_ok12() throws InvalidExpressionException{
+        String expression = "R(X) + R(X) = 2 * R(X)";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.collectAndCombineSearch(flattenedNode);
+
+        List<NodeStatus> subpasos = estado.getSubsteps();
+        ArrayList<String> expectedResults = new ArrayList<String>();
+        expectedResults.add("1 * R(X) + 1 * R(X)");
+        expectedResults.add("(1 + 1) * R(X)");
+        expectedResults.add("2 * R(X)");
+
+        for (int i=0; i <subpasos.size(); i++){
+            Assert.assertEquals(expectedResults.get(i),subpasos.get(i).getNewNode().toExpression());
+        };
+    }
+
+    @Test
+    public void collectAndCombineSearch_ok13() throws InvalidExpressionException{
+        String expression = "4R(2)^2 + 7R(2)^2 + R(2)^2 = 12 * R(2)^2";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.collectAndCombineSearch(flattenedNode);
+
+        List<NodeStatus> subpasos = estado.getSubsteps();
+        ArrayList<String> expectedResults = new ArrayList<String>();
+        expectedResults.add("4 * R(2)^2 + 7 * R(2)^2 + 1 * R(2)^2");
+        expectedResults.add("(4 + 7 + 1) * R(2)^2");
+        expectedResults.add("12 * R(2)^2");
+
+        for (int i=0; i <subpasos.size(); i++){
+            Assert.assertEquals(expectedResults.get(i),subpasos.get(i).getNewNode().toExpression());
+        };
+    }
+
+    @Test
+    public void collectAndCombineSearch_ok14() throws InvalidExpressionException{
+        String expression = "10R(5X) - 2R(5X) = 8 * R(5X)";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.collectAndCombineSearch(flattenedNode);
+
+        List<NodeStatus> subpasos = estado.getSubsteps();
+        ArrayList<String> expectedResults = new ArrayList<String>();
+        expectedResults.add("(10 - 2) * R(5X)");
+        expectedResults.add("8 * R(5X)");
+
+        for (int i=0; i <subpasos.size(); i++){
+            Assert.assertEquals(expectedResults.get(i),subpasos.get(i).getNewNode().toExpression());
+        };
+    }
+
+    @Test
+    public void collectAndCombineSearch_ok15() throws InvalidExpressionException{
+        String expression = "X+X = 2X";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.collectAndCombineSearch(flattenedNode);
+
+        List<NodeStatus> subpasos = estado.getSubsteps();
+        ArrayList<String> expectedResults = new ArrayList<String>();
+        expectedResults.add("1X + 1X");
+        expectedResults.add("(1 + 1) * x");
+        expectedResults.add("2X");
+
+        for (int i=0; i <subpasos.size(); i++){
+            Assert.assertEquals(expectedResults.get(i),subpasos.get(i).getNewNode().toExpression());
+        };
+    }
+
+    @Test
+    public void collectAndCombineSearch_ok16() throws InvalidExpressionException{
+        String expression = "4X^2 + 7X^2 + X^2= 12X^2";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.collectAndCombineSearch(flattenedNode);
+
+        List<NodeStatus> subpasos = estado.getSubsteps();
+        ArrayList<String> expectedResults = new ArrayList<String>();
+        expectedResults.add("4X^2 + 7X^2 + 1X^2");
+        expectedResults.add("(4 + 7 + 1) * X^2");
+        expectedResults.add("12X^2");
+
+        for (int i=0; i <subpasos.size(); i++){
+            Assert.assertEquals(expectedResults.get(i),subpasos.get(i).getNewNode().toExpression());
+        };
+    }
+
+    @Test
+    public void collectAndCombineSearch_ok17() throws InvalidExpressionException{
+        String expression = "X^2 * X * X = X^4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.collectAndCombineSearch(flattenedNode);
+
+        List<NodeStatus> subpasos = estado.getSubsteps();
+        ArrayList<String> expectedResults = new ArrayList<String>();
+        expectedResults.add("X^2 * X^1 * X^1");
+        expectedResults.add("X^(2 + 1 + 1)");
+        expectedResults.add("X^4");
+
+        for (int i=0; i <subpasos.size(); i++){
+            Assert.assertEquals(expectedResults.get(i),subpasos.get(i).getNewNode().toExpression());
+        };
+    }
+
+    @Test
+    public void collectAndCombineSearch_ok18() throws InvalidExpressionException{
+        String expression = "X * X^3 = X^4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.collectAndCombineSearch(flattenedNode);
+
+        List<NodeStatus> subpasos = estado.getSubsteps();
+        ArrayList<String> expectedResults = new ArrayList<String>();
+        expectedResults.add("X^1 * X^3");
+        expectedResults.add("X^(1 + 3)");
+        expectedResults.add("X^4");
+
+        for (int i=0; i <subpasos.size(); i++){
+            Assert.assertEquals(expectedResults.get(i),subpasos.get(i).getNewNode().toExpression());
+        };
+    }
+
+    @Test
+    public void collectAndCombineSearch_ok19() throws InvalidExpressionException{
+        String expression = "2X * X^2 * 5X = X^4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.collectAndCombineSearch(flattenedNode);
+
+        List<NodeStatus> subpasos = estado.getSubsteps();
+        ArrayList<String> expectedResults = new ArrayList<String>();
+        expectedResults.add("(2 * 5) * (X * X^2 * X)");
+        expectedResults.add("10 * (X * X^2 * X)");
+        expectedResults.add("10X^4");
+
+        for (int i=0; i <subpasos.size(); i++){
+            Assert.assertEquals(expectedResults.get(i),subpasos.get(i).getNewNode().toExpression());
+        };
+    }
+
+    @Test
     public void distributeSearch_ok1() throws InvalidExpressionException {
         String expression = "4 = 4";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.distributeSearch(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.distributeSearch(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
     }
 
@@ -262,8 +533,224 @@ public class SimplifyServiceTest extends SimplifyService {
         String expression = "-(4*9*x^2) = 4";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
-        NodeStatus estado = super.distributeSearch(node);
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.distributeSearch(flattenedNode);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.DISTRIBUTE_NEGATIVE_ONE);
+    }
+
+    @Test
+    public void distributeSearch_ok3() throws InvalidExpressionException {
+        String expression = "-(X+3) = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.distributeSearch(flattenedNode);
+        Assert.assertEquals("(-X - 3)",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void distributeSearch_ok4() throws InvalidExpressionException {
+        String expression = "-(X - 3) = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.distributeSearch(flattenedNode);
+        Assert.assertEquals("(-X + 3)",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void distributeSearch_ok5() throws InvalidExpressionException {
+        String expression = "-(-X^2 + 3X^6) = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.distributeSearch(flattenedNode);
+        Assert.assertEquals("(X^2 - 3X^6)",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void distributeSearch_ok6() throws InvalidExpressionException {
+        String expression = "-(X*3) = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.distributeSearch(flattenedNode);
+        Assert.assertEquals("(-X * 3)",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void distributeSearch_ok7() throws InvalidExpressionException {
+        String expression = "-(-X * 3) = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.distributeSearch(flattenedNode);
+        Assert.assertEquals("(X * 3)",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void distributeSearch_ok8() throws InvalidExpressionException {
+        String expression = "-(-X^2 * 3X^6) = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.distributeSearch(flattenedNode);
+        Assert.assertEquals("(X^2 * 3X^6)",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void distributeSearch_ok9() throws InvalidExpressionException {
+        String expression = "(5+X)*(X+3)= 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.distributeSearch(flattenedNode);
+        List<NodeStatus> subpasos = estado.getSubsteps();
+        ArrayList<String> expectedResults = new ArrayList<String>();
+        expectedResults.add("(5 * (X + 3) + X * (X + 3))");
+        expectedResults.add("((5X + 15) + (X^2 + 3X))");
+
+        for (int i=0; i <subpasos.size(); i++){
+            Assert.assertEquals(expectedResults.get(i),subpasos.get(i).getNewNode().toExpression());
+        };
+    }
+
+    @Test
+    public void distributeSearch_ok10() throws InvalidExpressionException {
+        String expression = "-2X^2 * (3X - 4) = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.distributeSearch(flattenedNode);
+        List<NodeStatus> subpasos = estado.getSubsteps();
+        ArrayList<String> expectedResults = new ArrayList<String>();
+        expectedResults.add("(-2X^2 * 3X - 2X^2 * -4)");
+        expectedResults.add("(-6X^3 + 8X^2)");
+
+        for (int i=0; i <subpasos.size(); i++){
+            Assert.assertEquals(expectedResults.get(i),subpasos.get(i).getNewNode().toExpression());
+        };
+    }
+
+    @Test
+    public void distributeSearch_ok11() throws InvalidExpressionException {
+        String expression = "(3 / X^2 + X / (X^2 + 3)) * (X^2 + 3) = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.distributeSearch(flattenedNode);
+        Assert.assertEquals("((3 * (X^2 + 3)) / (X^2) + (X * (X^2 + 3)) / (X^2 + 3))",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void distributeSearch_ok12() throws InvalidExpressionException {
+        String expression = "(3 / X^2 + X / (X^2 + 3)) * (5 / X + X^5) = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.distributeSearch(flattenedNode);
+        Assert.assertEquals("((3 / (X^2) * 5 / X + 3 / (X^2) * X^5) + (X / (X^2 + 3) * 5 / X + X / (X^2 + 3) * X^5))",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void distributeSearch_ok13() throws InvalidExpressionException {
+        String expression = "(2 / X +  3X^2) * (X^3 + 1) = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.distributeSearch(flattenedNode);
+        List<NodeStatus> subpasos = estado.getSubsteps();
+        ArrayList<String> expectedResults = new ArrayList<String>();
+        expectedResults.add("((2 * (X^3 + 1)) / X + 3X^2 * (X^3 + 1))");
+        expectedResults.add("((2 * (X^3 + 1)) / X + (3X^5 + 3X^2))");
+
+        for (int i=0; i <subpasos.size(); i++){
+            Assert.assertEquals(expectedResults.get(i),subpasos.get(i).getNewNode().toExpression());
+        };
+    }
+
+    @Test
+    public void distributeSearch_ok14() throws InvalidExpressionException {
+        String expression = "(2X + X^2) * (1 / (X^2 -4) + 4X^2) = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.distributeSearch(flattenedNode);
+        List<NodeStatus> subpasos = estado.getSubsteps();
+        ArrayList<String> expectedResults = new ArrayList<String>();
+        expectedResults.add("((1 * (2X + X^2)) / (X^2 - 4) + 4X^2 * (2X + X^2))");
+        expectedResults.add("((1 * (2X + X^2)) / (X^2 - 4) + (8X^3 + 4X^4))");
+
+        for (int i=0; i <subpasos.size(); i++){
+            Assert.assertEquals(expectedResults.get(i),subpasos.get(i).getNewNode().toExpression());
+        };
+    }
+
+    @Test
+    public void distributeSearch_ok15() throws InvalidExpressionException {
+        String expression = "(2X + X^2) * (3X^2 / (X^2 -4) + 4X^2) = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.distributeSearch(flattenedNode);
+        List<NodeStatus> subpasos = estado.getSubsteps();
+        ArrayList<String> expectedResults = new ArrayList<String>();
+        expectedResults.add("((3X^2 * (2X + x^2)) / (X^2 - 4) + 4X^2 * (2X + X^2))");
+        expectedResults.add("((3X^2 * (2X + X^2)) / (X^2 - 4) + (8X^3 + 4X^4))");
+
+        for (int i=0; i <subpasos.size(); i++){
+            Assert.assertEquals(expectedResults.get(i),subpasos.get(i).getNewNode().toExpression());
+        };
+    }
+
+    @Test
+    public void distributeSearch_ok16() throws InvalidExpressionException {
+        String expression = "(2X + 3)^2 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.distributeSearch(flattenedNode);
+        Assert.assertEquals("(2X + 3) * (2X + 3)",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void distributeSearch_ok17() throws InvalidExpressionException {
+        String expression = "(X + 3 + 4)^2 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.distributeSearch(flattenedNode);
+        Assert.assertEquals("(X + 3 + 4) * (X + 3 + 4)",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void distributeSearch_ok18() throws InvalidExpressionException {
+        String expression = "X + 2 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.distributeSearch(flattenedNode);
+        Assert.assertEquals("X + 2",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void distributeSearch_ok19() throws InvalidExpressionException {
+        String expression = "(X + 2)^-1 = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.distributeSearch(flattenedNode);
+        Assert.assertEquals("(X + 2)^-1",estado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void distributeSearch_ok20() throws InvalidExpressionException {
+        String expression = "(X + 1)^(1/2) = 4";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus estado = super.distributeSearch(flattenedNode);
+        Assert.assertEquals("(X + 1)^(1/2)",estado.getNewNode().toExpression());
     }
 
     @Test
