@@ -3062,7 +3062,7 @@ public class SimplifyService {
      * @param treeNode Nodo a evaluar
      * @return El estado de la simplificacion
      */
-    private NodeStatus divideByGCD(TreeNode treeNode){
+    protected NodeStatus divideByGCD(TreeNode treeNode){
 
         if (!treeNode.esOperador() || !treeNode.esDivision()){
             return NodeStatus.noChange(treeNode);
