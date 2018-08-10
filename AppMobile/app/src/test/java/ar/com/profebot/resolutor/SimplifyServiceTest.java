@@ -2095,4 +2095,214 @@ public class SimplifyServiceTest extends SimplifyService {
         };
 
     }
+
+    @Test
+    public void canCollectLikeTerms_ok1() throws InvalidExpressionException {
+        String expression = "2+2 = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        boolean resultado = super.canCollectLikeTerms(flattenedNode);
+        Assert.assertFalse(resultado);
+    }
+
+    @Test
+    public void canCollectLikeTerms_ok2() throws InvalidExpressionException {
+        String expression = "X^2+X^2 = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        boolean resultado = super.canCollectLikeTerms(flattenedNode);
+        Assert.assertFalse(resultado);
+    }
+
+    @Test
+    public void canCollectLikeTerms_ok3() throws InvalidExpressionException {
+        String expression = "X + 2 = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        boolean resultado = super.canCollectLikeTerms(flattenedNode);
+        Assert.assertFalse(resultado);
+    }
+
+    @Test
+    public void canCollectLikeTerms_ok4() throws InvalidExpressionException {
+        String expression = "(X+2+X) = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        boolean resultado = super.canCollectLikeTerms(flattenedNode);
+        Assert.assertFalse(resultado);
+    }
+
+    @Test
+    public void canCollectLikeTerms_ok5() throws InvalidExpressionException {
+        String expression = "X+2+X = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        boolean resultado = super.canCollectLikeTerms(flattenedNode);
+        Assert.assertTrue(resultado);
+    }
+
+    @Test
+    public void canCollectLikeTerms_ok6() throws InvalidExpressionException {
+        String expression = "X^2 + 5 + X + X^2 = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        boolean resultado = super.canCollectLikeTerms(flattenedNode);
+        Assert.assertTrue(resultado);
+    }
+
+    @Test
+    public void canCollectLikeTerms_ok7() throws InvalidExpressionException {
+        String expression = "R(2) + R(2) = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        boolean resultado = super.canCollectLikeTerms(flattenedNode);
+        Assert.assertFalse(resultado);
+    }
+
+    @Test
+    public void canCollectLikeTerms_ok8() throws InvalidExpressionException {
+        String expression = "2*2 = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        boolean resultado = super.canCollectLikeTerms(flattenedNode);
+        Assert.assertFalse(resultado);
+    }
+
+    @Test
+    public void canCollectLikeTerms_ok9() throws InvalidExpressionException {
+        String expression = "X^2 * 2X^2 = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        boolean resultado = super.canCollectLikeTerms(flattenedNode);
+        Assert.assertTrue(resultado);
+    }
+
+    @Test
+    public void canCollectLikeTerms_ok10() throws InvalidExpressionException {
+        String expression = "X * 2 = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        boolean resultado = super.canCollectLikeTerms(flattenedNode);
+        Assert.assertFalse(resultado);
+    }
+
+    @Test
+    public void collectLikeTerms_ok1() throws InvalidExpressionException {
+        String expression = "2+X+7 = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus resultado = super.collectLikeTerms(flattenedNode);
+        Assert.assertEquals("X + (2 + 7)",resultado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void collectLikeTerms_ok2() throws InvalidExpressionException {
+        String expression = "X + 4 + X + 5 = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus resultado = super.collectLikeTerms(flattenedNode);
+        Assert.assertEquals("(X + X) + (4 + 5)",resultado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void collectLikeTerms_ok3() throws InvalidExpressionException {
+        String expression = "R(2) + 100 + R(2) = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus resultado = super.collectLikeTerms(flattenedNode);
+        Assert.assertEquals("(R(2) + R(2)) + 100",resultado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void collectLikeTerms_ok4() throws InvalidExpressionException {
+        String expression = "X^2 + X + X^2 + X = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus resultado = super.collectLikeTerms(flattenedNode);
+        Assert.assertEquals("(X^2 + X^2) + (X + X)",resultado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void collectLikeTerms_ok5() throws InvalidExpressionException {
+        String expression = "X^2 + 5 + X^2 + 5 = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus resultado = super.collectLikeTerms(flattenedNode);
+        Assert.assertEquals("(X^2 + X^2) + (5 + 5)",resultado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void collectLikeTerms_ok6() throws InvalidExpressionException {
+        String expression = "2X^2 + X + X^2 + 3X  = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus resultado = super.collectLikeTerms(flattenedNode);
+        Assert.assertEquals("(2X^2 + X^2) + (X + 3X)",resultado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void collectLikeTerms_ok7() throws InvalidExpressionException {
+        String expression = "R(2)^3 + R(2)^3 - 6X  = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus resultado = super.collectLikeTerms(flattenedNode);
+        Assert.assertEquals("(R(2)^3 + R(2)^3) - 6X",resultado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void collectLikeTerms_ok8() throws InvalidExpressionException {
+        String expression = "4X + 7 * R(11) - X - 2 * R(11)  = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus resultado = super.collectLikeTerms(flattenedNode);
+        Assert.assertEquals("(7 * R(11) - 2 * R(11)) + (4X - X)",resultado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void collectLikeTerms_ok9() throws InvalidExpressionException {
+        String expression = "X^2 * 5 * X * 9 = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus resultado = super.collectLikeTerms(flattenedNode);
+        Assert.assertEquals("(5 * 9) * (X^2 * X)",resultado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void collectLikeTerms_ok10() throws InvalidExpressionException {
+        String expression = "5X^2 * -4X * 9 = 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus resultado = super.collectLikeTerms(flattenedNode);
+        Assert.assertEquals("(5 * -4 * 9) * (X^2 * X)",resultado.getNewNode().toExpression());
+    }
+
+    @Test
+    public void collectLikeTerms_ok11() throws InvalidExpressionException {
+        String expression = "5X^2 * -X * 9= 1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        TreeNode node = tree.getRootNode().getLeftNode();
+        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
+        NodeStatus resultado = super.collectLikeTerms(flattenedNode);
+        Assert.assertEquals("(5 * -1 * 9) * (X^2 * X)",resultado.getNewNode().toExpression());
+    }
 }

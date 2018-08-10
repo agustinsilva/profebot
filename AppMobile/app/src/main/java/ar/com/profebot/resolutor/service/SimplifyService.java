@@ -357,7 +357,7 @@ public class SimplifyService {
                 node, newNode, substeps);
     }
 
-    private NodeStatus collectLikeTerms(TreeNode node) {
+    protected NodeStatus collectLikeTerms(TreeNode node) {
         if (!canCollectLikeTerms(node)) {
             return NodeStatus.noChange(node);
         }
