@@ -2,9 +2,12 @@ package ar.com.profebot.intelligent.module;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.profebot.activities.R;
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +16,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 public class IAModuleClient extends AsyncTask<String, Void, Void> {
 
@@ -71,13 +77,8 @@ public class IAModuleClient extends AsyncTask<String, Void, Void> {
                     }
                     bufferedReader.close();
                     Log.i("HTTP Client", "Received String : " + sb.toString());
-                    //return received string
-                    /*context.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            context.updateUI(sb.toString());
-                        }
-                    });*/
+                    // Save received string
+                    saveEquationsFromIAModule(sb.toString().split(";"), context);
             }
         } catch (MalformedURLException ex) {
             Log.e("HTTP Client", "Error in http connection" + ex.toString());
@@ -95,5 +96,35 @@ public class IAModuleClient extends AsyncTask<String, Void, Void> {
             }
         }
         return null;
+    }
+
+    private void saveEquationsFromIAModule(String[] equations, Context context) {
+        //Get equations from memory
+        String pendingExercisesJson = PreferenceManager.getDefaultSharedPreferences(context).getString("pendingExercises","");
+        JSONObject equationsJsonToStore = new JSONObject();
+        if (!"".equals(pendingExercisesJson)){
+            try{
+                equationsJsonToStore = new JSONObject(pendingExercisesJson);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try{
+            JSONObject equationsJson = new JSONObject(equations.toString());
+            String equationStr = equationsJson.getString("equations");
+            List<String> equationItems = Arrays.asList(equationStr.split("\\s*;\\s*"));
+            for (Iterator<String> equationString = equationItems.iterator(); equationString.hasNext();) {
+                JSONObject pnObj = new JSONObject();
+                pnObj.put("equation", equationString.next());
+                pnObj.put("difficulty", "Facil");
+                pnObj.put("subject", "Ecuacion simple");
+                equationsJsonToStore.accumulate("pendingExercises", pnObj);
+            }
+            //Save equations in memory
+            PreferenceManager.getDefaultSharedPreferences(context).edit()
+                    .putString("pendingExercises",equationsJsonToStore.toString()).apply();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

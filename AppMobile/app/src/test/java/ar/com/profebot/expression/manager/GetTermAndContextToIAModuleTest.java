@@ -33,6 +33,11 @@ public class GetTermAndContextToIAModuleTest {
         Assert.assertEquals("2+2(x+3)+2", result.get(1));
         Assert.assertEquals("2+2(x+3)+2-3", result.get(2));
 
+        result = ExpressionsManager.getTermAndContextFromReduction("3+x>2-2(x-3)-2", "x>2-2(x-3)-2-3");
+        Assert.assertEquals(">", result.get(0));
+        Assert.assertEquals("2-2(x-3)-2", result.get(1));
+        Assert.assertEquals("2-2(x-3)-2-3", result.get(2));
+
         result = ExpressionsManager.getTermAndContextFromReduction("3+x>2+2(x+3)+2", "x>2+2(x+3)+2-3");
         Assert.assertEquals(">", result.get(0));
         Assert.assertEquals("2+2(x+3)+2", result.get(1));
@@ -92,5 +97,10 @@ public class GetTermAndContextToIAModuleTest {
         Assert.assertEquals("=", result.get(0));
         Assert.assertEquals("2(x+1)", result.get(1));
         Assert.assertEquals("2(x+1)+3", result.get(2));
+
+        result = ExpressionsManager.getTermAndContextFromReduction("2(-x-1)-3=0", "-2x-2-3=0");
+        Assert.assertEquals("=", result.get(0));
+        Assert.assertEquals("2(-x-1)", result.get(1));
+        Assert.assertEquals("2(-x-1)-3", result.get(2));
     }
 }

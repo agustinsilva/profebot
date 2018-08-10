@@ -101,7 +101,6 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
                         }else{
                             nextStep.setVisibility(View.GONE);
                         }
-                        //SolveEquationActivity.recyclerView.scrollToPosition(currentMultipleChoiceSteps.size()-1);
                     }
                 });
             }
