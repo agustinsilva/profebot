@@ -334,4 +334,9 @@ public class ExpressionsManager {
     private static String longestEquationMember(List<String> baseMembers){
          return baseMembers.get(0).length() >= baseMembers.get(1).length() ? baseMembers.get(0) : baseMembers.get(1);
     }
+
+    public static Boolean isQuadraticExpression(String expression){
+        return expression.replace("X", "x")
+                .matches(".*(\\(.*x.*\\))\\*(\\(.*x.*\\)).*|.*x\\*(\\(.*x.*\\)).*|.*(\\(.*x.*\\))\\*x.*|.*x\\*x.*|.*x\\^2.*|.*(\\(.*x.*\\))\\^2.*");
+    }
 }
