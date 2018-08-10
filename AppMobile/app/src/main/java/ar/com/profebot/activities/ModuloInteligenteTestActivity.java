@@ -2,17 +2,10 @@ package ar.com.profebot.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
 import com.profebot.activities.R;
-
-import org.json.JSONObject;
-
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 
 import ar.com.profebot.intelligent.module.IAModuleClient;
 import ar.com.profebot.service.ExpressionsManager;
@@ -51,35 +44,5 @@ public class ModuloInteligenteTestActivity extends GlobalActivity{
         ((TextView) findViewById(R.id.ecuacion3)).setText(equations[2]);
 
         //saveEquationsFromIAModule(equations);
-    }
-
-    private void saveEquationsFromIAModule(String[] equations) {
-        //Get equations from memory
-        String pendingExercisesJson = PreferenceManager.getDefaultSharedPreferences(this).getString("pendingExercises","");
-        JSONObject equationsJsonToStore = new JSONObject();
-        if (pendingExercisesJson != ""){
-            try{
-                equationsJsonToStore = new JSONObject(pendingExercisesJson);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        try{
-            JSONObject equationsJson = new JSONObject(equations.toString());
-            String equationStr = equationsJson.getString("equations");
-            List<String> equationItems = Arrays.asList(equationStr.split("\\s*;\\s*"));
-            for (Iterator<String> equationString = equationItems.iterator(); equationString.hasNext();) {
-                JSONObject pnObj = new JSONObject();
-                pnObj.put("equation", equationString.next());
-                pnObj.put("difficulty", "Facil");
-                pnObj.put("subject", "Ecuacion simple");
-                equationsJsonToStore.accumulate("pendingExercises", pnObj);
-            }
-            //Save equations in memory
-            PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).edit()
-                    .putString("pendingExercises",equationsJsonToStore.toString()).apply();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }
