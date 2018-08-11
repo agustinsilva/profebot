@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/main_menu_id"
-        android:icon="@drawable/dropdown_menu"
+        android:icon="@drawable/more_exercises"
         android:title="main_menu_dropdown"
         app:showAsAction="ifRoom|withText" >
         <menu>
