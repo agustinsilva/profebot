@@ -13,15 +13,18 @@ import com.profebot.activities.R;
 import java.util.List;
 
 import ar.com.profebot.Models.PendingExercise;
+import ar.com.profebot.activities.OnItemClickListener;
 
 public class PendingExerciseAdapter extends RecyclerView.Adapter<PendingExerciseAdapter.ViewHolder>{
 
     private List<PendingExercise> listExercise;
     private Context context;
+    private OnItemClickListener listener;
 
-    public PendingExerciseAdapter(List<PendingExercise> pendingExercises, Context context){
+    public PendingExerciseAdapter(List<PendingExercise> pendingExercises, Context context, OnItemClickListener listener){
         this.listExercise = pendingExercises;
         this.context = context;
+        this.listener = listener;
     }
 
     @Override
@@ -33,10 +36,12 @@ public class PendingExerciseAdapter extends RecyclerView.Adapter<PendingExercise
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String[] equation = listExercise.get(position).getHead().split("=");
+        PendingExercise pendingExercise = listExercise.get(position);
+        String[] equation = pendingExercise.getHead().split("=");
         holder.exerciseNumber.setText("Ejercicio " + (position  + 1));
         holder.description.setText(this.getDescription(equation));
         holder.difficulty.setText(this.getDifficulty(equation));
+        holder.bind(pendingExercise, listener);
     }
 
     private String getDifficulty(String[] equation){
@@ -71,6 +76,15 @@ public class PendingExerciseAdapter extends RecyclerView.Adapter<PendingExercise
             exerciseNumber = (TextView) itemView.findViewById(R.id.exercise_number_id);
             description = (TextView) itemView.findViewById(R.id.description_id);
             difficulty = (TextView) itemView.findViewById(R.id.difficulty_id);
+        }
+
+        public void bind(PendingExercise pendingExercise, OnItemClickListener onItemClickListener){
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onItemClick(pendingExercise);
+                }
+            });
         }
     }
 }
