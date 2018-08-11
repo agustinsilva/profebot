@@ -682,7 +682,7 @@ public class SimplifyService {
     // e.g. 2*(3+x) or (4+x^2+x^3)*(x+3)
     // Returns a Node.Status object with substeps
     private NodeStatus distributeAndSimplifyMultiplication(TreeNode node) {
-        if (!node.esOperador() || node.esProducto()) {
+        if (!node.esOperador() || !node.esProducto()) {
             return NodeStatus.noChange(node);
         }
 
@@ -760,29 +760,30 @@ public class SimplifyService {
     private TreeNode distributeTwoNodes(TreeNode firstNode, TreeNode secondNode) {
         // lists of terms we'll be multiplying together from each node
         List<TreeNode> firstArgs, secondArgs;
-        if (isParenthesisOfAddition(firstNode)) {
+        if (isParenthesisOfAddition(firstNode) && firstNode.isParenthesis()) {
             firstArgs = firstNode.getChild(0).getArgs();
         } else {
-            firstArgs =  Collections.singletonList(firstNode);
+            firstArgs =  new ArrayList<>();
+            firstArgs.add(firstNode);
         }
 
-        if (isParenthesisOfAddition(secondNode)) {
+        if (isParenthesisOfAddition(secondNode) && secondNode.isParenthesis()) {
             secondArgs = secondNode.getChild(0).getArgs();
-        }
-        else {
-            secondArgs = Collections.singletonList(secondNode);
+        }else {
+            secondArgs = new ArrayList<>();
+            secondArgs.add(secondNode);
         }
         // the new operands under addition, now products of terms
         List<TreeNode> newArgs = new ArrayList<>();
 
         int numFractions = 0;
         for(TreeNode node: firstArgs){
-            if (node.esDivision()){
+            if (node!= null &&  node.esDivision()){
                 numFractions++;
             }
         }
         for(TreeNode node: secondArgs){
-            if (node.esDivision()){
+            if (node!= null && node.esDivision()){
                 numFractions++;
             }
         }
@@ -912,11 +913,7 @@ public class SimplifyService {
 
     // returns true if `node` is of the type (node + node + ...)
     private boolean isParenthesisOfAddition(TreeNode node) {
-        if (!node.isParenthesis()) {
-            return false;
-        }
-        TreeNode content = node.getChild(0);
-        return content.esSuma();
+        return ((node.isParenthesis() && node.getContent().esSuma()) || node.esSuma());
     }
 
     // Expand a power node with a non-constant base and a positive exponent > 1

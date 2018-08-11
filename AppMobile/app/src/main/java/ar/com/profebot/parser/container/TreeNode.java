@@ -41,10 +41,12 @@ public class TreeNode {
         if(this.getRightNode() != null) {
             node.setRightNode(this.getRightNode().clone());
         }
-        List<TreeNode> otrosArgs = this.args.subList(2,this.args.size());
-        if(this.getRightNode() != null && this.getLeftNode() != null) {
-            for (TreeNode child : otrosArgs) {
-                node.addChild(child.clone());
+        if ( this.args.size()>2) {
+            List<TreeNode> otrosArgs = this.args.subList(2, this.args.size());
+            if (this.getRightNode() != null && this.getLeftNode() != null) {
+                for (TreeNode child : otrosArgs) {
+                    node.addChild(child.clone());
+                }
             }
         }
         return node;

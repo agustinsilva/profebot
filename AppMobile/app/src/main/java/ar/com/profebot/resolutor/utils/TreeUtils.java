@@ -714,8 +714,10 @@ public class TreeUtils {
         if (node.esOperador()) {
 
             for(TreeNode child:  node.getArgs() ){
-                if (!resolvesToConstant(child)){
-                    return false;
+                if (child!= null) {
+                    if (!resolvesToConstant(child)) {
+                        return false;
+                    }
                 }
             }
 
