@@ -37,27 +37,11 @@ public class PendingExerciseAdapter extends RecyclerView.Adapter<PendingExercise
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         PendingExercise pendingExercise = listExercise.get(position);
-        String[] equation = pendingExercise.getHead().split("=");
-        holder.exerciseNumber.setText("Ejercicio " + (position  + 1));
-        holder.description.setText(this.getDescription(equation));
-        holder.difficulty.setText(this.getDifficulty(equation));
+        pendingExercise.setPosition(position);
+        holder.exerciseNumber.setText(pendingExercise.getExerciseId());
+        holder.description.setText(pendingExercise.getDescription());
+        holder.difficulty.setText(pendingExercise.getDifficulty());
         holder.bind(pendingExercise, listener);
-    }
-
-    private String getDifficulty(String[] equation){
-        if(equation[1].length() == 1){
-            if(equation[0].length() <= 12){
-                return "Facil";
-            }else{
-                return "Intermedio";
-            }
-        }
-
-        return "Difícil";
-    }
-
-    private String getDescription(String[] equation){
-        return ExpressionsManager.isQuadraticExpression(equation[0]) && ExpressionsManager.isQuadraticExpression(equation[1]) ? "Ecuación cuadrática" : "Ecuación lineal";
     }
 
     @Override

@@ -52,10 +52,22 @@ public class ExpressionsManager {
                 .replaceAll("X", "x");
     }
 
+    public static String getEquationAsInfix(String infixEquation){
+        return infixEquation
+                .replaceAll("R", "sqrt")
+                .replaceAll("X", "x");
+    }
+
     public static String getEquationAsLatex() {
         String infixEquation = getEquationAsInfix();
         String[] expressions = infixEquation.split("="); // TODO: se necesita el rool parametrizable
         return FormulaParser.parseToLatex(expressions[0]) + "=" + FormulaParser.parseToLatex(expressions[1]);
+    }
+
+    public static String getEquationAsLatex(String infixEquation) {
+        String root = getRootOfEquation(infixEquation);
+        String[] expressions = getEquationAsInfix(infixEquation).split(root);
+        return FormulaParser.parseToLatex(expressions[0]) + root + FormulaParser.parseToLatex(expressions[1]);
     }
 
     public static String getEquationAsString() {
@@ -263,8 +275,12 @@ public class ExpressionsManager {
         client.execute();
     }
 
+    public static String getRootOfEquation(String infixEquation){
+         return infixEquation.contains("=") ? "=" : (infixEquation.contains(">") ? ">" : "<");
+    }
+
     public static List<String> getTermAndContextFromReduction(String equationBase, String newEquationBase){
-        String root = equationBase.contains("=") ? "=" : (equationBase.contains(">") ? ">" : "<");
+        String root = getRootOfEquation(equationBase);
         List<String> equationBaseMembers = Arrays.asList(equationBase.split(root));
         List<String> newEquationBaseMembers = Arrays.asList(newEquationBase.split(root));
         List<String> result = new ArrayList<>();

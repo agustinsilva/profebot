@@ -46,9 +46,9 @@
                         <TextView
                             android:id="@+id/description_id"
                             android:layout_width="0dp"
-                            android:layout_weight="48"
+                            android:layout_weight="58"
                             android:layout_height="match_parent"
-                            android:text="Ecuación lineal"
+                            android:text="Ecuación cuadrática"
                             android:textSize="15dp"
                             android:layout_marginStart="7dp"/>
 
@@ -63,9 +63,9 @@
                         <TextView
                             android:id="@+id/difficulty_id"
                             android:layout_width="0dp"
-                            android:layout_weight="48"
+                            android:layout_weight="38"
                             android:layout_height="match_parent"
-                            android:text="Dificil"
+                            android:text="Intermedio"
                             android:textSize="15dp"
                             android:layout_marginStart="7dp"/>
                     </LinearLayout>

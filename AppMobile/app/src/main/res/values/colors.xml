@@ -11,4 +11,6 @@
     <color name="colorGreyText">#ADADAD</color>
     <color name="black_overlay">#66000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="colorBlueBack">#44BCF1</color>
+    <color name="colorGreenSolve">#59AD00</color>
 </resources>

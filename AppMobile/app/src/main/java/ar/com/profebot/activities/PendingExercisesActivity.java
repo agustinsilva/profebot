@@ -13,6 +13,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.profebot.activities.R;
 
@@ -27,6 +30,7 @@ import java.util.TimerTask;
 import ar.com.profebot.Models.PendingExercise;
 import ar.com.profebot.service.ExpressionsManager;
 import ar.com.profebot.service.PendingExerciseAdapter;
+import io.github.kexanie.library.MathView;
 
 public class PendingExercisesActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -78,8 +82,7 @@ public class PendingExercisesActivity extends AppCompatActivity {
 //         recyclerView.setAdapter(adapter);
     }
 
-    private void loadRecyclerViewData()
-    {
+    private void loadRecyclerViewData() {
         //Codigo para leer de un JSON
         String pendingExercisesJson = PreferenceManager.getDefaultSharedPreferences(this).getString("pendingExercises","");
         if (pendingExercisesJson != "") {
@@ -89,13 +92,21 @@ public class PendingExercisesActivity extends AppCompatActivity {
                 JSONArray array = jsonObject.getJSONArray("pendingExercises");
                 for (int i = 0; i < array.length(); i++) {
                     JSONObject o = array.getJSONObject(i);
-                    PendingExercise item = new PendingExercise(o.getString("equation"), o.getString("subject"));
+                    PendingExercise item = new PendingExercise(o.getString("equation"));
                     pendingExerciseList.add(item);
                 }
-                adapter = new PendingExerciseAdapter(pendingExerciseList, getApplicationContext(), new OnItemClickListener() {
+                PendingExercisesActivity thisActivity = this;
+                adapter = new PendingExerciseAdapter(pendingExerciseList, this, new OnItemClickListener() {
                     @Override
-                    public void onItemClick(PendingExercise item) {
-                        // TODO: abrir pop up
+                    public void onItemClick(PendingExercise pendingExercise) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(thisActivity);
+                        View view = getLayoutInflater().inflate(R.layout.pending_exercise_pop_up, null);
+                        ((MathView) view.findViewById(R.id.equation_to_solve_id)).setText("$$" + ExpressionsManager.getEquationAsLatex(pendingExercise.getInfixEquation()) + "$$");
+                        ((TextView) view.findViewById(R.id.pop_up_title_id)).setText(pendingExercise.getExerciseId());
+                        view.setClipToOutline(true);
+                        builder.setView(view);
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
                     }
                 });
                 recyclerView.setAdapter(adapter);
@@ -108,7 +119,7 @@ public class PendingExercisesActivity extends AppCompatActivity {
                     progressDialog.dismiss(); // when the task active then close the dialog
                     t.cancel(); // also just top the timer thread, otherwise, you may receive a crash report
                 }
-            }, 3000); // after 2 second (or 2000 miliseconds), the task will be active.
+            }, 0); // after 2 second (or 2000 miliseconds), the task will be active.
         }
         else{
             new AlertDialog.Builder(PendingExercisesActivity.this)
