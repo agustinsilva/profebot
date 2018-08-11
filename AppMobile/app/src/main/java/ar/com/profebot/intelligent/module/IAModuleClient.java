@@ -117,8 +117,6 @@ public class IAModuleClient extends AsyncTask<String, Void, Void> {
             for (Iterator<String> equationString = equationItems.iterator(); equationString.hasNext();) {
                 JSONObject pnObj = new JSONObject();
                 pnObj.put("equation", equationString.next());
-                pnObj.put("difficulty", "Facil");
-                pnObj.put("subject", "Ecuacion simple");
                 equationsJsonToStore.accumulate("pendingExercises", pnObj);
             }
             //Save equations in memory

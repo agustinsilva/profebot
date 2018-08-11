@@ -44,5 +44,9 @@ public class DetectQuadraticExpressionsTest {
         Assert.assertTrue(ExpressionsManager.isQuadraticExpression("3x*(1+x-1)"));
 
         Assert.assertTrue(ExpressionsManager.isQuadraticExpression("1+2+x+2+x-x*3-3(1^3+x+4/5)*(1-3x)+5+x"));
+        Assert.assertTrue(ExpressionsManager.isQuadraticExpression("((9.0)*(x))*(9.0)*(6.0)*(x)"));
+
+        // TODO: fixear
+        //Assert.assertFalse(ExpressionsManager.isQuadraticExpression("((9.0)*(x))*(9.0)-(6.0)*(x)"));
     }
 }
