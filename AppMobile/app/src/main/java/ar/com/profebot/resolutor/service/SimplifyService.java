@@ -2091,8 +2091,10 @@ public class SimplifyService {
         // Integer sharedBase = firstTerm.getBase();
         // TODO Es necesario calcular la base?
         for(TreeNode child: args){
-            if (!sharedExponentNode.equals(child.getExponent())){
-                return false;
+            if (child!= null) {
+                if (!sharedExponentNode.equals(child.getExponent())) {
+                    return false;
+                }
             }
         }
 
