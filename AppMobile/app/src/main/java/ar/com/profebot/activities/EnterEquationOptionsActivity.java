@@ -110,13 +110,13 @@ public class EnterEquationOptionsActivity extends GlobalActivity {
         handdrawEquationOption.setChecked(false);
         photoEquationOption.setChecked(false);
         startResolution.setEnabled(false);
-        startResolution.setBackgroundResource(R.color.colorGrey);
+        startResolution.setBackgroundResource(R.drawable.rounded_corners_disable_button);
         startResolution.setTextColor(Color.GRAY);
     }
 
     private void activateStartResolutionButton(){
         startResolution.setEnabled(true);
-        startResolution.setBackgroundResource(R.color.colorGreen);
+        startResolution.setBackgroundResource(R.drawable.rounded_corners_main_buttons);
         startResolution.setTextColor(Color.WHITE);
     }
 

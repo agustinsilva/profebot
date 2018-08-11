@@ -36,8 +36,8 @@
     </style>
 
     <style name="AppButtonDisable">
-        <item name = "android:background">@color/colorGrey</item>
         <item name = "android:textColor">@color/colorGreyText</item>
+        <item name = "android:background">@drawable/rounded_corners_disable_button</item>
     </style>
 
     <style name="DisableButton">
