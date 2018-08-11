@@ -92,7 +92,12 @@ public class PendingExercisesActivity extends AppCompatActivity {
                     PendingExercise item = new PendingExercise(o.getString("equation"), o.getString("subject"));
                     pendingExerciseList.add(item);
                 }
-                adapter = new PendingExerciseAdapter(pendingExerciseList, getApplicationContext());
+                adapter = new PendingExerciseAdapter(pendingExerciseList, getApplicationContext(), new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(PendingExercise item) {
+                        // TODO: abrir pop up
+                    }
+                });
                 recyclerView.setAdapter(adapter);
             } catch (Exception e) {
                 e.printStackTrace();
