@@ -155,8 +155,12 @@ public class TreeNode {
     public String toExpression() {
         TreeNode leftNode = this.esRaiz()?null:this.getLeftNode(); // Las raices solo tienen termino derecho
 
+        // Si es un signo menos que afecta solo a un termino que no es aditivo, va sin parentesis
+        if (this.esResta() && this.getRightNode()==null && !this.getLeftNode().esAditivo()){
+            return "-" + this.getContent().toExpression()  + "";
+        }
         // Si es parentesis, o unaryMinus, envuelve
-        if (this.isParenthesis() || this.isUnaryMinus()){
+        else if (this.isParenthesis() || this.isUnaryMinus()){
 
             if (this.isUnaryMinus()){
                 if (TreeUtils.isConstant(this.getContent())){
@@ -172,25 +176,20 @@ public class TreeNode {
             // Si tiene mas de 2 hijos, se parsea distinto
             String childExpression = "";
             for(TreeNode child: this.getArgs()){
-
-                if (!TreeUtils.isNegative(child)){
-                    if (childExpression.length() != 0){childExpression+=this.getValue();}
-                }
+                if (childExpression.length() != 0){childExpression+=this.getValue();}
                 childExpression+= getNodeExpression(child, false);
             }
 
-            return childExpression;
+            return childExpression.replaceAll("\\+\\-", "-");
 
         }else{
 
             // Evito que quede "+-"
-            String exp = getNodeExpression(leftNode, false);
-            if (!this.esSuma() || !TreeUtils.isNegative(this.getRightNode())){
-                exp+=this.getValue();
-            }
-            exp+=getNodeExpression(this.getRightNode(), true);
+            String exp = getNodeExpression(leftNode, false)
+                     + this.getValue()
+                     + getNodeExpression(this.getRightNode(), true);
 
-            return exp;
+            return exp.replaceAll("\\+\\-", "-");
         }
     }
 
@@ -367,7 +366,12 @@ public class TreeNode {
 
     public static TreeNode createPolynomialTerm(String x, Integer exponent, Integer coefficient) {
         String exponentStr = (exponent==1? "":"^" + exponent.toString());
-        String coefficientStr = (coefficient==1? "":coefficient.toString());
+        String coefficientStr = "";
+        if(coefficient != null && !coefficient.equals(1) && !coefficient.equals(-1)){
+            coefficientStr = coefficient.toString();
+        }else if(coefficient != null && coefficient.equals(-1)){
+            coefficientStr = "-";
+        }
         return new TreeNode(coefficientStr + x + exponentStr);
     }
 

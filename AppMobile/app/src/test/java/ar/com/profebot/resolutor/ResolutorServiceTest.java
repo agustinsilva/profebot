@@ -440,7 +440,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("(X-2)*(X+2)", newExpression);
+        Assert.assertEquals("(X+2)*(X-2)", newExpression);
     }
 
     @Test
@@ -462,7 +462,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("(2X-3)*(2X+3)", newExpression);
+        Assert.assertEquals("(2X+3)*(2X-3)", newExpression);
     }
 
     @Test
@@ -473,7 +473,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("4*(X-2)*(X+2)", newExpression);
+        Assert.assertEquals("4*(X+2)*(X-2)", newExpression);
     }
 
     @Test
@@ -484,7 +484,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("-4*(X-2)*(X+2)", newExpression);
+        Assert.assertEquals("-4*(X+2)*(X-2)", newExpression);
     }
 
     @Test
@@ -539,7 +539,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("3*(2X+1)^2", newExpression);
+        Assert.assertEquals("3*((2X+1)^2)", newExpression);
     }
 
     @Test
@@ -643,7 +643,7 @@ public class ResolutorServiceTest extends ResolutorService {
 
     @Test
     public void factorQuadratic_ok29() throws InvalidExpressionException {
-        String expression = " X^2 - 3X + 1 = 3";
+        String expression = " X^2 + 3X + 2 = 3";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);

@@ -750,7 +750,7 @@ public class ResolutorService {
             }
         }
 
-        if (symbol == null || aValue == null) {
+        if (symbol == null || aValue.equals(0)) {
             return NodeStatus.noChange(node);
         }
 
@@ -791,7 +791,7 @@ public class ResolutorService {
 
     // Will factor the node if it's in the form of ax^2 + bx
     private NodeStatus factorSymbol(TreeNode node, String symbol, Integer aValue, Integer bValue, Integer cValue, Boolean negate) {
-        if (bValue == null || cValue != null) {
+        if (bValue.equals(0) || !cValue.equals(0)) {
             return NodeStatus.noChange(node);
         }
 
@@ -822,7 +822,7 @@ public class ResolutorService {
         //    (i) abs(a) and abs(c) are squares,
         //    (ii) b = 0,
         //    (iii) c is negative
-        if (bValue != null || cValue == null) {
+        if (!bValue.equals(0) || cValue.equals(0)) {
             return NodeStatus.noChange(node);
         }
 
@@ -835,12 +835,12 @@ public class ResolutorService {
         double cRootValue = Math.sqrt(Math.abs(cValue));
 
         // must be a difference of squares
-        if (TreeUtils.isInteger(String.valueOf(aRootValue)) &&
-                TreeUtils.isInteger(String.valueOf(cRootValue)) &&
+        if (TreeUtils.isDoubleInteger(aRootValue) &&
+                TreeUtils.isDoubleInteger(cRootValue) &&
                 cValue < 0) {
 
-            TreeNode aRootNode = TreeNode.createConstant(Integer.parseInt(String.valueOf(aRootValue)));
-            TreeNode cRootNode = TreeNode.createConstant(Integer.parseInt(String.valueOf(cRootValue)));
+            TreeNode aRootNode = TreeNode.createConstant((int)aRootValue);
+            TreeNode cRootNode = TreeNode.createConstant((int)cRootValue);
 
             TreeNode polyTerm = TreeNode.createPolynomialTerm(symbol, 1, aRootNode.getIntegerValue());
             TreeNode firstParen = TreeNode.createParenthesis(
@@ -870,7 +870,7 @@ public class ResolutorService {
     // e.g. x^2 + 2x + 1 -> (x + 1)^2
     private NodeStatus factorPerfectSquare(TreeNode node, String symbol, Integer aValue, Integer bValue, Integer cValue, Boolean negate) {
         // check if perfect square: (i) a and c squares, (ii) b = 2*sqrt(a)*sqrt(c)
-        if (bValue == null || cValue == null) {
+        if (bValue.equals(0) || cValue.equals(0)) {
             return NodeStatus.noChange(node);
         }
 
@@ -892,11 +892,11 @@ public class ResolutorService {
 
         // apply the perfect square test
         double perfectProduct = 2 * aRootValue * cRootValue;
-        if (TreeUtils.isInteger(String.valueOf(aRootValue)) &&
-                TreeUtils.isInteger(String.valueOf(cRootValue)) &&
+        if (TreeUtils.isDoubleInteger(aRootValue) &&
+                TreeUtils.isDoubleInteger(cRootValue) &&
                 (bValue/gcd) == perfectProduct) {
-            TreeNode aRootNode = TreeNode.createConstant(Integer.parseInt(String.valueOf(aRootValue)));
-            TreeNode cRootNode = TreeNode.createConstant(Integer.parseInt(String.valueOf(cRootValue)));
+            TreeNode aRootNode = TreeNode.createConstant((int)aRootValue);
+            TreeNode cRootNode = TreeNode.createConstant((int)cRootValue);
 
             TreeNode polyTerm = TreeNode.createPolynomialTerm(symbol, 1, aRootNode.getIntegerValue());
             TreeNode paren = TreeNode.createParenthesis(
@@ -928,7 +928,7 @@ public class ResolutorService {
 
         TreeNode newNode;
 
-        if (bValue != null && cValue != null) {
+        if (!bValue.equals(0) && !cValue.equals(0)) {
             // we factor out the gcd first, providing us with a modified expression to
             // factor with new a, b and c values
             Integer gcd = TreeUtils.calculateGCD(aValue, bValue);

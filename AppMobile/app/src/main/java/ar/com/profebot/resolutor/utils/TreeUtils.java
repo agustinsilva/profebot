@@ -1078,4 +1078,14 @@ public class TreeUtils {
 
         return node;
     }
+
+    public static boolean isDoubleInteger(double val) {
+        return (val%(int)val==0);
+    }
+
+    public static boolean isNegativeProduct(TreeNode node) {
+        if (!node.esProducto()){return false;}
+        if (!isNegative(node.getLeftNode())){return false;}
+        return true;
+    }
 }
