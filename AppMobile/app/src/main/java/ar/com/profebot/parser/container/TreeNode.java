@@ -61,6 +61,8 @@ public class TreeNode {
         return this.clone();
     }
 
+    //TODO Agregar nodo padre y child index.
+    
     public String getValue() {
         return value;
     }

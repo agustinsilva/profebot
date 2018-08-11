@@ -887,7 +887,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.breakUpNumeratorSearch(flattenedNode);
-        Assert.assertEquals("(X/3+3/3+X/3", estado.getNewNode().toExpression());
+        Assert.assertEquals("(X/3+3/3+X/3)", estado.getNewNode().toExpression());
     }
 
     @Test
@@ -1433,7 +1433,7 @@ public class SimplifyServiceTest extends SimplifyService {
         NodeStatus estado = super.distributeSearch(flattenedNode);
         List<NodeStatus> subpasos = estado.getSubsteps();
         ArrayList<String> expectedResults = new ArrayList<String>();
-        expectedResults.add("((3X^2*(2X+x^2))/(X^2-4)+4X^2*(2X+X^2))");
+        expectedResults.add("((3X^2*(2X+X^2))/(X^2-4)+4X^2*(2X+X^2))");
         expectedResults.add("((3X^2*(2X+X^2))/(X^2-4)+(8X^3+4X^4))");
 
         Assert.assertEquals(expectedResults.size(), subpasos.size());
