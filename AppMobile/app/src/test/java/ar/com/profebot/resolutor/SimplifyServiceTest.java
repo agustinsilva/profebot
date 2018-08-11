@@ -1358,8 +1358,8 @@ public class SimplifyServiceTest extends SimplifyService {
         NodeStatus estado = super.distributeSearch(flattenedNode);
         List<NodeStatus> subpasos = estado.getSubsteps();
         ArrayList<String> expectedResults = new ArrayList<String>();
-        expectedResults.add("(-2X^2 * 3X - 2X^2 * -4)");
-        expectedResults.add("(-6X^3+8X^2)");
+        expectedResults.add("(-2X^2*3X-2X^2*-4)");
+        expectedResults.add("-6X^3+8X^2");
 
         for (int i=0; i <subpasos.size(); i++){
             Assert.assertEquals(expectedResults.get(i),subpasos.get(i).getNewNode().toExpression());

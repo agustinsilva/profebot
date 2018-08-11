@@ -350,7 +350,10 @@ public class SimplifyService {
             substeps.addAll(combineSteps);
             NodeStatus lastStep = combineSteps.get(combineSteps.size()- 1);
             newNode = NodeStatus.resetChangeGroups(lastStep.getNewNode());
+            newNode = TreeUtils.groupConstantCoefficientAndSymbol(newNode);
         }
+
+
 
         return NodeStatus.nodeChanged(
                 NodeStatus.ChangeTypes.COLLECT_AND_COMBINE_LIKE_TERMS,
@@ -462,6 +465,7 @@ public class SimplifyService {
             if (!t.equals(OTHER)) {
                 if (terms.get(t).size() > 1){
                     hasSomeCollectNodes = true;
+                    break;
                 }
             }
         }
@@ -542,10 +546,11 @@ public class SimplifyService {
                     appendToArrayInObject(terms, termName, child);
                 }else{
                     // En este caso separo los terminos así se multiplican las constantes
-                    appendToArrayInObject(terms, termName, new TreeNode(termName));
+                    appendToArrayInObject(terms, "X", new TreeNode(termName));
                     appendToArrayInObject(terms, CONSTANT, TreeNode.createConstant(child.getCoefficient()));
                 }
             }
+            // TODO addToTermsforNthRootMultiplication
            // else if (Node.Type.isFunction(child, 'nthRoot')) {
            //    terms = addToTermsforNthRootMultiplication(terms, child);
            // }
@@ -760,15 +765,15 @@ public class SimplifyService {
     private TreeNode distributeTwoNodes(TreeNode firstNode, TreeNode secondNode) {
         // lists of terms we'll be multiplying together from each node
         List<TreeNode> firstArgs, secondArgs;
-        if (isParenthesisOfAddition(firstNode) && firstNode.isParenthesis()) {
-            firstArgs = firstNode.getChild(0).getArgs();
+        if (isParenthesisOfAddition(firstNode)) {
+            firstArgs = getAdditionArgs(firstNode);;
         } else {
             firstArgs =  new ArrayList<>();
             firstArgs.add(firstNode);
         }
 
-        if (isParenthesisOfAddition(secondNode) && secondNode.isParenthesis()) {
-            secondArgs = secondNode.getChild(0).getArgs();
+        if (isParenthesisOfAddition(secondNode)) {
+            secondArgs = getAdditionArgs(secondNode);
         }else {
             secondArgs = new ArrayList<>();
             secondArgs.add(secondNode);
@@ -869,6 +874,7 @@ public class SimplifyService {
         for (int i = 0; i < newNode.getArgs().size(); i++) {
 
             // e.g. 2*9 -> 18
+            node = newNode.getChild(i);
             NodeStatus childStatus = arithmeticSearch(node);
             if (childStatus.hasChanged()) {
                 NodeStatus status = NodeStatus.childChanged(newNode, childStatus, i);
@@ -877,6 +883,7 @@ public class SimplifyService {
             }
 
             // e.g. x*5 -> 5x
+            node = newNode.getChild(i);
             childStatus = rearrangeCoefficient(node);
             if (childStatus.hasChanged()) {
                 NodeStatus status = NodeStatus.childChanged(newNode, childStatus, i);
@@ -885,6 +892,7 @@ public class SimplifyService {
             }
 
             // e.g 2x*4x -> 8x^2
+            node = newNode.getChild(i);
             childStatus = collectAndCombineSearch(node);
             if (childStatus.hasChanged()) {
                 NodeStatus status = NodeStatus.childChanged(newNode, childStatus, i);
@@ -893,6 +901,7 @@ public class SimplifyService {
             }
 
             // e.g. (2+x)(3+x) -> 2*(3+x) recurses
+            node = newNode.getChild(i);
             childStatus = distributeAndSimplifyMultiplication(node);
             if (childStatus.hasChanged()) {
                 NodeStatus status = NodeStatus.childChanged(newNode, childStatus, i);
@@ -916,6 +925,14 @@ public class SimplifyService {
         return ((node.isParenthesis() && node.getContent().esSuma()) || node.esSuma());
     }
 
+    // Pequeño fix porque a veces usamos parentesis implicitos
+    private List<TreeNode> getAdditionArgs(TreeNode node) {
+        if (node.isParenthesis() && node.getContent().esSuma()){
+            return node.getContent().getArgs();
+        }else{
+            return node.getArgs();
+        }
+    }
     // Expand a power node with a non-constant base and a positive exponent > 1
     // e.g. (nthRoot(x, 2))^2 -> nthRoot(x, 2) * nthRoot(x, 2)
     // e.g. (2x + 3)^2 -> (2x + 3) (2x + 3)
@@ -2158,7 +2175,7 @@ public class SimplifyService {
         Integer changeGroup = 1;
         int i = 0;
         for(TreeNode child: newNode.getArgs()){
-            if (CONSTANT_1.equals(child.getCoefficient())) {
+            if (child!= null && CONSTANT_1.equals(child.getCoefficient())) {
                 TreeNode newChildNode = child.clone();
                 newChildNode.setExplicitCoeff(true);
                 newNode.getChild(i).setChangeGroup(changeGroup);
@@ -2191,7 +2208,7 @@ public class SimplifyService {
         Integer changeGroup = 1;
         int i = 0;
         for(TreeNode child: newNode.getArgs()){
-            if (CONSTANT_1_NEG.equals(child.getCoefficient())) {
+            if (child != null && CONSTANT_1_NEG.equals(child.getCoefficient())) {
                 TreeNode newChildNode = child.clone();
                 newChildNode.setExplicitCoeff(true);
                 newNode.getChild(i).setChangeGroup(changeGroup);
@@ -2220,7 +2237,9 @@ public class SimplifyService {
         TreeNode newNode = node.cloneDeep();
         List<TreeNode> coefficientList = new ArrayList<>();
         for(TreeNode child: newNode.getArgs()){
-            coefficientList.add(TreeNode.createConstant(child.getCoefficient()));
+            if (child!= null) {
+                coefficientList.add(TreeNode.createConstant(child.getCoefficient()));
+            }
         }
 
         TreeNode sumOfCoefficents = TreeNode.createParenthesis(
@@ -2257,7 +2276,6 @@ public class SimplifyService {
     // The polynomial nodes should *not* have coefficients. (multiplying
     // coefficients is handled in collecting like terms for multiplication)
     protected NodeStatus multiplyLikeTerms(TreeNode node, Boolean polynomialOnly){
-        // Multiplicar terminos con X. Ejemplo: 2x * x^2 * 5x => 10 x^4
 
         if (!node.esOperador()) {
             return NodeStatus.noChange(node);

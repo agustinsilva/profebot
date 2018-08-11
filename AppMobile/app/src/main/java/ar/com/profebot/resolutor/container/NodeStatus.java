@@ -308,6 +308,7 @@ public class NodeStatus {
     }
 
     private static List<NodeStatus> updateSubsteps(List<NodeStatus> substeps, TreeNode originalNode,Integer i){
+        if (substeps==null){return null;}
         for (NodeStatus step: substeps) {
             updateSubsteps(step.getSubsteps(),originalNode,i);
             updateStep(step,originalNode,i);

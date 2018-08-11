@@ -1090,4 +1090,26 @@ public class TreeUtils {
         if (!isNegative(node.getLeftNode())){return false;}
         return true;
     }
+
+    public static TreeNode groupConstantCoefficientAndSymbol(TreeNode node) {
+        if (!node.esProducto()){return node;}
+        if (node.getArgs().size() !=2){return node;}
+        if (!isConstant(node.getLeftNode())){return node;}
+        if (!isSymbol(node.getRightNode()) &&
+            !(node.getRightNode().esPotencia() && isSymbol(node.getRightNode().getLeftNode()))){return node;}
+
+        if (node.getRightNode().esPotencia()){
+            // Si es potencia, genero el temrino
+            TreeNode newNode = TreeNode.createPolynomialTerm("X", node.getRightNode().getRightNode().getIntegerValue(), node.getRightNode().getLeftNode().getIntegerValue());
+            newNode.multiplyCoefficient(node.getLeftNode().getValue());
+            return newNode;
+
+        }else if(node.getRightNode().getValue().contains("X") ){
+            TreeNode newNode = node.getRightNode().clone();
+            newNode.multiplyCoefficient(node.getLeftNode().getValue());
+            return newNode;
+        }
+
+        return node;
+    }
 }
