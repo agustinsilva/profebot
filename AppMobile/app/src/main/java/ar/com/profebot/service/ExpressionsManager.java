@@ -253,8 +253,11 @@ public class ExpressionsManager {
 
                 .replaceAll("×", "*")
                 .replaceAll("√", "R")
+                .replaceAll("sqrt", "R")
                 .replaceAll("e", "2.718281828459045235360")
-                .replaceAll("pi", "3.14159265358979323846");
+                .replaceAll("pi", "3.14159265358979323846")
+
+                .replaceAll("\\.0", "");
     }
 
     public static String fixEquationFormat(String equationDrawn){
