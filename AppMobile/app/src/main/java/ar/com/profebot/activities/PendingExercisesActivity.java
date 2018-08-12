@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.profebot.activities.R;
 
@@ -121,6 +122,25 @@ public class PendingExercisesActivity extends AppCompatActivity {
                                 public void onClick(View v) {
                                     deleteExercise(pendingExercise);
                                     dialog.cancel();
+                                }
+                            });
+
+                            ((Button) view.findViewById(R.id.solve_pending_equation_id)).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    String infixEquation = pendingExercise.getInfixEquation();
+                                    // If last char is 'new line' --> delete last char
+                                    if((int)(infixEquation.substring(infixEquation.length() - 1).charAt(0)) == 10){
+                                        infixEquation = infixEquation.substring(0, infixEquation.length() - 1);
+                                    }
+                                    ExpressionsManager.setEquationDrawn(infixEquation);
+                                    if(ExpressionsManager.expressionDrawnIsValid()){
+                                        dialog.cancel();
+                                        Intent intent = new Intent(thisActivity, SolveEquationActivity.class);
+                                        startActivity(intent);
+                                    }else{
+                                        Toast.makeText(thisActivity,"No se pudo armar la resolución de la ecuación: " + ExpressionsManager.getEquationDrawn(), Toast.LENGTH_LONG).show();
+                                    }
                                 }
                             });
                         }
