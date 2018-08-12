@@ -397,4 +397,12 @@ public class NodeStatus {
 
         return new NodeStatus(childStatus.changeType, oldNode, newNode, substeps);
     }
+
+    @Override
+    public String toString() {
+        return "NodeStatus{" +
+                "changeType=" + changeType +
+                (newNode !=null? ", newNode=" + newNode.toExpression() : "") +
+                '}';
+    }
 };

@@ -776,7 +776,6 @@ public class ResolutorServiceTest extends ResolutorService {
         };
     }
 
-
     @Test
     public void stepThrough_ok1()  throws InvalidExpressionException {
         String expression = "(X)/( 2x + 7) >= 4";
@@ -819,7 +818,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = 2",estado);
+        Assert.assertEquals("X=2",estado);
     }
 
     @Test
@@ -834,7 +833,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = -1",estado);
+        Assert.assertEquals("X=-1",estado);
     }
 
     @Test
@@ -849,7 +848,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = 1",estado);
+        Assert.assertEquals("X=1",estado);
     }
 
     @Test
@@ -864,7 +863,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = 3/2",estado);
+        Assert.assertEquals("X=3/2",estado);
     }
 
     @Test
@@ -879,7 +878,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = 3",estado);
+        Assert.assertEquals("X=3",estado);
     }
 
     @Test
@@ -894,7 +893,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = 8",estado);
+        Assert.assertEquals("X=8",estado);
     }
 
     @Test
@@ -909,7 +908,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = 1/3",estado);
+        Assert.assertEquals("X=1/3",estado);
     }
 
     @Test
@@ -924,7 +923,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = 3",estado);
+        Assert.assertEquals("X=3",estado);
     }
 
     @Test
@@ -939,7 +938,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = 3",estado);
+        Assert.assertEquals("X=3",estado);
     }
 
     @Test
@@ -954,7 +953,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = 3",estado);
+        Assert.assertEquals("X=3",estado);
     }
 
     @Test
@@ -969,7 +968,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = 2",estado);
+        Assert.assertEquals("X=2",estado);
     }
 
     @Test
@@ -984,7 +983,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = -2",estado);
+        Assert.assertEquals("X=-2",estado);
     }
 
     @Test
@@ -999,7 +998,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = 2/5",estado);
+        Assert.assertEquals("X=2/5",estado);
     }
 
     @Test
@@ -1014,7 +1013,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = -1/7",estado);
+        Assert.assertEquals("X=-1/7",estado);
     }
 
     @Test
@@ -1029,12 +1028,12 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = -1/11",estado);
+        Assert.assertEquals("X=-1/11",estado);
     }
 
     @Test
     public void stepThrough_ok18()  throws InvalidExpressionException {
-        String expression = "5X + (1/2)X = 27";
+        String expression = "5X + (1/2)*X = 27";
         Tree tree = (new ParserService()).parseExpression(expression);
         List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
         String estado;
@@ -1044,7 +1043,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = 54/11",estado);
+        Assert.assertEquals("X=54/11",estado);
     }
 
     @Test
@@ -1059,12 +1058,12 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = 3",estado);
+        Assert.assertEquals("X=3",estado);
     }
 
     @Test
     public void stepThrough_ok20()  throws InvalidExpressionException {
-        String expression = "(-2/3)X + 3/7 = 1/2 ";
+        String expression = "(-2/3)* X + 3/7 = 1/2 ";
         Tree tree = (new ParserService()).parseExpression(expression);
         List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
         String estado;
@@ -1074,7 +1073,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = -3/28",estado);
+        Assert.assertEquals("X=-3/28",estado);
     }
 
     @Test
@@ -1089,7 +1088,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = -1/30",estado);
+        Assert.assertEquals("X=-1/30",estado);
     }
 
     @Test
@@ -1104,7 +1103,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X^2 = 2",estado);
+        Assert.assertEquals("X^2=2",estado);
     }
 
     @Test
@@ -1119,7 +1118,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = 2/3",estado);
+        Assert.assertEquals("X=2/3",estado);
     }
 
     @Test
@@ -1134,12 +1133,12 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = 11",estado);
+        Assert.assertEquals("X=11",estado);
     }
 
     @Test
     public void stepThrough_ok25()  throws InvalidExpressionException {
-        String expression = "2(X+3)/3 = 2";
+        String expression = "2*(X+3)/3 = 2";
         Tree tree = (new ParserService()).parseExpression(expression);
         List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
         String estado;
@@ -1149,7 +1148,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = 0",estado);
+        Assert.assertEquals("X=0",estado);
     }
 
     @Test
@@ -1164,7 +1163,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [-2, 3]",estado);
+        Assert.assertEquals("X=[-2,3]",estado);
     }
 
     @Test
@@ -1179,7 +1178,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [-1, -2]",estado);
+        Assert.assertEquals("X=[-1,-2]",estado);
     }
 
     @Test
@@ -1194,7 +1193,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [0, 1]",estado);
+        Assert.assertEquals("X=[0,1]",estado);
     }
 
     @Test
@@ -1209,7 +1208,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [3, -5]",estado);
+        Assert.assertEquals("X=[3,-5]",estado);
     }
 
     @Test
@@ -1224,7 +1223,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [0, -2]",estado);
+        Assert.assertEquals("X=[0,-2]",estado);
     }
 
     @Test
@@ -1239,7 +1238,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [-2, 2]",estado);
+        Assert.assertEquals("X=[-2,2]",estado);
     }
 
     @Test
@@ -1254,7 +1253,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [-1, -1]",estado);
+        Assert.assertEquals("X=[-1,-1]",estado);
     }
 
     @Test
@@ -1269,7 +1268,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [-2, -2]",estado);
+        Assert.assertEquals("X=[-2,-2]",estado);
     }
 
     @Test
@@ -1284,7 +1283,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [3, 3]",estado);
+        Assert.assertEquals("X=[3,3]",estado);
     }
 
     @Test
@@ -1299,7 +1298,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [-4, -4]",estado);
+        Assert.assertEquals("X=[-4,-4]",estado);
     }
 
     @Test
@@ -1314,7 +1313,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [5, 5]",estado);
+        Assert.assertEquals("X=[5,5]",estado);
     }
 
     @Test
@@ -1329,7 +1328,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [-9 / 2, 9 / 2]",estado);
+        Assert.assertEquals("X=[-9/2,9/2]",estado);
     }
 
     @Test
@@ -1344,7 +1343,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [-3, 3]",estado);
+        Assert.assertEquals("X=[-3,3]",estado);
     }
 
     @Test
@@ -1359,7 +1358,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [-5 / 4, 5 / 4]",estado);
+        Assert.assertEquals("X=[-5/4,5/4]",estado);
     }
 
     @Test
@@ -1374,7 +1373,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [-6, -6]",estado);
+        Assert.assertEquals("X=[-6,-6]",estado);
     }
 
     @Test
@@ -1389,7 +1388,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [-1, -2]",estado);
+        Assert.assertEquals("X=[-1,-2]",estado);
     }
 
     @Test
@@ -1404,7 +1403,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [-1, -2]",estado);
+        Assert.assertEquals("X=[-1,-2]",estado);
     }
 
     @Test
@@ -1419,7 +1418,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [-1, -1]",estado);
+        Assert.assertEquals("X=[-1,-1]",estado);
     }
 
     @Test
@@ -1434,7 +1433,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [-1, -1]",estado);
+        Assert.assertEquals("X=[-1,-1]",estado);
     }
 
     @Test
@@ -1449,7 +1448,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [-1, -1]",estado);
+        Assert.assertEquals("X=[-1,-1]",estado);
     }
 
     @Test
@@ -1464,12 +1463,12 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [-1, -1]",estado);
+        Assert.assertEquals("X=[-1,-1]",estado);
     }
 
     @Test
     public void stepThrough_ok47()  throws InvalidExpressionException {
-        String expression = "2^7 (X + 2) = 0";
+        String expression = "2^7 * (X + 2) = 0";
         Tree tree = (new ParserService()).parseExpression(expression);
         List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
         String estado;
@@ -1479,12 +1478,12 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = -2",estado);
+        Assert.assertEquals("X=-2",estado);
     }
 
     @Test
     public void stepThrough_ok48()  throws InvalidExpressionException {
-        String expression = "(33 + 89) (X - 99) = 0";
+        String expression = "(33 + 89) * (X - 99) = 0";
         Tree tree = (new ParserService()).parseExpression(expression);
         List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
         String estado;
@@ -1494,12 +1493,12 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = 99",estado);
+        Assert.assertEquals("X=99",estado);
     }
 
     @Test
     public void stepThrough_ok49()  throws InvalidExpressionException {
-        String expression = "X^2 (X - 5)^2 = 0";
+        String expression = "X^2 * (X - 5)^2 = 0";
         Tree tree = (new ParserService()).parseExpression(expression);
         List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
         String estado;
@@ -1509,7 +1508,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [0, 0, 5, 5]",estado);
+        Assert.assertEquals("X=[0,0,5,5]",estado);
     }
 
     @Test
@@ -1524,12 +1523,12 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [0, 0]",estado);
+        Assert.assertEquals("X=[0,0]",estado);
     }
 
     @Test
     public void stepThrough_ok51()  throws InvalidExpressionException {
-        String expression = "X^(2) = 0";
+        String expression = "X^2 = 0";
         Tree tree = (new ParserService()).parseExpression(expression);
         List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
         String estado;
@@ -1539,12 +1538,12 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [0, 0]",estado);
+        Assert.assertEquals("X=[0,0]",estado);
     }
 
     @Test
     public void stepThrough_ok52()  throws InvalidExpressionException {
-        String expression = "(X+2)^2 -X^2 = 4(X+1)";
+        String expression = "(X+2)^2 -X^2 = 4*(X+1)";
         Tree tree = (new ParserService()).parseExpression(expression);
         List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
         String estado;
@@ -1554,7 +1553,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = 4",estado);
+        Assert.assertEquals("X=4",estado);
     }
 
     @Test
@@ -1569,7 +1568,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = 2",estado);
+        Assert.assertEquals("X=2",estado);
     }
 
     @Test
@@ -1584,7 +1583,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = 1/2",estado);
+        Assert.assertEquals("X=1/2",estado);
     }
 
     @Test
@@ -1599,7 +1598,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = 1",estado);
+        Assert.assertEquals("X=1",estado);
     }
 
     @Test
@@ -1614,7 +1613,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = 1",estado);
+        Assert.assertEquals("X=1",estado);
     }
 
     @Test
@@ -1629,7 +1628,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [0, 1]",estado);
+        Assert.assertEquals("X=[0,1]",estado);
     }
 
     @Test
@@ -1644,7 +1643,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = 1",estado);
+        Assert.assertEquals("X=1",estado);
     }
 
     @Test
@@ -1653,7 +1652,7 @@ public class ResolutorServiceTest extends ResolutorService {
         Tree tree = (new ParserService()).parseExpression(expression);
         List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
         EquationStatus estado = listaNodos.get(listaNodos.size() - 1);
-        Assert.assertEquals("X > 1",estado.getNewEquation().toExpression());
+        Assert.assertEquals("X>1",estado.getNewEquation().toExpression());
     }
 
 
@@ -1663,7 +1662,7 @@ public class ResolutorServiceTest extends ResolutorService {
         Tree tree = (new ParserService()).parseExpression(expression);
         List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
         EquationStatus estado = listaNodos.get(listaNodos.size() - 1);
-        Assert.assertEquals("X < 3",estado.getNewEquation().toExpression());
+        Assert.assertEquals("X<3",estado.getNewEquation().toExpression());
     }
 
     @Test
@@ -1672,7 +1671,7 @@ public class ResolutorServiceTest extends ResolutorService {
         Tree tree = (new ParserService()).parseExpression(expression);
         List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
         EquationStatus estado = listaNodos.get(listaNodos.size() - 1);
-        Assert.assertEquals("X < -1",estado.getNewEquation().toExpression());
+        Assert.assertEquals("X<-1",estado.getNewEquation().toExpression());
     }
 
     @Test
@@ -1681,7 +1680,7 @@ public class ResolutorServiceTest extends ResolutorService {
         Tree tree = (new ParserService()).parseExpression(expression);
         List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
         EquationStatus estado = listaNodos.get(listaNodos.size() - 1);
-        Assert.assertEquals("X > -1",estado.getNewEquation().toExpression());
+        Assert.assertEquals("X>-1",estado.getNewEquation().toExpression());
     }
 
     @Test
@@ -1696,12 +1695,12 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [1, 1]",estado);
+        Assert.assertEquals("X=[1,1]",estado);
     }
 
     @Test
     public void stepThrough_ok64()  throws InvalidExpressionException {
-        String expression = "(X - 1)(X - 5)(X + 5) = 0";
+        String expression = "(X - 1)*(X - 5)*(X + 5) = 0";
         Tree tree = (new ParserService()).parseExpression(expression);
         List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
         String estado;
@@ -1711,6 +1710,6 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X = [1, 5, -5]",estado);
+        Assert.assertEquals("X=[1,5,-5]",estado);
     }
 }

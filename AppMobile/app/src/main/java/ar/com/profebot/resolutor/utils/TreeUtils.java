@@ -817,6 +817,13 @@ public class TreeUtils {
     // e.g. 4x^2 + 2x + y with `symbolName=x` would return y
     public static TreeNode getLastNonSymbolTerm(TreeNode node) {
         if (isPolynomialTerm(node)) {
+
+            if (isSymbolFraction(node, true)){
+                // Genero la fraccion coeficiente
+                return TreeNode.createOperator("/",
+                        TreeNode.createConstant(node.getCoefficient()), node.getRightNode().cloneDeep());
+            }else if (node.getCoefficient() == 1){return null;}
+
             return TreeNode.createConstant(node.getCoefficient());
         }
         else if (hasDenominatorSymbol(node)) {
@@ -1092,6 +1099,13 @@ public class TreeUtils {
     }
 
     public static TreeNode groupConstantCoefficientAndSymbol(TreeNode node) {
+
+        if (node == null){return null;}
+        if (node.getArgs() != null){
+            for(int i=0; i <  node.getArgs().size(); i++){
+                node.setChild(i, groupConstantCoefficientAndSymbol(node.getChild(i)));
+            }
+        }
         if (!node.esProducto()){return node;}
         if (node.getArgs().size() !=2){return node;}
         if (!isConstant(node.getLeftNode())){return node;}

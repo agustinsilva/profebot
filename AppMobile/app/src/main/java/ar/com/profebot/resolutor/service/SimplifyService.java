@@ -46,7 +46,7 @@ public class SimplifyService {
         // Ahora, simplifica la expresion matematica hasta que no pueda cambiar más.
         NodeStatus nodeStatus = step(node);
         while (nodeStatus.hasChanged()) {
-            logSteps(nodeStatus);
+          //  logSteps(nodeStatus);
 
             steps.add(nodeStatus);
             TreeNode newNode = nodeStatus.getNewNode();
@@ -150,7 +150,7 @@ public class SimplifyService {
     protected NodeStatus arithmeticSearch(TreeNode treeNode) {
 
         // TODO Busqueda postOrder
-        boolean noEsOperador = !treeNode.esOperador();
+        boolean noEsOperador = treeNode != null &&  !treeNode.esOperador();
         if (noEsOperador) {
             return NodeStatus.noChange(treeNode);
         }
@@ -2105,11 +2105,14 @@ public class SimplifyService {
         // to add terms, they must have the same base *and* exponent
         TreeNode firstTerm = args.get(0);
         Integer sharedExponentNode = firstTerm.getExponent();
-        // Integer sharedBase = firstTerm.getBase();
-        // TODO Es necesario calcular la base?
+        String sharedBase = firstTerm.getBase();
+
         for(TreeNode child: args){
             if (child!= null) {
                 if (!sharedExponentNode.equals(child.getExponent())) {
+                    return false;
+                }
+                if (!sharedBase.equals(child.getBase())) {
                     return false;
                 }
             }
@@ -2156,6 +2159,14 @@ public class SimplifyService {
         // STEP 4: evaluate the sum (could include fractions)
         status = evaluateCoefficientSum(newNode, termSubclass);
         substeps.add(status);
+
+        // Por si queda en 0 al sumar los coeficientes
+        NodeStatus nodeStatus = reduceMultiplicationByZero(status.getNewNode());
+        if (nodeStatus.hasChanged()){
+            status = nodeStatus;
+            substeps.add(status);
+        }
+
         TreeNode evalateStatusNewNode = status.getNewNode();
         newNode = NodeStatus.resetChangeGroups(evalateStatusNewNode);
 
@@ -2252,6 +2263,7 @@ public class SimplifyService {
         TreeNode firstTerm = node.getChild(0).clone();
         firstTerm.setCoefficient(1);
         firstTerm.setExplicitCoeff(false);
+        firstTerm.updateValue();
         newNode = TreeNode.createOperator("*",
                 sumOfCoefficents, firstTerm);
 

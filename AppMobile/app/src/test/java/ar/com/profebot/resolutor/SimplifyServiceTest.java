@@ -1383,7 +1383,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.distributeSearch(flattenedNode);
-        Assert.assertEquals("((3/(X^2)*5/X+3/(X^2)*X^5)+(X/(X^2+3)*5/X+X/(X^2+3)*X^5))",estado.getNewNode().toExpression());
+        Assert.assertEquals("((3/X^2)*(5/X)+(3/X^2)*X^5)+((X/(X^2+3))*(5/X)+(X/(X^2+3))*X^5)",estado.getNewNode().toExpression());
     }
 
     @Test

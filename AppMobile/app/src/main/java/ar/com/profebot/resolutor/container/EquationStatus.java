@@ -97,4 +97,12 @@ public class EquationStatus {
         return new EquationStatus(
                 rightStep.getChangeType(), oldEquation, newEquation, substeps);
     }
+
+    @Override
+    public String toString() {
+        return "EquationStatus{" +
+                "changeType=" + changeType +
+                (newEquation!=null? ", newEquation=" + newEquation.toExpression(): "") +
+                '}';
+    }
 }

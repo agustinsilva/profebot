@@ -17,6 +17,10 @@ public class TreeNode {
   //  private TreeNode rightNode;
     private List<TreeNode> args; // Usado en achatamiento
 
+    // Para generar los temrinos invalidos
+    TreeNode parentNode = null;
+    Integer childIndex = null;
+
     //Constructor de nodo.
     public TreeNode(String value) {
         super();
@@ -159,8 +163,25 @@ public class TreeNode {
     public String toExpression() {
         TreeNode leftNode = this.esRaiz()?null:this.getLeftNode(); // Las raices solo tienen termino derecho
 
+        if (this.isList()){
+            // Muestra la lista
+            String list = "";
+            int numChilds = 0;
+            for(TreeNode child: this.getArgs()){
+                if (child != null) {
+                    list += child.getValue() + ",";
+                    numChilds++;
+                }
+            }
+            if (numChilds == 1){
+                list = list.substring(0, list.length() - 1);
+            }else {
+                list = "[" + list.substring(0, list.length() - 1) + "]";
+            }
+            return list;
+        }
         // Si es un signo menos que afecta solo a un termino que no es aditivo, va sin parentesis
-        if (this.esResta() && this.getRightNode()==null && !this.getLeftNode().esAditivo()){
+        else if (this.esResta() && this.getRightNode()==null && !this.getLeftNode().esAditivo()){
             return "-" + this.getContent().toExpression()  + "";
         }
         // Si es parentesis, o unaryMinus, envuelve
@@ -264,7 +285,7 @@ public class TreeNode {
      */
     //Actualiza el valor del nodo en funcion del coeficiente y el exponente por ejemplo si el
     //coeficiente es 3 y exponente es 2 cambiaria el valor a 3X^2
-    private void updateValue(){
+    public void updateValue(){
         String coefficientString = "";
         if (coefficient != null && coefficient != 1 && coefficient != -1) {
             coefficientString = coefficient.toString();
@@ -355,7 +376,6 @@ public class TreeNode {
         return newNode;
     }
 
-    // TODO createList: revisar como se parsearia esto
     public static TreeNode createList(List<TreeNode> nodes) {
         TreeNode newNode = new TreeNode("LIST");
         newNode.setArgs(nodes);
@@ -432,5 +452,38 @@ public class TreeNode {
 
     public void setContent(TreeNode node) {
         this.setChild(0, node);
+    }
+
+    /**
+     * Devuelve la base, si es una X devuelve
+     * @return
+     */
+    public String getBase() {
+        if (TreeUtils.isSymbol(this)){
+            return "X";
+        }else{
+            return this.getValue();
+        }
+    }
+
+    public void assignParentData(TreeNode parentNode, Integer childIndex){
+        this.parentNode = parentNode;
+        this.childIndex = childIndex;
+
+        // Y asigna a sus hijos
+        for( int i =0; i < this.getArgs().size(); i++){
+            TreeNode child = this.getChild(i);
+            if (child != null){
+                child.assignParentData(this, i);
+            }
+        }
+    }
+
+    public TreeNode getParentNode() {
+        return parentNode;
+    }
+
+    public Integer getChildIndex() {
+        return childIndex;
     }
 }

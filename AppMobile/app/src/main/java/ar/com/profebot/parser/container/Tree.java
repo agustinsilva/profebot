@@ -7,11 +7,10 @@ public class Tree {
     }
 
     public Tree(TreeNode leftNode, TreeNode rightNode, String operator) {
-        Tree tree = new Tree();
         TreeNode rootNode = new TreeNode(operator);
         rootNode.setLeftNode(leftNode);
         rootNode.setRightNode(rightNode);
-        tree.setRootNode(rootNode);
+        this.setRootNode(rootNode);
     }
 
     public TreeNode getRootNode() {
@@ -48,5 +47,15 @@ public class Tree {
 
     public String getComparator() {
         return this.getRootNode().getValue();
+    }
+
+    public void generateTwoWayLinkedTree(){
+        rootNode.getLeftNode().assignParentData(rootNode, 0);
+        rootNode.getRightNode().assignParentData(rootNode, 1);
+    }
+
+    @Override
+    public String toString() {
+        return toExpression();
     }
 }

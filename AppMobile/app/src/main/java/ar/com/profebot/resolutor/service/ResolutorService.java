@@ -302,7 +302,7 @@ public class ResolutorService {
         List<EquationStatus> rightSubSteps = new ArrayList<>();
 
         for (NodeStatus step:  rightSteps) {
-            leftSubSteps.add(EquationStatus.addRightStep(equation, step));
+            rightSubSteps.add(EquationStatus.addRightStep(equation, step));
         }
 
         if (rightSubSteps.size() == 1) {
@@ -524,6 +524,10 @@ public class ResolutorService {
             comparator = inverseComparator(comparator);
         }
 
+        // Saco los parentesis proque complejizan innecesariamente
+        leftNode = TreeUtils.removeUnnecessaryParens(leftNode);
+        rightNode = TreeUtils.removeUnnecessaryParens(rightNode);
+
         Tree newEquation = new Tree(leftNode, rightNode, comparator);
         return new EquationStatus(changeType, oldEquation, newEquation);
     }
@@ -672,6 +676,12 @@ public class ResolutorService {
             else {
                 throw new Error("Unsupported operation: " + leftNode.toExpression());
             }
+        }
+        else if (TreeUtils.isSymbol(leftNode) && leftNode.getCoefficient() != 1) {
+            // Pasa diviiendo el coeficiente
+            inverseOp = "/";
+            changeType = NodeStatus.ChangeTypes.DIVIDE_FROM_BOTH_SIDES;
+            inverseTerm = nonSymbolTerm;
         }
         else if (leftNode.isUnaryMinus()) {
             inverseOp = "*";
