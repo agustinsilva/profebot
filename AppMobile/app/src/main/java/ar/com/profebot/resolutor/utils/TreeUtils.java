@@ -8,6 +8,7 @@ import java.util.Set;
 
 import ar.com.profebot.parser.container.Tree;
 import ar.com.profebot.parser.container.TreeNode;
+import ar.com.profebot.resolutor.container.OperatorLevel;
 import ar.com.profebot.resolutor.service.SimplifyService;
 
 public class TreeUtils {
@@ -1125,5 +1126,15 @@ public class TreeUtils {
         }
 
         return node;
+    }
+
+    public static boolean haveSameOperatorLevelCode(TreeNode treeNodeA, TreeNode treeNodeB){
+        return ( OperatorLevel.getBySimbol(treeNodeA.getValue()).getCode() ==
+                OperatorLevel.getBySimbol(treeNodeB.getValue()).getCode());
+    }
+
+    public static boolean hasDifferentLevelAncestors(TreeNode treeNode){
+        //TODO marian
+        return false;
     }
 }
