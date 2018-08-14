@@ -883,7 +883,7 @@ public class ResolutorServiceTest extends ResolutorService {
 
     @Test
     public void stepThrough_ok8()  throws InvalidExpressionException {
-        String expression = "5X/2 + 2 = 3X/2 + 10";
+        String expression = "5*X/2 + 2 = 3*X/2 + 10";
         Tree tree = (new ParserService()).parseExpression(expression);
         List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
         String estado;

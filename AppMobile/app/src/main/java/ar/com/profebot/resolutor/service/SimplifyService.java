@@ -150,7 +150,7 @@ public class SimplifyService {
     protected NodeStatus arithmeticSearch(TreeNode treeNode) {
 
         // TODO Busqueda postOrder
-        boolean noEsOperador = treeNode != null &&  !treeNode.esOperador();
+        boolean noEsOperador = treeNode == null ||  !treeNode.esOperador();
         if (noEsOperador) {
             return NodeStatus.noChange(treeNode);
         }
@@ -868,11 +868,17 @@ public class SimplifyService {
     // e.g. 2x*(4x+5) --distribute--> 2x*4x + 2x*5 --simplify--> 8x^2 + 10x
     // Returns a Node.Status object.
     private NodeStatus simplify(TreeNode node) {
+
+        if (node == null){
+            return NodeStatus.noChange(node);
+        }
+
         List<NodeStatus> substeps = new ArrayList<>();
 
         TreeNode newNode = node.cloneDeep();
         for (int i = 0; i < newNode.getArgs().size(); i++) {
 
+            if (newNode.getChild(i) == null){continue;}
             // e.g. 2*9 -> 18
             node = newNode.getChild(i);
             NodeStatus childStatus = arithmeticSearch(node);
