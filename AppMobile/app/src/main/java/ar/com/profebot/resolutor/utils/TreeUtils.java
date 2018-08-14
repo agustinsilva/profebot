@@ -61,9 +61,8 @@ public class TreeUtils {
      * @param allowUnaryMinus
      * @return
      */
-    private static boolean isSymbolFraction(TreeNode node, Boolean allowUnaryMinus) {
+    public static boolean isSymbolFraction(TreeNode node, Boolean allowUnaryMinus) {
         if (!node.esDivision()){return false;}
-
         if (!isSymbol(node.getLeftNode(), allowUnaryMinus)){return false;}
 
         return isConstant(node.getRightNode());

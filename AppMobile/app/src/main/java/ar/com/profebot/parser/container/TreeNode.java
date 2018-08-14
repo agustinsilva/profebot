@@ -271,8 +271,13 @@ public class TreeNode {
 
     public void multiplyCoefficient(String value) {
 
-        this.setCoefficient(this.getCoefficient() * Integer.parseInt(value));
-        updateValue();
+        if(TreeUtils.isSymbolFraction(this,false)) {
+            this.getLeftNode().multiplyCoefficient(value);
+        }
+        else{
+            this.setCoefficient(this.getCoefficient() * Integer.parseInt(value));
+            updateValue();
+        }
     }
 
     public void addExponent(String value) {
