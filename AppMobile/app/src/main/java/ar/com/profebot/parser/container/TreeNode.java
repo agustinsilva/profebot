@@ -169,7 +169,7 @@ public class TreeNode {
             int numChilds = 0;
             for(TreeNode child: this.getArgs()){
                 if (child != null) {
-                    list += child.getValue() + ",";
+                    list += child.toExpression() + ",";
                     numChilds++;
                 }
             }
@@ -467,7 +467,7 @@ public class TreeNode {
         if (TreeUtils.isSymbol(this)){
             return "X";
         }else{
-            return this.getValue();
+            return this.toExpression();
         }
     }
 

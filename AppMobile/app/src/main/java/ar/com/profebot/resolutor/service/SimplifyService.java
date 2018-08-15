@@ -66,14 +66,14 @@ public class SimplifyService {
     /**
      // Given a expression node, performs a single step to simplify the
      // expression. Returns a Node.Status object.
-     * @param node Nodo a evaluar
+     * @param originalNode Nodo a evaluar
      * @return El estado de la simplificacion
      */
-    protected NodeStatus step(TreeNode node) {
+    protected NodeStatus step(TreeNode originalNode) {
 
         NodeStatus nodeStatus;
 
-        node = TreeUtils.flattenOperands(node);
+        TreeNode node = TreeUtils.flattenOperands(originalNode.cloneDeep());
 
         // Basic simplifications that we always try first e.g. (...)^0 => 1
         nodeStatus = basicSearch(node);
@@ -282,6 +282,8 @@ public class SimplifyService {
         TreeNode newNode = TreeNode.createOperator("+", fractionList);
         // Wrap in parens for cases like 2*(2+3)/5 => 2*(2/5 + 3/5)
         newNode = TreeNode.createParenthesis(newNode);
+        newNode = TreeUtils.removeUnnecessaryParens(newNode, true);
+
         node.setChangeGroup(1);
 
         return NodeStatus.nodeChanged(
@@ -306,7 +308,7 @@ public class SimplifyService {
             }
             // we might also be able to just combine if they're all the same term
             // e.g. 2x + 4x + x (doesn't need collecting)
-            return addLikeTerms(node, true);
+            return addLikeTerms(node, false);
         } else if (node.esProducto()) {
             // collect and combine involves there being coefficients pulled the front
             // e.g. 2x * x^2 * 5x => (2*5) * (x * x^2 * x) => ... => 10 x^4

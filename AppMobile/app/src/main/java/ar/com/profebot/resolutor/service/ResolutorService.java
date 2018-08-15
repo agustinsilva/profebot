@@ -343,15 +343,15 @@ public class ResolutorService {
         if (solutions.size() > 1) {
             List<TreeNode> flattenSolutionsList = new ArrayList<>();
             for(TreeNode s: solutions){
-                if (s.getLeftNode() !=null || s.getRightNode()!=null){
+                /*if (s.getLeftNode() !=null || s.getRightNode()!=null){
                     for(TreeNode child: s.getArgs()){
                         if (child!= null){
                             flattenSolutionsList.add(child);
                         }
                     }
-                }else{
+                }else{*/
                     flattenSolutionsList.add(s);
-                }
+                //}
             }
             allSolutions =  TreeNode.createList(flattenSolutionsList);
         }
@@ -699,7 +699,9 @@ public class ResolutorService {
     // Given a mathjs expression node, steps through factoring the expression.
     // Currently only supports factoring quadratics.
     // Returns a list of details about each step.
-    protected List<NodeStatus> factorStepThrough(TreeNode node, boolean debug) {
+    protected List<NodeStatus> factorStepThrough(TreeNode originalNode, boolean debug) {
+
+        TreeNode node =originalNode.cloneDeep();
         if (debug) {
             // eslint-disable-next-line
             System.out.println("\n\nFactoring: " + node.toExpression());
