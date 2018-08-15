@@ -55,6 +55,12 @@ public class TreeUtils {
         return (treeNode!=null && (isSymbol(treeNode, false) || isSymbolFraction(treeNode, false)) );
     }
 
+    //Valida si el nodo es una raiz.
+    public static Boolean isNthRootTerm(TreeNode treeNode){
+        return (treeNode!=null && (treeNode.esRaiz() ||
+                (treeNode.esProducto() && isConstant(treeNode.getLeftNode()) && treeNode.getRightNode().esRaiz())) );
+    }
+
     /**
      * X / Cte
      * @param node

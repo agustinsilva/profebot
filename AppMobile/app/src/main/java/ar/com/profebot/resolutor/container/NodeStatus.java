@@ -3,6 +3,7 @@ package ar.com.profebot.resolutor.container;
 import java.util.List;
 
 import ar.com.profebot.parser.container.TreeNode;
+import ar.com.profebot.resolutor.utils.TreeUtils;
 
 public class NodeStatus {
 
@@ -382,6 +383,7 @@ public class NodeStatus {
         if(node.esOperador() && i != null){
             oldNode.getArgs().set(i,childStatus.getOldNode());
             newNode.getArgs().set(i,childStatus.getNewNode());
+            newNode = TreeUtils.groupConstantCoefficientAndSymbol(newNode);
             if(substeps != null) {
                 substeps = updateSubsteps(substeps, node, i);
             }

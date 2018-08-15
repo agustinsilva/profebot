@@ -49,7 +49,9 @@ public class TreeNode {
             List<TreeNode> otrosArgs = this.args.subList(2, this.args.size());
             if (this.getRightNode() != null && this.getLeftNode() != null) {
                 for (TreeNode child : otrosArgs) {
-                    node.addChild(child.clone());
+                    if (child!=null) {
+                        node.addChild(child.clone());
+                    }
                 }
             }
         }
@@ -285,12 +287,21 @@ public class TreeNode {
         this.setExponent(this.getExponent() * Integer.parseInt(value));
         updateValue();
     }
+
+    public void updateValue(){
+        updateValue(false, false);
+    }
+
+    public void updateValue(boolean explicitExp){
+        updateValue(false, explicitExp);
+    }
+
     /**
      * Se debería usar solo cuando cambia el exponente o el coeficiente de una X
      */
     //Actualiza el valor del nodo en funcion del coeficiente y el exponente por ejemplo si el
     //coeficiente es 3 y exponente es 2 cambiaria el valor a 3X^2
-    public void updateValue(){
+    public void updateValue(boolean explicitCoeff, boolean explicitExp){
         String coefficientString = "";
         if (coefficient != null && coefficient != 1 && coefficient != -1) {
             coefficientString = coefficient.toString();
@@ -394,7 +405,11 @@ public class TreeNode {
     }
 
     public static TreeNode createPolynomialTerm(String x, Integer exponent, Integer coefficient) {
-        String exponentStr = (exponent==1? "":"^" + exponent.toString());
+        return createPolynomialTerm(x, exponent, coefficient, false);
+    }
+
+    public static TreeNode createPolynomialTerm(String x, Integer exponent, Integer coefficient, boolean explicitExp) {
+        String exponentStr = (exponent==1 && !explicitExp? "":"^" + exponent.toString());
         String coefficientStr = "";
         if(coefficient != null && !coefficient.equals(1) && !coefficient.equals(-1)){
             coefficientStr = coefficient.toString();
@@ -464,8 +479,15 @@ public class TreeNode {
      * @return
      */
     public String getBase() {
-        if (TreeUtils.isSymbol(this)){
+        if (TreeUtils.isSymbol(this)) {
             return "X";
+
+        }else if (TreeUtils.isNthRootTerm(this)){
+            if (this.esProducto()){
+                return this.getRightNode().toExpression();
+            }else{
+                return this.toExpression();
+            }
         }else{
             return this.toExpression();
         }

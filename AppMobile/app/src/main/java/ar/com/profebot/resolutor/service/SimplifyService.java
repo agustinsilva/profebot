@@ -494,10 +494,10 @@ public class SimplifyService {
                 }
                 appendToArrayInObject(terms, termName, child);
             }
-            //  else if (Node.NthRootTerm.isNthRootTerm(child)) {
-            //     String termName = getTermName(child, Node.NthRootTerm, '+');
-            //     terms = appendToArrayInObject(terms, termName, child);
-            // }
+              else if (TreeUtils.isNthRootTerm(child)) {
+                 String termName = "R2";// getTermName(child, Node.NthRootTerm, '+');
+                 appendToArrayInObject(terms, termName, child);
+            }
             else if (TreeUtils.isIntegerFraction(child)) {
                 appendToArrayInObject(terms, CONSTANT_FRACTION, child);
             } else if (TreeUtils.isConstant(child)) {
@@ -537,25 +537,12 @@ public class SimplifyService {
                 child = child.getChild(0);
             }
             if (TreeUtils.isPolynomialTerm(child)) {
+                addToTermsforPolynomialMultiplication(terms, child);
 
-                String termName = "X";
-                if (child.getExponent() != 1) {
-                    termName += "^" + child.getExponent().toString();
-                }
-
-
-                if (child.getCoefficient() == 1) {
-                    appendToArrayInObject(terms, termName, child);
-                }else{
-                    // En este caso separo los terminos así se multiplican las constantes
-                    appendToArrayInObject(terms, "X", new TreeNode(termName));
-                    appendToArrayInObject(terms, CONSTANT, TreeNode.createConstant(child.getCoefficient()));
-                }
             }
-            // TODO addToTermsforNthRootMultiplication
-           // else if (Node.Type.isFunction(child, 'nthRoot')) {
-           //    terms = addToTermsforNthRootMultiplication(terms, child);
-           // }
+           else if (child.esRaiz()) {
+               addToTermsforNthRootMultiplication(terms, child);
+            }
             else if (TreeUtils.isIntegerFraction(child)) {
                 appendToArrayInObject(terms, CONSTANT, child);
             }
@@ -573,6 +560,32 @@ public class SimplifyService {
             }
         }
         return terms;
+    }
+
+    // A helper function for getTermsForCollectingMultiplication
+    // e.g. nthRoot(x, 2), append 'nthRoot2': nthRootNode to terms dictionary
+    // Takes the terms dictionary and the nthRoot node, and returns an updated
+    // terms dictionary.
+    private void addToTermsforNthRootMultiplication(Map<String, List<TreeNode>> terms, TreeNode child) {
+        String termName = "R2";
+        appendToArrayInObject(terms, termName, child);
+    }
+
+    // A helper function for getTermsForCollectingMultiplication
+    // Polynomial terms need to be divided into their coefficient + symbolic parts.
+    // e.g. 2x^4 -> 2 (coeffient) and x^4 (symbolic, named after the symbol node)
+    // Takes the terms list and the polynomial term node, and returns an updated
+    // terms list.
+    private void addToTermsforPolynomialMultiplication(Map<String, List<TreeNode>> terms, TreeNode child) {
+        String termName = "X";
+
+        if (child.getCoefficient() == 1) {
+            appendToArrayInObject(terms, termName, child);
+        }else{
+            // En este caso separo los terminos así se multiplican las constantes
+            appendToArrayInObject(terms, termName, TreeNode.createPolynomialTerm("X", child.getExponent(), 1));
+            appendToArrayInObject(terms, CONSTANT, TreeNode.createConstant(child.getCoefficient()));
+        }
     }
 
     // step 2 onwards for collectAndCombineOperation
@@ -2078,7 +2091,7 @@ public class SimplifyService {
 
     // Returns true if the nodes are polynomial terms that can be added together.
     public boolean canAddLikeTermPolynomialNodes(TreeNode node) {
-        return canAddLikeTermNodes(node, NTH_ROOT_TERM);
+        return canAddLikeTermNodes(node, POLYNOMIAL_TERM);
     }
 
     protected NodeStatus addLikeNthRootTerms(TreeNode node) {
@@ -2103,9 +2116,17 @@ public class SimplifyService {
             return false;
         }
         List<TreeNode> args = node.getArgs();
-   //     if (!args.every(n => Node.Term.isTerm(n, termSubclass.baseNodeFunc))) {
-   //        return false;
-   //     }
+
+        // Todos tienen que ser del mismo tipo
+        for (TreeNode child: args) {
+            if (POLYNOMIAL_TERM.equals(termSubclass)) {
+                if (!TreeUtils.isPolynomialTerm(child)){return false;}
+            } else if (NTH_ROOT_TERM.equals(termSubclass)) {
+                if (!TreeUtils.isNthRootTerm(child)){return false;}
+            }else{
+                return false;
+            }
+        }
         if (args.size() == 1) {
             return false;
         }
@@ -2177,6 +2198,7 @@ public class SimplifyService {
 
         TreeNode evalateStatusNewNode = status.getNewNode();
         newNode = NodeStatus.resetChangeGroups(evalateStatusNewNode);
+        newNode = TreeUtils.groupConstantCoefficientAndSymbol(newNode);
 
         return NodeStatus.nodeChanged(
                 changeType, node, newNode, substeps);
@@ -2194,7 +2216,21 @@ public class SimplifyService {
         Integer changeGroup = 1;
         int i = 0;
         for(TreeNode child: newNode.getArgs()){
-            if (child!= null && CONSTANT_1.equals(child.getCoefficient())) {
+            if (child == null){continue;}
+
+            if (NTH_ROOT_TERM.equals(termSubclass)){
+                // Para las raices se comporta distinto
+                if (child.esRaiz()){
+                    // Tiene coeficiente 1, lo hago explicito
+                    TreeNode newChildNode = TreeNode.createOperator("*",
+                            TreeNode.createConstant(CONSTANT_1), child.cloneDeep());
+                    newNode.setChild(i, newChildNode);
+                    node.setChild(i, newChildNode); // note that this is the "oldNode"
+
+                    change = true;
+                    changeGroup++;
+                }
+            }else if (CONSTANT_1.equals(child.getCoefficient())) {
                 TreeNode newChildNode = child.clone();
                 newChildNode.setExplicitCoeff(true);
                 newNode.getChild(i).setChangeGroup(changeGroup);
@@ -2227,6 +2263,7 @@ public class SimplifyService {
         Integer changeGroup = 1;
         int i = 0;
         for(TreeNode child: newNode.getArgs()){
+            // TODO validar raices negativas, son validas en el parser?
             if (child != null && CONSTANT_1_NEG.equals(child.getCoefficient())) {
                 TreeNode newChildNode = child.clone();
                 newChildNode.setExplicitCoeff(true);
@@ -2257,7 +2294,12 @@ public class SimplifyService {
         List<TreeNode> coefficientList = new ArrayList<>();
         for(TreeNode child: newNode.getArgs()){
             if (child!= null) {
-                coefficientList.add(TreeNode.createConstant(child.getCoefficient()));
+                if (NTH_ROOT_TERM.equals(termSubclass)){
+                    // Las raices van a tener la forma "Cte * R(n)"
+                    coefficientList.add(child.getLeftNode().cloneDeep());
+                }else {
+                    coefficientList.add(TreeNode.createConstant(child.getCoefficient()));
+                }
             }
         }
 
@@ -2268,10 +2310,16 @@ public class SimplifyService {
 
         // terms that can be added together must share the same base
         // name and exponent. Get that base and exponent from the first term
-        TreeNode firstTerm = node.getChild(0).clone();
-        firstTerm.setCoefficient(1);
-        firstTerm.setExplicitCoeff(false);
-        firstTerm.updateValue();
+        TreeNode firstTerm = null;
+
+        if (NTH_ROOT_TERM.equals(termSubclass)){
+            firstTerm = node.getChild(0).getRightNode().clone();
+        }else { // Poly
+            firstTerm = node.getChild(0).clone();
+            firstTerm.setCoefficient(1);
+            firstTerm.setExplicitCoeff(false);
+            firstTerm.updateValue();
+        }
         newNode = TreeNode.createOperator("*",
                 sumOfCoefficents, firstTerm);
 
@@ -2609,8 +2657,8 @@ public class SimplifyService {
 
                     change = true;
                     changeGroup++;
-                    i++;
                 }
+                i++;
             }
         }
         else {
@@ -2620,7 +2668,7 @@ public class SimplifyService {
                     newNode.setChild(i,  TreeNode.createPolynomialTerm(
                             "X",
                             CONSTANT_1,
-                            polyTerm.getCoefficient()));
+                            polyTerm.getCoefficient(), true));
 
                     newNode.getChild(i).setChangeGroup(changeGroup);
                     node.getChild(i).setChangeGroup(changeGroup); // note that this is the "oldNode"
@@ -2646,7 +2694,7 @@ public class SimplifyService {
     // e.g 2^4 returns 2
     // e.g 3 returns 3, since 3 is equal to 3^1 which has a base of 3
     private TreeNode getBaseNode(TreeNode node) {
-        if (!node.getArgs().isEmpty()) {
+        if (node.esPotencia()) {
             return node.getChild(0);
         }
         else {
