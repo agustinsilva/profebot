@@ -39,6 +39,10 @@ public class TreeNode {
         TreeNode node = new TreeNode(this.getValue());
         node.setCoefficient(this.getCoefficient());
         node.setExponent(this.getExponent());
+        node.setUnaryMinus(this.unaryMinus);
+        node.setChangeGroup(this.changeGroup);
+        node.setExplicitCoeff(this.explicitCoeff);
+
         if(this.getLeftNode() != null) {
             node.setLeftNode(this.getLeftNode().clone());
         }
@@ -67,8 +71,6 @@ public class TreeNode {
         return this.clone();
     }
 
-    //TODO Agregar nodo padre y child index.
-    
     public String getValue() {
         return value;
     }
@@ -419,6 +421,16 @@ public class TreeNode {
         return new TreeNode(coefficientStr + x + exponentStr);
     }
 
+    public static TreeNode createPolynomialFractionTerm(String x, Integer exponent, TreeNode fractionCoefficient) {
+
+        Integer coefficientNumerator = fractionCoefficient.getLeftNode().getIntegerValue();
+        Integer coefficientDenominator = fractionCoefficient.getRightNode().getIntegerValue();
+
+        TreeNode symbolNode = createPolynomialTerm(x, exponent, coefficientNumerator);
+        TreeNode denominatorNode = createConstant(coefficientDenominator);
+        return createOperator("/", symbolNode, denominatorNode);
+    }
+
     public TreeNode getChild(int i) {
         if (i > this.args.size()-1){return null;}
         return this.args.get(i);
@@ -513,4 +525,5 @@ public class TreeNode {
     public Integer getChildIndex() {
         return childIndex;
     }
+
 }

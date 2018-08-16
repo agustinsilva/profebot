@@ -383,7 +383,7 @@ public class SimplifyService {
                 termTypesSorted.add(t);
             }
         }
-        Collections.sort(termTypesSorted);
+        Collections.sort(termTypesSorted, Collections.reverseOrder());
 
 
         // Then add const
@@ -487,10 +487,13 @@ public class SimplifyService {
         for (int i = 0; i < node.getArgs().size(); i++) {
             TreeNode child = node.getChild(i);
 
-            if (TreeUtils.isPolynomialTerm(child)) {
+            if (TreeUtils.isPolynomialTerm(child) || TreeUtils.isSymbolPower(child, false)) {
                 String termName = "X";
-                if (child.getExponent() != 1) {
-                    termName += "^" + child.getExponent().toString();
+                Integer exponentValue = (TreeUtils.isSymbolPower(child, false)?
+                        child.getRightNode().getIntegerValue():
+                        child.getExponent());
+                if (exponentValue != 1) {
+                    termName += "^" + exponentValue.toString();
                 }
                 appendToArrayInObject(terms, termName, child);
             }
@@ -511,6 +514,17 @@ public class SimplifyService {
                 // since they would have been handled by isPolynomialTerm
                 throw new Error("Unsupported node type: " + child.getValue());
             }
+        }
+
+        // If there's exactly one constant and one fraction, we collect them
+        // to add them together.
+        // e.g. 2 + 1/3 + 5 would collect the constants (2+5) + 1/3
+        // but 2 + 1/3 + x would collect (2 + 1/3) + x so we can add them together
+        if (terms.get(CONSTANT) != null && terms.get(CONSTANT).size()==1 &&
+                terms.get(CONSTANT_FRACTION) != null && terms.get(CONSTANT_FRACTION).size()==1) {
+                TreeNode fraction = terms.get(CONSTANT_FRACTION).get(0);
+                appendToArrayInObject(terms, CONSTANT, fraction);
+               terms.remove(CONSTANT_FRACTION);
         }
         return terms;
     }
@@ -659,7 +673,7 @@ public class SimplifyService {
         /*if (!unaryContent.isParenthesis()) {
             return NodeStatus.noChange(node);
         }*/
-        TreeNode content = unaryContent.getChild(0);
+        TreeNode content = unaryContent; // unaryContent.getChild(0);
         if (!content.esOperador()) {
             return NodeStatus.noChange(node);
         }
@@ -848,7 +862,11 @@ public class SimplifyService {
                 }
             }
         }
-        return TreeNode.createParenthesis(TreeNode.createOperator("+", newArgs));
+        if (newArgs.size() == 1){
+            return TreeNode.createParenthesis(newArgs.get(0));
+        }else {
+            return TreeNode.createParenthesis(TreeNode.createOperator("+", newArgs));
+        }
     }
 
     private Boolean hasFraction(List<TreeNode> args) {
@@ -1132,7 +1150,7 @@ public class SimplifyService {
      */
     protected NodeStatus functionsSearch(TreeNode treeNode){
         // TODO Busqueda postOrder
-        if(TreeUtils.isConstant(treeNode) || TreeUtils.isSymbol(treeNode,false)) {
+        if(treeNode == null || TreeUtils.isConstant(treeNode) || TreeUtils.isSymbol(treeNode,false)) {
             return NodeStatus.noChange(treeNode);
         }
         if(treeNode.isUnaryMinus()) {
@@ -3122,8 +3140,14 @@ public class SimplifyService {
             // we need to reset change groups because we're creating a new node
             TreeNode newCoeff = NodeStatus.resetChangeGroups(newCoeffStatus.getNewNode());
 
-            TreeNode newNode = TreeNode.createPolynomialTerm(
-                    "X", node.getLeftNode().getExponent(), newCoeff.getIntegerValue());
+            TreeNode newNode;
+            if (TreeUtils.isConstant(newCoeff)){
+                newNode = TreeNode.createPolynomialTerm(
+                        "X", node.getLeftNode().getExponent(), newCoeff.getIntegerValue());
+            }else{
+                newNode = TreeNode.createPolynomialFractionTerm(
+                        "X", node.getLeftNode().getExponent(), newCoeff);
+            }
             return NodeStatus.nodeChanged(newCoeffStatus.getChangeType(), node, newNode);
         }
 

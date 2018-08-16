@@ -6,6 +6,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import ar.com.profebot.parser.container.Tree;
@@ -152,7 +154,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         List<NodeStatus> listaNodos =  super.stepThrough(node);
         NodeStatus estadoSimple = listaNodos.get(0);
-        Assert.assertEquals("2X+2X^2",estadoSimple.getNewNode().toExpression());
+        Assert.assertEquals("2X^2+2X",estadoSimple.getNewNode().toExpression());
     }
 
     @Test
@@ -252,7 +254,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         List<NodeStatus> listaNodos =  super.stepThrough(node);
         NodeStatus estado = listaNodos.get(listaNodos.size() - 1);
-        Assert.assertEquals("5X^3 - 8X^2 + 6",estado.getNewNode().toExpression());
+        Assert.assertEquals("5X^3-8X^2+6",estado.getNewNode().toExpression());
     }
 
     @Test
@@ -272,7 +274,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         List<NodeStatus> listaNodos =  super.stepThrough(node);
         NodeStatus estado = listaNodos.get(listaNodos.size() - 1);
-        Assert.assertEquals("4X^2 + 2X + 7",estado.getNewNode().toExpression());
+        Assert.assertEquals("4X^2+2X+7",estado.getNewNode().toExpression());
     }
 
     @Test
@@ -282,7 +284,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         List<NodeStatus> listaNodos =  super.stepThrough(node);
         NodeStatus estado = listaNodos.get(listaNodos.size() - 1);
-        Assert.assertEquals("5X^3 - 8X^2 + 6",estado.getNewNode().toExpression());
+        Assert.assertEquals("5X^3-8X^2+6",estado.getNewNode().toExpression());
     }
 
     @Test
@@ -362,7 +364,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         List<NodeStatus> listaNodos =  super.stepThrough(node);
         NodeStatus estado = listaNodos.get(listaNodos.size() - 1);
-        Assert.assertEquals("3 + X",estado.getNewNode().toExpression());
+        Assert.assertEquals("3+X",estado.getNewNode().toExpression());
     }
 
     @Test
@@ -467,12 +469,12 @@ public class SimplifyServiceTest extends SimplifyService {
 
     @Test
     public void stepThrough_ok45()  throws InvalidExpressionException {
-        String expression = "(12*X^(2))/27 = 3";
+        String expression = "(12*X^2)/27 = 3";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
         List<NodeStatus> listaNodos =  super.stepThrough(node);
         NodeStatus estado = listaNodos.get(listaNodos.size() - 1);
-        Assert.assertEquals("4/9 X^2",estado.getNewNode().toExpression());
+        Assert.assertEquals("4X^2/9",estado.getNewNode().toExpression());
     }
 
     @Test
@@ -512,7 +514,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         List<NodeStatus> listaNodos =  super.stepThrough(node);
         NodeStatus estado = listaNodos.get(listaNodos.size() - 1);
-        Assert.assertEquals("X^3 + 12X^2 + 47X + 60",estado.getNewNode().toExpression());
+        Assert.assertEquals("X^3+12X^2+47X+60",estado.getNewNode().toExpression());
     }
 
     @Test
@@ -1373,7 +1375,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.distributeSearch(flattenedNode);
-        Assert.assertEquals("((3*(X^2+3))/(X^2)+(X*(X^2+3))/(X^2+3))",estado.getNewNode().toExpression());
+        Assert.assertEquals( "(3 / X^2 + X / (X^2 + 3)) * (X^2 + 3) = 4", "((3*(X^2+3))/X^2)+((X*(X^2+3))/(X^2+3))",estado.getNewNode().toExpression());
     }
 
     @Test
@@ -2625,7 +2627,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.simplifyPolynomialFraction(flattenedNode);
-        Assert.assertEquals("1/2 X", estado.getNewNode().toExpression());
+        Assert.assertEquals("X/2", estado.getNewNode().toExpression());
     }
 
     @Test
@@ -2645,7 +2647,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.simplifyPolynomialFraction(flattenedNode);
-        Assert.assertEquals("-1/3 X", estado.getNewNode().toExpression());
+        Assert.assertEquals("-X/3", estado.getNewNode().toExpression());
     }
 
     @Test
@@ -2655,7 +2657,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.simplifyPolynomialFraction(flattenedNode);
-        Assert.assertEquals("3/2 X", estado.getNewNode().toExpression());
+        Assert.assertEquals("3X/2", estado.getNewNode().toExpression());
     }
 
     @Test
@@ -2675,7 +2677,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.simplifyPolynomialFraction(flattenedNode);
-        Assert.assertEquals("4/9 X^2", estado.getNewNode().toExpression());
+        Assert.assertEquals("4X^2/9", estado.getNewNode().toExpression());
     }
 
     @Test
@@ -2878,7 +2880,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         boolean resultado = super.canCollectLikeTerms(flattenedNode);
-        Assert.assertFalse(resultado);
+        Assert.assertTrue(resultado);
     }
 
     @Test
@@ -2978,7 +2980,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus resultado = super.collectLikeTerms(flattenedNode);
-        Assert.assertEquals("(X+X)+(X^2+X^2)",resultado.getNewNode().toExpression());
+        Assert.assertEquals("(X^2+X^2)+(X+X)",resultado.getNewNode().toExpression());
     }
 
     @Test
@@ -2998,7 +3000,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus resultado = super.collectLikeTerms(flattenedNode);
-        Assert.assertEquals("(X+3X)+(2X^2+X^2)",resultado.getNewNode().toExpression());
+        Assert.assertEquals("(2X^2+X^2)+(X+3X)",resultado.getNewNode().toExpression());
     }
 
     @Test
@@ -3018,7 +3020,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus resultado = super.collectLikeTerms(flattenedNode);
-        Assert.assertEquals("(7*R(11)-2*R(11))+(4X-X)",resultado.getNewNode().toExpression());
+        Assert.assertEquals("(4X-X)+(7*R(11)-2*R(11))",resultado.getNewNode().toExpression());
     }
 
     @Test

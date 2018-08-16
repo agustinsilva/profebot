@@ -52,8 +52,10 @@ public class TreeUtils {
 
     //Valida si el nodo es un polinomio.
     public static Boolean isPolynomialTerm(TreeNode treeNode){
-        return (treeNode!=null && (isSymbol(treeNode, false) || isSymbolFraction(treeNode, false)) );
+        return (treeNode!=null && (isSymbol(treeNode, false)
+                || isSymbolFraction(treeNode, false)));
     }
+
 
     //Valida si el nodo es una raiz.
     public static Boolean isNthRootTerm(TreeNode treeNode){
@@ -69,6 +71,13 @@ public class TreeUtils {
      */
     public static boolean isSymbolFraction(TreeNode node, Boolean allowUnaryMinus) {
         if (!node.esDivision()){return false;}
+        if (!isSymbol(node.getLeftNode(), allowUnaryMinus)){return false;}
+
+        return isConstant(node.getRightNode());
+    }
+
+    public static boolean isSymbolPower(TreeNode node, Boolean allowUnaryMinus) {
+        if (!node.esPotencia()){return false;}
         if (!isSymbol(node.getLeftNode(), allowUnaryMinus)){return false;}
 
         return isConstant(node.getRightNode());
@@ -1125,8 +1134,16 @@ public class TreeUtils {
             return newNode;
 
         }else if(node.getRightNode().getValue().contains("X") ){
-            TreeNode newNode = node.getRightNode().clone();
-            newNode.multiplyCoefficient(node.getLeftNode().getValue());
+            TreeNode newNode = null;
+
+            if (new Integer(0).equals(node.getLeftNode().getIntegerValue())){
+                // Puede quedar en 0, en ese caso devuelvo la constante 0
+                newNode = TreeNode.createConstant(0);
+            }else {
+                newNode = node.getRightNode().clone();
+                newNode.multiplyCoefficient(node.getLeftNode().getValue());
+            }
+
             return newNode;
         }
 
