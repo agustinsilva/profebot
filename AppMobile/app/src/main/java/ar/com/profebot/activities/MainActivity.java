@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
         enterEquation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
-                spinner.setVisibility(View.VISIBLE);
                 Intent intent = new Intent(MainActivity.this, EnterEquationOptionsActivity.class);
                 startActivity(intent);
             }
@@ -39,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
         enterPolinomial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
-                spinner.setVisibility(View.VISIBLE);
                 Intent intent = new Intent(MainActivity.this, EnterPolinomialActivity.class);
                 startActivity(intent);
             }

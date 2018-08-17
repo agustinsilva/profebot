@@ -56,14 +56,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="+" />
+                android:text="@string/positive"
+                android:checked="true"/>
 
             <RadioButton
                 android:id="@+id/negativeRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="-" />
+                android:text="@string/negative" />
         </RadioGroup>
 
         <android.support.design.widget.TextInputLayout

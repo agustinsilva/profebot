@@ -9,4 +9,6 @@
     <string name="release_to_take_photo"></string>
     <string name="taking_picture">Tomando foto</string>
     <string name="processing_image">Procesando imagen</string>
+    <string name="positive">+</string>
+    <string name="negative">-</string>
 </resources>
