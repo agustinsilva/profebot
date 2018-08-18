@@ -32,6 +32,10 @@ public class EquationStatus {
         return new EquationStatus(NodeStatus.ChangeTypes.NO_CHANGE, null, equation, null);
     };
 
+    public Tree getOldEquation() {
+        return oldEquation;
+    }
+
     public Tree getNewEquation() {
         return newEquation;
     }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import ar.com.profebot.Models.MultipleChoiceStep;
 import ar.com.profebot.parser.container.Tree;
 import ar.com.profebot.parser.container.TreeNode;
 import ar.com.profebot.parser.exception.InvalidExpressionException;
@@ -17,13 +18,41 @@ import ar.com.profebot.resolutor.utils.TreeUtils;
 
 public class ResolutorService {
 
-    private List<ResolutionStep> resolutionStepList = new ArrayList<>();
     private SimplifyService simplifyService = new SimplifyService();
 
-    public void resolveExpression(String expression, Boolean debug) throws InvalidExpressionException {
+    public List<MultipleChoiceStep> resolveExpression(String expression) throws InvalidExpressionException {
+        return resolveExpression(expression, false);
+    }
+
+    public List<MultipleChoiceStep> resolveExpression(String expression, Boolean debug) throws InvalidExpressionException {
 
         Tree tree = (new ParserService()).parseExpression(expression);
         List<EquationStatus> steps = stepThrough(tree, debug);
+
+        List<MultipleChoiceStep> result = new ArrayList<>();
+        for(EquationStatus e: steps){
+            String equationBase = e.getOldEquation().toExpression();
+            String newEquationBase = e.getNewEquation().toExpression();
+            String summary = "-";
+            String optionA = newEquationBase;
+            String optionB = newEquationBase + "+8";
+            String optionC = newEquationBase + "-3";
+            Integer correctOption = 1;
+            String correctOptionJustification = "-";
+            String incorrectOptionJustification1 = "-";
+            String incorrectOptionJustification2 = "-";
+            MultipleChoiceStep multipleChoiceStep = new MultipleChoiceStep(equationBase,
+                    newEquationBase, summary, optionA, optionB, optionC, correctOption,
+                    correctOptionJustification, incorrectOptionJustification1, incorrectOptionJustification2);
+            result.add(multipleChoiceStep);
+        }
+
+        // El ultimo paso es el que resuelve
+        if (!result.isEmpty()){
+            result.get(result.size()-1).setSolved(true);
+        }
+
+        return result;
     }
 
     protected List<EquationStatus> stepThrough(Tree equation, Boolean debug){
