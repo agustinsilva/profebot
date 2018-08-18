@@ -29,6 +29,49 @@ public class SimplifyService {
     private static final String POLYNOMIAL_TERM = "PolynomialTerm";
     private static final String NTH_ROOT_TERM = "NthRootTerm";
 
+    private enum SEARCH_MODE{
+
+        // Basic simplifications that we always try first e.g. (...)^0 => 1
+        BASIC_SEARCH(true),
+
+        // Simplify any division chains so there's at most one division operation.
+        // e.g. 2/x/6 -> 2/(x*6)        e.g. 2/(x/6) => 2 * 6/x
+        DIVISION_SEARCH(true),
+
+        // Adding fractions, cancelling out things in fractions
+        FRACTION_SEARCH(true),
+
+        // e.g. addition of polynomial terms: 2x + 4x^2 + x => 4x^2 + 3x
+        // e.g. multiplication of polynomial terms: 2x * x * x^2 => 2x^3
+        // e.g. multiplication of constants: 10^3 * 10^2 => 10^5
+        COLLECT_AND_COMBINE_SEARCH(false),
+
+        // e.g. 2 + 2 => 4
+        ARITHMETIC_SEARCH(false),
+
+        // e.g. (2 + x) / 4 => 2/4 + x/4
+        BREAKUP_NUMERATOR_SEARCH(false),
+
+        // e.g. 3/x * 2x/5 => (3 * 2x) / (x * 5)
+        MULTIPLY_FRACTION_SEARCH(false),
+
+        // e.g. (2x + 3)(x + 4) => 2x^2 + 11x + 12
+        DISTRIBUTE_SEARCH(false),
+
+        // e.g. abs(-4) => 4
+        FUNCTION_SEARCH(false);
+
+        private Boolean preOrder;
+        SEARCH_MODE(Boolean preOrder) {
+            this.preOrder = preOrder;
+        }
+
+        Boolean isPreOrder(){
+            return preOrder;
+        }
+    }
+
+
     /**
      // Dado un nodo expresion, dada una lista de paso a paso simplificando la expresion.
      // Retorna una lista de detalles acerca del paso.
@@ -75,54 +118,92 @@ public class SimplifyService {
 
         TreeNode node = TreeUtils.flattenOperands(originalNode.cloneDeep());
 
-        // Basic simplifications that we always try first e.g. (...)^0 => 1
-        nodeStatus = basicSearch(node);
-        node = TreeUtils.flattenOperands(nodeStatus.getNewNode());
-        if (nodeStatus.hasChanged()){nodeStatus.setNewNode(node.clone()); return nodeStatus;}
+        for (SEARCH_MODE mode: SEARCH_MODE.values()){
+            nodeStatus = searchFunction(mode, node);
+            node = TreeUtils.flattenOperands(nodeStatus.getNewNode());
+            if (nodeStatus.hasChanged()){
+                nodeStatus.setNewNode(node.clone());
+                return nodeStatus;
+            }
+        }
 
-        // Simplify any division chains so there's at most one division operation.
-        // e.g. 2/x/6 -> 2/(x*6)        e.g. 2/(x/6) => 2 * 6/x
-        nodeStatus = divisionSearch(node);
-        node = TreeUtils.flattenOperands(nodeStatus.getNewNode());
-        if (nodeStatus.hasChanged()){nodeStatus.setNewNode(node.clone()); return nodeStatus;}
+        return NodeStatus.noChange(node);
+    }
 
-        // Adding fractions, cancelling out things in fractions
-        nodeStatus = fractionsSearch(node);
-        node = TreeUtils.flattenOperands(nodeStatus.getNewNode());
-        if (nodeStatus.hasChanged()){nodeStatus.setNewNode(node.clone()); return nodeStatus;}
+    private NodeStatus searchFunction(SEARCH_MODE mode, TreeNode node) {
 
-        // e.g. addition of polynomial terms: 2x + 4x^2 + x => 4x^2 + 3x
-        // e.g. multiplication of polynomial terms: 2x * x * x^2 => 2x^3
-        // e.g. multiplication of constants: 10^3 * 10^2 => 10^5
-        nodeStatus = collectAndCombineSearch(node);
-        node = TreeUtils.flattenOperands(nodeStatus.getNewNode());
-        if (nodeStatus.hasChanged()){nodeStatus.setNewNode(node.clone()); return nodeStatus;}
+        NodeStatus status;
 
-        // e.g. 2 + 2 => 4
-        nodeStatus = arithmeticSearch(node);
-        node = TreeUtils.flattenOperands(nodeStatus.getNewNode());
-        if (nodeStatus.hasChanged()){nodeStatus.setNewNode(node.clone()); return nodeStatus;}
+        if (node == null){
+            return NodeStatus.noChange(node);
+        }
 
-        // e.g. (2 + x) / 4 => 2/4 + x/4
-        nodeStatus = breakUpNumeratorSearch(node);
-        node = TreeUtils.flattenOperands(nodeStatus.getNewNode());
-        if (nodeStatus.hasChanged()){nodeStatus.setNewNode(node.clone()); return nodeStatus;}
+        if (mode.isPreOrder()) {
+            status = executeSearchFunction(mode, node);
+            if (status.hasChanged()) {
+                return status;
+            }
+        }
 
-        // e.g. 3/x * 2x/5 => (3 * 2x) / (x * 5)
-        nodeStatus = multiplyFractionsSearch(node);
-        node = TreeUtils.flattenOperands(nodeStatus.getNewNode());
-        if (nodeStatus.hasChanged()){nodeStatus.setNewNode(node.clone()); return nodeStatus;}
+        if (TreeUtils.isConstant(node) || TreeUtils.isSymbol(node)) {
+            return NodeStatus.noChange(node);
+        }
+        else if (node.isUnaryMinus()) {
+            status = searchFunction(mode, node.getChild(0));
+            if (status.hasChanged()) {
+                return NodeStatus.childChanged(node, status);
+            }
+        }
+        else if (node.esOperador() || node.esRaiz()) {
+            for (int i = 0; i < node.getArgs().size(); i++) {
+                TreeNode child = node.getChild(i);
+                NodeStatus childNodeStatus = searchFunction(mode, child);
+                if (childNodeStatus.hasChanged()) {
+                    return  NodeStatus.childChanged(node, childNodeStatus, i);
+                }
+            }
+        }
+        else if (node.isParenthesis()) {
+            status = searchFunction(mode, node.getContent());
+            if (status.hasChanged()) {
+                return NodeStatus.childChanged(node, status);
+            }
+        }
+        else {
+            throw new Error("Unsupported node type: " + node.toExpression());
+        }
 
-        // e.g. (2x + 3)(x + 4) => 2x^2 + 11x + 12
-        nodeStatus = distributeSearch(node);
-        node = TreeUtils.flattenOperands(nodeStatus.getNewNode());
-        if (nodeStatus.hasChanged()){nodeStatus.setNewNode(node.clone()); return nodeStatus;}
+        if (!mode.isPreOrder()) {
+            return executeSearchFunction(mode, node);
+        }
+        else {
+            return NodeStatus.noChange(node);
+        }
 
-        // e.g. abs(-4) => 4
-        nodeStatus = functionsSearch(node);
-        node = TreeUtils.flattenOperands(nodeStatus.getNewNode());
-        if (nodeStatus.hasChanged()){nodeStatus.setNewNode(node.clone()); return nodeStatus;}
 
+    }
+
+    private NodeStatus executeSearchFunction(SEARCH_MODE mode, TreeNode node) {
+        switch (mode){
+            case BASIC_SEARCH:
+                return basicSearch(node);
+            case DIVISION_SEARCH:
+                return divisionSearch(node);
+            case FRACTION_SEARCH:
+                return fractionsSearch(node);
+            case COLLECT_AND_COMBINE_SEARCH:
+                return collectAndCombineSearch(node);
+            case ARITHMETIC_SEARCH:
+                return arithmeticSearch(node);
+            case BREAKUP_NUMERATOR_SEARCH:
+                return breakUpNumeratorSearch(node);
+            case MULTIPLY_FRACTION_SEARCH:
+                return multiplyFractionsSearch(node);
+            case DISTRIBUTE_SEARCH:
+                return distributeSearch(node);
+            case FUNCTION_SEARCH:
+                return functionsSearch(node);
+        }
         return NodeStatus.noChange(node);
     }
 
@@ -149,7 +230,6 @@ public class SimplifyService {
      */
     protected NodeStatus arithmeticSearch(TreeNode treeNode) {
 
-        // TODO Busqueda postOrder
         boolean noEsOperador = treeNode == null ||  !treeNode.esOperador();
         if (noEsOperador) {
             return NodeStatus.noChange(treeNode);
@@ -199,8 +279,6 @@ public class SimplifyService {
      */
     protected NodeStatus basicSearch(TreeNode treeNode){
         NodeStatus nodeStatus;
-
-        // TODO Busqueda preOrder
 
         // multiplication by 0 yields 0
         nodeStatus = reduceMultiplicationByZero(treeNode);
@@ -258,7 +336,6 @@ public class SimplifyService {
      * @return El estado de la simplificacion
      */
     protected NodeStatus breakUpNumeratorSearch(TreeNode node){
-        // TODO Busqueda postOrder
 
         // Buscar una division
         if (node == null || !node.esDivision()) {
@@ -299,7 +376,6 @@ public class SimplifyService {
      * @return El estado de la simplificacion
      */
     protected NodeStatus collectAndCombineSearch(TreeNode node){
-        // TODO Busqueda postOrder
 
         if (node.esSuma()) {
             NodeStatus status = collectAndCombineOperation(node);
@@ -645,8 +721,6 @@ public class SimplifyService {
      * @return El estado de la simplificacion
      */
     protected NodeStatus distributeSearch(TreeNode node){
-        // TODO Busqueda postOrder
-
         if (node.isUnaryMinus()) {
             return distributeUnaryMinus(node);
         }
@@ -1024,7 +1098,6 @@ public class SimplifyService {
      * @return El estado de la simplificacion
      */
     protected NodeStatus divisionSearch(TreeNode node){
-        // TODO Busqueda preOrder
 
         if (!node.esOperador() || !node.esDivision()) {
             return NodeStatus.noChange(node);
@@ -1111,8 +1184,6 @@ public class SimplifyService {
     protected NodeStatus fractionsSearch(TreeNode treeNode){
         NodeStatus nodeStatus;
 
-        // TODO Busqueda preOrder
-
         // e.g. 2/3 + 5/6
         nodeStatus = addConstantFractions(treeNode);
         if (nodeStatus.hasChanged()){return nodeStatus;}
@@ -1149,7 +1220,7 @@ public class SimplifyService {
      * @return El estado de la simplificacion
      */
     protected NodeStatus functionsSearch(TreeNode treeNode){
-        // TODO Busqueda postOrder
+
         if(treeNode == null || TreeUtils.isConstant(treeNode) || TreeUtils.isSymbol(treeNode,false)) {
             return NodeStatus.noChange(treeNode);
         }
@@ -1192,7 +1263,6 @@ public class SimplifyService {
      * @return El estado de la simplificacion
      */
     protected NodeStatus multiplyFractionsSearch(TreeNode node){
-        // TODO Busqueda postOrder
 
         if (!node.esOperador() || !node.esProducto()) {
             return NodeStatus.noChange(node);

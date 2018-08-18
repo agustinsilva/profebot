@@ -314,7 +314,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         List<NodeStatus> listaNodos =  super.stepThrough(node);
         NodeStatus estado = listaNodos.get(listaNodos.size() - 1);
-        Assert.assertEquals("16X^2 + 3",estado.getNewNode().toExpression());
+        Assert.assertEquals("16X^2+3",estado.getNewNode().toExpression());
     }
 
     @Test
@@ -334,7 +334,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         List<NodeStatus> listaNodos =  super.stepThrough(node);
         NodeStatus estado = listaNodos.get(listaNodos.size() - 1);
-        Assert.assertEquals("16X^2 + 3",estado.getNewNode().toExpression());
+        Assert.assertEquals("16X^2+3",estado.getNewNode().toExpression());
     }
 
     @Test
@@ -354,7 +354,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         List<NodeStatus> listaNodos =  super.stepThrough(node);
         NodeStatus estado = listaNodos.get(listaNodos.size() - 1);
-        Assert.assertEquals("1/6 X",estado.getNewNode().toExpression());
+        Assert.assertEquals("X/6",estado.getNewNode().toExpression());
     }
 
     @Test
@@ -534,7 +534,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         List<NodeStatus> listaNodos =  super.stepThrough(node);
         NodeStatus estado = listaNodos.get(listaNodos.size() - 1);
-        Assert.assertEquals("-5X^3 - 11X^2 - 7",estado.getNewNode().toExpression());
+        Assert.assertEquals("-5X^3-11X^2-7",estado.getNewNode().toExpression());
     }
 
     @Test
@@ -634,7 +634,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         List<NodeStatus> listaNodos =  super.stepThrough(node);
         NodeStatus estado = listaNodos.get(listaNodos.size() - 1);
-        Assert.assertEquals("2X / 3 + 2",estado.getNewNode().toExpression());
+        Assert.assertEquals("2X/3+2",estado.getNewNode().toExpression());
     }
 
     @Test
