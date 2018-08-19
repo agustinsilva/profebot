@@ -416,6 +416,9 @@ public class ResolutorService {
         if (leftNode.esPotencia() && !TreeUtils.resolvesToConstant(leftNode)){
             factorsWithSymbols = Collections.singletonList(leftNode);
         }
+        else if (TreeUtils.isSymbol(leftNode)){
+            factorsWithSymbols = Collections.singletonList(leftNode);
+        }
         else {
             for(TreeNode child: equation.getLeftNode().getArgs()){
                 if (!TreeUtils.resolvesToConstant(child)){
@@ -438,6 +441,9 @@ public class ResolutorService {
             if (factor.esPotencia()) {
                 exponent = factor.getChild(1).getIntegerValue();
                 factor = factor.getChild(0);
+            } else if (TreeUtils.isSymbol(factor)){
+                exponent = factor.getExponent();
+                factor =  TreeNode.createPolynomialTerm("X", 1, factor.getCoefficient());
             }
 
             leftNode = factor.isParenthesis()

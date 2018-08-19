@@ -29,7 +29,7 @@ public class SimplifyServiceTest extends SimplifyService {
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
         List<NodeStatus> listaNodos =  super.stepThrough(node);
-        NodeStatus estadoSimple = listaNodos.get(1);
+        NodeStatus estadoSimple = listaNodos.get(0);
         Assert.assertTrue(estadoSimple.getChangeType() == NodeStatus.ChangeTypes.SIMPLIFY_ARITHMETIC);
     }
 
@@ -111,8 +111,7 @@ public class SimplifyServiceTest extends SimplifyService {
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
         List<NodeStatus> listaNodos =  super.stepThrough(node);
-        NodeStatus estadoSimple = listaNodos.get(0);
-        Assert.assertEquals("2+X",estadoSimple.getNewNode().toExpression());
+        Assert.assertEquals(0,listaNodos.size());
     }
 
     @Test
@@ -167,7 +166,7 @@ public class SimplifyServiceTest extends SimplifyService {
 
     @Test
     public void stepThrough_ok15()  throws InvalidExpressionException {
-        String expression = "10X^2 + 1/2 X^2 + 3/2 X^2 = 4";
+        String expression = "10X^2 + 1/2 * X^2 + 3/2 * X^2 = 4";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
         List<NodeStatus> listaNodos =  super.stepThrough(node);
@@ -483,16 +482,6 @@ public class SimplifyServiceTest extends SimplifyService {
         List<NodeStatus> listaNodos =  super.stepThrough(node);
         NodeStatus estado = listaNodos.get(listaNodos.size() - 1);
         Assert.assertEquals("-6X^2-7",estado.getNewNode().toExpression());
-    }
-
-    @Test
-    public void stepThrough_ok47()  throws InvalidExpressionException {
-        String expression = "-(12 X ^ 2) = 3";
-        Tree tree = (new ParserService()).parseExpression(expression);
-        TreeNode node = tree.getRootNode().getLeftNode();
-        List<NodeStatus> listaNodos =  super.stepThrough(node);
-        NodeStatus estado = listaNodos.get(listaNodos.size() - 1);
-        Assert.assertEquals("-12X^2",estado.getNewNode().toExpression());
     }
 
     @Test
@@ -1107,7 +1096,7 @@ public class SimplifyServiceTest extends SimplifyService {
 
     @Test
     public void collectAndCombineSearch_ok13() throws InvalidExpressionException{
-        String expression = "4*R(2)^2 + 7*R(2)^2 + R(2)^2 = 12 * R(2)^2";
+        String expression = "4*(R(2))^2 + 7*(R(2))^2 + (R(2))^2 = 12 * R(2)^2";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
@@ -1115,9 +1104,9 @@ public class SimplifyServiceTest extends SimplifyService {
 
         List<NodeStatus> subpasos = estado.getSubsteps();
         ArrayList<String> expectedResults = new ArrayList<String>();
-        expectedResults.add("4*R(2)^2+7*R(2)^2+1*R(2)^2");
-        expectedResults.add("(4+7+1)*R(2)^2");
-        expectedResults.add("12*R(2)^2");
+        expectedResults.add("4*(R(2)^2)+7*(R(2)^2)+1*(R(2)^2)");
+        expectedResults.add("(4+7+1)*(R(2)^2)");
+        expectedResults.add("12*(R(2)^2)");
 
         Assert.assertEquals(expectedResults.size(), subpasos.size());
 
@@ -1269,7 +1258,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.distributeSearch(flattenedNode);
-        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.DISTRIBUTE_NEGATIVE_ONE);
+        Assert.assertTrue("-(4*9*x^2) = 4", estado.getChangeType() == NodeStatus.ChangeTypes.DISTRIBUTE_NEGATIVE_ONE);
     }
 
     @Test
@@ -1309,7 +1298,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.distributeSearch(flattenedNode);
-        Assert.assertEquals("(-X*3)",estado.getNewNode().toExpression());
+        Assert.assertEquals("-X*3",estado.getNewNode().toExpression());
     }
 
     @Test
@@ -1319,7 +1308,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.distributeSearch(flattenedNode);
-        Assert.assertEquals("(X*3)",estado.getNewNode().toExpression());
+        Assert.assertEquals("X*3",estado.getNewNode().toExpression());
     }
 
     @Test
@@ -1329,7 +1318,7 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.distributeSearch(flattenedNode);
-        Assert.assertEquals("(X^2*3X^6)",estado.getNewNode().toExpression());
+        Assert.assertEquals("X^2*3X^6",estado.getNewNode().toExpression());
     }
 
     @Test
@@ -1808,7 +1797,7 @@ public class SimplifyServiceTest extends SimplifyService {
 
     @Test
     public void reduceMultiplicationByZero_ok4() throws InvalidExpressionException{
-        String expression = "0X = 0";
+        String expression = "0*X = 0";
         Tree tree = (new ParserService()).parseExpression(expression);
         TreeNode node = tree.getRootNode().getLeftNode();
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
@@ -2305,16 +2294,6 @@ public class SimplifyServiceTest extends SimplifyService {
         TreeNode node = tree.getRootNode().getLeftNode();
         NodeStatus estado = super.addLikeNthRootTerms(node);
         Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.NO_CHANGE);
-    }
-
-    @Test
-    public void addLikeNthRootTerms_ok2() throws InvalidExpressionException{
-        String expression = "2X^2 + X^2 = 27";
-        Tree tree = (new ParserService()).parseExpression(expression);
-        TreeNode node = tree.getRootNode().getLeftNode();
-        TreeNode flattenedNode = TreeUtils.flattenOperands(node);
-        NodeStatus estado = super.addLikeNthRootTerms(flattenedNode);
-        Assert.assertTrue(estado.getChangeType() == NodeStatus.ChangeTypes.ADD_NTH_ROOTS);
     }
 
     @Test

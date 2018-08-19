@@ -1064,6 +1064,9 @@ public class SimplifyService {
                 ? node.getChild(1).getChild(0)
                 : node.getChild(1);
 
+        if (!TreeUtils.isConstant(exponent)){
+            return NodeStatus.noChange(node);
+        }
         Integer exponentValue = exponent.getIntegerValue();
 
         // Exponent should be a positive integer
@@ -1102,16 +1105,17 @@ public class SimplifyService {
         if (!node.esOperador() || !node.esDivision()) {
             return NodeStatus.noChange(node);
         }
-        // e.g. 2/(x/6) => 2 * 6/x
-        NodeStatus nodeStatus =  multiplyByInverse(node);
-        if (nodeStatus.hasChanged()) {
-            return nodeStatus;
-        }
         // e.g. 2/x/6 -> 2/(x*6)
-        nodeStatus = simplifyDivisionChain(node);
+        NodeStatus nodeStatus = simplifyDivisionChain(node);
         if (nodeStatus.hasChanged()) {
             return nodeStatus;
         }
+        // e.g. 2/(x/6) => 2 * 6/x
+        nodeStatus =  multiplyByInverse(node);
+        if (nodeStatus.hasChanged()) {
+            return nodeStatus;
+        }
+
         return NodeStatus.noChange(node);
     }
 
@@ -1119,21 +1123,45 @@ public class SimplifyService {
     // by the inverse.
     // e.g. x/(2/3) -> x * 3/2
     private NodeStatus multiplyByInverse(TreeNode node) {
-        TreeNode denominator = node.getChild(1);
-        if (denominator.isParenthesis()) {
-            denominator = denominator.getChild(0);
+
+        TreeNode numerator = node.getLeftNode();
+        if (numerator.isParenthesis()) {
+            numerator = numerator.getContent();
         }
-        if (!denominator.esOperador() || !denominator.esDivision()) {
+
+        TreeNode denominator = node.getRightNode();
+        if (denominator.isParenthesis()) {
+            denominator = denominator.getContent();
+        }
+
+        if (!denominator.esDivision() && !numerator.esDivision()) {
             return NodeStatus.noChange(node);
         }
-        // At this point, we know that node is a fraction and denonimator is the
-        // fraction we need to inverse.
-        TreeNode inverseNumerator = denominator.getChild(1);
-        TreeNode inverseDenominator = denominator.getChild(0);
-        TreeNode inverseFraction = TreeNode.createOperator(
+
+        TreeNode multipliedByNode;
+        TreeNode inverseFraction;
+        if (denominator.esDivision()){
+            // At this point, we know that node is a fraction and denonimator is the
+            // fraction we need to inverse.
+            TreeNode inverseNumerator = denominator.getChild(1);
+            TreeNode inverseDenominator = denominator.getChild(0);
+            inverseFraction = TreeNode.createOperator(
                     "/", inverseNumerator, inverseDenominator);
 
-        TreeNode newNode = TreeNode.createOperator("*", node.getChild(0), inverseFraction);
+            multipliedByNode = node.getLeftNode();
+        }else{
+            // Si el numerador es fraccion, cambija un poco pero produce el mismo resultao.
+            // Este fix va porque el arbol se parsea distinto..
+            TreeNode inverseNumerator = denominator;
+            TreeNode inverseDenominator = numerator.getRightNode();
+            inverseFraction = TreeNode.createOperator(
+                    "/", inverseNumerator, inverseDenominator);
+
+            multipliedByNode = numerator.getLeftNode();
+        }
+
+        TreeNode newNode = TreeNode.createOperator("*", multipliedByNode, inverseFraction);
+
         return NodeStatus.nodeChanged(
                 NodeStatus.ChangeTypes.MULTIPLY_BY_INVERSE, node, newNode);
     }
@@ -1343,23 +1371,26 @@ public class SimplifyService {
     protected NodeStatus reduceMultiplicationByZero(TreeNode treeNode){
 
         // Buscar un nodo con *
-        if (treeNode == null || !treeNode.esProducto()) {
+        if (treeNode == null || (!treeNode.esProducto() && !TreeUtils.isSymbol(treeNode))) {
             return NodeStatus.noChange(treeNode);
         }
 
-        // If `node` is a multiplication node with 0 as one of its operands,
-        // reduce the node to 0. Returns a Node.Status object.
         Boolean hasZeroIndex = false;
-        for(TreeNode child: treeNode.getArgs()){
-            if (TreeUtils.isConstant(child) && TreeUtils.zeroValue(child)) {
-                hasZeroIndex =true;
-                break;
-            }else if(TreeUtils.isPolynomialTerm(child) && CONSTANT_0.equals(child.getCoefficient())){
-                hasZeroIndex =true;
-                break;
+        if (TreeUtils.isSymbol(treeNode) && treeNode.getCoefficient().equals(0)){
+            hasZeroIndex = true;
+        }else {
+            // If `node` is a multiplication node with 0 as one of its operands,
+            // reduce the node to 0. Returns a Node.Status object.
+            for (TreeNode child : treeNode.getArgs()) {
+                if (TreeUtils.isConstant(child) && TreeUtils.zeroValue(child)) {
+                    hasZeroIndex = true;
+                    break;
+                } else if (TreeUtils.isPolynomialTerm(child) && CONSTANT_0.equals(child.getCoefficient())) {
+                    hasZeroIndex = true;
+                    break;
+                }
             }
         }
-
         // Si se encuentra, verificar si algún operadorando es 0
         if (hasZeroIndex){
             // De ser así, reemplazar el subárbol con la constante 0.
@@ -1678,7 +1709,17 @@ public class SimplifyService {
         TreeNode rightNode = treeNode.getRightNode();
 
         TreeNode newNode = leftNode.clone();
-        newNode.multiplyCoefficient(rightNode.getValue());
+        // Si es fraccion, multiplico el temrino con X por el numerador, y divido por el denominador
+        if (TreeUtils.isFraction(rightNode)){
+            newNode.multiplyCoefficient(rightNode.getLeftNode().getValue());
+
+            // Nueva fraccion
+            newNode = TreeNode.createOperator("/", newNode, rightNode.getRightNode().cloneDeep());
+        }else{
+            newNode.multiplyCoefficient(rightNode.getValue());
+        }
+
+
         // De ser así, reemplazar el subárbol el otro nodo
         return NodeStatus.nodeChanged(
                 NodeStatus.ChangeTypes.REARRANGE_COEFF, treeNode, newNode);
@@ -2308,7 +2349,7 @@ public class SimplifyService {
 
             if (NTH_ROOT_TERM.equals(termSubclass)){
                 // Para las raices se comporta distinto
-                if (child.esRaiz()){
+                if (TreeUtils.isNthRootTerm(child) && CONSTANT_1.equals(child.getCoefficient())){
                     // Tiene coeficiente 1, lo hago explicito
                     TreeNode newChildNode = TreeNode.createOperator("*",
                             TreeNode.createConstant(CONSTANT_1), child.cloneDeep());
@@ -2318,7 +2359,7 @@ public class SimplifyService {
                     change = true;
                     changeGroup++;
                 }
-            }else if (CONSTANT_1.equals(child.getCoefficient())) {
+            }else if (CONSTANT_1.equals(child.getCoefficient()) && !TreeUtils.isSymbolFraction(child, true)) {
                 TreeNode newChildNode = child.clone();
                 newChildNode.setExplicitCoeff(true);
                 newNode.getChild(i).setChangeGroup(changeGroup);
@@ -2352,7 +2393,7 @@ public class SimplifyService {
         int i = 0;
         for(TreeNode child: newNode.getArgs()){
             // TODO validar raices negativas, son validas en el parser?
-            if (child != null && CONSTANT_1_NEG.equals(child.getCoefficient())) {
+           if (child != null && CONSTANT_1_NEG.equals(child.getCoefficient())) {
                 TreeNode newChildNode = child.clone();
                 newChildNode.setExplicitCoeff(true);
                 newNode.getChild(i).setChangeGroup(changeGroup);
@@ -2384,7 +2425,12 @@ public class SimplifyService {
             if (child!= null) {
                 if (NTH_ROOT_TERM.equals(termSubclass)){
                     // Las raices van a tener la forma "Cte * R(n)"
-                    coefficientList.add(child.getLeftNode().cloneDeep());
+                    coefficientList.add(TreeNode.createConstant(child.getCoefficient()));
+                }else if (TreeUtils.isSymbolFraction(child, true)) {
+                    coefficientList.add(TreeNode.createOperator("/",
+                            TreeNode.createConstant(child.getLeftNode().getCoefficient()),
+                            child.getRightNode().cloneDeep()
+                    ));
                 }else {
                     coefficientList.add(TreeNode.createConstant(child.getCoefficient()));
                 }
@@ -2403,10 +2449,9 @@ public class SimplifyService {
         if (NTH_ROOT_TERM.equals(termSubclass)){
             firstTerm = node.getChild(0).getRightNode().clone();
         }else { // Poly
-            firstTerm = node.getChild(0).clone();
-            firstTerm.setCoefficient(1);
-            firstTerm.setExplicitCoeff(false);
-            firstTerm.updateValue();
+            firstTerm = TreeNode.createPolynomialTerm("X",
+                    node.getChild(0).getExponent(),
+                    1);
         }
         newNode = TreeNode.createOperator("*",
                 sumOfCoefficents, firstTerm);
@@ -2578,6 +2623,7 @@ public class SimplifyService {
             status = NodeStatus.childChanged(newNode, sumStatus, 1);
             substeps.add(status);
             newNode = NodeStatus.resetChangeGroups(status.getNewNode());
+            newNode = TreeUtils.groupConstantCoefficientAndSymbol(newNode);
         }
 
         if (substeps.size() == 1) { // possible if only step 2 happens
@@ -3090,7 +3136,7 @@ public class SimplifyService {
                 // wrap the denominatorExponent in parens, in case it's complicated.
                 // If the parens aren't needed, they'll be removed with
                 // removeUnnecessaryParens at the end of this step.
-                denominatorExponent = TreeNode.createParenthesis(denominatorExponent);
+                //denominatorExponent = TreeNode.createParenthesis(denominatorExponent);
                 TreeNode newExponent = TreeNode.createParenthesis(
                         TreeNode.createOperator("-", numeratorExponent, denominatorExponent));
                 numerator = TreeNode.createPolynomialTerm(
