@@ -67,7 +67,6 @@ public class TreeNode {
     }
 
     public TreeNode cloneDeep(){
-        // TODO Revisar si amerita redefinir el clone
         return this.clone();
     }
 
@@ -79,13 +78,39 @@ public class TreeNode {
         updateVariableValues(); // Si es X, actualiza valor, exponente y coeficiente
     }
     public Integer getCoefficient() {
-        return coefficient;
+
+        if (TreeUtils.isNthRootTerm(this)){
+            if (this.esProducto() && TreeUtils.isConstant(this.getLeftNode())){
+                return this.getLeftNode().getIntegerValue();
+            }else{
+                return 1;
+            }
+        }else {
+            return coefficient;
+        }
     }
     public void setCoefficient(Integer coefficient) {
         this.coefficient = coefficient;
     }
     public Integer getExponent() {
-        return exponent;
+
+        if (TreeUtils.isNthRootTerm(this)){
+            if (this.esProducto()){
+                if (this.getRightNode().esPotencia()){
+                    return this.getRightNode().getRightNode().getIntegerValue();
+                }else{
+                    return 1; // Un producto sin potencia
+                }
+            }else if (this.esPotencia()){
+                return this.getRightNode().getIntegerValue();
+            }else{
+                return 1;
+            }
+        }else if (TreeUtils.isSymbolFraction(this, false)) {
+            return this.getLeftNode().getExponent();
+        }else {
+            return exponent;
+        }
     }
     public void setExponent(Integer exponent) {
         this.exponent = exponent;
@@ -357,7 +382,7 @@ public class TreeNode {
         }else if (esResta()){
             return getLeftNode().getIntegerValue() - getRightNode().getIntegerValue();
         }else if (esPotencia()){
-            return getLeftNode().getIntegerValue() ^ getRightNode().getIntegerValue();
+            return (int)Math.pow((double)getLeftNode().getIntegerValue(), (double)getRightNode().getIntegerValue());
         }else if (isParenthesis()){
             return this.getChild(0).getOperationResult();
         }else if (isUnaryMinus()){
@@ -491,12 +516,18 @@ public class TreeNode {
      * @return
      */
     public String getBase() {
-        if (TreeUtils.isSymbol(this)) {
+        if (TreeUtils.isSymbol(this) || TreeUtils.isSymbolFraction(this, true)) {
             return "X";
 
         }else if (TreeUtils.isNthRootTerm(this)){
             if (this.esProducto()){
-                return this.getRightNode().toExpression();
+                if (this.getRightNode().esPotencia()){
+                    return this.getRightNode().getBase();
+                }else{
+                    return this.getRightNode().toExpression();
+                }
+            }else if (this.esPotencia()){
+                return this.getLeftNode().toExpression();
             }else{
                 return this.toExpression();
             }
