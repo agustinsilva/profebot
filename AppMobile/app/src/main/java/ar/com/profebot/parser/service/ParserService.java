@@ -98,7 +98,7 @@ public class ParserService {
 
             // Si viene luego de un igual o al principio, puede ser un "-" valido
             Boolean addUnaryMinus = false;
-            if (scannerService.isFirstChar() && Token.RESTA.equals(Token)){
+            if (/*scannerService.isFirstChar() &&*/ Token.RESTA.equals(Token)){
                 scannerService.match(Token.RESTA);
                 addUnaryMinus = true;
             }

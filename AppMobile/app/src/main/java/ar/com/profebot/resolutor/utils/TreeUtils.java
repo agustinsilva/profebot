@@ -52,13 +52,18 @@ public class TreeUtils {
 
     //Valida si el nodo es un polinomio.
     public static Boolean isPolynomialTerm(TreeNode treeNode){
-        return (treeNode!=null && (isSymbol(treeNode, false) || isSymbolFraction(treeNode, false)) );
+        return (treeNode!=null && (isSymbol(treeNode, false)
+                || isSymbolFraction(treeNode, false)));
     }
+
 
     //Valida si el nodo es una raiz.
     public static Boolean isNthRootTerm(TreeNode treeNode){
+        // Es raiz, o es cte * Raiz, O es Raiz elevado a potencia, o es  es cte * Raiz elevado a potencia
         return (treeNode!=null && (treeNode.esRaiz() ||
-                (treeNode.esProducto() && isConstant(treeNode.getLeftNode()) && treeNode.getRightNode().esRaiz())) );
+                (treeNode.esProducto() && isConstant(treeNode.getLeftNode()) && isNthRootTerm(treeNode.getRightNode()))) ||
+                (treeNode.esPotencia() && isNthRootTerm(treeNode.getLeftNode()))
+                );
     }
 
     /**
@@ -69,6 +74,13 @@ public class TreeUtils {
      */
     public static boolean isSymbolFraction(TreeNode node, Boolean allowUnaryMinus) {
         if (!node.esDivision()){return false;}
+        if (!isSymbol(node.getLeftNode(), allowUnaryMinus)){return false;}
+
+        return isConstant(node.getRightNode());
+    }
+
+    public static boolean isSymbolPower(TreeNode node, Boolean allowUnaryMinus) {
+        if (!node.esPotencia()){return false;}
         if (!isSymbol(node.getLeftNode(), allowUnaryMinus)){return false;}
 
         return isConstant(node.getRightNode());
@@ -553,6 +565,10 @@ public class TreeUtils {
             node.multiplyCoefficient("-1");
             return  node;
         }
+        else if (node.esProducto()) {
+            node.setLeftNode(negate(node.getLeftNode(), naive));
+            return  node;
+        }
         else if (!naive) {
             if (node.isUnaryMinus()) {
                 return node.getChild(0);
@@ -688,8 +704,9 @@ public class TreeUtils {
                 && right.getIntegerValue() == 0;
 
         Boolean isMulOrPower = left.esProducto() || left.esPotencia();
+        Boolean isXWithExponent = TreeUtils.isSymbol(left) && left.getExponent() != 1;
 
-        if (!(zeroRightSide && isMulOrPower)) {
+        if (!(zeroRightSide && (isMulOrPower || isXWithExponent))) {
             return false;
         }
 
@@ -699,7 +716,10 @@ public class TreeUtils {
         // for when the left side is a power node.
         // e.g 2^7 and (33 + 89) do not have solutions when set equal to 0
 
-        if (left.esProducto()) {
+        if (isXWithExponent){
+            return true;
+        }
+        else if (left.esProducto()) {
             for(TreeNode arg: left.getArgs()){
                 if (!resolvesToConstant(arg)){
                     return true;
@@ -717,6 +737,8 @@ public class TreeUtils {
     // a constant.
     // e.g. 2, 2+4, (2+4)^2 would all return true. x + 4 would return false
     public static boolean resolvesToConstant(TreeNode node) {
+
+        if (node == null){return false;}
         if (node.esOperador()) {
 
             for(TreeNode child:  node.getArgs() ){
@@ -841,7 +863,7 @@ public class TreeUtils {
                 if (child.esSuma()) {
                     return getLastNonSymbolTerm(child);
                 }
-                else if (!isSymbolTerm(child)) {
+                else if (!child.toExpression().contains("X")) {
                     return child;
                 }
             }
@@ -1112,22 +1134,45 @@ public class TreeUtils {
                 node.setChild(i, groupConstantCoefficientAndSymbol(node.getChild(i)));
             }
         }
-        if (!node.esProducto()){return node;}
-        if (node.getArgs().size() !=2){return node;}
-        if (!isConstant(node.getLeftNode())){return node;}
-        if (!isSymbol(node.getRightNode()) &&
-            !(node.getRightNode().esPotencia() && isSymbol(node.getRightNode().getLeftNode()))){return node;}
+        if (!node.esProducto() && !node.esPotencia()){return node;}
 
-        if (node.getRightNode().esPotencia()){
-            // Si es potencia, genero el temrino
-            TreeNode newNode = TreeNode.createPolynomialTerm("X", node.getRightNode().getRightNode().getIntegerValue(), node.getRightNode().getLeftNode().getIntegerValue());
-            newNode.multiplyCoefficient(node.getLeftNode().getValue());
-            return newNode;
+        if (node.esProducto()) {
+            if (node.getArgs().size() != 2) {
+                return node;
+            }
+            if (!isConstant(node.getLeftNode())) {
+                return node;
+            }
+            if (!isSymbol(node.getRightNode()) &&
+                    !(node.getRightNode().esPotencia() && isSymbol(node.getRightNode().getLeftNode()))) {
+                return node;
+            }
 
-        }else if(node.getRightNode().getValue().contains("X") ){
-            TreeNode newNode = node.getRightNode().clone();
-            newNode.multiplyCoefficient(node.getLeftNode().getValue());
-            return newNode;
+            if (node.getRightNode().esPotencia()) {
+                // Si es potencia, genero el temrino
+                TreeNode newNode = TreeNode.createPolynomialTerm("X", node.getRightNode().getRightNode().getIntegerValue(), node.getRightNode().getLeftNode().getIntegerValue());
+                newNode.multiplyCoefficient(node.getLeftNode().getValue());
+                return newNode;
+
+            } else if (node.getRightNode().getValue().contains("X")) {
+                TreeNode newNode = null;
+
+                if (new Integer(0).equals(node.getLeftNode().getIntegerValue())) {
+                    // Puede quedar en 0, en ese caso devuelvo la constante 0
+                    newNode = TreeNode.createConstant(0);
+                } else {
+                    newNode = node.getRightNode().clone();
+                    newNode.multiplyCoefficient(node.getLeftNode().getValue());
+                }
+
+                return newNode;
+            }
+        }else if (node.esPotencia()){
+            if (!isConstant(node.getRightNode()) || !isSymbol(node.getLeftNode())) {
+                return node;
+            }
+            // Si es potencia, genero el temrino con coeficiente 1
+            return TreeNode.createPolynomialTerm("X", node.getRightNode().getIntegerValue(), 1);
         }
 
         return node;

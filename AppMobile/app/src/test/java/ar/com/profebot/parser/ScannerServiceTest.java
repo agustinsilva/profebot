@@ -31,7 +31,7 @@ public class ScannerServiceTest {
 
     @Test
     public void parse_ok_3()  throws InvalidExpressionException {
-        String expression = "(X-1)^2=X^3-5^2";
+        String expression = "(X-1)^2=X^3-(5^2)";
         Tree tree = (new ParserService()).parseExpression(expression);
         Assert.assertEquals(expression, tree.toExpression());
         Assert.assertEquals("(X-1)^2", tree.getRootNode().getLeftNode().toExpression());
@@ -42,7 +42,7 @@ public class ScannerServiceTest {
 
     @Test
     public void parse_ok_4()  throws InvalidExpressionException {
-        String expression = "R(X-1)-8=X^3-5^2";
+        String expression = "R(X-1)-8=X^3-(5^2)";
         Tree tree = (new ParserService()).parseExpression(expression);
         Assert.assertEquals(expression, tree.toExpression());
         Assert.assertEquals("R(X-1)", tree.getRootNode().getLeftNode().getLeftNode().toExpression());

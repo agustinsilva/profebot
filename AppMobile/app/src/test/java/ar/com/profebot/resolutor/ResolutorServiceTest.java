@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.com.profebot.Models.MultipleChoiceStep;
 import ar.com.profebot.parser.container.Tree;
 import ar.com.profebot.parser.container.TreeNode;
 import ar.com.profebot.parser.exception.InvalidExpressionException;
@@ -452,7 +453,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("-(X+1)*(X-1)", newExpression);
+        Assert.assertEquals("(-(X+1))*(X-1)", newExpression);
     }
 
     @Test
@@ -584,7 +585,7 @@ public class ResolutorServiceTest extends ResolutorService {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         NodeStatus estado = super.factorQuadratic(flattenedNode);
         String newExpression = estado.getNewNode().toExpression();
-        Assert.assertEquals("-(X+1)*(X+2)", newExpression);
+        Assert.assertEquals("(-(X+1))*(X+2)", newExpression);
     }
 
     @Test
@@ -713,7 +714,7 @@ public class ResolutorServiceTest extends ResolutorService {
         expectedResults.add("-((X^2+X)+(2X+2))");
         expectedResults.add("-(X*(X+1)+(2X+2))");
         expectedResults.add("-(X*(X+1)+2*(X+1))");
-        expectedResults.add("-(X+1)*(X+2)");
+        expectedResults.add("(-(X+1))*(X+2)");
         for (int i=0; i <subpasos.size(); i++){
             Assert.assertEquals(expectedResults.get(i), subpasos.get(i).getNewNode().toExpression());
         };
@@ -1043,7 +1044,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X=54/11",estado);
+        Assert.assertEquals("5X + (1/2)*X = 27", "X=54/11",estado);
     }
 
     @Test
@@ -1058,7 +1059,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X=3",estado);
+        Assert.assertEquals("2X/3 = 2X - 4 ","X=3",estado);
     }
 
     @Test
@@ -1088,7 +1089,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X=-1/30",estado);
+        Assert.assertEquals("-9/4X + 4/5 = 7/8", "X=-1/30",estado);
     }
 
     @Test
@@ -1108,7 +1109,7 @@ public class ResolutorServiceTest extends ResolutorService {
 
     @Test
     public void stepThrough_ok23()  throws InvalidExpressionException {
-        String expression = "X/(2/3) = 1";
+        String expression = "X/2/3 = 1";
         Tree tree = (new ParserService()).parseExpression(expression);
         List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
         String estado;

@@ -49,26 +49,29 @@
         <RadioGroup
             android:id="@+id/signRadioGroup"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
             <RadioButton
                 android:id="@+id/positiveRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="+" />
+                android:checked="true"
+                android:text="@string/positive" />
 
             <RadioButton
                 android:id="@+id/negativeRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="-" />
+                android:text="@string/negative" />
         </RadioGroup>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="100dp"
-            android:layout_height="50dp">
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/coefficientTerm"
@@ -82,20 +85,22 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:gravity="bottom"
-
             android:text="X" />
 
         <android.support.design.widget.TextInputLayout
-            android:layout_width="100dp"
-            android:layout_height="wrap_content">
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="6dp"
+            android:layout_weight="1">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/potentialTerm"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="top"
-                android:hint="potencia"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:hint="Potencia"
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
@@ -103,20 +108,47 @@
             android:id="@+id/AddEquationButton"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_weight="1"
+            android:padding="10dp"
             android:text="Agregar" />
     </LinearLayout>
 
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/ejercicios"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="100dp"
         android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/finalEquation"
+        <!--        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp">-->
+
+        <io.github.kexanie.library.MathView
+            android:id="@+id/equation_to_solve_id"
             android:layout_width="wrap_content"
-            android:layout_height="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="30dp"
+            app:engine="KaTeX"></io.github.kexanie.library.MathView>
+        <!--    </HorizontalScrollView>-->
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="x^2+x+6" />
+            android:text="Confirmar Polinomio" />
     </LinearLayout>
 </LinearLayout>
