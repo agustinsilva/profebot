@@ -59,7 +59,7 @@ public class EnterPolinomialActivity extends AppCompatActivity {
                 if (this.validTerms(coefficientTermInput,potentialTermInput)){
                     int selectedId = signRadioButton.getCheckedRadioButtonId();
                     RadioButton radioSignButton = (RadioButton) findViewById(selectedId);
-                    EquationBuilder.add(radioSignButton.getText().toString() + coefficientTermInput.getText() + "x^" + potentialTermInput.getText() + " ");
+                    EquationBuilder.add(radioSignButton.getText().toString() + coefficientTermInput.getText() + "x^" + potentialTermInput.getText());
                     //Mapping First Character and setting equation as latex
                     /*if (beautifierEquation().trim().charAt(0) == '+'){*/
                         ExpressionsManager.setEquationPhoto(beautifierEquation().trim().substring(1).concat("=0"), getApplicationContext());

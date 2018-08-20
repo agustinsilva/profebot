@@ -3,7 +3,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/colorBackground">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_id"
@@ -34,8 +35,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:fontFamily="casual"
         android:gravity="center_vertical|center"
-        android:text="Ingresa los terminos de tu polinomio"
+        android:includeFontPadding="false"
+        android:text="Ingresá los términos de tu polinomio"
+        android:textColor="@color/colorWhite"
         android:textSize="20dp" />
 
     <LinearLayout
@@ -50,7 +54,9 @@
             android:id="@+id/signRadioGroup"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:textColor="@color/colorWhite"
+            android:buttonTint="@color/colorWhite">
 
             <RadioButton
                 android:id="@+id/positiveRadioButton"
@@ -58,27 +64,36 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:checked="true"
-                android:text="@string/positive" />
+                android:text="@string/positive"
+                android:textColor="@color/colorGreen"
+                android:textColorLink="@color/colorGreen"
+                android:buttonTint="@color/colorWhite"/>
 
             <RadioButton
                 android:id="@+id/negativeRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/negative" />
+                android:text="@string/negative"
+                android:textColor="@color/colorGreen"
+                android:textColorLink="@color/colorGreen"
+                android:buttonTint="@color/colorWhite"/>
         </RadioGroup>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            style="@style/PolinomialTextInputLayout">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/coefficientTerm"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Coeficiente"
-                android:inputType="number" />
+                android:inputType="number"
+                style="@style/PolinomialEditTextInputLayout"
+                />
         </android.support.design.widget.TextInputLayout>
 
         <TextView
@@ -86,14 +101,17 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
+            android:fontFamily="casual"
             android:gravity="bottom"
-            android:text="X" />
+            android:text="X"
+            android:textColor="@color/colorWhite" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="80dp"
             android:layout_height="match_parent"
             android:layout_marginBottom="6dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            style="@style/PolinomialTextInputLayout">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/potentialTerm"
@@ -101,7 +119,8 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:hint="Potencia"
-                android:inputType="number" />
+                android:inputType="number"
+                style="@style/PolinomialEditTextInputLayout"/>
         </android.support.design.widget.TextInputLayout>
 
         <Button
@@ -111,7 +130,8 @@
             android:layout_gravity="center_vertical|center_horizontal"
             android:layout_weight="1"
             android:padding="10dp"
-            android:text="Agregar" />
+            android:text="Agregar"
+            style="@style/AppButton"/>
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -133,6 +153,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:layout_marginTop="30dp"
+            android:textColor="@color/colorWhite"
             app:engine="KaTeX"></io.github.kexanie.library.MathView>
         <!--    </HorizontalScrollView>-->
 
@@ -149,6 +170,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Confirmar Polinomio" />
+            android:text="Factorear!"
+            style="@style/AppButton"/>
     </LinearLayout>
 </LinearLayout>

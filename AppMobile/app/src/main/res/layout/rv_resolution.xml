@@ -6,11 +6,11 @@
     android:background="@color/colorBackground">
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_resolution_id"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/rv_resolution_id"
-        android:background="@color/colorBackground"
         android:layout_margin="10dp"
+        android:background="@color/colorBackground"
         android:padding="10dp" />
 
 </LinearLayout>
