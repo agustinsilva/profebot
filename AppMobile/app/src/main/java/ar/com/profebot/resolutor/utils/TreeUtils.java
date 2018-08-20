@@ -1184,7 +1184,12 @@ public class TreeUtils {
     }
 
     public static boolean hasDifferentLevelAncestors(TreeNode treeNode){
-        //TODO marian
-        return false;
+        boolean hasDiffLevelAnc = false;
+        TreeNode node = treeNode;
+        while(node != null && !hasDiffLevelAnc){
+            hasDiffLevelAnc = haveSameOperatorLevelCode(treeNode, node.getParentNode());
+            node = node.getParentNode();
+        }
+        return hasDiffLevelAnc;
     }
 }

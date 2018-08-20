@@ -22,11 +22,18 @@ public class InvalidOptionService {
 
         //3. Si el nodo elegido es hijo del signo Igual, pasar este nodo y su decendencia al otro miembro
         //4. Si el nodo elegido NO es hijo del signo Igual, validar niveles de sus ancestros
-            /*4.a Ancestros de distinto nivel: pasar este nodo (inviertiendo operador) y su decendencia
-             * 4.b Ancestros de igual nivel: pasar este nodo (sin invertir el operador) y su decendencia */
+            /*4.a Ancestros de distinto nivel: pasar este nodo (inviertiendo operador) y uno de sus hijos
+             * 4.b Ancestros de igual nivel: pasar este nodo (sin invertir el operador) y uno de sus hijos */
+        boolean reverseOperator = false;
         if(!isEqualsChild(nodeLevel)){
-            TreeUtils.hasDifferentLevelAncestors(randomNode);
+            reverseOperator =  TreeUtils.hasDifferentLevelAncestors(randomNode);
         }
+
+        /****Magic begins****/
+        //5. Reestructurar el arbol
+        // Sacar el randomNode y uno de sus hijos. El otro hijo debe enlazarse al padre de randomNode
+        // El randomNode se debe enlazar al otro lado del igual. La rama que se encontraba alli
+        // sera el nuevo hijo del randomNode
 
     }
 
