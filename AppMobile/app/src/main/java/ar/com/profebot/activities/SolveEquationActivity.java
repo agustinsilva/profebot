@@ -20,6 +20,7 @@ public class SolveEquationActivity extends GlobalActivity {
     private static List<MultipleChoiceStep> multipleChoiceSteps;
     private static RVMultipleChoiceAdapter adapter;
     public static RecyclerView recyclerView;
+    public static SolveEquationActivity context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,8 @@ public class SolveEquationActivity extends GlobalActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         super.onCreate(savedInstanceState);
+
+        context = this;
         
         recyclerView = (RecyclerView)findViewById(R.id.rv_resolution_id);
         LinearLayoutManager llm = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -37,6 +40,10 @@ public class SolveEquationActivity extends GlobalActivity {
         multipleChoiceSteps = this.initializeMultipleChoiceSteps();
         adapter = new RVMultipleChoiceAdapter(multipleChoiceSteps.get(0), multipleChoiceSteps);
         recyclerView.setAdapter(adapter);
+    }
+
+    public static SolveEquationActivity getContext(){
+        return context;
     }
 
     private List<MultipleChoiceStep> initializeMultipleChoiceSteps(){
