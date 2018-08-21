@@ -1192,4 +1192,32 @@ public class TreeUtils {
         }
         return hasDiffLevelAnc;
     }
+
+    public static String inverseComparator(String comparator) {
+        if (">".equals(comparator)) {
+            return "<";
+        }else if (">=".equals(comparator)){
+            return "<=";
+        }else if ("<".equals(comparator)){
+            return ">";
+        }else if ("<=".equals(comparator)){
+            return ">=";
+        }else if ("=".equals(comparator)){
+            return "=";
+        }else if ("+".equals(comparator)){
+            return "-";
+        }else if ("-".equals(comparator)){
+            return "+";
+        }else if ("*".equals(comparator)){
+            return "/";
+        }else if ("/".equals(comparator)){
+            return "*";
+        }else if ("^".equals(comparator)){
+            return "R";
+        }else if ("R".equals(comparator)){
+            return "^";
+        }else {
+            throw new Error("Comparador no soportado: " + comparator);
+        }
+    }
 }

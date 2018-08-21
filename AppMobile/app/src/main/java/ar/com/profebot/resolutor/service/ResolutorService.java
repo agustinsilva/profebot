@@ -491,7 +491,7 @@ public class ResolutorService {
 
         if (leftSideSymbolTerm == null) {
             if (rightSideSymbolTerm != null) {
-                String comparator = inverseComparator(equation.getRootNode().getValue());
+                String comparator = TreeUtils.inverseComparator(equation.getRootNode().getValue());
                 Tree oldEquation = equation;
                 Tree newEquation = new Tree(equation.getRightNode(), equation.getLeftNode(), comparator);
                 // no change groups are set for this step because everything changes, so
@@ -505,24 +505,6 @@ public class ResolutorService {
         }
         return EquationStatus.noChange(equation);
     }
-
-    private String inverseComparator(String comparator) {
-
-        if (">".equals(comparator)) {
-            return "<";
-        }else if (">=".equals(comparator)){
-            return "<=";
-        }else if ("<".equals(comparator)){
-            return ">";
-        }else if ("<=".equals(comparator)){
-            return ">=";
-        }else if ("=".equals(comparator)){
-            return "=";
-        }else {
-            throw new Error("Coparador no soportado: " + comparator);
-        }
-    }
-
 
     // Ensures that a symbol is not in the denominator by multiplying
     // both sides by the denominator if there is a symbol present.
@@ -556,7 +538,7 @@ public class ResolutorService {
 
         String comparator = equation.getComparator();
         if (TreeUtils.isNegative(term) && ("*".equals(op) || "/".equals(op))) {
-            comparator = inverseComparator(comparator);
+            comparator = TreeUtils.inverseComparator(comparator);
         }
 
         // Saco los parentesis proque complejizan innecesariamente
