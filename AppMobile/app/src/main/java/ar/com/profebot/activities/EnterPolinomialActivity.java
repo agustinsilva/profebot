@@ -25,6 +25,7 @@ import io.github.kexanie.library.MathView;
 
 public class EnterPolinomialActivity extends AppCompatActivity {
     private ArrayList<String> EquationBuilder;
+    private ArrayList<String> EquationUnordered;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +34,10 @@ public class EnterPolinomialActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         EquationBuilder = new ArrayList<>();
+        EquationUnordered = new ArrayList<>();
         Button enterPolinomial = (Button)findViewById(R.id.AddEquationButton);
+        Button deleterTerm = (Button)findViewById(R.id.delete_last_term);
+
         TextInputEditText coefficientTermInput = (TextInputEditText) findViewById(R.id.coefficientTerm);
         TextInputEditText potentialTermInput = (TextInputEditText) findViewById(R.id.potentialTerm);
         RadioGroup signRadioButton = (RadioGroup) findViewById(R.id.signRadioGroup);
@@ -60,6 +64,7 @@ public class EnterPolinomialActivity extends AppCompatActivity {
                     int selectedId = signRadioButton.getCheckedRadioButtonId();
                     RadioButton radioSignButton = (RadioButton) findViewById(selectedId);
                     EquationBuilder.add(radioSignButton.getText().toString() + coefficientTermInput.getText() + "x^" + potentialTermInput.getText());
+                    EquationUnordered.add(radioSignButton.getText().toString() + coefficientTermInput.getText() + "x^" + potentialTermInput.getText());
                     //Mapping First Character and setting equation as latex
                     /*if (beautifierEquation().trim().charAt(0) == '+'){*/
                         ExpressionsManager.setEquationPhoto(beautifierEquation().trim().substring(1).concat("=0"), getApplicationContext());
@@ -79,10 +84,31 @@ public class EnterPolinomialActivity extends AppCompatActivity {
             }
         }
 
+
             private boolean validTerms(TextInputEditText coefficientTermInput, TextInputEditText potentialTermInput) {
                 return !(coefficientTermInput.getText().toString().matches("") || potentialTermInput.getText().toString().matches(""));
             }
             });
+
+        deleterTerm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View button) {
+                deleteLastTerm();
+            }
+        });
+    }
+
+    public void deleteLastTerm(){
+        String lastTerm = this.EquationUnordered.get(EquationUnordered.size()-1);
+        this.EquationBuilder.remove(lastTerm);
+        this.EquationUnordered.remove(lastTerm);
+        if (EquationBuilder.size()!= 0) {
+            ExpressionsManager.setEquationPhoto(beautifierEquation().trim().substring(1).concat("=0"), getApplicationContext());
+            ((MathView) findViewById(R.id.equation_to_solve_id)).setText("$$" + ExpressionsManager.getEquationAsLatex() + "$$" );
+        }
+        else{
+            ((MathView) findViewById(R.id.equation_to_solve_id)).setText("$$" + "$$" );
+        }
     }
 
     public String beautifierEquation(){
