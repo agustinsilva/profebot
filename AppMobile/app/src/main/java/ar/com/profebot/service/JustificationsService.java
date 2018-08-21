@@ -108,18 +108,34 @@ public class JustificationsService {
         if(source.getDescrip().equals(COLLECT_AND_COMBINE_LIKE_TERMS.getDescrip())
                 || source.getDescrip().equals(COLLECT_LIKE_TERMS.getDescrip())
                 || source.getDescrip().equals(ADD_POLYNOMIAL_TERMS.getDescrip())
-                || source.getDescrip().equals(GROUP_COEFFICIENTS.getDescrip())){
+                || source.getDescrip().equals(GROUP_COEFFICIENTS.getDescrip())
+                || source.getDescrip().equals(MULTIPLY_COEFFICIENTS.getDescrip())){
             return createTextsFrom(context,
                     R.string.COLLECT_AND_COMBINE_LIKE_TERMS_OPTION,
                     R.string.COLLECT_AND_COMBINE_LIKE_TERMS_JUSTIFICATION,
                     R.string.COLLECT_AND_COMBINE_LIKE_TERMS_SUMMARY);
         }
 
-        if(source.getDescrip().equals(COLLECT_CONSTANT_EXPONENTS.getDescrip())){
+        if(source.getDescrip().equals(COLLECT_CONSTANT_EXPONENTS.getDescrip())
+                || source.getDescrip().equals(COLLECT_POLYNOMIAL_EXPONENTS.getDescrip())){
             return createTextsFrom(context,
                     R.string.COLLECT_CONSTANT_EXPONENTS_OPTION,
                     R.string.COLLECT_CONSTANT_EXPONENTS_JUSTIFICATION,
                     R.string.COLLECT_CONSTANT_EXPONENTS_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(ADD_EXPONENT_OF_ONE.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.ADD_EXPONENT_OF_ONE_OPTION,
+                    R.string.ADD_EXPONENT_OF_ONE_JUSTIFICATION,
+                    R.string.ADD_EXPONENT_OF_ONE_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(MULTIPLY_POLYNOMIAL_TERMS.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.MULTIPLY_POLYNOMIAL_TERMS_OPTION,
+                    R.string.MULTIPLY_POLYNOMIAL_TERMS_JUSTIFICATION,
+                    R.string.MULTIPLY_POLYNOMIAL_TERMS_SUMMARY);
         }
 
 

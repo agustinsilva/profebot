@@ -52,6 +52,13 @@
     <string name="COLLECT_CONSTANT_EXPONENTS_JUSTIFICATION">Producto de potencias de igual base, se suman los exponentes</string>
     <string name="COLLECT_CONSTANT_EXPONENTS_SUMMARY">Simplificar términos</string>
 
+    <string name="ADD_EXPONENT_OF_ONE_OPTION">Reescribir las variables como bases elevadas a un exponente</string>
+    <string name="ADD_EXPONENT_OF_ONE_JUSTIFICATION">Toda expresión está elevada a un exponente (que de no aparecer, vale 1).</string>
+    <string name="ADD_EXPONENT_OF_ONE_SUMMARY">Reescribir exponentes</string>
+
+    <string name="MULTIPLY_POLYNOMIAL_TERMS_OPTION">Reescribir el prodcuto de variables, como una variable elevada a una potencia</string>
+    <string name="MULTIPLY_POLYNOMIAL_TERMS_JUSTIFICATION">Una variable multiplicada por si misma 2 o más veces, equivale a escribir dicha variable, elevada a un exponente igual a la cantidad de veces que estaba multiplicada</string>
+    <string name="MULTIPLY_POLYNOMIAL_TERMS_SUMMARY">Reescribir producto de varaibles</string>
 
 
 </resources>
