@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="SIMPLIFY_ARITHMETIC_OPTION">Simplificar operación aritmética</string>
+    <string name="SIMPLIFY_ARITHMETIC_JUSTIFICATION">Para simplificar términos, resolver las sumas, restas, multiplicaciones, divisiones, potencias o raíces, que involucren solo números</string>
+    <string name="SIMPLIFY_ARITHMETIC_SUMMARY">Resolver operación</string>
+
+    <string name="DIVISION_BY_NEGATIVE_ONE_OPTION">Simplificar multiplicación o división por -1</string>
+    <string name="DIVISION_BY_NEGATIVE_ONE_JUSTIFICATION">Cambiar los signos de los términos que estén afectados por una división o multiplicación por -1</string>
+    <string name="DIVISION_BY_NEGATIVE_ONE_SUMMARY">Resolver operación</string>
+
+    <string name="DIVISION_BY_ONE_OPTION">Simplificar multiplicación o división por 1</string>
+    <string name="DIVISION_BY_ONE_JUSTIFICATION">Eliminar las multiplicaciones y divisiones por 1, que no modifican a los términos que afectan</string>
+    <string name="DIVISION_BY_ONE_SUMMARY">Reducir término</string>
+
+    <string name="MULTIPLY_BY_ZERO_OPTION">Simplificar multiplicación por 0</string>
+    <string name="MULTIPLY_BY_ZERO_JUSTIFICATION">Eliminar los términos que estén siendo multiplicados por 0</string>
+    <string name="MULTIPLY_BY_ZERO_SUMMARY">Reducir término</string>
+
+    <string name="REARRANGE_COEFF_OPTION">Reescribir producto de números y variables, como variables con coeficientes</string>
+    <string name="REARRANGE_COEFF_JUSTIFICATION">Escribir los productos de números y variables, como variables con coeficientes numéricos</string>
+    <string name="REARRANGE_COEFF_SUMMARY">Reescribir coeficientes</string>
+
+    <string name="REDUCE_EXPONENT_BY_ZERO_OPTION">Reducir a 1 el término elevado a la 0</string>
+    <string name="REDUCE_EXPONENT_BY_ZERO_JUSTIFICATION">Un término con números o letras, que se encuentra elevado a la 0, equivale a 1</string>
+    <string name="REDUCE_EXPONENT_BY_ZERO_SUMMARY">Reducir término</string>
+
+    <string name="REDUCE_ZERO_NUMERATOR_OPTION">Reducir a 0 la fracción con numerador igual a 0</string>
+    <string name="REDUCE_ZERO_NUMERATOR_JUSTIFICATION">0 multiplicado o dividido por cualquier término, equivale a 0</string>
+    <string name="REDUCE_ZERO_NUMERATOR_SUMMARY">Reducir término</string>
+
+    <string name="REMOVE_ADDING_ZERO_OPTION">Simplificar suma o resta con término igual a 0</string>
+    <string name="REMOVE_ADDING_ZERO_JUSTIFICATION">Todo término al que se le suma o resta 0, equivale al mismo término</string>
+    <string name="REMOVE_ADDING_ZERO_SUMMARY">Resolver operación</string>
+
+    <string name="REMOVE_EXPONENT_BY_ONE_OPTION">Eliminar potencia con exponente igual a 1</string>
+    <string name="REMOVE_EXPONENT_BY_ONE_JUSTIFICATION">Todo término elevado a 1, equivale al mismo término</string>
+    <string name="REMOVE_EXPONENT_BY_ONE_SUMMARY">Resolver operación</string>
+
+    <string name="REMOVE_EXPONENT_BASE_ONE_OPTION">Eliminar potencia con base iguale a 1</string>
+    <string name="REMOVE_EXPONENT_BASE_ONE_JUSTIFICATION">Todo término con base igual a 1, elevado a cualquier potencia, equivale a 1</string>
+    <string name="REMOVE_EXPONENT_BASE_ONE_SUMMARY">Reducir término</string>
+
+    <string name="RESOLVE_DOUBLE_MINUS_OPTION">Reescribir secuencia de dos signos (-), como un signo (+)</string>
+    <string name="RESOLVE_DOUBLE_MINUS_JUSTIFICATION">Por regla de los signos, dos "menos" equivalen a un "más". Por ejemplo: 2 - - 3 equivale a 2 + 3</string>
+    <string name="RESOLVE_DOUBLE_MINUS_SUMMARY">Simplificar operadores</string>
+
+    <string name="COLLECT_AND_COMBINE_LIKE_TERMS_OPTION">Agrupar términos numéricos entre sí, y términos con variables entre sí</string>
+    <string name="COLLECT_AND_COMBINE_LIKE_TERMS_JUSTIFICATION">En una expresión con sumas y restas de números y variables, se pueden agrupar los números por un lado, y las variables por otro, para simplificar la expresión</string>
+    <string name="COLLECT_AND_COMBINE_LIKE_TERMS_SUMMARY">Agrupar términos</string>
+
+    <string name="COLLECT_CONSTANT_EXPONENTS_OPTION">Reducir la multiplicación de términos de igual base</string>
+    <string name="COLLECT_CONSTANT_EXPONENTS_JUSTIFICATION">Producto de potencias de igual base, se suman los exponentes</string>
+    <string name="COLLECT_CONSTANT_EXPONENTS_SUMMARY">Simplificar términos</string>
+
+    <string name="ADD_EXPONENT_OF_ONE_OPTION">Reescribir las variables como bases elevadas a un exponente</string>
+    <string name="ADD_EXPONENT_OF_ONE_JUSTIFICATION">Toda expresión está elevada a un exponente (que de no aparecer, vale 1).</string>
+    <string name="ADD_EXPONENT_OF_ONE_SUMMARY">Reescribir exponentes</string>
+
+    <string name="MULTIPLY_POLYNOMIAL_TERMS_OPTION">Reescribir el prodcuto de variables, como una variable elevada a una potencia</string>
+    <string name="MULTIPLY_POLYNOMIAL_TERMS_JUSTIFICATION">Una variable multiplicada por si misma 2 o más veces, equivale a escribir dicha variable, elevada a un exponente igual a la cantidad de veces que estaba multiplicada</string>
+    <string name="MULTIPLY_POLYNOMIAL_TERMS_SUMMARY">Reescribir producto de varaibles</string>
+
+
+</resources>

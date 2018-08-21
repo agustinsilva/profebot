@@ -1,53 +1,103 @@
 package ar.com.profebot.resolutor.service;
 
 import java.util.concurrent.ThreadLocalRandom;
+
 import ar.com.profebot.parser.container.Tree;
 import ar.com.profebot.parser.container.TreeNode;
 import ar.com.profebot.resolutor.utils.TreeUtils;
 
 public class InvalidOptionService {
 
-    private void getFirstInvalidOption(Tree tree){
+    /***
+     * @param tree arbol del cual se quiere generar un paso inválido
+     * @return devuelve un nuevo arbol generado con un pasaje de términos inválido
+     **/
+    private Tree getFirstInvalidOption(Tree tree) {
         //1. Elegir rama izquierda o derecha del árbol
+        boolean equalsLeftBranch = true;
         TreeNode node = tree.getLeftNode();
-        if(chooseRightNode()){
-            node =  tree.getRightNode();
+        if (chooseRightNode()) {
+            node = tree.getRightNode();
+            equalsLeftBranch = false;
         }
 
         //2. Elegir un nodo random del subarbol que sea NO TERMINAL
         //generar un valor random de iteraciones (nivel dentro del subarbol)
         // TODO el random deberia ser entre 0 y la profundidad del árbol
-        int nodeLevel = getRandomValue(0,6);
+        int nodeLevel = getRandomValue(0, 6);
         TreeNode randomNode = getRandomNonTerminalNode(node, nodeLevel);
 
         //3. Si el nodo elegido es hijo del signo Igual, pasar este nodo y su decendencia al otro miembro
         //4. Si el nodo elegido NO es hijo del signo Igual, validar niveles de sus ancestros
-            /*4.a Ancestros de distinto nivel: pasar este nodo (inviertiendo operador) y uno de sus hijos
-             * 4.b Ancestros de igual nivel: pasar este nodo (sin invertir el operador) y uno de sus hijos */
+        /*4.a Ancestros de distinto nivel: pasar este nodo (inviertiendo operador) y uno de sus hijos/ramas
+         * 4.b Ancestros de igual nivel: pasar este nodo (sin invertir el operador) y uno de sus hijos/ramas */
         boolean reverseOperator = false;
-        if(!isEqualsChild(nodeLevel)){
-            reverseOperator =  TreeUtils.hasDifferentLevelAncestors(randomNode);
+        if (!isEqualsChild(nodeLevel)) {
+            reverseOperator = TreeUtils.hasDifferentLevelAncestors(randomNode);
+            if (reverseOperator) {
+                String newReverseOperator = TreeUtils.inverseComparator(randomNode.getValue());
+                randomNode.setValue(newReverseOperator);
+            }
         }
 
         /****Magic begins****/
         //5. Reestructurar el arbol
-        // Sacar el randomNode y uno de sus hijos. El otro hijo debe enlazarse al padre de randomNode
-        // El randomNode se debe enlazar al otro lado del igual. La rama que se encontraba alli
+        // 5.a Sacar el randomNode y una de sus ramas (elijo random). La otra rama, debe enlazarse al padre de randomNode
+        boolean chooseRightBranch = chooseRightNode();
+        if (isLeftChild(randomNode)) {
+            if (chooseRightBranch) {
+                randomNode.getParentNode().setLeftNode(randomNode.getLeftNode());
+                randomNode.setLeftNode(null);
+            } else {
+                randomNode.getParentNode().setLeftNode(randomNode.getRightNode());
+                randomNode.setRightNode(null);
+            }
+        } else {
+            if (chooseRightBranch) {
+                randomNode.getParentNode().setRightNode(randomNode.getLeftNode());
+                randomNode.setLeftNode(null);
+            } else {
+                randomNode.getParentNode().setRightNode(randomNode.getRightNode());
+                randomNode.setRightNode(null);
+            }
+        }
+        // 5.b El randomNode se debe enlazar al otro lado del igual. La rama que se encontraba alli
         // sera el nuevo hijo del randomNode
-
+        if (equalsLeftBranch) {
+            if (chooseRightBranch) {
+                randomNode.setLeftNode(tree.getRightNode());
+            } else {
+                randomNode.setRightNode(tree.getRightNode());
+            }
+            tree.setRightNode(randomNode);
+        } else {
+            if (chooseRightBranch) {
+                randomNode.setLeftNode(tree.getLeftNode());
+            } else {
+                randomNode.setRightNode(tree.getLeftNode());
+            }
+            tree.setLeftNode(randomNode);
+        }
+        return tree;
     }
 
-    /** Iterar nodos: random izquierdo o derecho mientras que no sea nodo terminal.
-     * Si es nodo terminal, elegir el padre. Si no, seguir iterando **/
-    private TreeNode getRandomNonTerminalNode(TreeNode treeNode, int nodeLevel){
+    private boolean isLeftChild(TreeNode node) {
+        return node.getChildIndex() == 0;
+    }
+
+    /**
+     * Iterar nodos: random izquierdo o derecho mientras que no sea nodo terminal.
+     * Si es nodo terminal, elegir el padre. Si no, seguir iterando
+     **/
+    private TreeNode getRandomNonTerminalNode(TreeNode treeNode, int nodeLevel) {
         TreeNode randomNode = treeNode;
         int i = 1;
-        while(i <= nodeLevel){
-            if(chooseRightNode() && randomNode.getRightNode() != null){
+        while (i <= nodeLevel) {
+            if (chooseRightNode() && randomNode.getRightNode() != null) {
                 randomNode = randomNode.getRightNode();
-            }else if(randomNode.getLeftNode() != null){
+            } else if (randomNode.getLeftNode() != null) {
                 randomNode = randomNode.getLeftNode();
-            }else{  // es nodo TERMINAL
+            } else {  // es nodo TERMINAL
                 nodeLevel = i;
                 randomNode = randomNode.getParentNode();
             }
@@ -59,9 +109,9 @@ public class InvalidOptionService {
     /**
      * Si el nivel del nodo es 0, entonces es hijo del signo Igual (o signos Menor, Mayor, whatever...)
      * El valor del nivel del nodo, en este caso, no incluye el nivel del nodo raiz.
-     * */
-    private boolean isEqualsChild(int nodeLevel){
-        if(nodeLevel == 0){
+     */
+    private boolean isEqualsChild(int nodeLevel) {
+        if (nodeLevel == 0) {
             return true;
         }
         return false;
@@ -70,9 +120,9 @@ public class InvalidOptionService {
     /**
      * Elige de forma RANDOM el nodo izquierdo o derecho
      **/
-    private boolean chooseRightNode(){
-        int random = this.getRandomValue(0,2);
-        if(1 == random){
+    private boolean chooseRightNode() {
+        int random = this.getRandomValue(0, 2);
+        if (1 == random) {
             return true;
         }
         return true;
@@ -82,7 +132,7 @@ public class InvalidOptionService {
      * @param origin (inclusive)
      * @param bound (exclusive)
      * */
-    private int getRandomValue(int origin, int bound){
+    private int getRandomValue(int origin, int bound) {
         ThreadLocalRandom generator = ThreadLocalRandom.current();
         return generator.nextInt(origin, bound);
     }
