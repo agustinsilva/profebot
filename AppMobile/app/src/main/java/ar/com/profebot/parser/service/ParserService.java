@@ -126,6 +126,7 @@ public class ParserService {
         scannerService.match(Token.CONSTANTE);
         operacionPotencia.setLeftNode(primaria); // la primaria inicial queda a la izquierda
         operacionPotencia.setRightNode(new TreeNode(scannerService.getResultado())); // la constante
+
         return operacionPotencia;
     }
 }

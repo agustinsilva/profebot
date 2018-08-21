@@ -463,7 +463,11 @@ public class TreeNode {
 
     public void setChild(int i, TreeNode node){
         if (i > this.args.size()-1){return;}
-        this.args.set(i, node);
+        try {
+            this.args.set(i, node);
+        }catch(Exception e){
+            e.getMessage();
+        }
     }
 
     public Boolean isUnaryMinus() {

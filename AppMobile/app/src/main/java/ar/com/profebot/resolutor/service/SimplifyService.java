@@ -1302,12 +1302,13 @@ public class SimplifyService {
         Boolean hasPolynomialTerms = false;
         Boolean hasPolynomialInDenominatorTerms = false;
         for(TreeNode child: node.getArgs()){
-            if (TreeUtils.isFraction(child)){
-                atLeastOneFraction = true;
-            }else if (TreeUtils.isPolynomialTerm(child)){
+            if (TreeUtils.isPolynomialTerm(child)){
                 hasPolynomialTerms = true;
             }else if (TreeUtils.hasPolynomialInDenominator(child)){
                 hasPolynomialInDenominatorTerms = true;
+                atLeastOneFraction = true;
+            }else if (TreeUtils.isFraction(child)){
+                atLeastOneFraction = true;
             }
         }
 
@@ -1576,18 +1577,25 @@ public class SimplifyService {
      */
     protected NodeStatus removeExponentByOne(TreeNode treeNode){
         // Buscar un nodo con ^
-        if (treeNode == null || !treeNode.esPotencia()) {
+        if (treeNode == null || (!treeNode.esPotencia() &&
+                !(TreeUtils.isSymbol(treeNode) && treeNode.getValue().endsWith("^1")))) {
             return NodeStatus.noChange(treeNode);
         }
 
-        TreeNode exponentNode = treeNode.getRightNode();
-        if (TreeUtils.isConstant(exponentNode) &&
-                CONSTANT_1.equals(exponentNode.getIntegerValue())){
-
-            TreeNode node = TreeNode.createConstant(1);
-            // De ser así, reemplazar el subárbol con 1
+        if (TreeUtils.isSymbol(treeNode) && treeNode.getValue().endsWith("^1")){
+            TreeNode node = treeNode.clone() ;
+            node.updateValue();
             return NodeStatus.nodeChanged(
-                    NodeStatus.ChangeTypes.REMOVE_EXPONENT_BASE_ONE, treeNode, node);
+                    NodeStatus.ChangeTypes.REMOVE_EXPONENT_BY_ONE, treeNode, node);
+        }else {
+            TreeNode exponentNode = treeNode.getRightNode();
+            if (TreeUtils.isConstant(exponentNode) &&
+                    CONSTANT_1.equals(exponentNode.getIntegerValue())) {
+
+                TreeNode node = treeNode.getLeftNode().clone() ;
+                return NodeStatus.nodeChanged(
+                        NodeStatus.ChangeTypes.REMOVE_EXPONENT_BY_ONE, treeNode, node);
+            }
         }
 
 
@@ -3068,7 +3076,7 @@ public class SimplifyService {
         if (numerator.isParenthesis()) {
             CancelOutStatus cancelStatus = cancelTerms(numerator.getChild(0), denominator);
             if (cancelStatus.getNumerator() != null) {
-                numerator.setArgs(Collections.singletonList(cancelStatus.getNumerator()));
+                numerator.setArgs(TreeUtils.singletonList(cancelStatus.getNumerator()));
             }
             else {
                 // if the numerator was cancelled out, the numerator should be null
@@ -3081,7 +3089,10 @@ public class SimplifyService {
         if (denominator.isParenthesis()) {
             CancelOutStatus cancelStatus = cancelTerms(numerator, denominator.getChild(0));
             if (cancelStatus.getDenominator() != null) {
-                denominator.setArgs(Collections.singletonList(cancelStatus.getDenominator()));
+                List<TreeNode> argsList = new ArrayList<>();
+                argsList.add(cancelStatus.getDenominator());
+                denominator.setArgs(argsList);
+                denominator.setArgs(TreeUtils.singletonList(cancelStatus.getDenominator()));
             }
             else {
                 // if the denominator was cancelled out, the denominator should be null

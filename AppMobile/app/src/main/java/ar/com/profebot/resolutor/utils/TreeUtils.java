@@ -1220,4 +1220,10 @@ public class TreeUtils {
             throw new Error("Comparador no soportado: " + comparator);
         }
     }
+
+    public static List<TreeNode> singletonList(TreeNode node) {
+        List<TreeNode> list = new ArrayList<>();
+        list.add(node);
+        return list;
+    }
 }

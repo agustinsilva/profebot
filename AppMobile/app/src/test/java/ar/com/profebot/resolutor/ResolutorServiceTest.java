@@ -6,7 +6,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import ar.com.profebot.Models.MultipleChoiceStep;
 import ar.com.profebot.parser.container.Tree;
 import ar.com.profebot.parser.container.TreeNode;
 import ar.com.profebot.parser.exception.InvalidExpressionException;
@@ -1079,7 +1078,7 @@ public class ResolutorServiceTest extends ResolutorService {
 
     @Test
     public void stepThrough_ok21()  throws InvalidExpressionException {
-        String expression = "-9/4X + 4/5 = 7/8";
+        String expression = "(-9/4) * X + 4/5 = 7/8";
         Tree tree = (new ParserService()).parseExpression(expression);
         List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
         String estado;
@@ -1629,7 +1628,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X=[0,1]",estado);
+        Assert.assertEquals("(3 + X) / (X^2 + 3) = 1", "X=[0,1]",estado);
     }
 
     @Test

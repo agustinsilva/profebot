@@ -135,4 +135,9 @@ public class ParserTest {
         Assert.assertEquals(new Integer(2), tree.getRootNode().getRightNode().getRightNode().getExponent());
         Assert.assertEquals(new Integer(5), tree.getRootNode().getRightNode().getRightNode().getCoefficient());
     }
+
+    @Test
+    public void parse_polynomial_ecuation()  throws InvalidExpressionException {
+        Tree tree = (new ParserService()).parseExpression("-5X^2+3X-9=0");
+    }
 }

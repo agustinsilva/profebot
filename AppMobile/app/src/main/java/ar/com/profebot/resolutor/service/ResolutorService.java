@@ -3,7 +3,6 @@ package ar.com.profebot.resolutor.service;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import ar.com.profebot.Models.MultipleChoiceStep;
@@ -13,7 +12,6 @@ import ar.com.profebot.parser.exception.InvalidExpressionException;
 import ar.com.profebot.parser.service.ParserService;
 import ar.com.profebot.resolutor.container.EquationStatus;
 import ar.com.profebot.resolutor.container.NodeStatus;
-import ar.com.profebot.resolutor.container.ResolutionStep;
 import ar.com.profebot.resolutor.utils.TreeUtils;
 
 public class ResolutorService {
@@ -284,6 +282,8 @@ public class ResolutorService {
                 ? (leftSimplifySteps.get(leftSimplifySteps.size() -1)).getNewNode()
                 : equation.getLeftNode();
 
+        simplifiedLeftNode = TreeUtils.removeUnnecessaryParens(simplifiedLeftNode, true);
+
         List<NodeStatus> leftFactorSteps = factorStepThrough(simplifiedLeftNode, false);
 
         List<EquationStatus> leftSubSteps = new ArrayList<>();
@@ -385,7 +385,7 @@ public class ResolutorService {
             allSolutions =  TreeNode.createList(flattenSolutionsList);
         }
         else if (solutions.size() == 1) {
-            allSolutions = TreeNode.createList(Collections.singletonList(solutions.get(0)));
+            allSolutions = TreeNode.createList(TreeUtils.singletonList(solutions.get(0)));
         }
         else {
             allSolutions = TreeNode.createList(new ArrayList<TreeNode>());
@@ -404,7 +404,8 @@ public class ResolutorService {
     */
     private TreeNode getSolutionsAndSymbol(Tree equation, List<TreeNode> solutions){
 
-        TreeNode leftNode = equation.getLeftNode();
+        // Por las dudas flattenizo
+        TreeNode leftNode = TreeUtils.flattenOperands(equation.getLeftNode());
         List<TreeNode> factorsWithSymbols = new ArrayList<>();
         List<EquationStatus> steps;
         TreeNode symbol = null;
@@ -414,10 +415,10 @@ public class ResolutorService {
         // x^2 would have factors x = 0)
         // If left hand side is a multiplication node, return a list of all the valid factors.
         if (leftNode.esPotencia() && !TreeUtils.resolvesToConstant(leftNode)){
-            factorsWithSymbols = Collections.singletonList(leftNode);
+            factorsWithSymbols = TreeUtils.singletonList(leftNode);
         }
         else if (TreeUtils.isSymbol(leftNode)){
-            factorsWithSymbols = Collections.singletonList(leftNode);
+            factorsWithSymbols = TreeUtils.singletonList(leftNode);
         }
         else {
             for(TreeNode child: equation.getLeftNode().getArgs()){
