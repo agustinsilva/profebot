@@ -10,6 +10,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -35,12 +37,13 @@ public class EnterPolinomialActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         EquationBuilder = new ArrayList<>();
         EquationUnordered = new ArrayList<>();
-        Button enterPolinomial = (Button)findViewById(R.id.AddEquationButton);
-        Button deleterTerm = (Button)findViewById(R.id.delete_last_term);
+        ImageButton enterPolinomial = (ImageButton)findViewById(R.id.AddEquationButton);
+        ImageButton deleterTerm = (ImageButton)findViewById(R.id.delete_last_term);
 
-        TextInputEditText coefficientTermInput = (TextInputEditText) findViewById(R.id.coefficientTerm);
-        TextInputEditText potentialTermInput = (TextInputEditText) findViewById(R.id.potentialTerm);
-        RadioGroup signRadioButton = (RadioGroup) findViewById(R.id.signRadioGroup);
+        EditText coefficientTermInput = (EditText) findViewById(R.id.coefficientTerm);
+        EditText potentialTermInput = (EditText) findViewById(R.id.potentialTerm);
+
+        /*
         coefficientTermInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -56,16 +59,16 @@ public class EnterPolinomialActivity extends AppCompatActivity {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {}
                 return true;
             }
-        });
+        });*/
         enterPolinomial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
-                if (this.validTerms(coefficientTermInput,potentialTermInput)){
-                    int selectedId = signRadioButton.getCheckedRadioButtonId();
+                if (this.validTerms(coefficientTermInput, potentialTermInput)){
+                 /*   int selectedId = signRadioButton.getCheckedRadioButtonId();
                     RadioButton radioSignButton = (RadioButton) findViewById(selectedId);
                     EquationBuilder.add(radioSignButton.getText().toString() + coefficientTermInput.getText() + "x^" + potentialTermInput.getText());
                     EquationUnordered.add(radioSignButton.getText().toString() + coefficientTermInput.getText() + "x^" + potentialTermInput.getText());
-                    //Mapping First Character and setting equation as latex
+                    //Mapping First Character and setting equation as latex*/
                     /*if (beautifierEquation().trim().charAt(0) == '+'){*/
                         ExpressionsManager.setEquationPhoto(beautifierEquation().trim().substring(1).concat("=0"), getApplicationContext());
                     /*}
@@ -85,7 +88,7 @@ public class EnterPolinomialActivity extends AppCompatActivity {
         }
 
 
-            private boolean validTerms(TextInputEditText coefficientTermInput, TextInputEditText potentialTermInput) {
+            private boolean validTerms(EditText coefficientTermInput, EditText potentialTermInput) {
                 return !(coefficientTermInput.getText().toString().matches("") || potentialTermInput.getText().toString().matches(""));
             }
             });

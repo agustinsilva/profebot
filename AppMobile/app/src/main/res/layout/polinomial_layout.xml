@@ -3,187 +3,177 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@color/colorBackground">
+    android:background="@color/colorWhite">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorGreen">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="start"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/profebot_id"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="Ingreso de Polinomios"
-                android:textColor="@color/colorWhite"
-                android:textSize="25dp" />
-        </LinearLayout>
-
-    </android.support.v7.widget.Toolbar>
+    <include layout="@layout/enter_equation_handdraw_toolbar"/>
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:layout_marginBottom="50dp"
         android:fontFamily="casual"
         android:gravity="center_vertical|center"
         android:includeFontPadding="false"
-        android:text="Ingresá los términos de tu polinomio"
-        android:textColor="@color/colorWhite"
-        android:textSize="20dp" />
+        android:text="Ingresá tu polinomio"
+        android:textColor="@color/colorBackground"
+        android:textSize="30dp" />
+
+    <LinearLayout
+        android:id="@+id/ejercicios"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        android:gravity="start"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30dp"
+            android:text="p(x) = " />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="start">
+
+            <io.github.kexanie.library.MathView
+                android:id="@+id/equation_to_solve_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:engine="KaTeX">
+            </io.github.kexanie.library.MathView>
+
+            <ImageButton
+                android:id="@+id/delete_last_term"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/delete_last_character" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginStart="20dp">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/signo_highlighted"
+                    android:visibility="invisible"/>
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/signo_mas"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/signo_highlighted"
+                    android:visibility="invisible"/>
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/signo_menos"/>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_vertical|end"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp">
+
+            <EditText
+                android:id="@+id/potentialTerm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
+                android:maxLength="2"
+                android:hint="2"
+                android:textSize="40dp"
+                android:inputType="number"
+                android:fontFamily="casual"
+                android:gravity="end" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="top|end"
+                android:layout_marginEnd="30dp"
+                android:layout_marginStart="20dp">
+
+                <EditText
+                    android:id="@+id/coefficientTerm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="90dp"
+                    android:background="@color/colorWhite"
+                    android:maxLength="6"
+                    android:hint="10"
+                    android:textSize="60dp"
+                    android:fontFamily="casual"
+                    android:inputType="number"
+                    android:gravity="center"
+                    android:includeFontPadding="false"/>
+
+                <ImageView
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:background="@drawable/letra_x"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/terminos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center">
 
-
-        <RadioGroup
-            android:id="@+id/signRadioGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:textColor="@color/colorWhite"
-            android:buttonTint="@color/colorWhite">
-
-            <RadioButton
-                android:id="@+id/positiveRadioButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:checked="true"
-                android:text="@string/positive"
-                android:textColor="@color/colorGreen"
-                android:textColorLink="@color/colorGreen"
-                android:buttonTint="@color/colorWhite"/>
-
-            <RadioButton
-                android:id="@+id/negativeRadioButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/negative"
-                android:textColor="@color/colorGreen"
-                android:textColorLink="@color/colorGreen"
-                android:buttonTint="@color/colorWhite"/>
-        </RadioGroup>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            style="@style/PolinomialTextInputLayout">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/coefficientTerm"
-                style="@style/PolinomialEditTextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="bottom"
-                android:hint="Coeficiente"
-                android:inputType="number" />
-        </android.support.design.widget.TextInputLayout>
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:fontFamily="casual"
-            android:gravity="bottom"
-            android:text="X"
-            android:textColor="@color/colorWhite"
-            android:textSize="18sp" />
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="80dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="6dp"
-            android:layout_weight="1"
-            style="@style/PolinomialTextInputLayout">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/potentialTerm"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:hint="Potencia"
-                android:inputType="number"
-                style="@style/PolinomialEditTextInputLayout"/>
-        </android.support.design.widget.TextInputLayout>
-
-        <Button
+        <ImageButton
             android:id="@+id/AddEquationButton"
             android:layout_width="80dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:text="Agregar"
-            style="@style/AppButton"/>
-        <Button
-            android:id="@+id/delete_last_term"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:background="@drawable/delete_exercise"
-
-            />
+            android:layout_height="80dp"
+            android:background="@drawable/solved_right" />
     </LinearLayout>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/ejercicios"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:orientation="horizontal">
-
-        <!--        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp">-->
-
-        <io.github.kexanie.library.MathView
-            android:id="@+id/equation_to_solve_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="30dp"
-            android:textColor="@color/colorWhite"
-            app:engine="KaTeX"></io.github.kexanie.library.MathView>
-        <!--    </HorizontalScrollView>-->
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Factorear!"
-            android:layout_marginRight="15dp"
-            android:layout_marginLeft="15dp"
-            style="@style/AppButton"/>
-    </LinearLayout>
 </LinearLayout>
