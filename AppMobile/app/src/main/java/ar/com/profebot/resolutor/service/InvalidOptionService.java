@@ -4,15 +4,20 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import ar.com.profebot.parser.container.Tree;
 import ar.com.profebot.parser.container.TreeNode;
+import ar.com.profebot.resolutor.container.InvalidStep;
 import ar.com.profebot.resolutor.utils.TreeUtils;
 
 public class InvalidOptionService {
 
     /***
-     * @param tree arbol del cual se quiere generar un paso inválido
-     * @return devuelve un nuevo arbol generado con un pasaje de términos inválido
+     * @param originalTree arbol del cual se quiere generar un paso inválido
+     * @return devuelve la info del nuevo arbol generado con un pasaje de términos inválido
      **/
-    private Tree getFirstInvalidOption(Tree tree) {
+    public InvalidStep getFirstInvalidOption(Tree originalTree) {
+
+        // Clonado para evitar modificar el original
+        Tree tree  = originalTree.clone();
+
         //1. Elegir rama izquierda o derecha del árbol
         boolean equalsLeftBranch = true;
         TreeNode node = tree.getLeftNode();
@@ -23,15 +28,14 @@ public class InvalidOptionService {
 
         //2. Elegir un nodo random del subarbol que sea NO TERMINAL
         //generar un valor random de iteraciones (nivel dentro del subarbol)
-        // TODO el random deberia ser entre 0 y la profundidad del árbol
-        int nodeLevel = getRandomValue(0, 6);
+        int nodeLevel = getRandomValue(0, tree.getDepth());
         TreeNode randomNode = getRandomNonTerminalNode(node, nodeLevel);
 
         //3. Si el nodo elegido es hijo del signo Igual, pasar este nodo y su decendencia al otro miembro
         //4. Si el nodo elegido NO es hijo del signo Igual, validar niveles de sus ancestros
         /*4.a Ancestros de distinto nivel: pasar este nodo (inviertiendo operador) y uno de sus hijos/ramas
          * 4.b Ancestros de igual nivel: pasar este nodo (sin invertir el operador) y uno de sus hijos/ramas */
-        boolean reverseOperator = false;
+        boolean reverseOperator;
         if (!isEqualsChild(nodeLevel)) {
             reverseOperator = TreeUtils.hasDifferentLevelAncestors(randomNode);
             if (reverseOperator) {
@@ -78,7 +82,8 @@ public class InvalidOptionService {
             }
             tree.setLeftNode(randomNode);
         }
-        return tree;
+        // TODO Resolver esto, devuelvo un mock por lo pronto
+        return new InvalidStep(InvalidStep.InvalidTypes.DISTRIBUTIVA_BASICA_MAL_RESUELTA,  tree);
     }
 
     private boolean isLeftChild(TreeNode node) {
@@ -111,10 +116,7 @@ public class InvalidOptionService {
      * El valor del nivel del nodo, en este caso, no incluye el nivel del nodo raiz.
      */
     private boolean isEqualsChild(int nodeLevel) {
-        if (nodeLevel == 0) {
-            return true;
-        }
-        return false;
+        return (nodeLevel == 0);
     }
 
     /**
@@ -122,10 +124,7 @@ public class InvalidOptionService {
      **/
     private boolean chooseRightNode() {
         int random = this.getRandomValue(0, 2);
-        if (1 == random) {
-            return true;
-        }
-        return true;
+        return (random == 1);
     }
 
     /***
@@ -135,5 +134,18 @@ public class InvalidOptionService {
     private int getRandomValue(int origin, int bound) {
         ThreadLocalRandom generator = ThreadLocalRandom.current();
         return generator.nextInt(origin, bound);
+    }
+
+    /***
+     * @param originalTree arbol del cual se quiere generar un paso inválido
+     * @return devuelve la info del nuevo arbol generado con un pasaje de términos inválido
+     **/
+    public InvalidStep getSecondInvalidOption(Tree originalTree) {
+
+        // Clonado para evitar modificar el original
+        Tree tree  = originalTree.clone();
+
+        // TODO Resolver esto, devuelvo un mock por lo pronto
+        return new InvalidStep(InvalidStep.InvalidTypes.DISTRIBUTIVA_BASICA_MAL_RESUELTA,  tree);
     }
 }

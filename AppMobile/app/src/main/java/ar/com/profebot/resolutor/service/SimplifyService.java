@@ -2804,6 +2804,7 @@ public class SimplifyService {
             }
         }
         else {
+            // TODO revisar esto, al crear un polinomio le saca el coeff nodo
             int i = 0;
             for(TreeNode polyTerm: newNode.getArgs()){
                 if (polyTerm.getExponent() == 1) {

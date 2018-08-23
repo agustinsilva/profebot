@@ -58,4 +58,23 @@ public class Tree {
     public String toString() {
         return toExpression();
     }
+
+    public int getDepth() {
+        return getNodeDepth(getRootNode());
+    }
+
+    private int getNodeDepth(TreeNode node) {
+
+        if (node == null){return 0;}
+
+        int depth = 0;
+        if (node.getArgs() != null){
+            for(TreeNode child: node.getArgs()){
+                depth = Math.max(depth, getNodeDepth(child));
+            }
+        }
+
+        // La mayor profundidad de uno de sus hijos + 1 de su propia profundidad
+        return depth + 1;
+    }
 }
