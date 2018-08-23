@@ -20,13 +20,15 @@ public class Tree {
         this.rootNode = rootNode;
     }
     public String toExpression(){
+        if (rootNode == null){return "";}
         return rootNode.toExpression();
+
     }
     public TreeNode getLeftNode() {
-        return rootNode.getLeftNode();
+        return (rootNode == null? null: rootNode.getLeftNode());
     }
     public TreeNode getRightNode() {
-        return rootNode.getRightNode();
+        return (rootNode == null? null: rootNode.getRightNode());
     }
     public void setLeftNode(TreeNode node) {
         rootNode.setLeftNode(node);
