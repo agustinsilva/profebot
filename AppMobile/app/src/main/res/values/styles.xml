@@ -35,6 +35,11 @@
         <item name = "android:textColor">@color/colorWhite</item>
     </style>
 
+    <style name="AppButtonRounded">
+        <item name = "android:background">@drawable/rounded_corners_main_buttons</item>
+        <item name = "android:textColor">@color/colorWhite</item>
+    </style>
+
     <style name="AppButtonDisable">
         <item name = "android:textColor">@color/colorGreyText</item>
         <item name = "android:background">@drawable/rounded_corners_disable_button</item>

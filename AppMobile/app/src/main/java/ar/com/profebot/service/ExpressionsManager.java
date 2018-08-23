@@ -17,6 +17,7 @@ public class ExpressionsManager {
 
     private static String equationDrawn;
     private static String equationPhoto;
+    private static String equationPolinomial;
     private static Tree treeOfExpression;
 
     public static String getEquationDrawn() {
@@ -25,6 +26,9 @@ public class ExpressionsManager {
 
     public static String getEquationPhoto() {
         return equationPhoto;
+    }
+    public static String getPolinomialEquation() {
+        return equationPolinomial;
     }
 
     public static void setEquationPhoto(String equationPhoto, Context context) {
@@ -38,6 +42,21 @@ public class ExpressionsManager {
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
             equationDrawn = null;
+            treeOfExpression = null;
+        }
+    }
+
+    public static void setPolinomialEquation(String equationPhoto, Context context) {
+        ExpressionsManager.equationPolinomial = null;
+        ExpressionsManager.equationPolinomial = mapPhotoToOurAlphabet(equationPhoto);
+        try{
+            setTreeOfExpression(new ParserService().parseExpression(getPolinomialEquation()));
+        }catch (InvalidExpressionException e){
+            CharSequence text = "Se produjo un error en la expresion:" + e.getMessage();
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+            equationPolinomial = null;
             treeOfExpression = null;
         }
     }
@@ -62,6 +81,12 @@ public class ExpressionsManager {
         String infixEquation = getEquationAsInfix();
         String[] expressions = infixEquation.split("="); // TODO: se necesita el rool parametrizable
         return FormulaParser.parseToLatex(expressions[0]) + "=" + FormulaParser.parseToLatex(expressions[1]);
+    }
+
+    public static String getPolinomialEquationAsLatex() {
+        String infixEquation = getEquationAsInfix();
+        String[] expressions = infixEquation.split("="); // TODO: se necesita el rool parametrizable
+        return FormulaParser.parseToLatex(expressions[0]);
     }
 
     public static String getEquationAsLatex(String infixEquation) {

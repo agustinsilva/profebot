@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -23,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="Ingreso de Polinomios"
+                android:text="ProfeBot"
                 android:textColor="@color/colorWhite"
                 android:textSize="25dp" />
         </LinearLayout>
@@ -46,57 +48,48 @@
         android:id="@+id/terminos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
         android:orientation="horizontal">
 
-
-        <RadioGroup
-            android:id="@+id/signRadioGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:textColor="@color/colorWhite"
-            android:buttonTint="@color/colorWhite">
-
-            <RadioButton
-                android:id="@+id/positiveRadioButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:checked="true"
-                android:text="@string/positive"
-                android:textColor="@color/colorGreen"
-                android:textColorLink="@color/colorGreen"
-                android:buttonTint="@color/colorWhite"/>
-
-            <RadioButton
-                android:id="@+id/negativeRadioButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/negative"
-                android:textColor="@color/colorGreen"
-                android:textColorLink="@color/colorGreen"
-                android:buttonTint="@color/colorWhite"/>
-        </RadioGroup>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="100dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            style="@style/PolinomialTextInputLayout">
+            android:layout_weight="10"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/coefficientTerm"
-                style="@style/PolinomialEditTextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="bottom"
-                android:hint="Coeficiente"
-                android:inputType="number" />
-        </android.support.design.widget.TextInputLayout>
+            <ToggleButton
+                android:id="@+id/signToogleButton"
+                style="@style/AppButtonRounded"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="45dp"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"
+                android:textOff="+"
+                android:textOn="-"
+                android:textSize="26dp" />
 
-        <TextView
+            <android.support.design.widget.TextInputLayout
+                style="@style/PolinomialTextInputLayout"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/coefficientTerm"
+                    style="@style/PolinomialEditTextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Coeficiente"
+                    android:inputType="number"
+                    android:textAlignment="center" />
+            </android.support.design.widget.TextInputLayout>
+
+            <!--        <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -105,44 +98,60 @@
             android:gravity="bottom"
             android:text="X"
             android:textColor="@color/colorWhite"
-            android:textSize="18sp" />
+            android:textSize="18sp" />-->
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:background="@drawable/letra_x"
+                android:textAlignment="center" />
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="80dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="6dp"
-            android:layout_weight="1"
-            style="@style/PolinomialTextInputLayout">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/potentialTerm"
-                android:layout_width="match_parent"
+            <android.support.design.widget.TextInputLayout
+                style="@style/PolinomialTextInputLayout"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:hint="Potencia"
-                android:inputType="number"
-                style="@style/PolinomialEditTextInputLayout"/>
-        </android.support.design.widget.TextInputLayout>
+                android:layout_marginBottom="45dp"
+                android:gravity="top"
+                android:textAlignment="center">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/potentialTerm"
+                    style="@style/PolinomialEditTextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="top"
+                    android:hint="Potencia"
+                    android:inputType="number"
+                    android:textAlignment="center" />
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/AddEquationButton"
-            android:layout_width="80dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"
+            style="@style/AppButtonRounded"
+            android:layout_width="140dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|center_horizontal"
-            android:layout_weight="1"
+            android:layout_margin="20dp"
             android:padding="10dp"
-            android:text="Agregar"
-            style="@style/AppButton"/>
+            android:text="Agregar" />
+
         <Button
             android:id="@+id/delete_last_term"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center_vertical|center_horizontal"
-            android:background="@drawable/delete_exercise"
+            android:layout_margin="20dp"
 
-            />
+            android:background="@drawable/delete_exercise" />
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -150,13 +159,21 @@
         android:id="@+id/ejercicios"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:layout_gravity="left"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:gravity="left|center_vertical"
         android:orientation="horizontal">
 
-        <!--        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp">-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left|start"
+            android:textColor="@color/colorWhite"
+            android:text="P(x) = "
+            android:textSize="25dp" />
 
         <io.github.kexanie.library.MathView
             android:id="@+id/equation_to_solve_id"
@@ -165,25 +182,22 @@
             android:layout_marginBottom="20dp"
             android:layout_marginTop="30dp"
             android:textColor="@color/colorWhite"
-            app:engine="KaTeX"></io.github.kexanie.library.MathView>
-        <!--    </HorizontalScrollView>-->
+            app:engine="MathJax"></io.github.kexanie.library.MathView>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/button2"
-            android:layout_width="wrap_content"
+            style="@style/AppButtonRounded"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Factorear!"
-            android:layout_marginRight="15dp"
-            android:layout_marginLeft="15dp"
-            style="@style/AppButton"/>
+            android:layout_margin="20dp"
+            android:text="Factorear !" />
     </LinearLayout>
 </LinearLayout>
