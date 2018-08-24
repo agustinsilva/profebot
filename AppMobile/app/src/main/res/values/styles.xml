@@ -35,6 +35,11 @@
         <item name = "android:textColor">@color/colorWhite</item>
     </style>
 
+    <style name="ToogleButtonRounded">
+        <item name = "android:background">@drawable/toogle_round_button</item>
+        <item name = "android:textColor">@color/colorWhite</item>
+    </style>
+
     <style name="AppButtonRounded">
         <item name = "android:background">@drawable/rounded_corners_main_buttons</item>
         <item name = "android:textColor">@color/colorWhite</item>

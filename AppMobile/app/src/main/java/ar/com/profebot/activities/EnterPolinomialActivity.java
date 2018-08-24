@@ -1,5 +1,7 @@
 package ar.com.profebot.activities;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +11,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -38,7 +41,8 @@ public class EnterPolinomialActivity extends AppCompatActivity {
         EquationBuilder = new ArrayList<>();
         EquationUnordered = new ArrayList<>();
         Button enterPolinomial = (Button)findViewById(R.id.AddEquationButton);
-        Button deleterTerm = (Button)findViewById(R.id.delete_last_term);
+        Button eraseLastTerm = (Button)findViewById(R.id.erase_last_term);
+        Button deletePolinomial = (Button)findViewById(R.id.delete_polinomial);
 
         TextInputEditText coefficientTermInput = (TextInputEditText) findViewById(R.id.coefficientTerm);
         TextInputEditText potentialTermInput = (TextInputEditText) findViewById(R.id.potentialTerm);
@@ -67,7 +71,7 @@ public class EnterPolinomialActivity extends AppCompatActivity {
                     EquationBuilder.add(termSign + coefficientTermInput.getText() + "x^" + potentialTermInput.getText());
                     EquationUnordered.add(termSign + coefficientTermInput.getText() + "x^" + potentialTermInput.getText());
                     //Mapping First Character and setting equation as latex
-                    if (beautifierEquation().trim().substring(0,1).matches("-")){firstSign = "-";}
+                    if (beautifierEquation().trim().substring(0,1).matches("-")){firstSign = "-";} else { firstSign = "";}
                     ExpressionsManager.setPolinomialEquation(beautifierEquation().trim().substring(1).concat("=0"), getApplicationContext());
                     ((MathView) findViewById(R.id.equation_to_solve_id)).config(
                             "MathJax.Hub.Config({\n"+
@@ -79,6 +83,8 @@ public class EnterPolinomialActivity extends AppCompatActivity {
                     coefficientTermInput.setText("");
                     potentialTermInput.setText("");
                     coefficientTermInput.requestFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
             }
         }
 
@@ -94,12 +100,23 @@ public class EnterPolinomialActivity extends AppCompatActivity {
         }
         });
 
-        deleterTerm.setOnClickListener(new View.OnClickListener() {
+        eraseLastTerm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
                 deleteLastTerm();
             }
         });
+        deletePolinomial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View button) {
+                deletePolinomial();
+            }
+        });
+    }
+    public void deletePolinomial(){
+        this.EquationBuilder = new ArrayList<>();
+        this.EquationUnordered = new ArrayList<>();
+        ((MathView) findViewById(R.id.equation_to_solve_id)).setText("$$" + "$$" );
     }
 
     public void deleteLastTerm(){
@@ -107,7 +124,12 @@ public class EnterPolinomialActivity extends AppCompatActivity {
         this.EquationBuilder.remove(lastTerm);
         this.EquationUnordered.remove(lastTerm);
         if (EquationBuilder.size()!= 0) {
-            if (beautifierEquation().trim().substring(0,1).matches("-")){firstSign = "-";}
+            if (beautifierEquation().trim().substring(0,1).matches("-")){
+                firstSign = "-";
+            }
+            else {
+                firstSign = "";
+            }
             ExpressionsManager.setPolinomialEquation(beautifierEquation().trim().substring(1).concat("=0"), getApplicationContext());
             ((MathView) findViewById(R.id.equation_to_solve_id)).config(
                     "MathJax.Hub.Config({\n"+

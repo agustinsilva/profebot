@@ -8,29 +8,7 @@
     android:orientation="vertical"
     android:background="@color/colorBackground">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorGreen">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="start"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/profebot_id"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="ProfeBot"
-                android:textColor="@color/colorWhite"
-                android:textSize="25dp" />
-        </LinearLayout>
-
-    </android.support.v7.widget.Toolbar>
+    <include layout="@layout/main_toolbar"/>
 
     <TextView
         android:id="@+id/textView2"
@@ -62,12 +40,12 @@
 
             <ToggleButton
                 android:id="@+id/signToogleButton"
-                style="@style/AppButtonRounded"
+                style="@style/ToogleButtonRounded"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="45dp"
-                android:background="@color/colorPrimary"
+                android:background="@drawable/toogle_round_button"
                 android:textColor="@color/white"
                 android:textOff="+"
                 android:textOn="-"
@@ -89,16 +67,6 @@
                     android:textAlignment="center" />
             </android.support.design.widget.TextInputLayout>
 
-            <!--        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:fontFamily="casual"
-            android:gravity="bottom"
-            android:text="X"
-            android:textColor="@color/colorWhite"
-            android:textSize="18sp" />-->
             <ImageView
                 android:layout_width="70dp"
                 android:layout_height="70dp"
@@ -145,12 +113,17 @@
             android:text="Agregar" />
 
         <Button
-            android:id="@+id/delete_last_term"
+            android:id="@+id/erase_last_term"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:background="@drawable/erase_exercise" />
+        <Button
+            android:id="@+id/delete_polinomial"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center_vertical|center_horizontal"
             android:layout_margin="20dp"
-
             android:background="@drawable/delete_exercise" />
     </LinearLayout>
 
