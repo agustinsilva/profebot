@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="start">
+
+        <include layout="@layout/main_toolbar"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:weightSum="100"
+                android:layout_margin="10dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="20"
+                    android:text="Elegí cómo ingresar tu polinomio"
+                    android:textSize="25dp"
+                    android:textColor="@color/colorWhite"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="10dp"
+                    />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:layout_weight="50"
+                    android:weightSum="100"
+                    android:background="@color/colorBackground">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="52.5"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorWhite"
+                        android:layout_marginEnd="6dp"
+                        android:padding="5dp">
+
+                        <ImageView
+                            android:id="@+id/photo_equation_picture_id"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/photo_equation"
+                            />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="47.5"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorWhite"
+                        android:layout_marginStart="6dp"
+                        android:padding="5dp">
+
+                        <ImageView
+                            android:id="@+id/polinomial_equation_id"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/polinomial_equation"
+                            />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="15"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:weightSum="100">
+
+                    <RadioButton
+                        android:id="@+id/photo_equation_id"
+                        android:layout_width="0dp"
+                        android:layout_weight="52.5"
+                        android:layout_height="wrap_content"
+                        android:text="Fotografiar polinomio"
+                        android:textColor="@color/colorWhite"
+                        android:textStyle="bold"/>
+
+                    <RadioButton
+                        android:id="@+id/polinomial_rb_equation_id"
+                        android:layout_width="0dp"
+                        android:layout_weight="47.5"
+                        android:layout_height="wrap_content"
+                        android:text="Ingresar términos"
+                        android:textColor="@color/colorWhite"
+                        android:textStyle="bold"/>
+
+                </RadioGroup>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="15"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <Button
+                        android:id="@+id/start_resolution_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/AppButtonDisable"
+                        android:enabled="false"
+                        android:text="Comenzar!"
+                        android:padding="5dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/options_progress_bar_id"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+</LinearLayout>

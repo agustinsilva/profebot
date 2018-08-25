@@ -44,6 +44,7 @@
         <activity android:name="ar.com.profebot.activities.PendingExercisesActivity" />
         <activity android:name="ar.com.profebot.activities.EnterPolinomialActivity"
             android:windowSoftInputMode="stateAlwaysVisible" ></activity>
+        <activity android:name="ar.com.profebot.activities.EnterPolinomialEquationOptionsActivity" />
     </application>
 
 </manifest>

@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         enterPolinomial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
-                Intent intent = new Intent(MainActivity.this, EnterPolinomialActivity.class);
+                Intent intent = new Intent(MainActivity.this, EnterPolinomialEquationOptionsActivity.class);
                 startActivity(intent);
             }
         });
