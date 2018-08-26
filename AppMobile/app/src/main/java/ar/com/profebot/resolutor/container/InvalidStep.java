@@ -87,7 +87,9 @@ public class InvalidStep {
 
         // distributiva de potencia de un binomio
         // ejemplo: 2+3^2 → hago 2^2 + 3^2
-        DISTRIBUTIVA_DE_POTENCIA_SOBRE_BINOMIO
+        DISTRIBUTIVA_DE_POTENCIA_SOBRE_BINOMIO,
+
+        CONSTANTE_NO_ENCONTRADA
         ;
     }
 
