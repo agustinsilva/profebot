@@ -79,6 +79,19 @@ public class TreeUtils {
         return isConstant(node.getRightNode());
     }
 
+    /**
+     * Cte / X
+     * @param node
+     * @param allowUnaryMinus
+     * @return
+     */
+    public static boolean isDividedBySymbol(TreeNode node, Boolean allowUnaryMinus) {
+        if (!node.esDivision()){return false;}
+        if (!isSymbol(node.getRightNode(), allowUnaryMinus)){return false;}
+
+        return isConstant(node.getLeftNode());
+    }
+
     public static boolean isSymbolPower(TreeNode node, Boolean allowUnaryMinus) {
         if (!node.esPotencia()){return false;}
         if (!isSymbol(node.getLeftNode(), allowUnaryMinus)){return false;}
@@ -678,11 +691,12 @@ public class TreeUtils {
 
     // Retorna verdadero si el nodo tiene un polinomio en el denominador
     // Ejemplo 5/x o 1/2X^2
-    public static boolean hasPolynomialInDenominator(TreeNode node) {
-        if (!(isFraction(node))) {
+    public static boolean hasPolynomialInDenominator(TreeNode originalNode) {
+        if (!(isFraction(originalNode))) {
             return false;
         }
 
+        TreeNode node = originalNode.cloneDeep(); // Se puede negar internamente
         TreeNode fraction = getFraction(node);
         TreeNode denominator = fraction.getChild(1);
         return isPolynomialTerm(denominator);
@@ -1068,6 +1082,7 @@ public class TreeUtils {
         // needed.
         else if (TreeUtils.isConstant(node.getContent(), true) ||
                 TreeUtils.isIntegerFraction(node.getContent()) ||
+                TreeUtils.isDividedBySymbol(node.getContent(), false) ||
                 TreeUtils.isSymbol(node.getContent())) {
             node = node.getContent();
         }
