@@ -59,24 +59,11 @@ public class EnterPolinomialActivity extends AppCompatActivity {
         coefficientTermInput = (TextInputEditText) findViewById(R.id.coefficientTerm);
         potentialTermInput = (TextInputEditText) findViewById(R.id.potentialTerm);
         signToogleButton = (ToggleButton)findViewById(R.id.signToogleButton);
-        coefficientTermInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
 
-                }
-                return true;
-            }
-        });
-        potentialTermInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
+        CustomKeyboard customKeyboard = new CustomKeyboard();
+        coefficientTermInput.setOnEditorActionListener(customKeyboard);
+        potentialTermInput.setOnEditorActionListener(customKeyboard);
 
-                }
-                return true;
-            }
-        });
         enterPolinomial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
@@ -97,6 +84,25 @@ public class EnterPolinomialActivity extends AppCompatActivity {
             }
         });
     }
+
+    class CustomKeyboard implements TextView.OnEditorActionListener{
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event){
+            if(actionId == EditorInfo.IME_ACTION_DONE){
+                if(coefficientTermInput.getText().length() == 0){
+                    coefficientTermInput.requestFocus();
+                }else if(potentialTermInput.getText().length() == 0){
+                    potentialTermInput.requestFocus();
+                }else{
+                    coefficientTermInput.clearFocus();
+                    potentialTermInput.clearFocus();
+                    addTerm();
+                }
+            }
+            return false;
+        }
+    }
+
 
     private void addTerm(){
         if (this.validTerms(coefficientTermInput,potentialTermInput) & reachLimitOfTerms() ){
@@ -132,9 +138,6 @@ public class EnterPolinomialActivity extends AppCompatActivity {
             ((MathView) findViewById(R.id.equation_to_solve_id)).setText("\\(\\color{White}{" + firstSign + ExpressionsManager.getPolinomialEquationAsLatex() + "}\\)" );
             coefficientTermInput.setText("");
             potentialTermInput.setText("");
-            coefficientTermInput.requestFocus();
-            InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
         }
     }
 
