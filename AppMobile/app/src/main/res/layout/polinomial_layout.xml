@@ -64,6 +64,7 @@
                     android:layout_height="match_parent"
                     android:hint="Coeficiente"
                     android:inputType="number"
+                    android:imeOptions="actionDone"
                     android:textAlignment="center" />
             </android.support.design.widget.TextInputLayout>
 
@@ -76,7 +77,7 @@
 
             <android.support.design.widget.TextInputLayout
                 style="@style/PolinomialTextInputLayout"
-                android:layout_width="80dp"
+                android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="45dp"
                 android:gravity="top"
@@ -88,8 +89,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="top"
-                    android:hint="Potencia"
+                    android:hint="Exponente"
                     android:inputType="number"
+                    android:imeOptions="actionDone"
                     android:textAlignment="center" />
             </android.support.design.widget.TextInputLayout>
 
@@ -152,10 +154,11 @@
             android:id="@+id/equation_to_solve_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="25dp"
             android:layout_marginTop="30dp"
             android:textColor="@color/colorWhite"
-            app:engine="MathJax"></io.github.kexanie.library.MathView>
+            app:engine="MathJax"/>
 
     </LinearLayout>
 

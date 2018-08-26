@@ -71,7 +71,9 @@ public class EnterPolinomialActivity extends AppCompatActivity {
         potentialTermInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {}
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+
+                }
                 return true;
             }
         });
@@ -114,7 +116,6 @@ public class EnterPolinomialActivity extends AppCompatActivity {
             }
 
             String equation = beautifierEquation().trim();
-            //Mapping First Character and setting equation as latex
             if (beautifierEquation().trim().substring(0,1).matches("-")){
                 firstSign = "-";
                 equation = equation.substring(1);
@@ -169,13 +170,14 @@ public class EnterPolinomialActivity extends AppCompatActivity {
         this.EquationUnordered.remove(lastTerm);
         polynomialTerms.remove(Collections.min(polynomialTerms.keySet()));
         if (EquationBuilder.size()!= 0) {
+            String equation = beautifierEquation().trim();
             if (beautifierEquation().trim().substring(0,1).matches("-")){
                 firstSign = "-";
-            }
-            else {
+                equation = equation.substring(1);
+            } else {
                 firstSign = "";
             }
-            ExpressionsManager.setPolinomialEquation(beautifierEquation().trim().substring(1).concat("=0"), getApplicationContext());
+            ExpressionsManager.setPolinomialEquation(equation.concat("=0"), getApplicationContext());
             ((MathView) findViewById(R.id.equation_to_solve_id)).config(
                     "MathJax.Hub.Config({\n"+
                             "  CommonHTML: { linebreaks: { automatic: true } },\n"+
