@@ -22,7 +22,12 @@ import android.widget.ToggleButton;
 import com.profebot.activities.R;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import ar.com.profebot.service.ExpressionsManager;
 import io.github.kexanie.library.MathView;
@@ -30,6 +35,7 @@ import io.github.kexanie.library.MathView;
 public class EnterPolinomialActivity extends AppCompatActivity {
     private ArrayList<String> EquationBuilder;
     private ArrayList<String> EquationUnordered;
+    private Map<Integer, Integer> polynomialTerms;
     private String firstSign = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +44,7 @@ public class EnterPolinomialActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_id);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        polynomialTerms = new HashMap<>();
         EquationBuilder = new ArrayList<>();
         EquationUnordered = new ArrayList<>();
         Button enterPolinomial = (Button)findViewById(R.id.AddEquationButton);
@@ -70,9 +77,27 @@ public class EnterPolinomialActivity extends AppCompatActivity {
                     String termSign = signToogleButton.isChecked() ? "-":"+";
                     EquationBuilder.add(termSign + coefficientTermInput.getText() + "x^" + potentialTermInput.getText());
                     EquationUnordered.add(termSign + coefficientTermInput.getText() + "x^" + potentialTermInput.getText());
+
+                    Integer coefficient = Integer.parseInt(coefficientTermInput.getText().toString());
+                    coefficient = signToogleButton.isChecked() ? -1 * coefficient : coefficient;
+                    Integer exponent = Integer.parseInt(potentialTermInput.getText().toString());
+                    if(!polynomialTerms.containsKey(exponent)){
+                        polynomialTerms.put(exponent, coefficient);
+                    }else {
+                        Integer oldCoefficient = polynomialTerms.get(exponent);
+                        polynomialTerms.remove(exponent);
+                        polynomialTerms.put(exponent, oldCoefficient + coefficient);
+                    }
+
+                    String equation = beautifierEquation().trim();
                     //Mapping First Character and setting equation as latex
-                    if (beautifierEquation().trim().substring(0,1).matches("-")){firstSign = "-";} else { firstSign = "";}
-                    ExpressionsManager.setPolinomialEquation(beautifierEquation().trim().substring(1).concat("=0"), getApplicationContext());
+                    if (beautifierEquation().trim().substring(0,1).matches("-")){
+                        firstSign = "-";
+                        equation = equation.substring(1);
+                    } else {
+                        firstSign = "";
+                    }
+                    ExpressionsManager.setPolinomialEquation(equation.concat("=0"), getApplicationContext());
                     ((MathView) findViewById(R.id.equation_to_solve_id)).config(
                             "MathJax.Hub.Config({\n"+
                                     "  CommonHTML: { linebreaks: { automatic: true } },\n"+
@@ -114,6 +139,7 @@ public class EnterPolinomialActivity extends AppCompatActivity {
         });
     }
     public void deletePolinomial(){
+        this.polynomialTerms = new HashMap<>();
         this.EquationBuilder = new ArrayList<>();
         this.EquationUnordered = new ArrayList<>();
         ((MathView) findViewById(R.id.equation_to_solve_id)).setText("$$" + "$$" );
@@ -123,6 +149,7 @@ public class EnterPolinomialActivity extends AppCompatActivity {
         String lastTerm = this.EquationUnordered.get(EquationUnordered.size()-1);
         this.EquationBuilder.remove(lastTerm);
         this.EquationUnordered.remove(lastTerm);
+        polynomialTerms.remove(Collections.min(polynomialTerms.keySet()));
         if (EquationBuilder.size()!= 0) {
             if (beautifierEquation().trim().substring(0,1).matches("-")){
                 firstSign = "-";
@@ -144,8 +171,9 @@ public class EnterPolinomialActivity extends AppCompatActivity {
         }
     }
     private boolean reachLimitOfTerms() {
-        if (this.EquationBuilder.size() > 9) {
-            Toast toast1 = Toast.makeText(getApplicationContext(), "No podés ingresar más de 10 términos", Toast.LENGTH_LONG);
+        int maxSize = 10;
+        if (this.EquationBuilder.size() >= maxSize) {
+            Toast toast1 = Toast.makeText(getApplicationContext(), "El polinomio ingresado no puede tener más de " + maxSize + " términos", Toast.LENGTH_LONG);
             toast1.setGravity(Gravity.CENTER, 0, 0);
             toast1.show();
             return false;
@@ -156,17 +184,30 @@ public class EnterPolinomialActivity extends AppCompatActivity {
     }
 
     public String beautifierEquation(){
-        this.EquationBuilder.sort( new Comparator<String>() {
-            public int compare(String str1, String str2) {
-                int possubstr1 = str1.indexOf('^') + 1;
-                int possubstr2 = str2.indexOf('^') + 1;
-                String substr1 = str1.substring(possubstr1, str1.length()).trim();
-                String substr2 = str2.substring(possubstr2, str2.length()).trim();
-
-                return Integer.valueOf(substr2).compareTo(Integer.valueOf(substr1));
+        List<Integer> exponents = new ArrayList<>(polynomialTerms.keySet());
+        Collections.sort(exponents, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2 >= o1 ? 1 : -1;
             }
         });
-        return String.join("",this.EquationBuilder).replaceAll("x\\^0","");
+
+        StringBuilder stringBuilder = new StringBuilder("");
+        Boolean firstTerm = true;
+        for(Integer exponent : exponents){
+            Integer coefficient = polynomialTerms.get(exponent);
+            String operator = "+";
+            if(coefficient < 0 || firstTerm){
+                operator = "";
+            }
+            stringBuilder.append(operator);
+            stringBuilder.append(polynomialTerms.get(exponent));
+            stringBuilder.append("x^");
+            stringBuilder.append(exponent);
+            firstTerm = false;
+        }
+
+        return stringBuilder.toString().replaceAll("x\\^0","");
     }
 
     @Override
