@@ -3,7 +3,9 @@ package ar.com.profebot.resolutor.service;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ar.com.profebot.Models.MultipleChoiceStep;
 import ar.com.profebot.parser.container.Tree;
@@ -43,21 +45,28 @@ public class ResolutorService {
             // Opción correcta
             Integer correctOption = 1;
             String optionA = newEquationBase;
+            String equationOptionA = "";
+            Map<Integer, Integer> equationOptionAPositionsToPaint = new HashMap<>();
             String correctOptionJustification = e.getUIDescription();
 
             // Opción incorrecta 1
             InvalidStep invalidStep = invalidOptionService.getFirstInvalidOption(originalEquation);
             String optionB = invalidStep.getTree().toExpression();
+            String equationOptionB = "";
+            Map<Integer, Integer> equationOptionBPositionsToPaint = new HashMap<>();
             String incorrectOptionJustification1 = invalidStep.getUIDescription();
 
             // Opción incorrecta 2
             invalidStep = invalidOptionService.getSecondInvalidOption(originalEquation);
             String optionC = invalidStep.getTree().toExpression();
+            String equationOptionC = "";
+            Map<Integer, Integer> equationOptionCPositionsToPaint = new HashMap<>();
             String incorrectOptionJustification2 = invalidStep.getUIDescription();
 
-
             MultipleChoiceStep multipleChoiceStep = new MultipleChoiceStep(equationBase,
-                    newEquationBase, summary, optionA, optionB, optionC, correctOption,
+                    newEquationBase, summary, optionA, equationOptionA, equationOptionAPositionsToPaint,
+                    optionB, equationOptionB, equationOptionBPositionsToPaint,
+                    optionC, equationOptionC, equationOptionCPositionsToPaint, correctOption,
                     correctOptionJustification, incorrectOptionJustification1, incorrectOptionJustification2);
             result.add(multipleChoiceStep);
         }
