@@ -46,27 +46,23 @@ public class ResolutorService {
             Integer correctOption = 1;
             String optionA = newEquationBase;
             String equationOptionA = "";
-            Map<Integer, Integer> equationOptionAPositionsToPaint = new HashMap<>();
             String correctOptionJustification = e.getUIDescription();
 
             // Opción incorrecta 1
             InvalidStep invalidStep = invalidOptionService.getFirstInvalidOption(originalEquation);
             String optionB = invalidStep.getTree().toExpression();
             String equationOptionB = "";
-            Map<Integer, Integer> equationOptionBPositionsToPaint = new HashMap<>();
             String incorrectOptionJustification1 = invalidStep.getUIDescription();
 
             // Opción incorrecta 2
             invalidStep = invalidOptionService.getSecondInvalidOption(originalEquation);
             String optionC = invalidStep.getTree().toExpression();
             String equationOptionC = "";
-            Map<Integer, Integer> equationOptionCPositionsToPaint = new HashMap<>();
             String incorrectOptionJustification2 = invalidStep.getUIDescription();
 
             MultipleChoiceStep multipleChoiceStep = new MultipleChoiceStep(equationBase,
-                    newEquationBase, summary, optionA, equationOptionA, equationOptionAPositionsToPaint,
-                    optionB, equationOptionB, equationOptionBPositionsToPaint,
-                    optionC, equationOptionC, equationOptionCPositionsToPaint, correctOption,
+                    newEquationBase, summary, optionA, equationOptionA,
+                    optionB, equationOptionB, optionC, equationOptionC, correctOption,
                     correctOptionJustification, incorrectOptionJustification1, incorrectOptionJustification2);
             result.add(multipleChoiceStep);
         }
