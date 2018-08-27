@@ -16,113 +16,129 @@ public class TreeUtils {
     private static SimplifyService simplifyService = new SimplifyService();
 
     //Valida si el valor es una constante.
-    public static Boolean isConstant(TreeNode treeNode){
+    public static Boolean isConstant(TreeNode treeNode) {
         return isConstant(treeNode, false);
     }
 
     //Valida si el valor es una constante.
-    public static Boolean isConstant(TreeNode treeNode, Boolean allowUnaryMinus){
+    public static Boolean isConstant(TreeNode treeNode, Boolean allowUnaryMinus) {
 
-        if (treeNode == null){return false;}
+        if (treeNode == null) {
+            return false;
+        }
 
-        if(!isPolynomialTerm(treeNode) && contieneNumero(treeNode.getValue())){
+        if (!isPolynomialTerm(treeNode) && contieneNumero(treeNode.getValue())) {
             return true;
-        }else if (allowUnaryMinus && treeNode.isUnaryMinus()){
+        } else if (allowUnaryMinus && treeNode.isUnaryMinus()) {
             isConstant(treeNode.getLeftNode());
         }
         return false;
     }
 
     //Valida si el valor es un numero.
-    private static Boolean contieneNumero(String value){
+    private static Boolean contieneNumero(String value) {
         return (value.contains("0") || value.contains("1") || value.contains("2")
-        || value.contains("3") || value.contains("4") || value.contains("5") || value.contains("6")
-        || value.contains("7") || value.contains("8") || value.contains("9"));
+                || value.contains("3") || value.contains("4") || value.contains("5") || value.contains("6")
+                || value.contains("7") || value.contains("8") || value.contains("9"));
     }
 
     //Valida si el nodo contiene valor 0.
-    public static Boolean zeroValue(TreeNode treeNode){
-       return hasValue(treeNode, "0");
+    public static Boolean zeroValue(TreeNode treeNode) {
+        return hasValue(treeNode, "0");
     }
 
     //Valida si el nodo contiene el valor pasado en el segundo parametro.
-    public static Boolean hasValue(TreeNode treeNode, String value){
-        return (treeNode!=null && value.equals(treeNode.getValue()) );
+    public static Boolean hasValue(TreeNode treeNode, String value) {
+        return (treeNode != null && value.equals(treeNode.getValue()));
     }
 
     //Valida si el nodo es un polinomio.
-    public static Boolean isPolynomialTerm(TreeNode treeNode){
-        return (treeNode!=null && (isSymbol(treeNode, false)
+    public static Boolean isPolynomialTerm(TreeNode treeNode) {
+        return (treeNode != null && (isSymbol(treeNode, false)
                 || isSymbolFraction(treeNode, false)));
     }
 
 
     //Valida si el nodo es una raiz.
-    public static Boolean isNthRootTerm(TreeNode treeNode){
+    public static Boolean isNthRootTerm(TreeNode treeNode) {
         // Es raiz, o es cte * Raiz, O es Raiz elevado a potencia, o es  es cte * Raiz elevado a potencia
-        return (treeNode!=null && (treeNode.esRaiz() ||
+        return (treeNode != null && (treeNode.esRaiz() ||
                 (treeNode.esProducto() && isConstant(treeNode.getLeftNode()) && isNthRootTerm(treeNode.getRightNode()))) ||
                 (treeNode.esPotencia() && isNthRootTerm(treeNode.getLeftNode()))
-                );
+        );
     }
 
     /**
      * X / Cte
+     *
      * @param node
      * @param allowUnaryMinus
      * @return
      */
     public static boolean isSymbolFraction(TreeNode node, Boolean allowUnaryMinus) {
-        if (!node.esDivision()){return false;}
-        if (!isSymbol(node.getLeftNode(), allowUnaryMinus)){return false;}
+        if (!node.esDivision()) {
+            return false;
+        }
+        if (!isSymbol(node.getLeftNode(), allowUnaryMinus)) {
+            return false;
+        }
 
         return isConstant(node.getRightNode());
     }
 
     /**
      * Cte / X
+     *
      * @param node
      * @param allowUnaryMinus
      * @return
      */
     public static boolean isDividedBySymbol(TreeNode node, Boolean allowUnaryMinus) {
-        if (!node.esDivision()){return false;}
-        if (!isSymbol(node.getRightNode(), allowUnaryMinus)){return false;}
+        if (!node.esDivision()) {
+            return false;
+        }
+        if (!isSymbol(node.getRightNode(), allowUnaryMinus)) {
+            return false;
+        }
 
         return isConstant(node.getLeftNode());
     }
 
     public static boolean isSymbolPower(TreeNode node, Boolean allowUnaryMinus) {
-        if (!node.esPotencia()){return false;}
-        if (!isSymbol(node.getLeftNode(), allowUnaryMinus)){return false;}
+        if (!node.esPotencia()) {
+            return false;
+        }
+        if (!isSymbol(node.getLeftNode(), allowUnaryMinus)) {
+            return false;
+        }
 
         return isConstant(node.getRightNode());
     }
 
-    public static Boolean isSymbol(TreeNode treeNode){
+    public static Boolean isSymbol(TreeNode treeNode) {
         return isSymbol(treeNode, false);
     }
 
-    public static Boolean isSymbol(TreeNode treeNode, Boolean allowUnaryMinus){
-        if (treeNode!=null && treeNode.getValue().contains("X")){
+    public static Boolean isSymbol(TreeNode treeNode, Boolean allowUnaryMinus) {
+        if (treeNode != null && treeNode.getValue().contains("X")) {
             return true;
-        }else if (allowUnaryMinus && treeNode.isUnaryMinus()) {
+        } else if (allowUnaryMinus && treeNode.isUnaryMinus()) {
             return isSymbol(treeNode.getChild(0), false);
         }
         return false;
     }
 
     //Valida si el nodo es / (division) y los hijos son constantes
-    public static Boolean isConstantFraction(TreeNode treeNode){
+    public static Boolean isConstantFraction(TreeNode treeNode) {
         return isConstantFraction(treeNode, false);
     }
 
     //Valida si el nodo es / (division) y los hijos son constantes
-    public static Boolean isConstantFraction(TreeNode treeNode, Boolean allowUnaryMinus){
+    public static Boolean isConstantFraction(TreeNode treeNode, Boolean allowUnaryMinus) {
 
-        if (treeNode!=null && treeNode.esDivision() ){
-            for(TreeNode child: treeNode.getArgs()){
-                if (!isConstant(child)){
+        if (treeNode != null && treeNode.esDivision()) {
+            for (TreeNode child : treeNode.getArgs()) {
+                if (!isConstant(child)) {
                     return false;
                 }
             }
@@ -133,20 +149,20 @@ public class TreeUtils {
     }
 
     //Valida si el nodo contiene valor negativo.
-    public static Boolean isNegative(TreeNode treeNode){
+    public static Boolean isNegative(TreeNode treeNode) {
         if (treeNode == null) return null;
 
-        if (isConstant(treeNode)){
-            return treeNode.getIntegerValue()< 0;
+        if (isConstant(treeNode)) {
+            return treeNode.getIntegerValue() < 0;
         }
 
-        if (isConstantFraction(treeNode)){
+        if (isConstantFraction(treeNode)) {
             TreeNode numeratorTree = treeNode.getLeftNode();
             TreeNode denominatorTree = treeNode.getRightNode();
             if (numeratorTree.getIntegerValue() < 0 || denominatorTree.getIntegerValue() < 0) {
                 return !(numeratorTree.getIntegerValue() < 0 && denominatorTree.getIntegerValue() < 0);
             }
-        }else if (isPolynomialTerm(treeNode)){
+        } else if (isPolynomialTerm(treeNode)) {
             return treeNode.getValue().contains("-");
         }
 
@@ -154,23 +170,23 @@ public class TreeUtils {
     }
 
     //Valida si el nodo contiene una constante o una fraccion formada por constantes.
-    public static Boolean isConstantOrConstantFraction(TreeNode treeNode){
+    public static Boolean isConstantOrConstantFraction(TreeNode treeNode) {
         return isConstantOrConstantFraction(treeNode, false);
     }
 
     //Valida si el nodo contiene una constante o una fraccion formada por constantes.
-    public static Boolean isConstantOrConstantFraction(TreeNode treeNode, Boolean allowUnaryMinus){
+    public static Boolean isConstantOrConstantFraction(TreeNode treeNode, Boolean allowUnaryMinus) {
         return TreeUtils.isConstant(treeNode, allowUnaryMinus) ||
                 TreeUtils.isConstantFraction(treeNode, allowUnaryMinus);
     }
 
     //Valida si es una fraccion con valores enteros.
-    public static Boolean isIntegerFraction(TreeNode node){
+    public static Boolean isIntegerFraction(TreeNode node) {
         return isIntegerFraction(node, false);
     }
 
     //Valida si es una fraccion con valores enteros.
-    public static Boolean isIntegerFraction(TreeNode node, Boolean allowUnaryMinus){
+    public static Boolean isIntegerFraction(TreeNode node, Boolean allowUnaryMinus) {
         if (!isConstantFraction(node, allowUnaryMinus)) {
             return false;
         }
@@ -189,27 +205,26 @@ public class TreeUtils {
     }
 
     //Valida is el valor es un entero.
-    public static Boolean isInteger(String value){
-        try
-        {
+    public static Boolean isInteger(String value) {
+        try {
             Integer.parseInt(value);
             return true;
-        } catch (NumberFormatException ex)
-        {
+        } catch (NumberFormatException ex) {
             return false;
         }
     }
 
     /**
-     // Aplana el arbol a traves de la misma operación (por ahora solo + y *)
-     // Por ejemplo si tenemos 2+2+2 originariamente lo vemos como 2+(2+2), cuando
-     // es aplanado es un unico nodo con operador + y tres hijos de valor 2.
-     // Entrada: Una expresion con formato arbol.
-     // Salida: El mismo arbol de expresion con las operaciones aplanadas.
+     * // Aplana el arbol a traves de la misma operación (por ahora solo + y *)
+     * // Por ejemplo si tenemos 2+2+2 originariamente lo vemos como 2+(2+2), cuando
+     * // es aplanado es un unico nodo con operador + y tres hijos de valor 2.
+     * // Entrada: Una expresion con formato arbol.
+     * // Salida: El mismo arbol de expresion con las operaciones aplanadas.
+     *
      * @param node Nodo a evaluar
      * @return Nodo achatado
      */
-    public static TreeNode flattenOperands(TreeNode node){
+    public static TreeNode flattenOperands(TreeNode node) {
 
         if (TreeUtils.isConstant(node, true)) {
             // the evaluate() changes unary minuses around constant nodes to constant nodes
@@ -219,16 +234,14 @@ public class TreeUtils {
                 constNode.setChangeGroup(node.getChangeGroup());
             }
             return constNode;
-        }
-        else if (node.isUnaryMinus()) {
+        } else if (node.isUnaryMinus()) {
             TreeNode arg = flattenOperands(node.getChild(0));
             TreeNode flattenedNode = TreeUtils.negate(arg, true);
             if (node.getChangeGroup() != null) {
                 flattenedNode.setChangeGroup(node.getChangeGroup());
             }
             return flattenedNode;
-        }
-        else if (node.esOperador()) {
+        } else if (node.esOperador()) {
             if ("+-/*".contains(node.getValue())) {
                 String parentOp;
                 if (node.esDivision()) {
@@ -246,8 +259,8 @@ public class TreeUtils {
                 return flattenSupportedOperation(node, parentOp);
             } else {
                 // Si la operacion no es soportada, itera sobre los hijos.
-                int index =0;
-                for(TreeNode child: node.getArgs()) {
+                int index = 0;
+                for (TreeNode child : node.getArgs()) {
                     (node.getArgs()).set(index, flattenOperands(child));
                     index++;
                 }
@@ -265,13 +278,14 @@ public class TreeUtils {
     }
 
     /**
-     // Aplana las operaciones para un nodo operador con un tip operacion que puede ser aplanado.
-     // Por el momento * + / son soportados.
-     // Retorna el noda aplanado.
-     // NOTA: El nodo retornado sera de la operacion parentOp a pesar del tipo de operacion del nodo
-     // A menos que el nodo no sea cambiado.
-     // Por ejemplo 2 * 3 / 4 sera * de 2 y 3/4 pero 2/3 queda como 2 y 3 bajo operador /.
-     * @param node Nodo a evaluar
+     * // Aplana las operaciones para un nodo operador con un tip operacion que puede ser aplanado.
+     * // Por el momento * + / son soportados.
+     * // Retorna el noda aplanado.
+     * // NOTA: El nodo retornado sera de la operacion parentOp a pesar del tipo de operacion del nodo
+     * // A menos que el nodo no sea cambiado.
+     * // Por ejemplo 2 * 3 / 4 sera * de 2 y 3/4 pero 2/3 queda como 2 y 3 bajo operador /.
+     *
+     * @param node     Nodo a evaluar
      * @param parentOp Operador padre
      * @return Nodo achatado
      */
@@ -288,7 +302,7 @@ public class TreeUtils {
         if (operands.size() == 1) {
             node = operands.get(0);
 
-        }  else {
+        } else {
             // Cuando tratamos una reduccion de division, y tambien hay una multiplicacion
             // involucrada, podemos terminar con un * como raiz.
             // Por ejemplo 2*4/5 es parseado con / en la raiz, pero al final queremos 2 * (4/5)
@@ -312,25 +326,28 @@ public class TreeUtils {
     }
 
     /**
-     // Recursivamente buscamos los operandos bajo la operacion padre 'parentOp en el nodo de
-     // entrada.
-     // El nodo de entrada tipo arbol siempre tendra un padre que es una operacion
-     //  del tipo 'op'.
-     // Op es un string por ejemplo '+' o '*'
-     * @param node nodo a evaluar
+     * // Recursivamente buscamos los operandos bajo la operacion padre 'parentOp en el nodo de
+     * // entrada.
+     * // El nodo de entrada tipo arbol siempre tendra un padre que es una operacion
+     * //  del tipo 'op'.
+     * // Op es un string por ejemplo '+' o '*'
+     *
+     * @param node     nodo a evaluar
      * @param parentOp operador padre
      * @return una lista de todos los nodos operados por la operacion padre 'parentOp'
      */
     private static List<TreeNode> getOperands(TreeNode node, String parentOp) {
 
-        if (node == null){return new ArrayList<>();}
+        if (node == null) {
+            return new ArrayList<>();
+        }
 
         // Solo podemos hacer recursion en operacion del tipo op.
         // Si el nodo no es un nodo operador o el tipo operacion correcto,
         // no podemos seguir descomponiendo o aplastando este arbol, entonces retornamos simplemente
         // el nodo actual, e iteramos sobre el mismo para aplastar sus operaciones.
         if (!node.esOperador()) {
-            ArrayList<TreeNode> operandsList =  new ArrayList<TreeNode>();
+            ArrayList<TreeNode> operandsList = new ArrayList<TreeNode>();
             operandsList.add(flattenOperands(node));
             return operandsList;
             //return Collections.singletonList(flattenOperands(node));
@@ -340,7 +357,7 @@ public class TreeUtils {
             case "*":
             case "/":
                 if (!"*".equals(parentOp)) {
-                    ArrayList<TreeNode> operandsList =  new ArrayList<TreeNode>();
+                    ArrayList<TreeNode> operandsList = new ArrayList<TreeNode>();
                     operandsList.add(flattenOperands(node));
                     return operandsList;
                     //return Collections.singletonList(flattenOperands(node));
@@ -349,27 +366,27 @@ public class TreeUtils {
             case "+":
             case "-":
                 if (!"+".equals(parentOp)) {
-                    ArrayList<TreeNode> operandsList =  new ArrayList<TreeNode>();
+                    ArrayList<TreeNode> operandsList = new ArrayList<TreeNode>();
                     operandsList.add(flattenOperands(node));
                     return operandsList;
                     //return Collections.singletonList(flattenOperands(node));
                 }
                 break;
             default:
-                ArrayList<TreeNode> operandsList =  new ArrayList<TreeNode>();
+                ArrayList<TreeNode> operandsList = new ArrayList<TreeNode>();
                 operandsList.add(flattenOperands(node));
                 return operandsList;
-                //return Collections.singletonList(flattenOperands(node));
+            //return Collections.singletonList(flattenOperands(node));
         }
 
         if (TreeUtils.isPolynomialTerm(node)) {
-            for (int i=0; i < node.getArgs().size(); i++){
+            for (int i = 0; i < node.getArgs().size(); i++) {
                 TreeNode arg = node.getChild(i);
-                if (arg != null){
+                if (arg != null) {
                     node.setChild(i, flattenOperands(arg));
                 }
             }
-            ArrayList<TreeNode> operandsList =  new ArrayList<TreeNode>();
+            ArrayList<TreeNode> operandsList = new ArrayList<TreeNode>();
             operandsList.add(node);
             return operandsList;
         }
@@ -392,14 +409,18 @@ public class TreeUtils {
             List<TreeNode> rightOperandsList = getOperands(negativeSecondOperand, parentOp);
 
             List<TreeNode> resultList = new ArrayList<>();
-            if (leftOperandsList!=null){resultList.addAll(leftOperandsList);}
-            if (rightOperandsList!=null){resultList.addAll(rightOperandsList);}
+            if (leftOperandsList != null) {
+                resultList.addAll(leftOperandsList);
+            }
+            if (rightOperandsList != null) {
+                resultList.addAll(rightOperandsList);
+            }
 
             return resultList;
 
         } else {
             List<TreeNode> operands = new ArrayList<>();
-            for(TreeNode child: node.getArgs()){
+            for (TreeNode child : node.getArgs()) {
                 operands.addAll(getOperands(child, parentOp));
             }
             return operands;
@@ -407,14 +428,15 @@ public class TreeUtils {
     }
 
     /**
-     // Esta funcion es auxiliar para getOperands.
-     // Contexto: Por lo general aplastamos 2*2*X a un nodo multiplicacion con 3 hijos.
-     //  (2,2 y X) pero si tenemos 2*2X, queremos dejar 2X junto.
-     // 2*2*X (Un arbol almacenado en 2 niveles porque inicialmente los nodos
-     // tienen 2 hijos) en el proceso de aplanamiento deberian ser convertidos en 2*2x en vez de
-     // 2*2*X (el cual tiene 3 hijos).
-     // Entonces esta funcion retorna true para una entrada como 2*2X , si fue almacenada como
-     // una expresion arbol con nodo raiz * e hijos 2*2 y X.
+     * // Esta funcion es auxiliar para getOperands.
+     * // Contexto: Por lo general aplastamos 2*2*X a un nodo multiplicacion con 3 hijos.
+     * //  (2,2 y X) pero si tenemos 2*2X, queremos dejar 2X junto.
+     * // 2*2*X (Un arbol almacenado en 2 niveles porque inicialmente los nodos
+     * // tienen 2 hijos) en el proceso de aplanamiento deberian ser convertidos en 2*2x en vez de
+     * // 2*2*X (el cual tiene 3 hijos).
+     * // Entonces esta funcion retorna true para una entrada como 2*2X , si fue almacenada como
+     * // una expresion arbol con nodo raiz * e hijos 2*2 y X.
+     *
      * @param node nodo a evaluar
      * @return true si el nodo es candidato para simplificar un termino polinomial.
      */
@@ -433,9 +455,10 @@ public class TreeUtils {
     }
 
     /**
-     // Toma un nodo que puede representar una multiplicacion con un termino polinomial y
-     // lo aplana apropiadamente para que el coeficiente y el simbolo sean agrupados de forma conjunta.
-     // Retorna una nueva lista de operandos de este nodo que puede ser multiplicados juntos.
+     * // Toma un nodo que puede representar una multiplicacion con un termino polinomial y
+     * // lo aplana apropiadamente para que el coeficiente y el simbolo sean agrupados de forma conjunta.
+     * // Retorna una nueva lista de operandos de este nodo que puede ser multiplicados juntos.
+     *
      * @param node Nodo a evaluar
      * @return Nodos achatados
      */
@@ -447,8 +470,8 @@ public class TreeUtils {
         // Por ejemplo 2*5*6X crea un arbol donde el nodo superior es una multiplicacion implicita
         // y la rama izquierda va al arbol con 2*5*6, y el operando derecho es el simbolo X.
         // Queremos validar que el ultimo argumento en la izquierda es una constante.
-        TreeNode lastOperand = operands.get(operands.size()-1);
-        operands.remove(operands.size()-1);
+        TreeNode lastOperand = operands.get(operands.size() - 1);
+        operands.remove(operands.size() - 1);
 
         //En el ejemplo de arriba, el argumento 1 puede ser el simbolo X
         TreeNode nextOperand = flattenOperands(node.getChild(1));
@@ -469,7 +492,7 @@ public class TreeUtils {
 
             operands.add(newOperand);
         } else {
-          //Ahora sabemos que no es termino polinomial y que es un operando separado.
+            //Ahora sabemos que no es termino polinomial y que es un operando separado.
             operands.add(lastOperand);
             operands.add(nextOperand);
         }
@@ -477,10 +500,11 @@ public class TreeUtils {
     }
 
     /**
-     // Toma un nodo division y retorna una lista de operandos
-     // Si hay una multiplicacion en el numerador, los operandos retornados son multiplicados
-     // en conjunto.De otro modo, una lista de largo 1 con solo un nodo de division es retornado.
-     // La funcion getOperands puede cambiar el operador de acuerdo a los parametros ingresados.
+     * // Toma un nodo division y retorna una lista de operandos
+     * // Si hay una multiplicacion en el numerador, los operandos retornados son multiplicados
+     * // en conjunto.De otro modo, una lista de largo 1 con solo un nodo de division es retornado.
+     * // La funcion getOperands puede cambiar el operador de acuerdo a los parametros ingresados.
+     *
      * @param node nodo a evaluar
      * @return nodos achatados
      */
@@ -498,8 +522,8 @@ public class TreeUtils {
             operands.add(node);
         } else {
             //Este es el ultimo operando, el termino que queremos agregar a la division
-            TreeNode numerator = operands.get(operands.size()-1);
-            operands.remove(operands.size()-1);
+            TreeNode numerator = operands.get(operands.size() - 1);
+            operands.remove(operands.size() - 1);
 
             // Este es el denominador del nodo de division actual sobre el cual estamos haciendo
             // recursion
@@ -514,11 +538,12 @@ public class TreeUtils {
     }
 
     /**
-     // Ejemplos que retorna verdadero: 2*3/4, 2/5 / 6 * 7 / 8
-     // Ejemplos que retornan falso: 3/4/5, ((3*2) - 5) / 7, (2*5)/6
+     * // Ejemplos que retorna verdadero: 2*3/4, 2/5 / 6 * 7 / 8
+     * // Ejemplos que retornan falso: 3/4/5, ((3*2) - 5) / 7, (2*5)/6
+     *
      * @param node nodo a evaluar
      * @return Verdadero si hay un nodo * anidado en alguna division, con ningun operador
-    // o parentesis entre ellos
+     * // o parentesis entre ellos
      */
     private static boolean hasMultiplicationBesideDivision(TreeNode node) {
         if (!node.esOperador()) {
@@ -532,8 +557,8 @@ public class TreeUtils {
             return false;
         }
 
-        for(TreeNode child: node.getArgs()){
-            if (hasMultiplicationBesideDivision(child)){
+        for (TreeNode child : node.getArgs()) {
+            if (hasMultiplicationBesideDivision(child)) {
                 return true;
             }
         }
@@ -542,27 +567,30 @@ public class TreeUtils {
     }
 
     /**
-     // Dado un nodo, retorna el nodo negado
-     // Si el parametro naive es verdadero, solo agrega un unary minus extra a la expresion
-     // de otro modo, hace la negacion completa
-     //En este caso el parametro naive es falso por defecto.
-     // E.g.
-     //   si naive es false: -3 -> 3, x -> -x
-     //   si naive es true: -3 -> --3, x -> -x
+     * // Dado un nodo, retorna el nodo negado
+     * // Si el parametro naive es verdadero, solo agrega un unary minus extra a la expresion
+     * // de otro modo, hace la negacion completa
+     * //En este caso el parametro naive es falso por defecto.
+     * // E.g.
+     * //   si naive es false: -3 -> 3, x -> -x
+     * //   si naive es true: -3 -> --3, x -> -x
+     *
      * @param node nodo a negar
      * @return El nodo negado
      */
     public static TreeNode negate(TreeNode node) {
         return negate(node, false);
     }
+
     /**
-     // Dado un node, retorna el nodo negado
-     // Si el parametro naive es verdadero, solo agrega un unary minus extra a la expresion
-     // de otro modo, hace la negacion completa
-     // E.g.
-     //   si naive es false: -3 -> 3, x -> -x
-     //   si naive es true: -3 -> --3, x -> -x
-     * @param node nodo a negar
+     * // Dado un node, retorna el nodo negado
+     * // Si el parametro naive es verdadero, solo agrega un unary minus extra a la expresion
+     * // de otro modo, hace la negacion completa
+     * // E.g.
+     * //   si naive es false: -3 -> 3, x -> -x
+     * //   si naive es true: -3 -> --3, x -> -x
+     *
+     * @param node  nodo a negar
      * @param naive el negativo se agrega al coeficiente del nodo
      * @return El nodo negado
      */
@@ -573,21 +601,18 @@ public class TreeUtils {
         if (isConstantFraction(node)) {
             node.setLeftNode(negate(node.getLeftNode(), naive));
             return node;
-        }
-        else if (isPolynomialTerm(node)) {
+        } else if (isPolynomialTerm(node)) {
             node.multiplyCoefficient("-1");
-            return  node;
-        }
-        else if (node.esProducto()) {
+            return node;
+        } else if (node.esProducto()) {
             node.setLeftNode(negate(node.getLeftNode(), naive));
-            return  node;
-        }
-        else if (!naive) {
+            return node;
+        } else if (!naive) {
             if (node.isUnaryMinus()) {
                 return node.getChild(0);
             } else if (isConstant(node)) {
                 return TreeNode.createConstant(0 - node.getIntegerValue());
-            } else if ((node.esProducto() || node.esDivision()) &&  isConstantOrConstantFraction(node.getLeftNode())) {
+            } else if ((node.esProducto() || node.esDivision()) && isConstantOrConstantFraction(node.getLeftNode())) {
                 node.setLeftNode(negate(node.getLeftNode(), naive));
                 return node;
             }
@@ -624,14 +649,14 @@ public class TreeUtils {
         List<TreeNode> args = node.getArgs();
         Boolean anyHasExponent = false;
         Set<Integer> constantTermBaseList = new HashSet<>();
-        for(TreeNode child: args){
-            if (!isConstantOrConstantPower(child)){
+        for (TreeNode child : args) {
+            if (!isConstantOrConstantPower(child)) {
                 return false;
             }
-            if (child.esPotencia()){
+            if (child.esPotencia()) {
                 anyHasExponent = true;
                 constantTermBaseList.add(child.getLeftNode().getIntegerValue());
-            }else{
+            } else {
                 // Constante
                 constantTermBaseList.add(child.getIntegerValue());
             }
@@ -639,7 +664,7 @@ public class TreeUtils {
 
         //Si ninguno de los terminos tienen exponentes, retorna falso
         //Si por ejemplo tenemos 6*6 se convierte en 6^1 * 6^1 => 6^2
-        if (!anyHasExponent){
+        if (!anyHasExponent) {
             return false;
         }
 
@@ -680,7 +705,7 @@ public class TreeUtils {
     public static TreeNode getFraction(TreeNode node, Boolean allowUnaryMinus, Boolean allowParens) {
         if (node.esDivision()) {
             return node;
-        }else if (allowUnaryMinus && node.isUnaryMinus()) {
+        } else if (allowUnaryMinus && node.isUnaryMinus()) {
             return TreeUtils.negate(getFraction(node.getContent(), allowUnaryMinus, allowParens));
         } else if (allowParens && node.isParenthesis()) {
             return getFraction(node.getContent(), allowUnaryMinus, allowParens);
@@ -730,19 +755,18 @@ public class TreeUtils {
         // for when the left side is a power node.
         // e.g 2^7 and (33 + 89) do not have solutions when set equal to 0
 
-        if (isXWithExponent){
+        if (isXWithExponent) {
             return true;
-        }
-        else if (left.esProducto()) {
-            for(TreeNode arg: left.getArgs()){
-                if (!resolvesToConstant(arg)){
+        } else if (left.esProducto()) {
+            for (TreeNode arg : left.getArgs()) {
+                if (!resolvesToConstant(arg)) {
                     return true;
                 }
             }
             return false;
         } else if (left.esPotencia()) {
             return !resolvesToConstant(left);
-        }else{
+        } else {
             return false;
         }
     }
@@ -752,11 +776,13 @@ public class TreeUtils {
     // e.g. 2, 2+4, (2+4)^2 would all return true. x + 4 would return false
     public static boolean resolvesToConstant(TreeNode node) {
 
-        if (node == null){return false;}
+        if (node == null) {
+            return false;
+        }
         if (node.esOperador()) {
 
-            for(TreeNode child:  node.getArgs() ){
-                if (child!= null) {
+            for (TreeNode child : node.getArgs()) {
+                if (child != null) {
                     if (!resolvesToConstant(child)) {
                         return false;
                     }
@@ -764,20 +790,15 @@ public class TreeUtils {
             }
 
             return true;
-        }
-        else if (node.isParenthesis()) {
+        } else if (node.isParenthesis()) {
             return resolvesToConstant(node.getChild(0));
-        }
-        else if (TreeUtils.isConstant(node, true)) {
+        } else if (TreeUtils.isConstant(node, true)) {
             return true;
-        }
-        else if (TreeUtils.isSymbol(node, true)) {
+        } else if (TreeUtils.isSymbol(node, true)) {
             return false;
-        }
-        else if (node.isUnaryMinus()) {
+        } else if (node.isUnaryMinus()) {
             return resolvesToConstant(node.getChild(0));
-        }
-        else {
+        } else {
             throw new Error("Unsupported node type: " + node.toExpression());
         }
     }
@@ -794,12 +815,11 @@ public class TreeUtils {
         // If it's a sum of terms, look through the operands for a term
         // with `symbolName`
         else if (node.esSuma()) {
-            for (int i = node.getArgs().size() - 1; i >= 0 ; i--) {
+            for (int i = node.getArgs().size() - 1; i >= 0; i--) {
                 TreeNode child = node.getChild(i);
                 if (child.esSuma()) {
                     return getLastSymbolTerm(child, symbolName);
-                }
-                else if (isSymbolTerm(child)) {
+                } else if (isSymbolTerm(child)) {
                     return child;
                 }
             }
@@ -808,7 +828,7 @@ public class TreeUtils {
     }
 
     // Returns if `node` is a term with symbol `symbolName`
-    public static Boolean isSymbolTerm(TreeNode node){
+    public static Boolean isSymbolTerm(TreeNode node) {
         return isPolynomialTerm(node) ||
                 hasDenominatorSymbol(node);
     }
@@ -838,12 +858,11 @@ public class TreeUtils {
         // Look through the operands for a
         // denominator term with `symbolName`
         else if (node.esSuma()) {
-            for (int i = node.getArgs().size()- 1; i >= 0 ; i--) {
+            for (int i = node.getArgs().size() - 1; i >= 0; i--) {
                 TreeNode child = node.getChild(i);
                 if (child.esSuma()) {
                     return getLastDenominatorWithSymbolTerm(child);
-                }
-                else if (hasDenominatorSymbol(child)) {
+                } else if (hasDenominatorSymbol(child)) {
                     return child.getChild(1);
                 }
             }
@@ -860,24 +879,23 @@ public class TreeUtils {
     public static TreeNode getLastNonSymbolTerm(TreeNode node) {
         if (isPolynomialTerm(node)) {
 
-            if (isSymbolFraction(node, true)){
+            if (isSymbolFraction(node, true)) {
                 // Genero la fraccion coeficiente
                 return TreeNode.createOperator("/",
                         TreeNode.createConstant(node.getCoefficient()), node.getRightNode().cloneDeep());
-            }else if (node.getCoefficient() == 1){return null;}
+            } else if (node.getCoefficient() == 1) {
+                return null;
+            }
 
             return TreeNode.createConstant(node.getCoefficient());
-        }
-        else if (hasDenominatorSymbol(node)) {
+        } else if (hasDenominatorSymbol(node)) {
             return null;
-        }
-        else if (node.esOperador()) {
-            for (int i = node.getArgs().size() - 1; i >= 0 ; i--) {
+        } else if (node.esOperador()) {
+            for (int i = node.getArgs().size() - 1; i >= 0; i--) {
                 TreeNode child = node.getChild(i);
                 if (child.esSuma()) {
                     return getLastNonSymbolTerm(child);
-                }
-                else if (!child.toExpression().contains("X")) {
+                } else if (!child.toExpression().contains("X")) {
                     return child;
                 }
             }
@@ -901,12 +919,12 @@ public class TreeUtils {
         List<TreeNode> firstDegreeTerms = new ArrayList<>();
         List<TreeNode> constantTerms = new ArrayList<>();
 
-        for(TreeNode child: node.getArgs()){
-            if (isPolynomialTermOfDegree(child, 2)){
+        for (TreeNode child : node.getArgs()) {
+            if (isPolynomialTermOfDegree(child, 2)) {
                 secondDegreeTerms.add(child);
-            }else if (isPolynomialTermOfDegree(child, 1)){
+            } else if (isPolynomialTermOfDegree(child, 1)) {
                 firstDegreeTerms.add(child);
-            }else if (isConstant(child, true)){
+            } else if (isConstant(child, true)) {
                 constantTerms.add(child);
             }
         }
@@ -932,13 +950,14 @@ public class TreeUtils {
     private static boolean isPolynomialTermOfDegree(TreeNode node, int degree) {
         if (isPolynomialTerm(node)) {
             Integer exponent = node.getExponent();
-            return exponent!= null && exponent.equals(degree);
+            return exponent != null && exponent.equals(degree);
         }
         return false;
     }
 
     /**
      * Calculates the  greatest common divisor
+     *
      * @param a First value
      * @param b Second Value
      * @return El estado de la simplificacion
@@ -972,24 +991,23 @@ public class TreeUtils {
     // NOTE: after this function is called, every parenthesis node in the
     // tree should always have an operator node or unary minus as its child.
     private static TreeNode removeUnnecessaryParensSearch(TreeNode node) {
-        if (node == null){return null;}
+        if (node == null) {
+            return null;
+        }
 
         if (node.esRaiz()) {
             return removeUnnecessaryParensInFunctionNode(node);
-        }else  if (node.esOperador()) {
+        } else if (node.esOperador()) {
             return removeUnnecessaryParensInOperatorNode(node);
-        }else if (node.isParenthesis()) {
+        } else if (node.isParenthesis()) {
             return removeUnnecessaryParensInParenthesisNode(node);
-        }
-        else if (TreeUtils.isConstant(node, true) || TreeUtils.isSymbol(node)) {
+        } else if (TreeUtils.isConstant(node, true) || TreeUtils.isSymbol(node)) {
             return node;
-        }
-        else if (node.isUnaryMinus()) {
+        } else if (node.isUnaryMinus()) {
             TreeNode content = node.getChild(0);
-            node.setChild(0,removeUnnecessaryParensSearch(content));
+            node.setChild(0, removeUnnecessaryParensSearch(content));
             return node;
-        }
-        else {
+        } else {
             throw new Error("Unsupported node type: " + node.toExpression());
         }
     }
@@ -1011,7 +1029,7 @@ public class TreeUtils {
             }
         }
 
-        for(int i=0; i < node.getArgs().size(); i++){
+        for (int i = 0; i < node.getArgs().size(); i++) {
             node.setChild(i, removeUnnecessaryParensSearch(node.getChild(i)));
         }
 
@@ -1020,12 +1038,12 @@ public class TreeUtils {
         // operation, we can remove the parenthesis.
         // e.g. (x+4) + 12 -> x+4 + 12
         if (node.esSuma()) {
-            for(int i=0; i < node.getArgs().size(); i++){
+            for (int i = 0; i < node.getArgs().size(); i++) {
                 TreeNode child = node.getChild(i);
-                if (child.isParenthesis() && !canCollectOrCombine(child.getContent())){
+                if (child.isParenthesis() && !canCollectOrCombine(child.getContent())) {
                     // remove the parens by replacing the child node (in its args list)
                     // with its content
-                    node.setChild(i,child.getContent());
+                    node.setChild(i, child.getContent());
                 }
                 node.setChild(i, removeUnnecessaryParensSearch(node.getChild(i)));
             }
@@ -1036,7 +1054,7 @@ public class TreeUtils {
         else if (node.esResta()) {
             if (node.getChild(0).isParenthesis() &&
                     !canCollectOrCombine(node.getChild(0).getContent())) {
-                node.setChild(0,  node.getChild(0).getContent());
+                node.setChild(0, node.getChild(0).getContent());
             }
         }
 
@@ -1072,7 +1090,7 @@ public class TreeUtils {
             // (e.g. the exponent might have parens around it)
             if (node.getContent().getArgs() != null) {
                 TreeNode nodeContent = node.getContent();
-                for(int i=0; i < nodeContent.getArgs().size(); i++){
+                for (int i = 0; i < nodeContent.getArgs().size(); i++) {
                     nodeContent.setChild(i, removeUnnecessaryParensSearch(nodeContent.getChild(i)));
                 }
             }
@@ -1105,11 +1123,9 @@ public class TreeUtils {
         // to get rid of the extra parens.
         else if (node.getContent().isParenthesis()) {
             node = removeUnnecessaryParensSearch(node.getContent());
-        }
-        else if (node.getContent().isUnaryMinus()) {
+        } else if (node.getContent().isUnaryMinus()) {
             node.setContent(removeUnnecessaryParensSearch(node.getContent()));
-        }
-        else {
+        } else {
             throw new Error("Unsupported node type: " + node.getContent().toExpression());
         }
 
@@ -1120,9 +1136,9 @@ public class TreeUtils {
     // Returns a node.
     private static TreeNode removeUnnecessaryParensInFunctionNode(TreeNode node) {
 
-        for(int i=0; i < node.getArgs().size(); i++){
+        for (int i = 0; i < node.getArgs().size(); i++) {
             TreeNode child = node.getChild(i);
-            if (child != null && child.isParenthesis()){
+            if (child != null && child.isParenthesis()) {
                 child = child.getContent();
             }
             node.setChild(i, removeUnnecessaryParensSearch(child));
@@ -1132,24 +1148,32 @@ public class TreeUtils {
     }
 
     public static boolean isDoubleInteger(double val) {
-        return (val%(int)val==0);
+        return (val % (int) val == 0);
     }
 
     public static boolean isNegativeProduct(TreeNode node) {
-        if (!node.esProducto()){return false;}
-        if (!isNegative(node.getLeftNode())){return false;}
+        if (!node.esProducto()) {
+            return false;
+        }
+        if (!isNegative(node.getLeftNode())) {
+            return false;
+        }
         return true;
     }
 
     public static TreeNode groupConstantCoefficientAndSymbol(TreeNode node) {
 
-        if (node == null){return null;}
-        if (node.getArgs() != null){
-            for(int i=0; i <  node.getArgs().size(); i++){
+        if (node == null) {
+            return null;
+        }
+        if (node.getArgs() != null) {
+            for (int i = 0; i < node.getArgs().size(); i++) {
                 node.setChild(i, groupConstantCoefficientAndSymbol(node.getChild(i)));
             }
         }
-        if (!node.esProducto() && !node.esPotencia()){return node;}
+        if (!node.esProducto() && !node.esPotencia()) {
+            return node;
+        }
 
         if (node.esProducto()) {
             if (node.getArgs().size() != 2) {
@@ -1182,7 +1206,7 @@ public class TreeUtils {
 
                 return newNode;
             }
-        }else if (node.esPotencia()){
+        } else if (node.esPotencia()) {
             if (!isConstant(node.getRightNode()) || !isSymbol(node.getLeftNode())) {
                 return node;
             }
@@ -1193,15 +1217,15 @@ public class TreeUtils {
         return node;
     }
 
-    public static boolean haveSameOperatorLevelCode(TreeNode treeNodeA, TreeNode treeNodeB){
-        return ( OperatorLevel.getBySimbol(treeNodeA.getValue()).getCode() ==
+    public static boolean haveSameOperatorLevelCode(TreeNode treeNodeA, TreeNode treeNodeB) {
+        return (OperatorLevel.getBySimbol(treeNodeA.getValue()).getCode() ==
                 OperatorLevel.getBySimbol(treeNodeB.getValue()).getCode());
     }
 
-    public static boolean hasDifferentLevelAncestors(TreeNode treeNode){
+    public static boolean hasDifferentLevelAncestors(TreeNode treeNode) {
         boolean hasDiffLevelAnc = false;
         TreeNode node = treeNode;
-        while(node != null && !hasDiffLevelAnc){
+        while (node != null && !hasDiffLevelAnc) {
             hasDiffLevelAnc = haveSameOperatorLevelCode(treeNode, node.getParentNode());
             node = node.getParentNode();
         }
@@ -1211,27 +1235,27 @@ public class TreeUtils {
     public static String inverseComparator(String comparator) {
         if (">".equals(comparator)) {
             return "<";
-        }else if (">=".equals(comparator)){
+        } else if (">=".equals(comparator)) {
             return "<=";
-        }else if ("<".equals(comparator)){
+        } else if ("<".equals(comparator)) {
             return ">";
-        }else if ("<=".equals(comparator)){
+        } else if ("<=".equals(comparator)) {
             return ">=";
-        }else if ("=".equals(comparator)){
+        } else if ("=".equals(comparator)) {
             return "=";
-        }else if ("+".equals(comparator)){
+        } else if ("+".equals(comparator)) {
             return "-";
-        }else if ("-".equals(comparator)){
+        } else if ("-".equals(comparator)) {
             return "+";
-        }else if ("*".equals(comparator)){
+        } else if ("*".equals(comparator)) {
             return "/";
-        }else if ("/".equals(comparator)){
+        } else if ("/".equals(comparator)) {
             return "*";
-        }else if ("^".equals(comparator)){
+        } else if ("^".equals(comparator)) {
             return "R";
-        }else if ("R".equals(comparator)){
+        } else if ("R".equals(comparator)) {
             return "^";
-        }else {
+        } else {
             throw new Error("Comparador no soportado: " + comparator);
         }
     }
@@ -1242,23 +1266,48 @@ public class TreeUtils {
         return list;
     }
 
-    public static boolean esReduciblePorOperacionesBasicas(TreeNode node){
+    public static boolean esReduciblePorOperacionesBasicas(TreeNode node) {
         boolean esReducible = false;
+        if (node.esSuma() || node.esResta() || node.esProducto() || node.esDivision()
+                || node.esPotencia() || node.esRaiz()) {
+            if (TreeUtils.isConstant(node.getLeftNode()) && TreeUtils.isConstant(node.getRightNode())) {
+                esReducible = true;
+            }
+        }
         return esReducible;
     }
 
-    public static boolean esReduciblePorDistributiva(TreeNode node){
+    public static boolean esReduciblePorDistributiva(TreeNode node) {
         boolean esReducible = false;
+        if (node.esProducto() || node.esDivision()) {
+            if (esBinomio(node)) {
+                esReducible = true;
+            }
+        }
         return esReducible;
+    }
+
+    private static boolean esBinomio(TreeNode originalNode) {
+        boolean esBinomio = false;
+        TreeNode node = originalNode.clone();
+        if(originalNode.isParenthesis()){
+            node = originalNode.getLeftNode();
+        }
+        if(node.esSuma() || node.esResta()){
+            if(false){//TODO el hijo izq debe ser incognita y el resto ctes
+                esBinomio = true;
+            }
+        }
+        return esBinomio;
     }
 
     //TODO
-    public static boolean esReduciblePorAsociativa(TreeNode node){
+    public static boolean esReduciblePorAsociativa(TreeNode node) {
         boolean esReducible = false;
         return esReducible;
     }
 
-    public static boolean esReduciblePorPotenciaDeBinomio(TreeNode node){
+    public static boolean esReduciblePorPotenciaDeBinomio(TreeNode node) {
         boolean esReducible = false;
         return esReducible;
     }
