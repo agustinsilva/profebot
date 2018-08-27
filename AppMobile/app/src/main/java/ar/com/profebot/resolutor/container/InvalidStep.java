@@ -26,13 +26,17 @@ public class InvalidStep {
         // ejemplo: x=sqrt(3), quiero pasar la raíz cuadrada cómo raíz de x
         PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RAIZ_COMO_RAIZ,
 
-
         // ejemplo: 4+3*5, quiero pasar el 5 dividiendo
         PASAJE_TERMINO_DE_MULTIPLICACION_COMO_DIVISION_SIENDO_TERMINO_DE_SUMATORIA,
 
         //ejemplo: 4+3/5, quiero pasar el 5 multiplicando. Ejemplo 2: 4*5+6, quiero pasar el 6 restando
         PASAJE_TERMINO_DE_DIVISION_COMO_MULTIPLICACION_SIENDO_TERMINO_DE_SUMATORIA,
-
+        //ejemplo: 4*(3+5), quiero pasar el 5 restando
+        PASAJE_TERMINO_DE_SUMA_COMO_RESTA_SIENDO_TERMINO_MUTIPLICATIVO,
+        //ejemplo: 4*(3-5), quiero pasar el 5 sumando
+        PASAJE_TERMINO_DE_RESTA_COMO_SUMA_SIENDO_TERMINO_MUTIPLICATIVO,
+        PASAJE_TERMINO_DE_RAIZ_COMO_POTENCIA,
+        PASAJE_TERMINO_DE_POTENCIA_COMO_RAIZ,
         // x=4-5+6, quiero pasar el 6 sumando
         PASAJE_DE_TERMINO_DE_DESCENDENCIA_SUMA_COMO_SUMA,
 

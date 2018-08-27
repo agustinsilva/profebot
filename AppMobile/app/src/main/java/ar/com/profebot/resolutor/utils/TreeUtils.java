@@ -1241,4 +1241,25 @@ public class TreeUtils {
         list.add(node);
         return list;
     }
+
+    public static boolean esReduciblePorOperacionesBasicas(TreeNode node){
+        boolean esReducible = false;
+        return esReducible;
+    }
+
+    public static boolean esReduciblePorDistributiva(TreeNode node){
+        boolean esReducible = false;
+        return esReducible;
+    }
+
+    //TODO
+    public static boolean esReduciblePorAsociativa(TreeNode node){
+        boolean esReducible = false;
+        return esReducible;
+    }
+
+    public static boolean esReduciblePorPotenciaDeBinomio(TreeNode node){
+        boolean esReducible = false;
+        return esReducible;
+    }
 }

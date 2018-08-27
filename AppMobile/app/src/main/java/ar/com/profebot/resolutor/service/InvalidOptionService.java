@@ -1,10 +1,12 @@
 package ar.com.profebot.resolutor.service;
 
+import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 import ar.com.profebot.parser.container.Tree;
 import ar.com.profebot.parser.container.TreeNode;
 import ar.com.profebot.resolutor.container.InvalidStep;
+import ar.com.profebot.resolutor.utils.Reduction;
 import ar.com.profebot.resolutor.utils.TreeUtils;
 
 public class InvalidOptionService {
@@ -42,7 +44,7 @@ public class InvalidOptionService {
                 type = getTipoPasajeTerminoAncestrosDeDistintoNivel(randomNode);
                 String newReverseOperator = TreeUtils.inverseComparator(randomNode.getValue());
                 randomNode.setValue(newReverseOperator);
-            }else{
+            } else {
                 type = getTipoPasajeTerminoAncestrosDeMismoNivel(randomNode);
             }
         } else {
@@ -176,10 +178,18 @@ public class InvalidOptionService {
     }
 
     private InvalidStep.InvalidTypes getTipoPasajeTerminoAncestrosDeDistintoNivel(TreeNode node) {
-        if (node.esProducto()){
+        if (node.esProducto()) {
             return InvalidStep.InvalidTypes.PASAJE_TERMINO_DE_MULTIPLICACION_COMO_DIVISION_SIENDO_TERMINO_DE_SUMATORIA;
-        }else if(node.esDivision()){
+        } else if (node.esDivision()) {
             return InvalidStep.InvalidTypes.PASAJE_TERMINO_DE_DIVISION_COMO_MULTIPLICACION_SIENDO_TERMINO_DE_SUMATORIA;
+        } else if (node.esSuma()) {
+            return InvalidStep.InvalidTypes.PASAJE_TERMINO_DE_SUMA_COMO_RESTA_SIENDO_TERMINO_MUTIPLICATIVO;
+        } else if (node.esResta()) {
+            return InvalidStep.InvalidTypes.PASAJE_TERMINO_DE_RESTA_COMO_SUMA_SIENDO_TERMINO_MUTIPLICATIVO;
+        } else if (node.esPotencia()) {
+            return InvalidStep.InvalidTypes.PASAJE_TERMINO_DE_POTENCIA_COMO_RAIZ;
+        } else if (node.esRaiz()) {
+            return InvalidStep.InvalidTypes.PASAJE_TERMINO_DE_RAIZ_COMO_POTENCIA;
         }
         return InvalidStep.InvalidTypes.CONSTANTE_NO_ENCONTRADA;
     }
@@ -192,9 +202,39 @@ public class InvalidOptionService {
 
         // Clonado para evitar modificar el original
         Tree tree = originalTree.clone();
+        InvalidStep.InvalidTypes type = null;
+        //1. Elegir rama izquierda o derecha del árbol
+        boolean equalsLeftBranch = true;
+        TreeNode node = tree.getLeftNode();
+        if (chooseRightNode()) {
+            node = tree.getRightNode();
+            equalsLeftBranch = false;
+        }
 
-        // TODO Resolver esto, devuelvo un mock por lo pronto
-        return new InvalidStep(InvalidStep.InvalidTypes.DISTRIBUTIVA_BASICA_MAL_RESUELTA, tree);
+        ArrayList<Reduction> reducibles = new ArrayList<Reduction>();
+
+        //2. Analizar los posibles subarboles reducibles y guardarlos en la lista
+        if (node.getArgs() != null) {
+            for (TreeNode child : node.getArgs()) {
+                if (TreeUtils.esReduciblePorOperacionesBasicas(child)) {
+                    Reduction r = new Reduction(child, Reduction.ReductionType.OPERACIONES_BASICAS);
+                    reducibles.add(r);
+                } else if (TreeUtils.esReduciblePorDistributiva(child)) {
+                    Reduction r = new Reduction(child, Reduction.ReductionType.DISTRIBUTIVA);
+                    reducibles.add(r);
+                } else if (TreeUtils.esReduciblePorAsociativa(child)) {
+                    Reduction r = new Reduction(child, Reduction.ReductionType.ASOCIATIVA);
+                    reducibles.add(r);
+                } else if (TreeUtils.esReduciblePorPotenciaDeBinomio(child)) {
+                    Reduction r = new Reduction(child, Reduction.ReductionType.POTENCIA_DE_BINOMIO);
+                    reducibles.add(r);
+                }
+            }
+        }
+
+        //3. Elegir uno de forma random y hacer la reduccion
+
+        return new InvalidStep(type, tree);
     }
 
 }
