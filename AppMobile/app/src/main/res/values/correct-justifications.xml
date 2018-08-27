@@ -60,5 +60,22 @@
     <string name="MULTIPLY_POLYNOMIAL_TERMS_JUSTIFICATION">Una variable multiplicada por si misma 2 o más veces, equivale a escribir dicha variable, elevada a un exponente igual a la cantidad de veces que estaba multiplicada</string>
     <string name="MULTIPLY_POLYNOMIAL_TERMS_SUMMARY">Reescribir producto de varaibles</string>
 
+    <string name="BREAK_UP_FRACTION_OPTION">Distribuir la división a los distintos términos del paréntesis</string>
+    <string name="BREAK_UP_FRACTION_JUSTIFICATION">Así como en la multiplicación, la división se puede también distribuir a cada uno de los términos de una suma o resta, multiplicando a cada término por la fracción correspondiente</string>
+    <string name="BREAK_UP_FRACTION_SUMMARY">Distribuir fracción</string>
+
+    <string name="CANCEL_MINUSES_OPTION">Cancelar los signos "menos"</string>
+    <string name="CANCEL_MINUSES_JUSTIFICATION">Por regla de los signos, 2 "menos" multiplicados o dividios equivalen a un signo "más". Por ejemplo: -1/-3 equivale a 1/3</string>
+    <string name="CANCEL_MINUSES_SUMMARY">Simplificar signos</string>
+
+    <string name="CANCEL_TERMS_OPTION">Cancelar términos debido a una división</string>
+    <string name="CANCEL_TERMS_JUSTIFICATION">2 términos iguales divididos entre sí, pueden ser cancelados. De esta forma, una fracción cuyo numerador es igual al denominador, equivale a 1. Por ejemplo: 2/2 equivale a 1.</string>
+    <string name="CANCEL_TERMS_SUMMARY">Simplificar fracción</string>
+
+    <string name="SIMPLIFY_FRACTION_OPTION">Simplificar fracción numérica</string>
+    <string name="SIMPLIFY_FRACTION_JUSTIFICATION">Una fracción de números se puede simplificar en la medida en la que existe algun divisor en común tanto para el numerador como para el denominador.</string>
+    <string name="SIMPLIFY_FRACTION_SUMMARY">Simplificar fracción</string>
+
+
 
 </resources>

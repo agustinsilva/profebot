@@ -138,6 +138,34 @@ public class JustificationsService {
                     R.string.MULTIPLY_POLYNOMIAL_TERMS_SUMMARY);
         }
 
+        if(source.getDescrip().equals(BREAK_UP_FRACTION.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.BREAK_UP_FRACTION_OPTION,
+                    R.string.BREAK_UP_FRACTION_JUSTIFICATION,
+                    R.string.BREAK_UP_FRACTION_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(CANCEL_MINUSES.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.CANCEL_MINUSES_OPTION,
+                    R.string.CANCEL_MINUSES_JUSTIFICATION,
+                    R.string.CANCEL_MINUSES_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(CANCEL_TERMS.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.CANCEL_TERMS_OPTION,
+                    R.string.CANCEL_TERMS_JUSTIFICATION,
+                    R.string.CANCEL_TERMS_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(SIMPLIFY_FRACTION.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.SIMPLIFY_FRACTION_OPTION,
+                    R.string.SIMPLIFY_FRACTION_JUSTIFICATION,
+                    R.string.SIMPLIFY_FRACTION_SUMMARY);
+        }
+
 
 
         return justifications;
