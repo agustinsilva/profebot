@@ -168,11 +168,11 @@ public class EnterPolinomialActivity extends AppCompatActivity {
     }
 
     public void deleteLastTerm(){
-        String lastTerm = this.EquationUnordered.get(EquationUnordered.size()-1);
-        this.EquationBuilder.remove(lastTerm);
-        this.EquationUnordered.remove(lastTerm);
-        polynomialTerms.remove(Collections.min(polynomialTerms.keySet()));
         if (EquationBuilder.size()!= 0) {
+            String lastTerm = this.EquationUnordered.get(EquationUnordered.size()-1);
+            this.EquationBuilder.remove(lastTerm);
+            this.EquationUnordered.remove(lastTerm);
+            polynomialTerms.remove(Collections.min(polynomialTerms.keySet()));
             String equation = beautifierEquation().trim();
             if (beautifierEquation().trim().substring(0,1).matches("-")){
                 firstSign = "-";
