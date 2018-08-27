@@ -38,18 +38,39 @@
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
-            <ToggleButton
-                android:id="@+id/signToogleButton"
-                style="@style/ToogleButtonRounded"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="45dp"
-                android:background="@drawable/toogle_round_button"
-                android:textColor="@color/white"
-                android:textOff="+"
-                android:textOn="-"
-                android:textSize="26dp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_weight="10"
+                android:gravity="bottom"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginRight="10dp"
+                    android:gravity="right"
+                    android:text="Signo"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="12dp" />
+
+                <ToggleButton
+                    android:id="@+id/signToogleButton"
+                    style="@style/ToogleButtonRounded"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/toogle_round_button"
+                    android:textColor="@color/white"
+                    android:textOff="+"
+                    android:textOn="-"
+                    android:textSize="26dp" />
+            </LinearLayout>
 
             <android.support.design.widget.TextInputLayout
                 style="@style/PolinomialTextInputLayout"
@@ -63,8 +84,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="Coeficiente"
-                    android:inputType="number"
                     android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:maxLength="2"
                     android:textAlignment="center" />
             </android.support.design.widget.TextInputLayout>
 
@@ -90,8 +112,9 @@
                     android:layout_height="match_parent"
                     android:gravity="top"
                     android:hint="Exponente"
-                    android:inputType="number"
                     android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:maxLength="2"
                     android:textAlignment="center" />
             </android.support.design.widget.TextInputLayout>
 
