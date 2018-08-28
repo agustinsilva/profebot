@@ -218,6 +218,29 @@ public class JustificationsService {
                     R.string.MULTIPLY_NUMERATORS_JUSTIFICATION,
                     R.string.MULTIPLY_NUMERATORS_SUMMARY);
         }
+
+        if(source.getDescrip().equals(MULTIPLY_FRACTIONS.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.MULTIPLY_FRACTIONS_OPTION,
+                    R.string.MULTIPLY_FRACTIONS_JUSTIFICATION,
+                    R.string.MULTIPLY_FRACTIONS_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(SIMPLIFY_DIVISION.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.SIMPLIFY_DIVISION_OPTION,
+                    R.string.SIMPLIFY_DIVISION_JUSTIFICATION,
+                    R.string.SIMPLIFY_DIVISION_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(MULTIPLY_BY_INVERSE.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.MULTIPLY_BY_INVERSE_OPTION,
+                    R.string.MULTIPLY_BY_INVERSE_JUSTIFICATION,
+                    R.string.MULTIPLY_BY_INVERSE_SUMMARY);
+        }
+
+
         
         return justifications;
     }

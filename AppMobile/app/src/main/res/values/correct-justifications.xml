@@ -104,4 +104,17 @@
     <string name="MULTIPLY_NUMERATORS_JUSTIFICATION">Si en una suma o resta de fracciones, los numeradores son iguales pero se encuetran factorizados (expresados como un producto de factores), se deben realizar las multiplicaciones en cada numerador para luego, buscar denominador común</string>
     <string name="MULTIPLY_NUMERATORS_SUMMARY">Resolver operación</string>
 
+    <string name="MULTIPLY_FRACTIONS_OPTION">Multiplicar fracciones numéricas</string>
+    <string name="MULTIPLY_FRACTIONS_JUSTIFICATION">El resultado de multiplicar 2 fracciones, será una nueva fracción, cuyo numerador será el producto de los numeradores de las fracciones que se multiplican, y el denominador será el producto de los denominadores</string>
+    <string name="MULTIPLY_FRACTIONS_SUMMARY">Resolver operación</string>
+
+    <string name="SIMPLIFY_DIVISION_OPTION">Simplificar divisiones sucesivas</string>
+    <string name="SIMPLIFY_DIVISION_JUSTIFICATION">Una cadena de divisiones se puede simplificar generando una fracción en la que se expresen todos los cocientes como un denominador con multiplicaciones</string>
+    <string name="SIMPLIFY_DIVISION_SUMMARY">Simplificar fracción</string>
+
+    <string name="MULTIPLY_BY_INVERSE_OPTION">Multiplicar por el inverso de la fracción que está dividiendo</string>
+    <string name="MULTIPLY_BY_INVERSE_JUSTIFICATION">Un término está siendo dividido por una fracción, es equivalente a multiplicar dicho término por la inversa de la fracción. Por ejemplo: 2 / (2/3) equivale a decir 2 * 3/2</string>
+    <string name="MULTIPLY_BY_INVERSE_SUMMARY">Simplificar operadores</string>
+
+
 </resources>
