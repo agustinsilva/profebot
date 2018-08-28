@@ -166,8 +166,59 @@ public class JustificationsService {
                     R.string.SIMPLIFY_FRACTION_SUMMARY);
         }
 
+        if(source.getDescrip().equals(SIMPLIFY_SIGNS.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.SIMPLIFY_SIGNS_OPTION,
+                    R.string.SIMPLIFY_SIGNS_JUSTIFICATION,
+                    R.string.SIMPLIFY_SIGNS_SUMMARY);
+        }
 
+        // TODO: pending: FIND_GCD, CANCEL_GCD, CONVERT_MIXED_NUMBER_TO_IMPROPER_FRACTION, IMPROPER_FRACTION_NUMERATOR, COMBINE_NUMERATORS
 
+        if(source.getDescrip().equals(ADD_FRACTIONS.getDescrip())
+                || source.getDescrip().equals(ADD_NUMERATORS.getDescrip())
+                || source.getDescrip().equals(COMBINE_NUMERATORS.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.ADD_FRACTIONS_OPTION,
+                    R.string.ADD_FRACTIONS_JUSTIFICATION,
+                    R.string.ADD_FRACTIONS_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(COMMON_DENOMINATOR.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.COMMON_DENOMINATOR_OPTION,
+                    R.string.COMMON_DENOMINATOR_JUSTIFICATION,
+                    R.string.COMMON_DENOMINATOR_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(CONVERT_INTEGER_TO_FRACTION.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.CONVERT_INTEGER_TO_FRACTION_OPTION,
+                    R.string.CONVERT_INTEGER_TO_FRACTION_JUSTIFICATION,
+                    R.string.CONVERT_INTEGER_TO_FRACTION_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(DIVIDE_FRACTION_FOR_ADDITION.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.DIVIDE_FRACTION_FOR_ADDITION_OPTION,
+                    R.string.DIVIDE_FRACTION_FOR_ADDITION_JUSTIFICATION,
+                    R.string.DIVIDE_FRACTION_FOR_ADDITION_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(MULTIPLY_DENOMINATORS.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.MULTIPLY_DENOMINATORS_OPTION,
+                    R.string.MULTIPLY_DENOMINATORS_JUSTIFICATION,
+                    R.string.MULTIPLY_DENOMINATORS_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(MULTIPLY_NUMERATORS.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.MULTIPLY_NUMERATORS_OPTION,
+                    R.string.MULTIPLY_NUMERATORS_JUSTIFICATION,
+                    R.string.MULTIPLY_NUMERATORS_SUMMARY);
+        }
+        
         return justifications;
     }
 

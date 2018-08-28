@@ -76,6 +76,32 @@
     <string name="SIMPLIFY_FRACTION_JUSTIFICATION">Una fracción de números se puede simplificar en la medida en la que existe algun divisor en común tanto para el numerador como para el denominador.</string>
     <string name="SIMPLIFY_FRACTION_SUMMARY">Simplificar fracción</string>
 
+    <string name="SIMPLIFY_SIGNS_OPTION">Reescribir signos en fracción</string>
+    <string name="SIMPLIFY_SIGNS_JUSTIFICATION">Por regla de los signos, cuando en una fracción, el numerador es positivo y el denominador es negativo, se puede ubicar el signo negativo en el numerador, para simplificar la escritura de la expresión</string>
+    <string name="SIMPLIFY_SIGNS_SUMMARY">Reescribir fracción</string>
 
+    <string name="ADD_FRACTIONS_OPTION">Resolver la suma o resta de fracciones</string>
+    <string name="ADD_FRACTIONS_JUSTIFICATION">2 fracciones numéricas se pueden sumar o restar, buscando denominador común (si sus denominadores son diferentes) o unificando sus numeradores (si sus denominadores son iguales)</string>
+    <string name="ADD_FRACTIONS_SUMMARY">Resolver operación</string>
+
+    <string name="COMMON_DENOMINATOR_OPTION">Buscar común denominador</string>
+    <string name="COMMON_DENOMINATOR_JUSTIFICATION">2 o más fracciones que se están sumando o restando, y que tienen denominadores diferentes se pueden unificar (sumar o restar), buscando un denominador en común. El mismo se obtiene encontrando el mínimo común múltiplo (mcm) entre los denominadores de cada fracción</string>
+    <string name="COMMON_DENOMINATOR_SUMMARY">Resolver operación</string>
+
+    <string name="CONVERT_INTEGER_TO_FRACTION_OPTION">Convertir número entero a fracción</string>
+    <string name="CONVERT_INTEGER_TO_FRACTION_JUSTIFICATION">Para sumar o restar un número entero con una fracción, se puede convertir al entero en una fracción, multiplicándolo y dividiéndolo por un mismo valor que resulte conveniente</string>
+    <string name="CONVERT_INTEGER_TO_FRACTION_SUMMARY">Resolver operación</string>
+
+    <string name="DIVIDE_FRACTION_FOR_ADDITION_OPTION">Convertir fracción a número decimal</string>
+    <string name="DIVIDE_FRACTION_FOR_ADDITION_JUSTIFICATION">Para operar con fracciones y números decimales (con coma), se puede convertir dichas fracciones en números decimales, efectuando las divisiones de los numeradores y sus denominadores respectivos</string>
+    <string name="DIVIDE_FRACTION_FOR_ADDITION_SUMMARY">Resolver operación</string>
+
+    <string name="MULTIPLY_DENOMINATORS_OPTION">Unificar denominadores de fracciones, para realizar una suma o resta</string>
+    <string name="MULTIPLY_DENOMINATORS_JUSTIFICATION">Si en una suma o resta de fracciones, los denominadores son iguales pero se encuetran factorizados (expresados como un producto de factores), se deben realizar las multiplicaciones en cada denominador para luego, operar los numeradores</string>
+    <string name="MULTIPLY_DENOMINATORS_SUMMARY">Resolver operación</string>
+
+    <string name="MULTIPLY_NUMERATORS_OPTION">Unificar numeradores de fracciones, para realizar una suma o resta</string>
+    <string name="MULTIPLY_NUMERATORS_JUSTIFICATION">Si en una suma o resta de fracciones, los numeradores son iguales pero se encuetran factorizados (expresados como un producto de factores), se deben realizar las multiplicaciones en cada numerador para luego, buscar denominador común</string>
+    <string name="MULTIPLY_NUMERATORS_SUMMARY">Resolver operación</string>
 
 </resources>
