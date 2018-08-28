@@ -240,6 +240,13 @@ public class JustificationsService {
                     R.string.MULTIPLY_BY_INVERSE_SUMMARY);
         }
 
+        if(source.getDescrip().equals(DISTRIBUTE.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.DISTRIBUTE_OPTION,
+                    R.string.DISTRIBUTE_JUSTIFICATION,
+                    R.string.DISTRIBUTE_SUMMARY);
+        }
+
 
         
         return justifications;

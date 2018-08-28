@@ -116,5 +116,10 @@
     <string name="MULTIPLY_BY_INVERSE_JUSTIFICATION">Un término está siendo dividido por una fracción, es equivalente a multiplicar dicho término por la inversa de la fracción. Por ejemplo: 2 / (2/3) equivale a decir 2 * 3/2</string>
     <string name="MULTIPLY_BY_INVERSE_SUMMARY">Simplificar operadores</string>
 
+    <string name="DISTRIBUTE_OPTION">Aplicar distributiva</string>
+    <string name="DISTRIBUTE_JUSTIFICATION">Una expresión que se encuentra multiplicando o dividiendo a un paréntesis que encierra una suma o resta de términos, se puede distribuir, de manera que se genere una suma o resta de términos multiplicados o divididos por dicha expresión. Por ejemplo: si se tiene 2*(1+3), el 2 se puede distribuir a los términos 1 y 3, de manera que se genere una nueva suma con la forma: 2*1 + 2*3</string>
+    <string name="DISTRIBUTE_SUMMARY">Aplicar distributiva</string>
+
+
 
 </resources>
