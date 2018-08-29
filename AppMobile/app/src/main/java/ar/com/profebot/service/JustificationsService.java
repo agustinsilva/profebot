@@ -109,7 +109,8 @@ public class JustificationsService {
                 || source.getDescrip().equals(COLLECT_LIKE_TERMS.getDescrip())
                 || source.getDescrip().equals(ADD_POLYNOMIAL_TERMS.getDescrip())
                 || source.getDescrip().equals(GROUP_COEFFICIENTS.getDescrip())
-                || source.getDescrip().equals(MULTIPLY_COEFFICIENTS.getDescrip())){
+                || source.getDescrip().equals(MULTIPLY_COEFFICIENTS.getDescrip())
+                || source.getDescrip().equals(SIMPLIFY_TERMS.getDescrip())){
             return createTextsFrom(context,
                     R.string.COLLECT_AND_COMBINE_LIKE_TERMS_OPTION,
                     R.string.COLLECT_AND_COMBINE_LIKE_TERMS_JUSTIFICATION,
@@ -240,15 +241,85 @@ public class JustificationsService {
                     R.string.MULTIPLY_BY_INVERSE_SUMMARY);
         }
 
-        if(source.getDescrip().equals(DISTRIBUTE.getDescrip())){
+        if(source.getDescrip().equals(DISTRIBUTE.getDescrip())
+                || source.getDescrip().equals(DISTRIBUTE_NEGATIVE_ONE.getDescrip())){
             return createTextsFrom(context,
                     R.string.DISTRIBUTE_OPTION,
                     R.string.DISTRIBUTE_JUSTIFICATION,
                     R.string.DISTRIBUTE_SUMMARY);
         }
 
+        if(source.getDescrip().equals(EXPAND_EXPONENT.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.EXPAND_EXPONENT_OPTION,
+                    R.string.EXPAND_EXPONENT_JUSTIFICATION,
+                    R.string.EXPAND_EXPONENT_SUMMARY);
+        }
 
-        
+        if(source.getDescrip().equals(ABSOLUTE_VALUE.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.ABSOLUTE_VALUE_OPTION,
+                    R.string.ABSOLUTE_VALUE_JUSTIFICATION,
+                    R.string.ABSOLUTE_VALUE_SUMMARY);
+        }
+
+
+        if(source.getDescrip().equals(CANCEL_EXPONENT.getDescrip())
+                || source.getDescrip().equals(CANCEL_EXPONENT_AND_ROOT.getDescrip())
+                || source.getDescrip().equals(CANCEL_ROOT.getDescrip())
+                || source.getDescrip().equals(EVALUATE_DISTRIBUTED_NTH_ROOT.getDescrip())
+                || source.getDescrip().equals(NTH_ROOT_VALUE.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.CANCEL_EXPONENT_OPTION,
+                    R.string.CANCEL_EXPONENT_JUSTIFICATION,
+                    R.string.CANCEL_EXPONENT_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(COMBINE_UNDER_ROOT.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.COMBINE_UNDER_ROOT_OPTION,
+                    R.string.COMBINE_UNDER_ROOT_JUSTIFICATION,
+                    R.string.COMBINE_UNDER_ROOT_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(CONVERT_MULTIPLICATION_TO_EXPONENT.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.CONVERT_MULTIPLICATION_TO_EXPONENT_OPTION,
+                    R.string.CONVERT_MULTIPLICATION_TO_EXPONENT_JUSTIFICATION,
+                    R.string.CONVERT_MULTIPLICATION_TO_EXPONENT_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(DISTRIBUTE_NTH_ROOT.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.DISTRIBUTE_NTH_ROOT_OPTION,
+                    R.string.DISTRIBUTE_NTH_ROOT_JUSTIFICATION,
+                    R.string.DISTRIBUTE_NTH_ROOT_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(FACTOR_INTO_PRIMES.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.FACTOR_INTO_PRIMES_OPTION,
+                    R.string.FACTOR_INTO_PRIMES_JUSTIFICATION,
+                    R.string.FACTOR_INTO_PRIMES_SUMMARY);
+        }
+
+        // TODO: GROUP_TERMS_BY_ROOT
+
+        if(source.getDescrip().equals(ADD_NTH_ROOTS.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.ADD_NTH_ROOTS_OPTION,
+                    R.string.ADD_NTH_ROOTS_JUSTIFICATION,
+                    R.string.ADD_NTH_ROOTS_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(MULTIPLY_NTH_ROOTS.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.MULTIPLY_NTH_ROOTS_OPTION,
+                    R.string.MULTIPLY_NTH_ROOTS_JUSTIFICATION,
+                    R.string.MULTIPLY_NTH_ROOTS_SUMMARY);
+        }
+
+
         return justifications;
     }
 
