@@ -225,7 +225,7 @@ public class InvalidOptionService {
                 } else if (TreeUtils.esReduciblePorAsociativa(child)) {
                     Reduction r = new Reduction(child, Reduction.ReductionType.ASOCIATIVA);
                     reducibles.add(r);
-                } else if (TreeUtils.esReduciblePorPotenciaDeBinomio(child)) {
+                } else if (TreeUtils.esReduciblePorCuadradoDeBinomio(child)) {
                     Reduction r = new Reduction(child, Reduction.ReductionType.POTENCIA_DE_BINOMIO);
                     reducibles.add(r);
                 }

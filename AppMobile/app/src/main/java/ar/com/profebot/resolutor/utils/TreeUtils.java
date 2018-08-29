@@ -1290,11 +1290,11 @@ public class TreeUtils {
     private static boolean esBinomio(TreeNode originalNode) {
         boolean esBinomio = false;
         TreeNode node = originalNode.clone();
-        if(originalNode.isParenthesis()){
+        if (originalNode.isParenthesis()) {
             node = originalNode.getLeftNode();
         }
-        if(node.esSuma() || node.esResta()){
-            if(false){//TODO el hijo izq debe ser incognita y el resto ctes
+        if (node.esSuma() || node.esResta()) {
+            if (isSymbol(node.getLeftNode()) && isConstant(node.getRightNode())) {
                 esBinomio = true;
             }
         }
@@ -1307,8 +1307,15 @@ public class TreeUtils {
         return esReducible;
     }
 
-    public static boolean esReduciblePorPotenciaDeBinomio(TreeNode node) {
+    public static boolean esReduciblePorCuadradoDeBinomio(TreeNode node) {
         boolean esReducible = false;
+        if (node.esPotencia()) {
+            //un Hijo es binomio, y el otro exponente
+            if ((esBinomio(node.getLeftNode()) && isConstant(node.getRightNode())) ||
+                    (esBinomio(node.getRightNode()) && isConstant(node.getLeftNode()))) {
+                esReducible = true;
+            }
+        }
         return esReducible;
     }
 }
