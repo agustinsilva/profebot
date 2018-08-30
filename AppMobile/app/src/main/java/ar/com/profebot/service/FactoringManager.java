@@ -90,7 +90,7 @@ public class FactoringManager {
 
         setFactors();
 
-        //String equation = FormulaParser.parseToLatex
+        String equation = FormulaParser.parseToLatex(rootsFactorized) + "*" + "\\mathbf{" + FormulaParser.parseToLatex(pendingPolynomial) + "}";
 
         return null;//new MultipleChoiceStep()
     }
