@@ -373,6 +373,50 @@ public class JustificationsService {
                     R.string.FIND_ROOTS_SUMMARY);
         }
 
+        if(source.getDescrip().equals(STATEMENT_IS_TRUE.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.STATEMENT_IS_TRUE_OPTION,
+                    R.string.STATEMENT_IS_TRUE_JUSTIFICATION,
+                    R.string.STATEMENT_IS_TRUE_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(STATEMENT_IS_FALSE.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.STATEMENT_IS_FALSE_OPTION,
+                    R.string.STATEMENT_IS_FALSE_JUSTIFICATION,
+                    R.string.STATEMENT_IS_FALSE_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(FACTOR_SYMBOL.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.FACTOR_SYMBOL_OPTION,
+                    R.string.FACTOR_SYMBOL_JUSTIFICATION,
+                    R.string.FACTOR_SYMBOL_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(FACTOR_DIFFERENCE_OF_SQUARES.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.FACTOR_DIFFERENCE_OF_SQUARES_OPTION,
+                    R.string.FACTOR_DIFFERENCE_OF_SQUARES_JUSTIFICATION,
+                    R.string.FACTOR_DIFFERENCE_OF_SQUARES_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(FACTOR_PERFECT_SQUARE.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.FACTOR_PERFECT_SQUARE_OPTION,
+                    R.string.FACTOR_PERFECT_SQUARE_JUSTIFICATION,
+                    R.string.FACTOR_PERFECT_SQUARE_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(FACTOR_SUM_PRODUCT_RULE.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.FACTOR_SUM_PRODUCT_RULE_OPTION,
+                    R.string.FACTOR_SUM_PRODUCT_RULE_JUSTIFICATION,
+                    R.string.FACTOR_SUM_PRODUCT_RULE_SUMMARY);
+        }
+
+        // TODO: BREAK_UP_TERM
+
         return justifications;
     }
 

@@ -184,6 +184,29 @@
     <string name="FIND_ROOTS_JUSTIFICATION">Un polinomio factorizado permite extraer sus raíces, tomando los números de cada binomio cambiado de signo. Estos valores son los que reemplazados en la X, si se resuelven las operaciones aritméticas se llega a 0</string>
     <string name="FIND_ROOTS_SUMMARY">Extraer raíces</string>
 
+    <string name="STATEMENT_IS_TRUE_OPTION">Existen infinitas soluciones para X</string>
+    <string name="STATEMENT_IS_TRUE_JUSTIFICATION">Cuando los dos miembros del igual son iguales y numéricos, se dice que existen infinitas soluciones, porque para cualquier valor de X, la igualdad se cumple</string>
+    <string name="STATEMENT_IS_TRUE_SUMMARY">Infinitas soluciones</string>
+
+    <string name="STATEMENT_IS_FALSE_OPTION">No existen soluciones para X</string>
+    <string name="STATEMENT_IS_FALSE_JUSTIFICATION">Cuando los dos miembros del igual son distintos y numéricos, se dice que no existen soluciones, porque para cualquier valor de X, la igualdad nunca se cumple</string>
+    <string name="STATEMENT_IS_FALSE_SUMMARY">Ninguna solución</string>
+
+    <string name="FACTOR_SYMBOL_OPTION">Extraer factor común</string>
+    <string name="FACTOR_SYMBOL_JUSTIFICATION">Se puede extraer factor común de "letra" o "número", en la medida que haya una suma o resta de términos, con operandos repetidos. Por ejemplo: x+3x puede ser factoreado por "x", quedando x(3+1)</string>
+    <string name="FACTOR_SYMBOL_SUMMARY">Factor común</string>
+
+    <string name="FACTOR_DIFFERENCE_OF_SQUARES_OPTION">Aplicar diferencia de cuadrados</string>
+    <string name="FACTOR_DIFFERENCE_OF_SQUARES_JUSTIFICATION">Se puede factorear por diferencia de cuadrados, cuando se tiene una resta, en donde ambos términos pueden convertirse en otras expresiones elevadas al cuadrado. Por ejemplo, 9 puede ser reescrito como 3 al cuadrado</string>
+    <string name="FACTOR_DIFFERENCE_OF_SQUARES_SUMMARY">Diferencia de cuadrados</string>
+
+    <string name="FACTOR_PERFECT_SQUARE_OPTION">Aplicar trinomio cuadrado perfecto</string>
+    <string name="FACTOR_PERFECT_SQUARE_JUSTIFICATION">Factorear por trinomio cuadrado perfecto implica convertir un trinomio, en un binomio al cuadrado. Esto se puede lograr, cuando en el trinomio (3 términos sumados o restados) existen 2 que pueden reescribirse como una expresión al cuadrado, y un tercero que resulta del doble producto de las expresiones elevadas al cuadrado (sin el cuadrado)</string>
+    <string name="FACTOR_PERFECT_SQUARE_SUMMARY">Trinomio cuadrado perfecto</string>
+
+    <string name="FACTOR_SUM_PRODUCT_RULE_OPTION">Aplicar fórmula resolvente</string>
+    <string name="FACTOR_SUM_PRODUCT_RULE_JUSTIFICATION">Factorear por fórmula resolventees posible cuando el polinomio es cuadrático. La fórmula permitirá extraer las 2 raíces del polinomio, el cual podrá ser reescrito en forma factorizada como (x - raíz1) * (x - raíz2)</string>
+    <string name="FACTOR_SUM_PRODUCT_RULE_SUMMARY">Fómula resolvente</string>
 
 
 
