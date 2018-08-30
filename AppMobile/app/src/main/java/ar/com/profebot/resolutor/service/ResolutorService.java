@@ -3,7 +3,9 @@ package ar.com.profebot.resolutor.service;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ar.com.profebot.Models.MultipleChoiceStep;
 import ar.com.profebot.parser.container.Tree;
@@ -43,21 +45,24 @@ public class ResolutorService {
             // Opción correcta
             Integer correctOption = 1;
             String optionA = newEquationBase;
+            String equationOptionA = "";
             String correctOptionJustification = e.getUIDescription();
 
             // Opción incorrecta 1
             InvalidStep invalidStep = invalidOptionService.getFirstInvalidOption(originalEquation);
             String optionB = invalidStep.getTree().toExpression();
+            String equationOptionB = "";
             String incorrectOptionJustification1 = invalidStep.getUIDescription();
 
             // Opción incorrecta 2
             invalidStep = invalidOptionService.getSecondInvalidOption(originalEquation);
             String optionC = invalidStep.getTree().toExpression();
+            String equationOptionC = "";
             String incorrectOptionJustification2 = invalidStep.getUIDescription();
 
-
             MultipleChoiceStep multipleChoiceStep = new MultipleChoiceStep(equationBase,
-                    newEquationBase, summary, optionA, optionB, optionC, correctOption,
+                    newEquationBase, summary, optionA, equationOptionA,
+                    optionB, equationOptionB, optionC, equationOptionC, correctOption,
                     correctOptionJustification, incorrectOptionJustification1, incorrectOptionJustification2);
             result.add(multipleChoiceStep);
         }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/multiple_choice_section_id"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -30,7 +30,18 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:checked="false" />
+
+        <io.github.kexanie.library.MathView
+            android:id="@+id/equation_option_a_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="10dp"
+            app:text="$$\\sum_{i=0}^n i^2 = \\frac{(n^2+n)(2n+1)}{6}$$"
+            app:engine="KaTeX">
+        </io.github.kexanie.library.MathView>
 
         <RadioButton
             android:id="@+id/option_b_id"
@@ -40,7 +51,18 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:checked="false" />
+
+        <io.github.kexanie.library.MathView
+            android:id="@+id/equation_option_b_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="10dp"
+            app:text="$$\\sum_{i=0}^n i^2 = \\frac{(n^2+n)(2n+1)}{6}$$"
+            app:engine="KaTeX">
+        </io.github.kexanie.library.MathView>
 
         <RadioButton
             android:id="@+id/option_c_id"
@@ -52,6 +74,17 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:checked="false" />
+
+        <io.github.kexanie.library.MathView
+            android:id="@+id/equation_option_c_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="10dp"
+            app:text="$$\\sum_{i=0}^n i^2 = \\frac{(n^2+n)(2n+1)}{6}$$"
+            android:layout_marginBottom="10dp"
+            app:engine="KaTeX">
+        </io.github.kexanie.library.MathView>
     </RadioGroup>
 
     <Button

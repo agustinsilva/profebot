@@ -230,7 +230,7 @@ public class SimplifyService {
      */
     protected NodeStatus arithmeticSearch(TreeNode treeNode) {
 
-        boolean noEsOperador = treeNode == null ||  !treeNode.esOperador();
+        boolean noEsOperador = treeNode == null ||  (!treeNode.esOperador() && !treeNode.esRaiz());
         if (noEsOperador) {
             return NodeStatus.noChange(treeNode);
         }
@@ -253,15 +253,24 @@ public class SimplifyService {
         }
 
         // Only resolve division of integers if we get an integer result.
-        if (TreeUtils.isIntegerFraction(treeNode)){
+        if (TreeUtils.isIntegerFraction(treeNode)) {
             Integer numeratorValue = treeNode.getLeftNode().getIntegerValue();
             Integer denominatorValue = treeNode.getRightNode().getIntegerValue();
             if (numeratorValue % denominatorValue == 0) {
                 TreeNode newNode = TreeNode.createConstant(numeratorValue / denominatorValue);
                 return NodeStatus.nodeChanged(
                         NodeStatus.ChangeTypes.SIMPLIFY_ARITHMETIC, treeNode, newNode);
-            }else{
+            } else {
                 // El resultado no es entero
+                return NodeStatus.noChange(treeNode);
+            }
+        }else if (treeNode.esRaiz() && TreeUtils.isConstant(treeNode.getRightNode())){
+            double sqrt = Math.sqrt(treeNode.getRightNode().getIntegerValue());
+            if (TreeUtils.isDoubleInteger(sqrt)){
+                TreeNode newNode = TreeNode.createConstant((int)sqrt);
+                return NodeStatus.nodeChanged(
+                        NodeStatus.ChangeTypes.SIMPLIFY_ARITHMETIC, treeNode, newNode);
+            }else{
                 return NodeStatus.noChange(treeNode);
             }
         }else{
@@ -1335,6 +1344,7 @@ public class SimplifyService {
                 : TreeNode.createParenthesis(TreeNode.createOperator("*", denominatorArgs));
 
         TreeNode newNode = TreeNode.createOperator("/", newNumerator, newDenominator);
+
         return NodeStatus.nodeChanged(
                 NodeStatus.ChangeTypes.MULTIPLY_FRACTIONS, node, newNode);
     }
@@ -2611,7 +2621,7 @@ public class SimplifyService {
         // STEP 2: collect exponents to a single exponent sum
         // e.g. x^1 * x^3 -> x^(1+3)
         // e.g. 10^2 * 10^3 -> 10^(2+3)
-        if (canMultiplyLikeTermConstantNodes(node)) {
+        if (canMultiplyLikeTermConstantNodes(newNode)) {
             status = collectConstantExponents(newNode);
         }
         else {
@@ -2625,10 +2635,23 @@ public class SimplifyService {
         // but this case isn't that common and can be caught in other steps.
         // e.g. x^(2+4+z)
         // T-O-D-O: handle fractions, combining and collecting like terms, etc, here
-        TreeNode exponentSum = newNode.getChild(1).getLeftNode();
+        TreeNode exponentSum;
+        if (newNode.esProducto()){
+            // Si es un producto, lo antecede su fracion
+            exponentSum = newNode.getChild(1).getChild(1).getLeftNode();
+        }else {
+            exponentSum = newNode.getChild(1).getLeftNode();
+        }
         NodeStatus sumStatus = arithmeticSearch(exponentSum);
         if (sumStatus.hasChanged()) {
-            status = NodeStatus.childChanged(newNode, sumStatus, 1);
+            if (newNode.esProducto()) {
+                // Si es un producto, lo antecede su fracion
+                TreeNode newChild = newNode.clone();
+                newChild.getRightNode().setRightNode(sumStatus.getNewNode());
+                status = new NodeStatus(sumStatus.getChangeType(), newNode, newChild, sumStatus.getSubsteps());
+            }else {
+                status = NodeStatus.childChanged(newNode, sumStatus, 1);
+            }
             substeps.add(status);
             newNode = NodeStatus.resetChangeGroups(status.getNewNode());
             newNode = TreeUtils.groupConstantCoefficientAndSymbol(newNode);
@@ -2677,16 +2700,28 @@ public class SimplifyService {
         // If we're multiplying polynomial nodes together, they all share the same
         // symbol. Get that from the first node.
 
+        List<TreeNode> extraArgs = new ArrayList<>();
+
         // The new exponent will be a sum of exponents (an operation, wrapped in
         // parens) e.g. x^(3+4+5)
         List<TreeNode> exponentNodeList = new ArrayList<>();
         for(TreeNode p: polynomialTermList){
-            exponentNodeList.add(getExponentNode(p, true));
+            if (TreeUtils.isPolynomialTerm(p)) {
+                exponentNodeList.add(getExponentNode(p, true));
+            }else{
+                extraArgs.add(p);
+            }
         }
         
         TreeNode newExponent = TreeNode.createParenthesis(
                 TreeNode.createOperator("+", exponentNodeList));
         TreeNode newNode = TreeNode.createPolynomialTerm("X", newExponent, null);
+
+        if (!extraArgs.isEmpty()){
+            extraArgs.add(newNode);
+            newNode = TreeNode.createOperator("*", extraArgs);
+        }
+
         return NodeStatus.nodeChanged(
                 NodeStatus.ChangeTypes.COLLECT_POLYNOMIAL_EXPONENTS, node, newNode);
     }
@@ -2806,12 +2841,31 @@ public class SimplifyService {
         else {
             // TODO revisar esto, al crear un polinomio le saca el coeff nodo
             int i = 0;
+            List<TreeNode> extraArgs = new ArrayList<>();
             for(TreeNode polyTerm: newNode.getArgs()){
                 if (polyTerm.getExponent() == 1) {
-                    newNode.setChild(i,  TreeNode.createPolynomialTerm(
-                            "X",
-                            CONSTANT_1,
-                            polyTerm.getCoefficient(), true));
+
+                    TreeNode newChild = null;
+                    if (TreeUtils.isSymbolFraction(polyTerm, false)){
+
+                        // Separo la fracción para multiplicar las X
+                        newChild = TreeNode.createPolynomialTerm(
+                                "X",
+                                CONSTANT_1,
+                                CONSTANT_1, true);
+
+                        extraArgs.add(TreeNode.createOperator("/",
+                                TreeNode.createConstant(polyTerm.getLeftNode().getCoefficient()),
+                                polyTerm.getRightNode()));
+                        /*newChild.getLeftNode().setExplicitCoeff(true);
+                        newChild.getLeftNode().updateValue(false, true);*/
+                    }else {
+                        newChild = TreeNode.createPolynomialTerm(
+                                "X",
+                                CONSTANT_1,
+                                polyTerm.getCoefficient(), true);
+                    }
+                    newNode.setChild(i,newChild);
 
                     newNode.getChild(i).setChangeGroup(changeGroup);
                     node.getChild(i).setChangeGroup(changeGroup); // note that this is the "oldNode"
@@ -2820,6 +2874,10 @@ public class SimplifyService {
                     changeGroup++;
                 }
                 i++;
+            }
+
+            for(TreeNode extraNode: extraArgs){
+                newNode.addChild(extraNode);
             }
         }
 
@@ -3070,6 +3128,7 @@ public class SimplifyService {
                     numerator = TreeNode.createConstant(-1);
                 }
             }
+
             return new CancelOutStatus(numerator, denominator, cancelStatus.getHasChanged());
         }
 
@@ -3078,6 +3137,7 @@ public class SimplifyService {
             CancelOutStatus cancelStatus = cancelTerms(numerator.getChild(0), denominator);
             if (cancelStatus.getNumerator() != null) {
                 numerator.setArgs(TreeUtils.singletonList(cancelStatus.getNumerator()));
+                numerator = TreeUtils.removeUnnecessaryParens(numerator);
             }
             else {
                 // if the numerator was cancelled out, the numerator should be null
@@ -3108,7 +3168,7 @@ public class SimplifyService {
 
         // case 1: the numerator term and denominator term are the same, so we cancel
         // them out. e.g. (x+5)^100 / (x+5)^100 => null / null
-        if (numerator.getValue().equals(denominator.getValue())) {
+        if (numerator.toExpression().equals(denominator.toExpression())) {
             return new CancelOutStatus(null, null, true);
         }
         // case 2: they're both exponent nodes with the same base
@@ -3165,8 +3225,8 @@ public class SimplifyService {
         // e.g. 2 / 4x -> 1 / 2x
         // e.g. ignore cases like:  2 / a and 2 / x^2
         if (TreeUtils.isConstant(numerator)
-                && denominator.esProducto()
-                && TreeUtils.isPolynomialTerm(denominator)) {
+                && TreeUtils.isPolynomialTerm(denominator) &&
+                !CONSTANT_1.equals(denominator.getCoefficient())) {
 
             TreeNode coeff = TreeNode.createConstant(denominator.getCoefficient());
             TreeNode exponent = TreeNode.createConstant(denominator.getExponent());
@@ -3191,7 +3251,12 @@ public class SimplifyService {
                 numerator = reduceStatus.getNewNode().getChild(0);
                 newCoeff = reduceStatus.getNewNode().getChild(1);
             }
-            denominator = TreeNode.createPolynomialTerm("X", exponent, newCoeff.getIntegerValue());
+            Integer coeffValue = (newCoeff!=null? newCoeff.getIntegerValue(): 1);
+            if (TreeUtils.isConstant(exponent)) {
+                denominator = TreeNode.createPolynomialTerm("X", exponent.getIntegerValue(), coeffValue);
+            }else{
+                denominator = TreeNode.createPolynomialTerm("X", exponent, coeffValue);
+            }
 
             return new CancelOutStatus(numerator, denominator, true);
         }

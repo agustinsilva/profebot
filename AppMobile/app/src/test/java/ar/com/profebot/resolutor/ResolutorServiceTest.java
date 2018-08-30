@@ -1108,7 +1108,7 @@ public class ResolutorServiceTest extends ResolutorService {
 
     @Test
     public void stepThrough_ok23()  throws InvalidExpressionException {
-        String expression = "X/2/3 = 1";
+        String expression = "X/(2/3) = 1";
         Tree tree = (new ParserService()).parseExpression(expression);
         List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
         String estado;
@@ -1553,7 +1553,7 @@ public class ResolutorServiceTest extends ResolutorService {
         else{
             estado = listaNodos.get(listaNodos.size() - 1).getNewEquation().toExpression();
         }
-        Assert.assertEquals("X=4",estado);
+        Assert.assertEquals("4=4",estado);
     }
 
     @Test

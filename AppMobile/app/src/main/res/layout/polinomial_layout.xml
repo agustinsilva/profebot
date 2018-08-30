@@ -38,18 +38,39 @@
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
-            <ToggleButton
-                android:id="@+id/signToogleButton"
-                style="@style/ToogleButtonRounded"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="45dp"
-                android:background="@drawable/toogle_round_button"
-                android:textColor="@color/white"
-                android:textOff="+"
-                android:textOn="-"
-                android:textSize="26dp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_weight="10"
+                android:gravity="bottom"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginRight="10dp"
+                    android:gravity="right"
+                    android:text="Signo"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="12dp" />
+
+                <ToggleButton
+                    android:id="@+id/signToogleButton"
+                    style="@style/ToogleButtonRounded"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/toogle_round_button"
+                    android:textColor="@color/white"
+                    android:textOff="+"
+                    android:textOn="-"
+                    android:textSize="26dp" />
+            </LinearLayout>
 
             <android.support.design.widget.TextInputLayout
                 style="@style/PolinomialTextInputLayout"
@@ -63,7 +84,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="Coeficiente"
+                    android:imeOptions="actionDone"
                     android:inputType="number"
+                    android:maxLength="2"
                     android:textAlignment="center" />
             </android.support.design.widget.TextInputLayout>
 
@@ -76,7 +99,7 @@
 
             <android.support.design.widget.TextInputLayout
                 style="@style/PolinomialTextInputLayout"
-                android:layout_width="80dp"
+                android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="45dp"
                 android:gravity="top"
@@ -88,8 +111,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="top"
-                    android:hint="Potencia"
+                    android:hint="Exponente"
+                    android:imeOptions="actionDone"
                     android:inputType="number"
+                    android:maxLength="2"
                     android:textAlignment="center" />
             </android.support.design.widget.TextInputLayout>
 
@@ -134,8 +159,8 @@
         android:layout_height="100dp"
         android:layout_gravity="left"
         android:layout_marginBottom="5dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginTop="5dp"
         android:gravity="left|center_vertical"
         android:orientation="horizontal">
@@ -152,10 +177,11 @@
             android:id="@+id/equation_to_solve_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="25dp"
             android:layout_marginTop="30dp"
             android:textColor="@color/colorWhite"
-            app:engine="MathJax"></io.github.kexanie.library.MathView>
+            app:engine="MathJax"/>
 
     </LinearLayout>
 

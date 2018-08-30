@@ -427,7 +427,7 @@ public class TreeNode {
 
     public static TreeNode createPolynomialTerm(String x, TreeNode exponent, Integer coefficient) {
 
-        String coefficientStr = (coefficient !=null && !coefficient.equals(1)? coefficient.toString() : "");
+        String coefficientStr = (coefficient !=null  && !coefficient.equals(1)? coefficient.toString() : "");
         return createOperator("^", new TreeNode(coefficientStr + x), exponent);
     }
 

@@ -22,15 +22,26 @@ import android.widget.ToggleButton;
 import com.profebot.activities.R;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import ar.com.profebot.service.ExpressionsManager;
 import io.github.kexanie.library.MathView;
 
 public class EnterPolinomialActivity extends AppCompatActivity {
+
     private ArrayList<String> EquationBuilder;
     private ArrayList<String> EquationUnordered;
+    private Map<Integer, Integer> polynomialTerms;
+    private TextInputEditText coefficientTermInput;
+    private TextInputEditText potentialTermInput;
+    private ToggleButton signToogleButton;
     private String firstSign = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,66 +49,26 @@ public class EnterPolinomialActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_id);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        polynomialTerms = new HashMap<>();
         EquationBuilder = new ArrayList<>();
         EquationUnordered = new ArrayList<>();
         Button enterPolinomial = (Button)findViewById(R.id.AddEquationButton);
         Button eraseLastTerm = (Button)findViewById(R.id.erase_last_term);
         Button deletePolinomial = (Button)findViewById(R.id.delete_polinomial);
 
-        TextInputEditText coefficientTermInput = (TextInputEditText) findViewById(R.id.coefficientTerm);
-        TextInputEditText potentialTermInput = (TextInputEditText) findViewById(R.id.potentialTerm);
-        ToggleButton signToogleButton = (ToggleButton)findViewById(R.id.signToogleButton);
-        coefficientTermInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
+        coefficientTermInput = (TextInputEditText) findViewById(R.id.coefficientTerm);
+        potentialTermInput = (TextInputEditText) findViewById(R.id.potentialTerm);
+        signToogleButton = (ToggleButton)findViewById(R.id.signToogleButton);
 
-                }
-                return true;
-            }
-        });
-        potentialTermInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {}
-                return true;
-            }
-        });
+        CustomKeyboard customKeyboard = new CustomKeyboard();
+        coefficientTermInput.setOnEditorActionListener(customKeyboard);
+        potentialTermInput.setOnEditorActionListener(customKeyboard);
+
         enterPolinomial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
-                if (this.validTerms(coefficientTermInput,potentialTermInput) & reachLimitOfTerms() ){
-                    String termSign = signToogleButton.isChecked() ? "-":"+";
-                    EquationBuilder.add(termSign + coefficientTermInput.getText() + "x^" + potentialTermInput.getText());
-                    EquationUnordered.add(termSign + coefficientTermInput.getText() + "x^" + potentialTermInput.getText());
-                    //Mapping First Character and setting equation as latex
-                    if (beautifierEquation().trim().substring(0,1).matches("-")){firstSign = "-";} else { firstSign = "";}
-                    ExpressionsManager.setPolinomialEquation(beautifierEquation().trim().substring(1).concat("=0"), getApplicationContext());
-                    ((MathView) findViewById(R.id.equation_to_solve_id)).config(
-                            "MathJax.Hub.Config({\n"+
-                                    "  CommonHTML: { linebreaks: { automatic: true } },\n"+
-                                    "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
-                                    "         SVG: { linebreaks: { automatic: true } }\n"+
-                                    "});");
-                    ((MathView) findViewById(R.id.equation_to_solve_id)).setText("\\(\\color{White}{" + firstSign + ExpressionsManager.getPolinomialEquationAsLatex() + "}\\)" );
-                    coefficientTermInput.setText("");
-                    potentialTermInput.setText("");
-                    coefficientTermInput.requestFocus();
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                addTerm();
             }
-        }
-
-        private boolean validTerms(TextInputEditText coefficientTermInput, TextInputEditText potentialTermInput) {
-            if ((coefficientTermInput.getText().toString().matches("") || potentialTermInput.getText().toString().matches(""))) {
-                Toast toast1 = Toast.makeText(getApplicationContext(), "Ingresá los terminos del polinomio", Toast.LENGTH_LONG);
-                toast1.setGravity(Gravity.CENTER, 0, 0);
-                toast1.show();
-                return false;
-            } else {
-                return true;
-            }
-        }
         });
 
         eraseLastTerm.setOnClickListener(new View.OnClickListener() {
@@ -113,24 +84,103 @@ public class EnterPolinomialActivity extends AppCompatActivity {
             }
         });
     }
+
+    class CustomKeyboard implements TextView.OnEditorActionListener{
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event){
+            if(actionId == EditorInfo.IME_ACTION_DONE){
+                if(coefficientTermInput.getText().length() == 0){
+                    coefficientTermInput.requestFocus();
+                }else if(potentialTermInput.getText().length() == 0){
+                    potentialTermInput.requestFocus();
+                }else{
+                    coefficientTermInput.clearFocus();
+                    potentialTermInput.clearFocus();
+                    addTerm();
+                }
+            }
+            return false;
+        }
+    }
+
+
+    private void addTerm(){
+        if (this.validTerms(coefficientTermInput,potentialTermInput) & reachLimitOfTerms() ){
+            String termSign = signToogleButton.isChecked() ? "-":"+";
+            EquationBuilder.add(termSign + coefficientTermInput.getText() + "x^" + potentialTermInput.getText());
+            EquationUnordered.add(termSign + coefficientTermInput.getText() + "x^" + potentialTermInput.getText());
+
+            Integer coefficient = Integer.parseInt(coefficientTermInput.getText().toString());
+            coefficient = signToogleButton.isChecked() ? -1 * coefficient : coefficient;
+            Integer exponent = Integer.parseInt(potentialTermInput.getText().toString());
+            if(!polynomialTerms.containsKey(exponent)){
+                polynomialTerms.put(exponent, coefficient);
+            }else {
+                Integer oldCoefficient = polynomialTerms.get(exponent);
+                polynomialTerms.remove(exponent);
+                polynomialTerms.put(exponent, oldCoefficient + coefficient);
+            }
+
+            String equation = beautifierEquation().trim();
+            if (beautifierEquation().trim().substring(0,1).matches("-")){
+                firstSign = "-";
+                equation = equation.substring(1);
+            } else {
+                firstSign = "";
+            }
+            ExpressionsManager.setPolinomialEquation(equation.concat("=0"), getApplicationContext());
+            ((MathView) findViewById(R.id.equation_to_solve_id)).config(
+                    "MathJax.Hub.Config({\n"+
+                            "  CommonHTML: { linebreaks: { automatic: true } },\n"+
+                            "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
+                            "         SVG: { linebreaks: { automatic: true } }\n"+
+                            "});");
+            ((MathView) findViewById(R.id.equation_to_solve_id)).setText("\\(\\color{White}{" + firstSign + ExpressionsManager.getPolinomialEquationAsLatex() + "}\\)" );
+            coefficientTermInput.setText("");
+            potentialTermInput.setText("");
+        }
+    }
+
+    private boolean validTerms(TextInputEditText coefficientTermInput, TextInputEditText potentialTermInput) {
+        StringBuilder message = new StringBuilder("");
+        if(coefficientTermInput.getText().toString().matches("")){
+            message.append("No olvides ingresar el coeficiente!\n");
+        }
+        if(potentialTermInput.getText().toString().matches("")){
+            message.append("No olvides ingresar el exponente!\n");
+        }
+
+        if (message.length() > 0) {
+            Toast toast1 = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+            toast1.setGravity(Gravity.CENTER, 0, 0);
+            toast1.show();
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public void deletePolinomial(){
+        this.polynomialTerms = new HashMap<>();
         this.EquationBuilder = new ArrayList<>();
         this.EquationUnordered = new ArrayList<>();
         ((MathView) findViewById(R.id.equation_to_solve_id)).setText("$$" + "$$" );
     }
 
     public void deleteLastTerm(){
-        String lastTerm = this.EquationUnordered.get(EquationUnordered.size()-1);
-        this.EquationBuilder.remove(lastTerm);
-        this.EquationUnordered.remove(lastTerm);
         if (EquationBuilder.size()!= 0) {
+            String lastTerm = this.EquationUnordered.get(EquationUnordered.size()-1);
+            this.EquationBuilder.remove(lastTerm);
+            this.EquationUnordered.remove(lastTerm);
+            polynomialTerms.remove(Collections.min(polynomialTerms.keySet()));
+            String equation = beautifierEquation().trim();
             if (beautifierEquation().trim().substring(0,1).matches("-")){
                 firstSign = "-";
-            }
-            else {
+                equation = equation.substring(1);
+            } else {
                 firstSign = "";
             }
-            ExpressionsManager.setPolinomialEquation(beautifierEquation().trim().substring(1).concat("=0"), getApplicationContext());
+            ExpressionsManager.setPolinomialEquation(equation.concat("=0"), getApplicationContext());
             ((MathView) findViewById(R.id.equation_to_solve_id)).config(
                     "MathJax.Hub.Config({\n"+
                             "  CommonHTML: { linebreaks: { automatic: true } },\n"+
@@ -144,8 +194,9 @@ public class EnterPolinomialActivity extends AppCompatActivity {
         }
     }
     private boolean reachLimitOfTerms() {
-        if (this.EquationBuilder.size() > 9) {
-            Toast toast1 = Toast.makeText(getApplicationContext(), "No podés ingresar más de 10 términos", Toast.LENGTH_LONG);
+        int maxSize = 10;
+        if (this.EquationBuilder.size() >= maxSize) {
+            Toast toast1 = Toast.makeText(getApplicationContext(), "El polinomio ingresado no puede tener más de " + maxSize + " términos", Toast.LENGTH_LONG);
             toast1.setGravity(Gravity.CENTER, 0, 0);
             toast1.show();
             return false;
@@ -156,27 +207,40 @@ public class EnterPolinomialActivity extends AppCompatActivity {
     }
 
     public String beautifierEquation(){
-        this.EquationBuilder.sort( new Comparator<String>() {
-            public int compare(String str1, String str2) {
-                int possubstr1 = str1.indexOf('^') + 1;
-                int possubstr2 = str2.indexOf('^') + 1;
-                String substr1 = str1.substring(possubstr1, str1.length()).trim();
-                String substr2 = str2.substring(possubstr2, str2.length()).trim();
-
-                return Integer.valueOf(substr2).compareTo(Integer.valueOf(substr1));
+        List<Integer> exponents = new ArrayList<>(polynomialTerms.keySet());
+        Collections.sort(exponents, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2 >= o1 ? 1 : -1;
             }
         });
-        return String.join("",this.EquationBuilder).replaceAll("x\\^0","");
+
+        StringBuilder stringBuilder = new StringBuilder("");
+        Boolean firstTerm = true;
+        for(Integer exponent : exponents){
+            Integer coefficient = polynomialTerms.get(exponent);
+            String operator = "+";
+            if(coefficient < 0 || firstTerm){
+                operator = "";
+            }
+            stringBuilder.append(operator);
+            stringBuilder.append(polynomialTerms.get(exponent));
+            stringBuilder.append("x^");
+            stringBuilder.append(exponent);
+            firstTerm = false;
+        }
+
+        return stringBuilder.toString().replaceAll("x\\^0","");
     }
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, EnterPolinomialEquationOptionsActivity.class));
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, EnterPolinomialEquationOptionsActivity.class));
         return true;
     }
 }
