@@ -1,6 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="SIMPLIFY_ARITHMETIC_OPTION">Simplificar operación aritmética</string>
-    <string name="SIMPLIFY_ARITHMETIC_JUSTIFICATION">Para simplificar términos, resolver las sumas, restas, multiplicaciones, divisiones, potencias o raíces, que involucren solo números</string>
-    <string name="SIMPLIFY_ARITHMETIC_SUMMARY">Resolver operación</string>
 </resources>
