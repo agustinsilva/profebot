@@ -156,4 +156,35 @@
     <string name="MULTIPLY_NTH_ROOTS_JUSTIFICATION">2 o más raíces con mismo índice y mismo radicando, que se están multiplicando o dividiendo, se pueden unificar, tratandolas como si fueran variables. De esta forma, la raíz cuadrada de 2 por la raíz cuadrada de 2, resulta en la raíz cuarta de 2.</string>
     <string name="MULTIPLY_NTH_ROOTS_SUMMARY">Multiplicar raíces</string>
 
+    <string name="ADD_TO_BOTH_SIDES_OPTION">Sumar a ambos miembros para cancelar términos</string>
+    <string name="ADD_TO_BOTH_SIDES_JUSTIFICATION">Para cancelar un término que está restando de un lado del igual, se puede sumar miembro a miembro dicho término; de esta forma, se logrará "pasar" dicho término de un lado del igual al otro, con el objetivo de despejar la X</string>
+    <string name="ADD_TO_BOTH_SIDES_SUMMARY">Sumar miembro a miembro</string>
+
+    <string name="DIVIDE_FROM_BOTH_SIDES_OPTION">Dividir a ambos miembros para cancelar términos</string>
+    <string name="DIVIDE_FROM_BOTH_SIDES_JUSTIFICATION">Para cancelar un término que está multiplicando de un lado del igual, se puede dividir miembro a miembro dicho término; de esta forma, se logrará "pasar" dicho término de un lado del igual al otro, con el objetivo de despejar la X</string>
+    <string name="DIVIDE_FROM_BOTH_SIDES_SUMMARY">Dividir miembro a miembro</string>
+
+    <string name="MULTIPLY_BOTH_SIDES_BY_INVERSE_FRACTION_OPTION">Multiplicar a ambos miembros para cancelar términos</string>
+    <string name="MULTIPLY_BOTH_SIDES_BY_INVERSE_FRACTION_JUSTIFICATION">Para cancelar un término que está dividiendo de un lado del igual, se puede multiplicar miembro a miembro dicho término; de esta forma, se logrará "pasar" dicho término de un lado del igual al otro, con el objetivo de despejar la X</string>
+    <string name="MULTIPLY_BOTH_SIDES_BY_INVERSE_FRACTION_SUMMARY">Multiplicar miembro a miembro</string>
+
+    <string name="SIMPLIFY_LEFT_SIDE_OPTION">Simplificar el lado izquierdo del igual</string>
+    <string name="SIMPLIFY_LEFT_SIDE_JUSTIFICATION">Simplificar el lado izquierdo del igual para despejar la X</string>
+    <string name="SIMPLIFY_LEFT_SIDE_SUMMARY">Simplificar términos</string>
+
+    <string name="SIMPLIFY_RIGHT_SIDE_OPTION">Simplificar el lado derecho del igual</string>
+    <string name="SIMPLIFY_RIGHT_SIDE_JUSTIFICATION">Simplificar el lado derecho del igual para despejar la X</string>
+    <string name="SIMPLIFY_RIGHT_SIDE_SUMMARY">Simplificar términos</string>
+
+    <string name="SUBTRACT_FROM_BOTH_SIDES_OPTION">Simplificar ambos miembros del igual</string>
+    <string name="SUBTRACT_FROM_BOTH_SIDES_JUSTIFICATION">Simplificar ambos miembros del igual para despejar la X</string>
+    <string name="SUBTRACT_FROM_BOTH_SIDES_SUMMARY">Simplificar términos</string>
+
+    <string name="FIND_ROOTS_OPTION">Extraer raíces del polinomio factorizado</string>
+    <string name="FIND_ROOTS_JUSTIFICATION">Un polinomio factorizado permite extraer sus raíces, tomando los números de cada binomio cambiado de signo. Estos valores son los que reemplazados en la X, si se resuelven las operaciones aritméticas se llega a 0</string>
+    <string name="FIND_ROOTS_SUMMARY">Extraer raíces</string>
+
+
+
+
 </resources>

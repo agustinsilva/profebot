@@ -319,6 +319,59 @@ public class JustificationsService {
                     R.string.MULTIPLY_NTH_ROOTS_SUMMARY);
         }
 
+        if(source.getDescrip().equals(ADD_TO_BOTH_SIDES.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.ADD_TO_BOTH_SIDES_OPTION,
+                    R.string.ADD_TO_BOTH_SIDES_JUSTIFICATION,
+                    R.string.ADD_TO_BOTH_SIDES_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(DIVIDE_FROM_BOTH_SIDES.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.DIVIDE_FROM_BOTH_SIDES_OPTION,
+                    R.string.DIVIDE_FROM_BOTH_SIDES_JUSTIFICATION,
+                    R.string.DIVIDE_FROM_BOTH_SIDES_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(MULTIPLY_BOTH_SIDES_BY_INVERSE_FRACTION.getDescrip())
+                || source.getDescrip().equals(MULTIPLY_BOTH_SIDES_BY_NEGATIVE_ONE.getDescrip())
+                || source.getDescrip().equals(MULTIPLY_TO_BOTH_SIDES.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.MULTIPLY_BOTH_SIDES_BY_INVERSE_FRACTION_OPTION,
+                    R.string.MULTIPLY_BOTH_SIDES_BY_INVERSE_FRACTION_JUSTIFICATION,
+                    R.string.MULTIPLY_BOTH_SIDES_BY_INVERSE_FRACTION_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(SIMPLIFY_LEFT_SIDE.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.SIMPLIFY_LEFT_SIDE_OPTION,
+                    R.string.SIMPLIFY_LEFT_SIDE_JUSTIFICATION,
+                    R.string.SIMPLIFY_LEFT_SIDE_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(SIMPLIFY_RIGHT_SIDE.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.SIMPLIFY_RIGHT_SIDE_OPTION,
+                    R.string.SIMPLIFY_RIGHT_SIDE_JUSTIFICATION,
+                    R.string.SIMPLIFY_RIGHT_SIDE_SUMMARY);
+        }
+
+        if(source.getDescrip().equals(SUBTRACT_FROM_BOTH_SIDES.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.SUBTRACT_FROM_BOTH_SIDES_OPTION,
+                    R.string.SUBTRACT_FROM_BOTH_SIDES_JUSTIFICATION,
+                    R.string.SUBTRACT_FROM_BOTH_SIDES_SUMMARY);
+        }
+
+
+        // TODO: SWAP_SIDES
+
+        if(source.getDescrip().equals(FIND_ROOTS.getDescrip())){
+            return createTextsFrom(context,
+                    R.string.FIND_ROOTS_OPTION,
+                    R.string.FIND_ROOTS_JUSTIFICATION,
+                    R.string.FIND_ROOTS_SUMMARY);
+        }
 
         return justifications;
     }
