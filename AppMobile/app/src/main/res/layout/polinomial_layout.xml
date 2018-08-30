@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:background="@color/colorBackground">
 
-    <include layout="@layout/main_toolbar"/>
+    <include layout="@layout/enter_equation_handdraw_toolbar"/>
 
     <TextView
         android:id="@+id/textView2"

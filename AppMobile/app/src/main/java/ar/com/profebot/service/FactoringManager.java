@@ -30,6 +30,7 @@ public class FactoringManager {
 
     public static void setPolynomialTerms(Map<Integer, Integer> polynomialTerms) {
         FactoringManager.polynomialTerms = polynomialTerms;
+        FactoringManager.roots = new ArrayList<>();
     }
 
     public static MultipleChoiceStep nextStep(){
@@ -90,9 +91,23 @@ public class FactoringManager {
 
         setFactors();
 
-        String equation = FormulaParser.parseToLatex(rootsFactorized) + "*" + "\\mathbf{" + FormulaParser.parseToLatex(pendingPolynomial) + "}";
+        String rootsFactorizedAux = "";
+        if(!rootsFactorized.isEmpty()){
+            rootsFactorizedAux = rootsFactorizedAux.replace("x", "a_1");
+            rootsFactorizedAux = FormulaParser.parseToLatex(rootsFactorizedAux).replace("{a}_{1}", "x");
+            rootsFactorizedAux += "*";
+        }
 
-        return null;//new MultipleChoiceStep()
+        String pendingPolynomialAux = pendingPolynomial;
+        pendingPolynomialAux = pendingPolynomialAux.replace("x", "a_1");
+        pendingPolynomialAux = FormulaParser.parseToLatex(pendingPolynomialAux).replace("{a}_{1}", "x");
+
+        String equation = rootsFactorizedAux + "\\mathbf{" + pendingPolynomialAux + "}";
+
+        return new MultipleChoiceStep(equation, "", "", "", "",
+                "Factor común", "", "Fórmula cuadrática", "", "Método de Gauss",
+                "", 1,1,1, "","",
+                "" );
     }
 
     public static void setFactors(){
@@ -114,7 +129,7 @@ public class FactoringManager {
             }
             stringBuilder.append(operator);
             stringBuilder.append(polynomialTerms.get(exponent));
-            stringBuilder.append("x^");
+            stringBuilder.append("*x^");
             stringBuilder.append(exponent);
             firstTerm = false;
         }

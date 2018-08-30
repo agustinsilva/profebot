@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -64,6 +65,8 @@ public class EnterPolinomialActivity extends AppCompatActivity {
         coefficientTermInput.setOnEditorActionListener(customKeyboard);
         potentialTermInput.setOnEditorActionListener(customKeyboard);
 
+        ((Button)findViewById(R.id.clear_blackboard_id)).setVisibility(View.INVISIBLE);
+
         enterPolinomial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
@@ -85,6 +88,15 @@ public class EnterPolinomialActivity extends AppCompatActivity {
         });
 
         ((Button)findViewById(R.id.start_resolution_id)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), SolvePolynomialActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        ImageButton startButton = (ImageButton)findViewById(R.id.solve_equation_id);
+        startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), SolvePolynomialActivity.class);
