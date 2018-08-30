@@ -36,7 +36,7 @@ public class EnterPolinomialActivity extends AppCompatActivity {
 
     private ArrayList<String> EquationBuilder;
     private ArrayList<String> EquationUnordered;
-    private Map<Integer, Integer> polynomialTerms;
+    public static Map<Integer, Integer> polynomialTerms;
     private TextInputEditText coefficientTermInput;
     private TextInputEditText potentialTermInput;
     private ToggleButton signToogleButton;
@@ -81,6 +81,14 @@ public class EnterPolinomialActivity extends AppCompatActivity {
             @Override
             public void onClick(View button) {
                 deletePolinomial();
+            }
+        });
+
+        ((Button)findViewById(R.id.start_resolution_id)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), SolvePolynomialActivity.class);
+                startActivity(intent);
             }
         });
     }

@@ -192,7 +192,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/start_resolution_id"
             style="@style/AppButtonRounded"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
