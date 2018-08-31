@@ -117,12 +117,13 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
                         }
                         expandCollapseIndicatorColor.setVisibility(View.VISIBLE);
 
+                        summary.setText(summaryText);
+                        MultipleChoiceStep newMultipleChoiceStep = FactoringManager.nextStep();
+                        newEquationBase.setText("\\(" + FactoringManager.getEquation() + "\\)");
                         if(!FactoringManager.end){
-                            multipleChoiceSteps.add(FactoringManager.nextStep());
+                            multipleChoiceSteps.add(newMultipleChoiceStep);
                             MultipleChoiceStep currentMultipleChoiceStep = multipleChoiceSteps.get(currentMultipleChoiceSteps.size()-1);
                             currentMultipleChoiceStep.setSolved(true);
-                            summary.setText(summaryText);
-                            newEquationBase.setText(FactoringManager.getEquation());
                             setUpNextStepButton();
                         }else{
                             nextStep.setVisibility(View.GONE);
