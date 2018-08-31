@@ -170,35 +170,35 @@ public class FactoringManager {
     }
 
     public static void factorizeBy(Integer option){
-
+        
     }
 
     public static String getMessageOfRightOption(Integer option){
         String answer;
         switch (option){
             case 1:
-                answer = "" + context.getText(R.string.FACTOR_COMUN_ERA_EL_CORRECTO);
+                answer = "" + context.getText(R.string.FACTOR_COMUN_ES_EL_CORRECTO);
                 return  answer
                         .replace("/raiz/", "" + currentRoot1)
                         .replace("/type/", currentRootType);
             case 2:
                 if(currentRoot2 == null){
-                    answer = "" + context.getText(R.string.CUADRATICA_RAIZ_DOBLE_ERA_EL_CORRECTO);
+                    answer = "" + context.getText(R.string.CUADRATICA_RAIZ_DOBLE_ES_EL_CORRECTO);
                     return answer.replace("/raiz/", "" + currentRoot1);
                 }
-                answer = "" + context.getText(R.string.CUADRATICA_RAICES_SIMPLES_ERA_EL_CORRECTO);
+                answer = "" + context.getText(R.string.CUADRATICA_RAICES_SIMPLES_ES_EL_CORRECTO);
                 return answer
                         .replace("/raiz1/", "" + currentRoot1)
                         .replace("/raiz2/", "" + currentRoot2);
             default:
-                answer = "" + context.getText(R.string.GAUSS_ERA_EL_CORRECTO);
+                answer = "" + context.getText(R.string.GAUSS_ES_EL_CORRECTO);
                 return answer.replace("/raiz/", "" + currentRoot1);
         }
     }
 
     public static String getMessageOfRegularOptions(Integer regularOption1, Integer regularOption2){
-        String regularOption1Text = getMessageOfRegularOption(regularOption1);
-        String regularOption2Text = getMessageOfRegularOption(regularOption2);
+        String regularOption1Text = getMessageOfRegularOptionNotChosen(regularOption1);
+        String regularOption2Text = getMessageOfRegularOptionNotChosen(regularOption2);
 
         String answer = "";
 
@@ -217,7 +217,7 @@ public class FactoringManager {
         return answer;
     }
 
-    private static String getMessageOfRegularOption(Integer regularOption){
+    public static String getMessageOfRegularOptionNotChosen(Integer regularOption){
         switch (regularOption){
             case 2:
                 return "" + context.getText(R.string.CUADRATICA_ERA_POSIBLE);
@@ -225,4 +225,35 @@ public class FactoringManager {
                 return "" + context.getText(R.string.GAUSS_ERA_POSIBLE);
         }
     }
+
+    public static String getMessageOfRegularOptionChosen(Integer regularOption){
+        switch (regularOption){
+            case 2:
+                return "" + context.getText(R.string.CUADRATICA_ES_POSIBLE_PERO_NO_LO_MEJOR);
+            default:
+                return "" + context.getText(R.string.GAUSS_ES_POSIBLE_PERO_NO_LO_MEJOR);
+        }
+    }
+
+    public static String getMessageOfRightOptionNotChosen(Integer correctOption){
+        switch (correctOption){
+            case 1:
+                return "" + context.getText(R.string.FACTOR_COMUN_ERA_EL_CORRECTO);
+            case 2:
+                return "" + context.getText(R.string.CUADRATICA_ERA_EL_CORRECTO);
+            default:
+                return "" + context.getText(R.string.GAUSS_ERA_EL_CORRECTO);
+        }
+    }
+
+    public static String getMessageOfWrongOptionChosen(Integer optionChosen){
+        switch (optionChosen){
+            case 1:
+                return "" + context.getText(R.string.FACTOR_COMUN_NO_ES_CORRECTO);
+            default:
+                return "" + context.getText(R.string.CUADRATICA_NO_ES_CORRECTO);
+        }
+    }
+
+
 }

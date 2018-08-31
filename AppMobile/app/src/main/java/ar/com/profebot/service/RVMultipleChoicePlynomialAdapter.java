@@ -79,7 +79,17 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
                             FactoringManager.factorizeBy(chosenOption);
                             String correctText = FactoringManager.getMessageOfRightOption(chosenOption);
                             String complementText = FactoringManager.getMessageOfRegularOptions(regularOption1, regularOption2);
-                            correctOptionRadio.setText(correctText + ". " + complementText);
+                            correctOptionRadio.setText(correctText + " " + complementText);
+                        }else if(chosenOption.equals(regularOption1) || chosenOption.equals(regularOption2)){
+                            incorrectOptionRadio.setVisibility(View.GONE);
+                            expandCollapseIndicatorColor.setBackgroundResource(R.drawable.solved_right);
+                            FactoringManager.factorizeBy(chosenOption);
+                            String regularText = FactoringManager.getMessageOfRegularOptionChosen(chosenOption);
+                            String complementText = chosenOption.equals(regularOption1)
+                                    ? FactoringManager.getMessageOfRegularOptionNotChosen(regularOption2)
+                                    : FactoringManager.getMessageOfRegularOptionNotChosen(regularOption1);
+                            String correctText = FactoringManager.getMessageOfRightOptionNotChosen(correctOption);
+                            correctOptionRadio.setText(regularText + " " + complementText + " " + correctText);
                         }else{
                             expandCollapseIndicatorColor.setBackgroundResource(R.drawable.solved_wrong);
                             Map<Integer, String> incorrectOptions = new HashMap<>();
@@ -93,9 +103,13 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
                                 }
                             }
                             incorrectOptionRadio.setVisibility(View.VISIBLE);
-                            incorrectOptionRadio.setText(incorrectOptions.get(chosenOption));
+                            incorrectOptionRadio.setText(FactoringManager.getMessageOfWrongOptionChosen(chosenOption));
 
-                            ExpressionsManager.requestNewExercises(getAsInfix(equationBase.getText()), getAsInfix(newEquationBase.getText()), equationBase.getContext());
+                            FactoringManager.factorizeBy(correctOption);
+                            String regularText = FactoringManager.getMessageOfRegularOptionNotChosen(regularOption1);
+                            regularText += FactoringManager.getMessageOfRegularOptionNotChosen(regularOption2);
+                            String correctText = FactoringManager.getMessageOfRightOptionNotChosen(correctOption);
+                            correctOptionRadio.setText(correctText + " " + regularText);
                         }
                         expandCollapseIndicatorColor.setVisibility(View.VISIBLE);
 
