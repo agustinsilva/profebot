@@ -25,7 +25,7 @@ import de.uni_bielefeld.cebitec.mzurowie.pretty_formula.main.FormulaParser;
 public class FactoringManager {
 
     // (exponente, coeficiente)
-    public static Map<Integer, Integer> polynomialTerms;
+    public static Map<Integer, Double> polynomialTerms;
     // (raíz, multiplicidad)
     public static Map<Double, Integer> rootsMultiplicity;
     public static List<Double> roots;
@@ -41,11 +41,11 @@ public class FactoringManager {
         FactoringManager.context = context;
     }
 
-    public static Map<Integer, Integer> getPolynomialTerms() {
+    public static Map<Integer, Double> getPolynomialTerms() {
         return polynomialTerms;
     }
 
-    public static void setPolynomialTerms(Map<Integer, Integer> polynomialTerms) {
+    public static void setPolynomialTerms(Map<Integer, Double> polynomialTerms) {
         FactoringManager.polynomialTerms = polynomialTerms;
         roots = new ArrayList<>();
         rootsMultiplicity = new HashMap<>();
@@ -149,7 +149,7 @@ public class FactoringManager {
         StringBuilder stringBuilder = new StringBuilder("");
         Boolean firstTerm = true;
         for(Integer exponent : exponents){
-            Integer coefficient = polynomialTerms.get(exponent);
+            Double coefficient = polynomialTerms.get(exponent);
             String operator = "+";
             if(coefficient < 0 || firstTerm){
                 operator = "";
@@ -220,9 +220,22 @@ public class FactoringManager {
                 applyGauss();
         }
 
-        if(polynomialTerms.isEmpty() || Collections.max(polynomialTerms.keySet()) == 1){
+        if(polynomialTerms.isEmpty() || Collections.max(polynomialTerms.keySet()) == 1 || cantFactorizeAnymore()){
             end = true;
         }
+    }
+
+    private static Boolean cantFactorizeAnymore(){
+        if(getDegree() != 2){
+            return false;
+        }
+
+        Double a = polynomialTerms.get(2);
+        Double b = polynomialTerms.get(1);
+        Double c = polynomialTerms.get(0);
+
+        Double discriminant = b * b - 4 * a * c;
+        return discriminant < 0;
     }
 
     private static void initializeVariables(){
@@ -248,11 +261,11 @@ public class FactoringManager {
     }
 
     private static void applyQuadratic(){
-        Integer a = polynomialTerms.get(2);
-        Integer b = polynomialTerms.get(1);
-        Integer c = polynomialTerms.get(0);
+        Double a = polynomialTerms.get(2);
+        Double b = polynomialTerms.get(1);
+        Double c = polynomialTerms.get(0);
 
-        Integer discriminant = b * b - 4 * a * c;
+        Double discriminant = b * b - 4 * a * c;
 
         if(discriminant < 0){
             end = true;
@@ -283,7 +296,106 @@ public class FactoringManager {
     }
 
     private static void applyGauss(){
+        if(hasIndependentTerm()){
+            Double independentTerm = polynomialTerms.get(0);
+            Double principalCoefficient = polynomialTerms.get(getDegree());
 
+            List<Integer> independentTermDivisors = divisorsOf(independentTerm);
+            List<Integer> principalCoefficientDivisors = divisorsOf(principalCoefficient);
+
+            List<Double> possibleRoots = new ArrayList<>();
+            for(Integer independentTermDivisor : independentTermDivisors){
+                for(Integer principalCoefficientDivisor : principalCoefficientDivisors){
+                    possibleRoots.add((double) independentTermDivisor / principalCoefficientDivisor);
+                }
+            }
+
+            for(Double possibleRoot : possibleRoots){
+                if(isRoot(possibleRoot)){
+                    try{
+                        applyRuffini(possibleRoot);
+                    }catch (Exception e){
+                        System.out.println(e.getMessage() + " - Raiz: " + possibleRoot);
+                    }
+                }
+            }
+        }
+    }
+
+    private static void applyRuffini(Double possibleRoot) throws Exception{
+        // Genero el listado ordenado y completo de coeficientes
+
+        List<Double> coefficientsSortedAndCompleted = new ArrayList<>();
+        for(int exponent = getDegree() ; exponent >= 0  ; exponent--){
+            Double coefficientToAdd;
+            if(polynomialTerms.containsKey(exponent)){
+                coefficientToAdd = polynomialTerms.get(exponent);
+            }else{
+                coefficientToAdd = 0.0;
+            }
+            coefficientsSortedAndCompleted.add(coefficientToAdd);
+        }
+
+        // Hago la división
+
+        List<Double> quotient = new ArrayList<>();
+        quotient.add((double)coefficientsSortedAndCompleted.get(0));
+
+        for(int i = 1 ; i < coefficientsSortedAndCompleted.size() ; i++){
+            Double newCoefficient =  coefficientsSortedAndCompleted.get(i - 1) * possibleRoot + coefficientsSortedAndCompleted.get(i);
+            quotient.add(newCoefficient);
+        }
+
+        // Valido el resto
+
+        if(quotient.get(quotient.size() - 1) != 0.0){
+            throw new Exception("El resto de Ruffini no es 0");
+        }
+
+        // Genero la nueva raíz
+
+        roots.add(possibleRoot);
+        rootsMultiplicity.put(possibleRoot, 1);
+
+        currentRoot1 = possibleRoot;
+        currentRootType = getMultiplicityName(1);
+
+        // Genero el nuevo polinomio a factorizar
+
+        Integer currentDegree = getDegree() - 1;
+        polynomialTerms = new HashMap<>();
+        for(int i = 0 ; i < quotient.size() - 1 ; i++){
+            polynomialTerms.put(currentDegree--, quotient.get(i));
+        }
+    }
+
+    private static Integer getDegree(){
+        return Collections.max(polynomialTerms.keySet());
+    }
+
+    private static Boolean isRoot(Double possibleRoot){
+        Double result = 0.0;
+        for(Integer exponent : polynomialTerms.keySet()){
+            result += polynomialTerms.get(exponent) * Math.pow(possibleRoot, exponent);
+        }
+        return result.equals(0.0);
+    }
+
+    private static List<Integer> divisorsOf(Double number){
+        List<Integer> divisors = new ArrayList<>();
+        divisors.add(1);
+        divisors.add(-1);
+        for(int i = 2 ; i <= number / 2 ; i++){
+            if(number % i == 0){
+                divisors.add(i);
+                divisors.add(-1 * i);
+            }
+        }
+        return divisors;
+    }
+
+    private static Boolean hasIndependentTerm(){
+        return polynomialTerms.containsKey(0);
     }
 
     private static String getMultiplicityName(Integer multiplicity){

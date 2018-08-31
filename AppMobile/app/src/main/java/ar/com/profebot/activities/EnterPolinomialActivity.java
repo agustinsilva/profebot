@@ -31,11 +31,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import ar.com.profebot.service.ExpressionsManager;
+import de.uni_bielefeld.cebitec.mzurowie.pretty_formula.main.FormulaParser;
 import io.github.kexanie.library.MathView;
 
 public class EnterPolinomialActivity extends AppCompatActivity {
 
-    public static Map<Integer, Integer> polynomialTerms;
+    public static Map<Integer, Double> polynomialTerms;
     private TextInputEditText coefficientTermInput;
     private TextInputEditText potentialTermInput;
     private ToggleButton signToogleButton;
@@ -134,35 +135,37 @@ public class EnterPolinomialActivity extends AppCompatActivity {
 
     private void addTerm(){
         if (this.validTerms(coefficientTermInput,potentialTermInput) & reachLimitOfTerms() ){
-            String termSign = signToogleButton.isChecked() ? "-":"+";
-
-            Integer coefficient = Integer.parseInt(coefficientTermInput.getText().toString());
+            Double coefficient = Double.parseDouble(coefficientTermInput.getText().toString());
             coefficient = signToogleButton.isChecked() ? -1 * coefficient : coefficient;
             Integer exponent = Integer.parseInt(potentialTermInput.getText().toString());
-            Integer newCoefficient;
+            Double newCoefficient;
             if(!polynomialTerms.containsKey(exponent)){
                 newCoefficient = coefficient;
             }else {
-                newCoefficient = polynomialTerms.get(exponent) + coefficient;
+                newCoefficient = (double) polynomialTerms.get(exponent) + coefficient;
                 polynomialTerms.remove(exponent);
             }
             polynomialTerms.put(exponent, newCoefficient);
 
             String equation = beautifierEquation().trim();
-            if (beautifierEquation().trim().substring(0,1).matches("-")){
+            if (equation.substring(0,1).matches("-")){
                 firstSign = "-";
                 equation = equation.substring(1);
             } else {
                 firstSign = "";
             }
-            ExpressionsManager.setPolinomialEquation(equation.concat("=0"), getApplicationContext());
             ((MathView) findViewById(R.id.equation_to_solve_id)).config(
                     "MathJax.Hub.Config({\n"+
                             "  CommonHTML: { linebreaks: { automatic: true } },\n"+
                             "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
                             "         SVG: { linebreaks: { automatic: true } }\n"+
                             "});");
-            ((MathView) findViewById(R.id.equation_to_solve_id)).setText("\\(\\color{White}{" + firstSign + ExpressionsManager.getPolinomialEquationAsLatex() + "}\\)" );
+
+            equation = equation.replace("x", "a_1");
+            System.out.println(equation);
+            equation = firstSign + FormulaParser.parseToLatex(equation).replace("{a}_{1}", "x");
+
+            ((MathView) findViewById(R.id.equation_to_solve_id)).setText("\\(\\color{White}{" + equation + "}\\)" );
             coefficientTermInput.setText("");
             potentialTermInput.setText("");
             enablePlayButton();
@@ -248,19 +251,23 @@ public class EnterPolinomialActivity extends AppCompatActivity {
         StringBuilder stringBuilder = new StringBuilder("");
         Boolean firstTerm = true;
         for(Integer exponent : exponents){
-            Integer coefficient = polynomialTerms.get(exponent);
+            Double coefficient = polynomialTerms.get(exponent);
             String operator = "+";
             if(coefficient < 0 || firstTerm){
                 operator = "";
             }
             stringBuilder.append(operator);
-            stringBuilder.append(polynomialTerms.get(exponent));
-            stringBuilder.append("x^");
+            if(coefficient == 1.0){
+                stringBuilder.append("x^");
+            }else{
+                stringBuilder.append(coefficient);
+                stringBuilder.append("*x^");
+            }
             stringBuilder.append(exponent);
             firstTerm = false;
         }
 
-        return stringBuilder.toString().replaceAll("x\\^0","");
+        return stringBuilder.toString();
     }
 
     @Override
