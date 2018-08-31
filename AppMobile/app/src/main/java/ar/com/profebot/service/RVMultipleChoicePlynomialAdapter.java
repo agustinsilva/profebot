@@ -88,8 +88,8 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
                             FactoringManager.factorizeBy(chosenOption);
                             String regularText = FactoringManager.getMessageOfRegularOptionChosen(chosenOption);
                             String complementText = chosenOption.equals(regularOption1)
-                                    ? FactoringManager.getMessageOfRegularOptionNotChosen(regularOption2)
-                                    : FactoringManager.getMessageOfRegularOptionNotChosen(regularOption1);
+                                    ? (regularOption2 == null ? "" : FactoringManager.getMessageOfRegularOptionNotChosen(regularOption2))
+                                    : (regularOption1 == null ? "" : FactoringManager.getMessageOfRegularOptionNotChosen(regularOption1));
                             String correctText = FactoringManager.getMessageOfRightOptionNotChosen(correctOption);
                             correctOptionRadio.setText(regularText + " " + complementText + " " + correctText);
                             summaryText = FactoringManager.getCaseNameFrom(chosenOption);
@@ -109,8 +109,8 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
                             incorrectOptionRadio.setText(FactoringManager.getMessageOfWrongOptionChosen(chosenOption));
 
                             FactoringManager.factorizeBy(correctOption);
-                            String regularText = FactoringManager.getMessageOfRegularOptionNotChosen(regularOption1);
-                            regularText += FactoringManager.getMessageOfRegularOptionNotChosen(regularOption2);
+                            String regularText = (regularOption1 == null ? "" : FactoringManager.getMessageOfRegularOptionNotChosen(regularOption1));
+                            regularText += (regularOption2 == null ? "" : FactoringManager.getMessageOfRegularOptionNotChosen(regularOption2));
                             String correctText = FactoringManager.getMessageOfRightOptionNotChosen(correctOption);
                             correctOptionRadio.setText(correctText + " " + regularText);
                             summaryText = FactoringManager.getCaseNameFrom(correctOption);

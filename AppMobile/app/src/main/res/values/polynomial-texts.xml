@@ -13,10 +13,10 @@
     <string name="GAUSS_ERA_POSIBLE">El método de Gauss también se podría haber aplicado, por tratarse de un polinomio de grado mayor a 1.</string>
 
     <string name="CUADRATICA_ES_POSIBLE_PERO_NO_LO_MEJOR">Aplicar fórmula cuadrática es correcto, aunque también podría haberse aplicado factor común, para llegar de una manera más rápida a las raíces.</string>
-    <string name="GAUSS_ES_POSIBLE_PERO_NO_LO_MEJOR">Aplicar el método de Gauss es correcto, aunque se podría haber tomado otro camino para llegar de forma más rápida a la raíz.</string>
+    <string name="GAUSS_ES_POSIBLE_PERO_NO_LO_MEJOR">Aplicar el método de Gauss es correcto; se encontró la raíz /raiz/. Por otro lado, se podría haber tomado otro camino para llegar de forma más rápida a la raíz.</string>
 
     <string name="FACTOR_COMUN_ERA_EL_CORRECTO">Factor común era el caso de factoreo más conveniente. Al haber variables en todos los términos, si se divide cada término por la X de menor exponente, se pueden extraer automáticamente tantas raíces como indique el exponente.</string>
-    <string name="CUADRATICA_ERA_EL_CORRECTO">Aplicar la fórmula cuadrática era lo más conveniente, por tratarse de un polinomio de grado 2. Solo se debería resolver la fórmula resolvente para extraer las raíces.</string>
+    <string name="CUADRATICA_ERA_EL_CORRECTO">Aplicar la fórmula cuadrática era lo más conveniente, por tratarse de un polinomio de grado 2; únicamente resolviendo la fórmula resolvente se podrían haber encontrado las raíces.</string>
     <string name="GAUSS_ERA_EL_CORRECTO">Aplicar el método de Gauss era lo más conveniente, por tratarse de un polinomio de grado mayor a 1.</string>
 
     <string name="FACTOR_COMUN_NO_ES_CORRECTO">No se puede aplicar factor común, dado que no en todos los términos hay variables.</string>

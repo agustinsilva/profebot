@@ -240,7 +240,7 @@ public class FactoringManager {
                 applyGauss();
         }
 
-        if(polynomialTerms.isEmpty() || Collections.max(polynomialTerms.keySet()) == 1 || cantFactorizeAnymore()){
+        if(polynomialTerms.isEmpty() || Collections.max(polynomialTerms.keySet()) <= 1 || cantFactorizeAnymore()){
             end = true;
         }
     }
@@ -250,9 +250,9 @@ public class FactoringManager {
             return false;
         }
 
-        Double a = polynomialTerms.get(2);
-        Double b = polynomialTerms.get(1);
-        Double c = polynomialTerms.get(0);
+        Double a = polynomialTerms.containsKey(2) ? polynomialTerms.get(2) : 0.0;
+        Double b = polynomialTerms.containsKey(1) ? polynomialTerms.get(1) : 0.0;
+        Double c = polynomialTerms.containsKey(0) ? polynomialTerms.get(0) : 0.0;
 
         Double discriminant = b * b - 4 * a * c;
         return discriminant < 0;
@@ -281,9 +281,9 @@ public class FactoringManager {
     }
 
     private static void applyQuadratic(){
-        Double a = polynomialTerms.get(2);
-        Double b = polynomialTerms.get(1);
-        Double c = polynomialTerms.get(0);
+        Double a = polynomialTerms.containsKey(2) ? polynomialTerms.get(2) : 0.0;
+        Double b = polynomialTerms.containsKey(1) ? polynomialTerms.get(1) : 0.0;
+        Double c = polynomialTerms.containsKey(0) ? polynomialTerms.get(0) : 0.0;
 
         Double discriminant = b * b - 4 * a * c;
 
@@ -308,7 +308,7 @@ public class FactoringManager {
         }
 
         polynomialTerms = new HashMap<>();
-        if(a > 1){
+        if(a != 1.0){
             // Cuando se factoriza cuadrática, el resultado es: a*(x-r1)(x-r2)
             polynomialTerms.put(0, a);
         }
@@ -491,7 +491,8 @@ public class FactoringManager {
             case 2:
                 return "" + context.getText(R.string.CUADRATICA_ES_POSIBLE_PERO_NO_LO_MEJOR);
             default:
-                return "" + context.getText(R.string.GAUSS_ES_POSIBLE_PERO_NO_LO_MEJOR);
+                String answer = "" + context.getText(R.string.GAUSS_ES_POSIBLE_PERO_NO_LO_MEJOR);
+                return answer.replace("/raiz/", "" + currentRoot1);
         }
     }
 
