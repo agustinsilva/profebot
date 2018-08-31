@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +23,10 @@ import de.uni_bielefeld.cebitec.mzurowie.pretty_formula.main.FormulaParser;
 
 public class FactoringManager {
 
+    // (exponente, coeficiente)
     public static Map<Integer, Integer> polynomialTerms;
+    // (raíz, multiplicidad)
+    public static Map<Integer, Integer> rootsMultiplicity;
     public static List<Integer> roots;
     public static String rootsFactorized;
     public static String pendingPolynomial;
@@ -41,17 +45,17 @@ public class FactoringManager {
 
     public static void setPolynomialTerms(Map<Integer, Integer> polynomialTerms) {
         FactoringManager.polynomialTerms = polynomialTerms;
-        FactoringManager.roots = new ArrayList<>();
+        roots = new ArrayList<>();
+        rootsMultiplicity = new HashMap<>();
     }
 
     public static MultipleChoiceStep nextStep(){
         Boolean factorComunIsPossible = true;
         Boolean cuadraticIsPossible = true;
-        Boolean gaussIsPossible = true;
 
         // Veo qué casos son posibles
 
-        for(Integer exponent : polynomialTerms.values()){
+        for(Integer exponent : polynomialTerms.keySet()){
             if(exponent <= 1){
                 factorComunIsPossible = false;
                 break;
@@ -60,7 +64,7 @@ public class FactoringManager {
 
         Boolean anyExponentIs2 = false;
         Boolean firstTime = true;
-        for(Integer exponent : polynomialTerms.values()){
+        for(Integer exponent : polynomialTerms.keySet()){
             if(firstTime && exponent == 2){
                 anyExponentIs2 = true;
                 firstTime = false;
@@ -147,21 +151,31 @@ public class FactoringManager {
             firstTerm = false;
         }
 
+        // Polinomio a factorizar
         String firstSign = "";
         String equation = stringBuilder.toString().replaceAll("x\\^0","").trim();
         if (equation.substring(0,1).matches("-")){
             firstSign = "-";
             equation = equation.substring(1);
-        } else {
-            firstSign = "";
         }
-
         pendingPolynomial = "(" + firstSign + equation + ")";
+
+        // Raíces ya calculadas
         stringBuilder = new StringBuilder("");
         for(int i = 0 ; i < roots.size() ; i++){
-            stringBuilder.append("(x-");
-            stringBuilder.append(roots.get(i));
-            stringBuilder.append(")");
+            if(roots.get(i) == 0){
+                stringBuilder.append("x");
+            }else{
+                stringBuilder.append("(x-");
+                stringBuilder.append(roots.get(i));
+                stringBuilder.append(")");
+            }
+
+            if(rootsMultiplicity.get(roots.get(i)) > 1){
+                stringBuilder.append("^");
+                stringBuilder.append(rootsMultiplicity.get(roots.get(i)));
+            }
+
             if(i + 1 < roots.size()){
                 stringBuilder.append("*");
             }
@@ -170,7 +184,62 @@ public class FactoringManager {
     }
 
     public static void factorizeBy(Integer option){
-        
+        switch (option){
+            case 1:
+                applyCommonFactor();
+                break;
+            case 2:
+                applyQuadratic();
+                break;
+            default:
+                applyGauss();
+        }
+    }
+
+    private static void initializeVariables(){
+        currentRoot1 = null;
+        currentRoot2 = null;
+        currentRootType = "";
+    }
+
+    private static void applyCommonFactor(){
+        initializeVariables();
+
+        Integer minExponent = Collections.min(polynomialTerms.keySet());
+
+        for(Integer exponent : polynomialTerms.keySet()){
+            polynomialTerms.put(exponent - minExponent, polynomialTerms.get(exponent));
+            polynomialTerms.remove(exponent);
+        }
+
+        roots.add(0);
+        rootsMultiplicity.put(0, minExponent);
+
+        currentRoot1 = 0;
+        currentRootType = getMultiplicityName(minExponent);
+    }
+
+    private static void applyQuadratic(){
+
+    }
+
+    private static void applyGauss(){
+
+    }
+
+    private static String getMultiplicityName(Integer multiplicity){
+        switch (multiplicity){
+            case 1:
+                return "simple";
+            case 2:
+                return "doble";
+            case 3:
+                return "triple";
+            case 4:
+                return "cuádruple";
+            default:
+                return "múltiple";
+        }
     }
 
     public static String getMessageOfRightOption(Integer option){
