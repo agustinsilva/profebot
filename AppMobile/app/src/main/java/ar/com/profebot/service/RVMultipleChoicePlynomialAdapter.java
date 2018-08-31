@@ -118,10 +118,10 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
                         expandCollapseIndicatorColor.setVisibility(View.VISIBLE);
 
                         summary.setText(summaryText);
-                        MultipleChoiceStep newMultipleChoiceStep = FactoringManager.nextStep();
+                        FactoringManager.setFactors();
                         newEquationBase.setText("\\(" + FactoringManager.getEquation() + "\\)");
                         if(!FactoringManager.end){
-                            multipleChoiceSteps.add(newMultipleChoiceStep);
+                            multipleChoiceSteps.add(FactoringManager.nextStep());
                             MultipleChoiceStep currentMultipleChoiceStep = multipleChoiceSteps.get(currentMultipleChoiceSteps.size()-1);
                             currentMultipleChoiceStep.setSolved(true);
                             setUpNextStepButton();

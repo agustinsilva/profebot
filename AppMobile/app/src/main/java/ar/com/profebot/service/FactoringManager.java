@@ -126,11 +126,15 @@ public class FactoringManager {
             rootsFactorizedAux += "*";
         }
 
-        String pendingPolynomialAux = pendingPolynomial;
-        pendingPolynomialAux = pendingPolynomialAux.replace("x", "a_1");
-        pendingPolynomialAux = FormulaParser.parseToLatex(pendingPolynomialAux).replace("{a}_{1}", "x");
+        String pendingPolynomialAux = "";
+        if(!pendingPolynomial.isEmpty()){
+            pendingPolynomialAux = pendingPolynomial;
+            pendingPolynomialAux = pendingPolynomialAux.replace("x", "a_1");
+            pendingPolynomialAux = FormulaParser.parseToLatex(pendingPolynomialAux).replace("{a}_{1}", "x");
+            pendingPolynomialAux = "\\mathbf{" + pendingPolynomialAux + "}";
+        }
 
-        return rootsFactorizedAux + "\\mathbf{" + pendingPolynomialAux + "}";
+        return rootsFactorizedAux + pendingPolynomialAux;
     }
 
     public static void setFactors(){
@@ -165,11 +169,15 @@ public class FactoringManager {
         // Polinomio a factorizar
         String firstSign = "";
         String equation = stringBuilder.toString().trim();
-        if (equation.substring(0,1).matches("-")){
-            firstSign = "-";
-            equation = equation.substring(1);
+        if(equation.isEmpty()){
+            pendingPolynomial = "";
+        }else{
+            if (equation.substring(0,1).matches("-")){
+                firstSign = "-";
+                equation = equation.substring(1);
+            }
+            pendingPolynomial = "(" + firstSign + equation + ")";
         }
-        pendingPolynomial = "(" + firstSign + equation + ")";
 
         // Raíces ya calculadas
         stringBuilder = new StringBuilder("");
@@ -177,8 +185,10 @@ public class FactoringManager {
             if(roots.get(i) == 0){
                 stringBuilder.append("x");
             }else{
-                stringBuilder.append("(x-");
-                stringBuilder.append(roots.get(i));
+                stringBuilder.append("(x");
+                Double root = roots.get(i);
+                stringBuilder.append(root >= 0 ? "-" : "+");
+                stringBuilder.append(Math.abs(root));
                 stringBuilder.append(")");
             }
 
@@ -187,7 +197,7 @@ public class FactoringManager {
                 stringBuilder.append(rootsMultiplicity.get(roots.get(i)));
             }
 
-            if(i + 2 < roots.size()){
+            if(i + 1 < roots.size()){
                 stringBuilder.append("*");
             }
         }
@@ -207,7 +217,7 @@ public class FactoringManager {
                 applyGauss();
         }
 
-        if(Collections.max(polynomialTerms.keySet()) == 1){
+        if(polynomialTerms.isEmpty() || Collections.max(polynomialTerms.keySet()) == 1){
             end = true;
         }
     }
@@ -260,6 +270,9 @@ public class FactoringManager {
                 rootsMultiplicity.put(root2, 1);
             }
         }
+
+        polynomialTerms = new HashMap<>();
+        end = true;
     }
 
     private static void applyGauss(){
