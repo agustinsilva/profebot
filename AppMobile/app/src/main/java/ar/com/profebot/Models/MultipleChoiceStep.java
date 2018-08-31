@@ -94,6 +94,14 @@ public class MultipleChoiceStep {
         return correctOption;
     }
 
+    public Integer getRegularOption1() {
+        return regularOption1;
+    }
+
+    public Integer getRegularOption2() {
+        return regularOption2;
+    }
+
     public String getCorrectOptionJustification() {
         return correctOptionJustification;
     }

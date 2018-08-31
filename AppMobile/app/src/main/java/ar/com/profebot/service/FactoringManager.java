@@ -26,6 +26,9 @@ public class FactoringManager {
     public static List<Integer> roots;
     public static String rootsFactorized;
     public static String pendingPolynomial;
+    public static Integer currentRoot1;
+    public static Integer currentRoot2;
+    public static String currentRootType;
     private static SolvePolynomialActivity context;
 
     public static void setContext(SolvePolynomialActivity context) {
@@ -116,7 +119,7 @@ public class FactoringManager {
                 context.getString(R.string.FACTOR_COMUN), "",
                 context.getString(R.string.CUADRATICA), "",
                 context.getString(R.string.GAUSS), "",
-                correctOption,1,1, "","",
+                correctOption, regularOption1, regularOption2, "","",
                 "" );
     }
 
@@ -164,5 +167,62 @@ public class FactoringManager {
             }
         }
         rootsFactorized = stringBuilder.toString();
+    }
+
+    public static void factorizeBy(Integer option){
+
+    }
+
+    public static String getMessageOfRightOption(Integer option){
+        String answer;
+        switch (option){
+            case 1:
+                answer = "" + context.getText(R.string.FACTOR_COMUN_ERA_EL_CORRECTO);
+                return  answer
+                        .replace("/raiz/", "" + currentRoot1)
+                        .replace("/type/", currentRootType);
+            case 2:
+                if(currentRoot2 == null){
+                    answer = "" + context.getText(R.string.CUADRATICA_RAIZ_DOBLE_ERA_EL_CORRECTO);
+                    return answer.replace("/raiz/", "" + currentRoot1);
+                }
+                answer = "" + context.getText(R.string.CUADRATICA_RAICES_SIMPLES_ERA_EL_CORRECTO);
+                return answer
+                        .replace("/raiz1/", "" + currentRoot1)
+                        .replace("/raiz2/", "" + currentRoot2);
+            default:
+                answer = "" + context.getText(R.string.GAUSS_ERA_EL_CORRECTO);
+                return answer.replace("/raiz/", "" + currentRoot1);
+        }
+    }
+
+    public static String getMessageOfRegularOptions(Integer regularOption1, Integer regularOption2){
+        String regularOption1Text = getMessageOfRegularOption(regularOption1);
+        String regularOption2Text = getMessageOfRegularOption(regularOption2);
+
+        String answer = "";
+
+        if(regularOption1Text.isEmpty() && regularOption2Text.isEmpty()){
+            return answer;
+        }
+
+        if(!regularOption1Text.isEmpty()){
+            answer += regularOption1Text;
+        }
+
+        if(!regularOption2Text.isEmpty()){
+            answer += ". " + regularOption1Text;
+        }
+
+        return answer;
+    }
+
+    private static String getMessageOfRegularOption(Integer regularOption){
+        switch (regularOption){
+            case 2:
+                return "" + context.getText(R.string.CUADRATICA_ERA_POSIBLE);
+            default:
+                return "" + context.getText(R.string.GAUSS_ERA_POSIBLE);
+        }
     }
 }

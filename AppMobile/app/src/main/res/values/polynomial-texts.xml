@@ -3,4 +3,13 @@
     <string name="FACTOR_COMUN">Factor común</string>
     <string name="CUADRATICA">Fórmula cuadrática</string>
     <string name="GAUSS">Método de Gauss</string>
+
+    <string name="FACTOR_COMUN_ERA_EL_CORRECTO">Factor común es el caso más conveniente a aplicar, el cual permitió encontrar la raíz /raiz/, que es /tipo/</string>
+    <string name="CUADRATICA_RAICES_SIMPLES_ERA_EL_CORRECTO">Aplicar la fórmula cuadrática es lo más conveniente a aplicar, lo cual permitió encontrar las raíces /raiz1/ y /raiz2/</string>
+    <string name="CUADRATICA_RAIZ_DOBLE_ERA_EL_CORRECTO">Aplicar la fórmula cuadrática es lo más conveniente a aplicar, lo cual permitió encontrar la raíz doble /raiz/</string>
+    <string name="GAUSS_ERA_EL_CORRECTO">El método de Gauss es el caso más conveniente a aplicar, el cual permitió encontrar la raíz simple /raiz/</string>
+
+    <string name="CUADRATICA_ERA_POSIBLE">Aplicar fórmula cuadrática también era válido</string>
+    <string name="GAUSS_ERA_POSIBLE">Aplicar el método de Gauss también era válido</string>
+
 </resources>

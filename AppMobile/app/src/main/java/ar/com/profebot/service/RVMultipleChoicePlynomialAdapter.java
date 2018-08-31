@@ -48,6 +48,8 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
         RadioButton incorrectOptionRadio;
         Integer chosenOption;
         Integer correctOption;
+        Integer regularOption1;
+        Integer regularOption2;
         String correctOptionJustification;
         String incorrectOptionJustification1;
         String incorrectOptionJustification2;
@@ -74,6 +76,10 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
                         if(chosenOption.equals(correctOption)){
                             incorrectOptionRadio.setVisibility(View.GONE);
                             expandCollapseIndicatorColor.setBackgroundResource(R.drawable.solved_right);
+                            FactoringManager.factorizeBy(chosenOption);
+                            String correctText = FactoringManager.getMessageOfRightOption(chosenOption);
+                            String complementText = FactoringManager.getMessageOfRegularOptions(regularOption1, regularOption2);
+                            correctOptionRadio.setText(correctText + ". " + complementText);
                         }else{
                             expandCollapseIndicatorColor.setBackgroundResource(R.drawable.solved_wrong);
                             Map<Integer, String> incorrectOptions = new HashMap<>();
@@ -234,12 +240,12 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
                 "});");
         multipleChoiceViewHolder.equationBase.setText("\\(" + currentMultipleChoiceSteps.get(position).getEquationBase() + "\\)");
 
+        multipleChoiceViewHolder.newEquationBase.setText("\\(" + currentMultipleChoiceSteps.get(position).getNewEquationBase() + "\\)");
         multipleChoiceViewHolder.newEquationBase.config("MathJax.Hub.Config({\n"+
                 "  CommonHTML: { linebreaks: { automatic: true } },\n"+
                 "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
                 "         SVG: { linebreaks: { automatic: true } }\n"+
                 "});");
-        multipleChoiceViewHolder.newEquationBase.setText("\\(" + currentMultipleChoiceSteps.get(position).getNewEquationBase() + "\\)");
 
         if(currentMultipleChoiceSteps.get(position).getSolved()){
             multipleChoiceViewHolder.summary.setText(currentMultipleChoiceSteps.get(position).getSummary());
@@ -248,6 +254,8 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
         multipleChoiceViewHolder.optionB.setText(currentMultipleChoiceSteps.get(position).getOptionB());
         multipleChoiceViewHolder.optionC.setText(currentMultipleChoiceSteps.get(position).getOptionC());
         multipleChoiceViewHolder.correctOption = currentMultipleChoiceSteps.get(position).getCorrectOption();
+        multipleChoiceViewHolder.regularOption1 = currentMultipleChoiceSteps.get(position).getRegularOption1();
+        multipleChoiceViewHolder.regularOption2 = currentMultipleChoiceSteps.get(position).getRegularOption2();
         multipleChoiceViewHolder.correctOptionJustification = currentMultipleChoiceSteps.get(position).getCorrectOptionJustification();
         multipleChoiceViewHolder.incorrectOptionJustification1 = currentMultipleChoiceSteps.get(position).getIncorrectOptionJustification1();
         multipleChoiceViewHolder.incorrectOptionJustification2 = currentMultipleChoiceSteps.get(position).getIncorrectOptionJustification2();
