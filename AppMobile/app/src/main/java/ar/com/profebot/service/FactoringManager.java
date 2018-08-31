@@ -176,7 +176,10 @@ public class FactoringManager {
                 firstSign = "-";
                 equation = equation.substring(1);
             }
-            pendingPolynomial = "(" + firstSign + equation + ")";
+            pendingPolynomial = firstSign + equation;
+            if(!roots.isEmpty()){
+                pendingPolynomial = "(" + pendingPolynomial + ")";
+            }
         }
 
         // Raíces ya calculadas
@@ -272,6 +275,10 @@ public class FactoringManager {
         }
 
         polynomialTerms = new HashMap<>();
+        if(a > 1){
+            // Cuando se factoriza cuadrática, el resultado es: a*(x-r1)(x-r2)
+            polynomialTerms.put(0, a);
+        }
         end = true;
     }
 
