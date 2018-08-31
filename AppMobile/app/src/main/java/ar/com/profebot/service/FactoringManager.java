@@ -12,6 +12,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import ar.com.profebot.Models.MultipleChoiceStep;
 import ar.com.profebot.activities.SolvePolynomialActivity;
@@ -119,6 +120,7 @@ public class FactoringManager {
     public static String getEquation(){
         String rootsFactorizedAux = "";
         if(!rootsFactorized.isEmpty()){
+            rootsFactorizedAux = rootsFactorized;
             rootsFactorizedAux = rootsFactorizedAux.replace("x", "a_1");
             rootsFactorizedAux = FormulaParser.parseToLatex(rootsFactorizedAux).replace("{a}_{1}", "x");
             rootsFactorizedAux += "*";
@@ -149,15 +151,20 @@ public class FactoringManager {
                 operator = "";
             }
             stringBuilder.append(operator);
-            stringBuilder.append(polynomialTerms.get(exponent));
-            stringBuilder.append("*x^");
-            stringBuilder.append(exponent);
+            stringBuilder.append(coefficient);
+            if(exponent != 0){
+                stringBuilder.append("*x");
+                if(exponent > 1){
+                    stringBuilder.append("^");
+                    stringBuilder.append(exponent);
+                }
+            }
             firstTerm = false;
         }
 
         // Polinomio a factorizar
         String firstSign = "";
-        String equation = stringBuilder.toString().replaceAll("x\\^0","").trim();
+        String equation = stringBuilder.toString().trim();
         if (equation.substring(0,1).matches("-")){
             firstSign = "-";
             equation = equation.substring(1);
@@ -180,7 +187,7 @@ public class FactoringManager {
                 stringBuilder.append(rootsMultiplicity.get(roots.get(i)));
             }
 
-            if(i + 1 < roots.size()){
+            if(i + 2 < roots.size()){
                 stringBuilder.append("*");
             }
         }
@@ -189,7 +196,6 @@ public class FactoringManager {
 
     public static void factorizeBy(Integer option){
         initializeVariables();
-
         switch (option){
             case 1:
                 applyCommonFactor();
@@ -199,6 +205,10 @@ public class FactoringManager {
                 break;
             default:
                 applyGauss();
+        }
+
+        if(Collections.max(polynomialTerms.keySet()) == 1){
+            end = true;
         }
     }
 
@@ -211,7 +221,8 @@ public class FactoringManager {
     private static void applyCommonFactor(){
         Integer minExponent = Collections.min(polynomialTerms.keySet());
 
-        for(Integer exponent : polynomialTerms.keySet()){
+        List<Integer> exponents = new ArrayList<>(polynomialTerms.keySet());
+        for(Integer exponent : exponents){
             polynomialTerms.put(exponent - minExponent, polynomialTerms.get(exponent));
             polynomialTerms.remove(exponent);
         }
@@ -277,7 +288,7 @@ public class FactoringManager {
                 answer = "" + context.getText(R.string.FACTOR_COMUN_ES_EL_CORRECTO);
                 return  answer
                         .replace("/raiz/", "" + currentRoot1)
-                        .replace("/type/", currentRootType);
+                        .replace("/tipo/", currentRootType);
             case 2:
                 if(currentRoot2 == null){
                     answer = "" + context.getText(R.string.CUADRATICA_RAIZ_DOBLE_ES_EL_CORRECTO);
@@ -294,8 +305,8 @@ public class FactoringManager {
     }
 
     public static String getMessageOfRegularOptions(Integer regularOption1, Integer regularOption2){
-        String regularOption1Text = getMessageOfRegularOptionNotChosen(regularOption1);
-        String regularOption2Text = getMessageOfRegularOptionNotChosen(regularOption2);
+        String regularOption1Text = regularOption1 == null ? "" : getMessageOfRegularOptionNotChosen(regularOption1);
+        String regularOption2Text = regularOption2 == null ? "" : getMessageOfRegularOptionNotChosen(regularOption2);
 
         String answer = "";
 

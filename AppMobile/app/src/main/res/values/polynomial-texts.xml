@@ -9,8 +9,8 @@
     <string name="CUADRATICA_RAIZ_DOBLE_ES_EL_CORRECTO">Aplicar la fórmula cuadrática es lo más conveniente a aplicar, lo cual permitió encontrar la raíz doble /raiz/.</string>
     <string name="GAUSS_ES_EL_CORRECTO">El método de Gauss es el caso más conveniente a aplicar, el cual permitió encontrar la raíz simple /raiz/.</string>
 
-    <string name="CUADRATICA_ERA_POSIBLE">Aplicar fórmula cuadrática también era correcto.</string>
-    <string name="GAUSS_ERA_POSIBLE">Aplicar el método de Gauss también era correcto.</string>
+    <string name="CUADRATICA_ERA_POSIBLE">La fórmula cuadrática también se podría haber aplicado, por tratarse de un polinomio de grado 2.</string>
+    <string name="GAUSS_ERA_POSIBLE">El método de Gauss también se podría haber aplicado, por tratarse de un polinomio de grado mayor a 2.</string>
 
     <string name="CUADRATICA_ES_POSIBLE_PERO_NO_LO_MEJOR">Aplicar fórmula cuadrática es correcto, aunque también podría haberse aplicado factor común, para llegar de una manera más rápida a las raíces.</string>
     <string name="GAUSS_ES_POSIBLE_PERO_NO_LO_MEJOR">Aplicar el método de Gauss es correcto, aunque se podría haber tomado otro camino para llegar de forma más rápida a la raíz.</string>

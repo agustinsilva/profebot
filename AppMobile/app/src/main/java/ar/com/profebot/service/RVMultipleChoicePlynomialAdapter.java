@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import ar.com.profebot.Models.MultipleChoiceStep;
-import ar.com.profebot.activities.SolveEquationActivity;
+import ar.com.profebot.activities.SolvePolynomialActivity;
 import io.github.kexanie.library.MathView;
 
 public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMultipleChoicePlynomialAdapter.MultipleChoiceViewHolder> {
@@ -66,7 +66,7 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
                 solveStep.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        SolveEquationActivity.recyclerView.scrollToPosition(0);
+                        SolvePolynomialActivity.recyclerView.scrollToPosition(0);
                         isSolved = true;
                         multipleChoiceResolutionStep.setVisibility(View.GONE);
                         multipleChoiceSolvedResolutionStep.setVisibility(View.VISIBLE);
@@ -145,7 +145,7 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
             nextStep.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    SolveEquationActivity.recyclerView.scrollToPosition(0);
+                    SolvePolynomialActivity.recyclerView.scrollToPosition(0);
                     nextStep.setVisibility(View.GONE);
                     layoutToUse.setVisibility(View.GONE);
                     expandCollapseIndicator.setScaleY(1f);
@@ -260,7 +260,6 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
                 "});");
         multipleChoiceViewHolder.equationBase.setText("\\(" + currentMultipleChoiceSteps.get(position).getEquationBase() + "\\)");
 
-        multipleChoiceViewHolder.newEquationBase.setText("\\(" + currentMultipleChoiceSteps.get(position).getNewEquationBase() + "\\)");
         multipleChoiceViewHolder.newEquationBase.config("MathJax.Hub.Config({\n"+
                 "  CommonHTML: { linebreaks: { automatic: true } },\n"+
                 "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
