@@ -35,13 +35,12 @@ import io.github.kexanie.library.MathView;
 
 public class EnterPolinomialActivity extends AppCompatActivity {
 
-    private ArrayList<String> EquationBuilder;
-    private ArrayList<String> EquationUnordered;
     public static Map<Integer, Integer> polynomialTerms;
     private TextInputEditText coefficientTermInput;
     private TextInputEditText potentialTermInput;
     private ToggleButton signToogleButton;
     private String firstSign = "";
+    private ImageButton playButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +50,7 @@ public class EnterPolinomialActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         polynomialTerms = new HashMap<>();
-        EquationBuilder = new ArrayList<>();
-        EquationUnordered = new ArrayList<>();
+
         Button enterPolinomial = (Button)findViewById(R.id.AddEquationButton);
         Button eraseLastTerm = (Button)findViewById(R.id.erase_last_term);
         Button deletePolinomial = (Button)findViewById(R.id.delete_polinomial);
@@ -95,8 +93,9 @@ public class EnterPolinomialActivity extends AppCompatActivity {
             }
         });
 
-        ImageButton startButton = (ImageButton)findViewById(R.id.solve_equation_id);
-        startButton.setOnClickListener(new View.OnClickListener() {
+        playButton = (ImageButton)findViewById(R.id.solve_equation_id);
+        disablePlayButton();
+        playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), SolvePolynomialActivity.class);
@@ -123,23 +122,31 @@ public class EnterPolinomialActivity extends AppCompatActivity {
         }
     }
 
+    private void disablePlayButton(){
+        playButton.setBackgroundResource(R.color.colorGreyText);
+        playButton.setEnabled(false);
+    }
+
+    private void enablePlayButton(){
+        playButton.setBackgroundResource(R.color.colorAccent);
+        playButton.setEnabled(true);
+    }
 
     private void addTerm(){
         if (this.validTerms(coefficientTermInput,potentialTermInput) & reachLimitOfTerms() ){
             String termSign = signToogleButton.isChecked() ? "-":"+";
-            EquationBuilder.add(termSign + coefficientTermInput.getText() + "x^" + potentialTermInput.getText());
-            EquationUnordered.add(termSign + coefficientTermInput.getText() + "x^" + potentialTermInput.getText());
 
             Integer coefficient = Integer.parseInt(coefficientTermInput.getText().toString());
             coefficient = signToogleButton.isChecked() ? -1 * coefficient : coefficient;
             Integer exponent = Integer.parseInt(potentialTermInput.getText().toString());
+            Integer newCoefficient;
             if(!polynomialTerms.containsKey(exponent)){
-                polynomialTerms.put(exponent, coefficient);
+                newCoefficient = coefficient;
             }else {
-                Integer oldCoefficient = polynomialTerms.get(exponent);
+                newCoefficient = polynomialTerms.get(exponent) + coefficient;
                 polynomialTerms.remove(exponent);
-                polynomialTerms.put(exponent, oldCoefficient + coefficient);
             }
+            polynomialTerms.put(exponent, newCoefficient);
 
             String equation = beautifierEquation().trim();
             if (beautifierEquation().trim().substring(0,1).matches("-")){
@@ -158,6 +165,7 @@ public class EnterPolinomialActivity extends AppCompatActivity {
             ((MathView) findViewById(R.id.equation_to_solve_id)).setText("\\(\\color{White}{" + firstSign + ExpressionsManager.getPolinomialEquationAsLatex() + "}\\)" );
             coefficientTermInput.setText("");
             potentialTermInput.setText("");
+            enablePlayButton();
         }
     }
 
@@ -181,41 +189,43 @@ public class EnterPolinomialActivity extends AppCompatActivity {
     }
 
     public void deletePolinomial(){
-        this.polynomialTerms = new HashMap<>();
-        this.EquationBuilder = new ArrayList<>();
-        this.EquationUnordered = new ArrayList<>();
+        polynomialTerms = new HashMap<>();
+        disablePlayButton();
         ((MathView) findViewById(R.id.equation_to_solve_id)).setText("$$" + "$$" );
     }
 
     public void deleteLastTerm(){
-        if (EquationBuilder.size()!= 0) {
-            String lastTerm = this.EquationUnordered.get(EquationUnordered.size()-1);
-            this.EquationBuilder.remove(lastTerm);
-            this.EquationUnordered.remove(lastTerm);
+        if (polynomialTerms.size()!= 0) {
             polynomialTerms.remove(Collections.min(polynomialTerms.keySet()));
-            String equation = beautifierEquation().trim();
-            if (beautifierEquation().trim().substring(0,1).matches("-")){
-                firstSign = "-";
-                equation = equation.substring(1);
-            } else {
-                firstSign = "";
+            if(polynomialTerms.size()!= 0){
+                String equation = beautifierEquation().trim();
+                if (beautifierEquation().trim().substring(0,1).matches("-")){
+                    firstSign = "-";
+                    equation = equation.substring(1);
+                } else {
+                    firstSign = "";
+                }
+                ExpressionsManager.setPolinomialEquation(equation.concat("=0"), getApplicationContext());
+                ((MathView) findViewById(R.id.equation_to_solve_id)).config(
+                        "MathJax.Hub.Config({\n"+
+                                "  CommonHTML: { linebreaks: { automatic: true } },\n"+
+                                "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
+                                "         SVG: { linebreaks: { automatic: true } }\n"+
+                                "});");
+                ((MathView) findViewById(R.id.equation_to_solve_id)).setText("\\(\\color{White}{" + firstSign + ExpressionsManager.getPolinomialEquationAsLatex() + "}\\)" );
+            }else{
+                disablePlayButton();
+                ((MathView) findViewById(R.id.equation_to_solve_id)).setText("$$" + "$$" );
             }
-            ExpressionsManager.setPolinomialEquation(equation.concat("=0"), getApplicationContext());
-            ((MathView) findViewById(R.id.equation_to_solve_id)).config(
-                    "MathJax.Hub.Config({\n"+
-                            "  CommonHTML: { linebreaks: { automatic: true } },\n"+
-                            "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
-                            "         SVG: { linebreaks: { automatic: true } }\n"+
-                            "});");
-            ((MathView) findViewById(R.id.equation_to_solve_id)).setText("\\(\\color{White}{" + firstSign + ExpressionsManager.getPolinomialEquationAsLatex() + "}\\)" );
         }
         else{
+            disablePlayButton();
             ((MathView) findViewById(R.id.equation_to_solve_id)).setText("$$" + "$$" );
         }
     }
     private boolean reachLimitOfTerms() {
         int maxSize = 10;
-        if (this.EquationBuilder.size() >= maxSize) {
+        if (polynomialTerms.size() >= maxSize) {
             Toast toast1 = Toast.makeText(getApplicationContext(), "El polinomio ingresado no puede tener más de " + maxSize + " términos", Toast.LENGTH_LONG);
             toast1.setGravity(Gravity.CENTER, 0, 0);
             toast1.show();

@@ -3,6 +3,8 @@ package ar.com.profebot.service;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.profebot.activities.R;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -11,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import ar.com.profebot.Models.MultipleChoiceStep;
+import ar.com.profebot.activities.SolvePolynomialActivity;
 import ar.com.profebot.intelligent.module.IAModuleClient;
 import ar.com.profebot.parser.container.Tree;
 import ar.com.profebot.parser.exception.InvalidExpressionException;
@@ -23,6 +26,11 @@ public class FactoringManager {
     public static List<Integer> roots;
     public static String rootsFactorized;
     public static String pendingPolynomial;
+    private static SolvePolynomialActivity context;
+
+    public static void setContext(SolvePolynomialActivity context) {
+        FactoringManager.context = context;
+    }
 
     public static Map<Integer, Integer> getPolynomialTerms() {
         return polynomialTerms;
@@ -105,8 +113,10 @@ public class FactoringManager {
         String equation = rootsFactorizedAux + "\\mathbf{" + pendingPolynomialAux + "}";
 
         return new MultipleChoiceStep(equation, "", "", "", "",
-                "Factor común", "", "Fórmula cuadrática", "", "Método de Gauss",
-                "", 1,1,1, "","",
+                context.getString(R.string.FACTOR_COMUN), "",
+                context.getString(R.string.CUADRATICA), "",
+                context.getString(R.string.GAUSS), "",
+                correctOption,1,1, "","",
                 "" );
     }
 

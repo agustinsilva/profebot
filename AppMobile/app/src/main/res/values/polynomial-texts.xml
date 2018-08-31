@@ -1,3 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="FACTOR_COMUN">Factor común</string>
+    <string name="CUADRATICA">Fórmula cuadrática</string>
+    <string name="GAUSS">Método de Gauss</string>
 </resources>

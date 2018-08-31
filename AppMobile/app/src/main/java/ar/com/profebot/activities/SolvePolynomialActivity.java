@@ -49,6 +49,7 @@ public class SolvePolynomialActivity extends GlobalActivity {
     }
 
     private List<MultipleChoiceStep> initializeMultipleChoiceSteps(){
+        FactoringManager.setContext(this);
         FactoringManager.setPolynomialTerms(EnterPolinomialActivity.polynomialTerms);
         List<MultipleChoiceStep> multipleChoiceSteps = new ArrayList<>();
         multipleChoiceSteps.add(FactoringManager.nextStep());
