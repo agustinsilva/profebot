@@ -26,13 +26,14 @@ public class FactoringManager {
     // (exponente, coeficiente)
     public static Map<Integer, Integer> polynomialTerms;
     // (raíz, multiplicidad)
-    public static Map<Integer, Integer> rootsMultiplicity;
-    public static List<Integer> roots;
+    public static Map<Double, Integer> rootsMultiplicity;
+    public static List<Double> roots;
     public static String rootsFactorized;
     public static String pendingPolynomial;
-    public static Integer currentRoot1;
-    public static Integer currentRoot2;
+    public static Double currentRoot1;
+    public static Double currentRoot2;
     public static String currentRootType;
+    public static Boolean end;
     private static SolvePolynomialActivity context;
 
     public static void setContext(SolvePolynomialActivity context) {
@@ -47,6 +48,7 @@ public class FactoringManager {
         FactoringManager.polynomialTerms = polynomialTerms;
         roots = new ArrayList<>();
         rootsMultiplicity = new HashMap<>();
+        end = false;
     }
 
     public static MultipleChoiceStep nextStep(){
@@ -106,6 +108,15 @@ public class FactoringManager {
 
         setFactors();
 
+        return new MultipleChoiceStep(getEquation(), "", "", "", "",
+                context.getString(R.string.FACTOR_COMUN), "",
+                context.getString(R.string.CUADRATICA), "",
+                context.getString(R.string.GAUSS), "",
+                correctOption, regularOption1, regularOption2, "","",
+                "" );
+    }
+
+    public static String getEquation(){
         String rootsFactorizedAux = "";
         if(!rootsFactorized.isEmpty()){
             rootsFactorizedAux = rootsFactorizedAux.replace("x", "a_1");
@@ -117,14 +128,7 @@ public class FactoringManager {
         pendingPolynomialAux = pendingPolynomialAux.replace("x", "a_1");
         pendingPolynomialAux = FormulaParser.parseToLatex(pendingPolynomialAux).replace("{a}_{1}", "x");
 
-        String equation = rootsFactorizedAux + "\\mathbf{" + pendingPolynomialAux + "}";
-
-        return new MultipleChoiceStep(equation, "", "", "", "",
-                context.getString(R.string.FACTOR_COMUN), "",
-                context.getString(R.string.CUADRATICA), "",
-                context.getString(R.string.GAUSS), "",
-                correctOption, regularOption1, regularOption2, "","",
-                "" );
+        return rootsFactorizedAux + "\\mathbf{" + pendingPolynomialAux + "}";
     }
 
     public static void setFactors(){
@@ -184,6 +188,8 @@ public class FactoringManager {
     }
 
     public static void factorizeBy(Integer option){
+        initializeVariables();
+
         switch (option){
             case 1:
                 applyCommonFactor();
@@ -203,8 +209,6 @@ public class FactoringManager {
     }
 
     private static void applyCommonFactor(){
-        initializeVariables();
-
         Integer minExponent = Collections.min(polynomialTerms.keySet());
 
         for(Integer exponent : polynomialTerms.keySet()){
@@ -212,15 +216,39 @@ public class FactoringManager {
             polynomialTerms.remove(exponent);
         }
 
-        roots.add(0);
-        rootsMultiplicity.put(0, minExponent);
+        roots.add(0.0);
+        rootsMultiplicity.put(0.0, minExponent);
 
-        currentRoot1 = 0;
+        currentRoot1 = 0.0;
         currentRootType = getMultiplicityName(minExponent);
     }
 
     private static void applyQuadratic(){
+        Integer a = polynomialTerms.get(2);
+        Integer b = polynomialTerms.get(1);
+        Integer c = polynomialTerms.get(0);
 
+        Integer discriminant = b * b - 4 * a * c;
+
+        if(discriminant < 0){
+            end = true;
+        }else{
+            Double root1 = (-1 * b + Math.sqrt(discriminant)) / (2 * a);
+            Double root2 = (-1 * b - Math.sqrt(discriminant)) / (2 * a);
+
+            if(root1.equals(root2)){
+                currentRoot1 = root1;
+                roots.add(root1);
+                rootsMultiplicity.put(root1, 2);
+            }else{
+                currentRoot1 = root1;
+                currentRoot2 = root2;
+                roots.add(root1);
+                rootsMultiplicity.put(root1, 1);
+                roots.add(root2);
+                rootsMultiplicity.put(root2, 1);
+            }
+        }
     }
 
     private static void applyGauss(){
@@ -324,5 +352,14 @@ public class FactoringManager {
         }
     }
 
-
+    public static String getCaseNameFrom(Integer option){
+        switch (option){
+            case 1:
+                return "" + context.getText(R.string.FACTOR_COMUN);
+            case 2:
+                return "" + context.getText(R.string.CUADRATICA);
+            default:
+                return "" + context.getText(R.string.GAUSS);
+        }
+    }
 }

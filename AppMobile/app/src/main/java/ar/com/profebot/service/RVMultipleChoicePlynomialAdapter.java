@@ -73,6 +73,7 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
                         layoutToUse = multipleChoiceSolvedResolutionStep;
 
                         correctOptionRadio.setText(correctOptionJustification);
+                        String summaryText;
                         if(chosenOption.equals(correctOption)){
                             incorrectOptionRadio.setVisibility(View.GONE);
                             expandCollapseIndicatorColor.setBackgroundResource(R.drawable.solved_right);
@@ -80,6 +81,7 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
                             String correctText = FactoringManager.getMessageOfRightOption(chosenOption);
                             String complementText = FactoringManager.getMessageOfRegularOptions(regularOption1, regularOption2);
                             correctOptionRadio.setText(correctText + " " + complementText);
+                            summaryText = FactoringManager.getCaseNameFrom(chosenOption);
                         }else if(chosenOption.equals(regularOption1) || chosenOption.equals(regularOption2)){
                             incorrectOptionRadio.setVisibility(View.GONE);
                             expandCollapseIndicatorColor.setBackgroundResource(R.drawable.solved_right);
@@ -90,6 +92,7 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
                                     : FactoringManager.getMessageOfRegularOptionNotChosen(regularOption1);
                             String correctText = FactoringManager.getMessageOfRightOptionNotChosen(correctOption);
                             correctOptionRadio.setText(regularText + " " + complementText + " " + correctText);
+                            summaryText = FactoringManager.getCaseNameFrom(chosenOption);
                         }else{
                             expandCollapseIndicatorColor.setBackgroundResource(R.drawable.solved_wrong);
                             Map<Integer, String> incorrectOptions = new HashMap<>();
@@ -110,13 +113,16 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
                             regularText += FactoringManager.getMessageOfRegularOptionNotChosen(regularOption2);
                             String correctText = FactoringManager.getMessageOfRightOptionNotChosen(correctOption);
                             correctOptionRadio.setText(correctText + " " + regularText);
+                            summaryText = FactoringManager.getCaseNameFrom(correctOption);
                         }
                         expandCollapseIndicatorColor.setVisibility(View.VISIBLE);
 
-                        MultipleChoiceStep currentMultipleChoiceStep = multipleChoiceSteps.get(currentMultipleChoiceSteps.size()-1);
-                        currentMultipleChoiceStep.setSolved(true);
-                        summary.setText(currentMultipleChoiceStep.getSummary());
-                        if(currentMultipleChoiceSteps.size() < multipleChoiceSteps.size()){
+                        if(!FactoringManager.end){
+                            multipleChoiceSteps.add(FactoringManager.nextStep());
+                            MultipleChoiceStep currentMultipleChoiceStep = multipleChoiceSteps.get(currentMultipleChoiceSteps.size()-1);
+                            currentMultipleChoiceStep.setSolved(true);
+                            summary.setText(summaryText);
+                            newEquationBase.setText(FactoringManager.getEquation());
                             setUpNextStepButton();
                         }else{
                             nextStep.setVisibility(View.GONE);
