@@ -69,6 +69,6 @@ public class SolvePolynomialActivity extends GlobalActivity {
 
     private void returnToEnterNewEquation(){
         ExpressionsManager.setEquationDrawn(null);
-        startActivity(new Intent(this, EnterEquationOptionsActivity.class));
+        startActivity(new Intent(this, EnterPolinomialActivity.class));
     }
 }

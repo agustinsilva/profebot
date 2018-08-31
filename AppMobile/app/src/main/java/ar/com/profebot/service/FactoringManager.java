@@ -123,7 +123,7 @@ public class FactoringManager {
             rootsFactorizedAux = rootsFactorized;
             rootsFactorizedAux = rootsFactorizedAux.replace("x", "a_1");
             rootsFactorizedAux = FormulaParser.parseToLatex(rootsFactorizedAux).replace("{a}_{1}", "x");
-            rootsFactorizedAux += "*";
+            rootsFactorizedAux += !pendingPolynomial.isEmpty() ? "*" : "";
         }
 
         String pendingPolynomialAux = "";
