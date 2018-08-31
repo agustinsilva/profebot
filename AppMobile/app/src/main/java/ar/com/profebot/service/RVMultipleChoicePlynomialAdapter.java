@@ -119,7 +119,7 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
 
                         summary.setText(summaryText);
                         FactoringManager.setFactors();
-                        newEquationBase.setText("\\(" + FactoringManager.getEquation() + "\\)");
+                        newEquationBase.setText("\\(" + FactoringManager.getEquationAfterFactorizing() + "\\)");
                         if(!FactoringManager.end){
                             multipleChoiceSteps.add(FactoringManager.nextStep());
                             MultipleChoiceStep currentMultipleChoiceStep = multipleChoiceSteps.get(currentMultipleChoiceSteps.size()-1);
@@ -261,6 +261,7 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
                 "});");
         multipleChoiceViewHolder.equationBase.setText("\\(" + currentMultipleChoiceSteps.get(position).getEquationBase() + "\\)");
 
+        multipleChoiceViewHolder.newEquationBase.setEngine(MathView.Engine.MATHJAX);
         multipleChoiceViewHolder.newEquationBase.config("MathJax.Hub.Config({\n"+
                 "  CommonHTML: { linebreaks: { automatic: true } },\n"+
                 "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+

@@ -137,6 +137,26 @@ public class FactoringManager {
         return rootsFactorizedAux + pendingPolynomialAux;
     }
 
+    public static String getEquationAfterFactorizing(){
+        String rootsFactorizedAux = "";
+        if(!rootsFactorized.isEmpty()){
+            rootsFactorizedAux = rootsFactorized;
+            rootsFactorizedAux = rootsFactorizedAux.replace("x", "a_1");
+            rootsFactorizedAux = FormulaParser.parseToLatex(rootsFactorizedAux).replace("{a}_{1}", "x");
+            rootsFactorizedAux = "\\mathbf{" + rootsFactorizedAux + "}" + (!pendingPolynomial.isEmpty() ? "*" : "");
+        }
+
+        String pendingPolynomialAux = "";
+        if(!pendingPolynomial.isEmpty()){
+            pendingPolynomialAux = pendingPolynomial;
+            pendingPolynomialAux = pendingPolynomialAux.replace("x", "a_1");
+            pendingPolynomialAux = FormulaParser.parseToLatex(pendingPolynomialAux).replace("{a}_{1}", "x");
+            pendingPolynomialAux = pendingPolynomialAux;
+        }
+
+        return rootsFactorizedAux + pendingPolynomialAux;
+    }
+
     public static void setFactors(){
         List<Integer> exponents = new ArrayList<>(polynomialTerms.keySet());
         Collections.sort(exponents, new Comparator<Integer>() {
@@ -342,14 +362,14 @@ public class FactoringManager {
         quotient.add((double)coefficientsSortedAndCompleted.get(0));
 
         for(int i = 1 ; i < coefficientsSortedAndCompleted.size() ; i++){
-            Double newCoefficient =  coefficientsSortedAndCompleted.get(i - 1) * possibleRoot + coefficientsSortedAndCompleted.get(i);
+            Double newCoefficient =  (quotient.get(i - 1) * possibleRoot) + coefficientsSortedAndCompleted.get(i);
             quotient.add(newCoefficient);
         }
 
         // Valido el resto
 
         if(quotient.get(quotient.size() - 1) != 0.0){
-            throw new Exception("El resto de Ruffini no es 0");
+            throw new Exception("El resto de Ruffini no es 0 --> es " + quotient.get(quotient.size() - 1));
         }
 
         // Genero la nueva raíz

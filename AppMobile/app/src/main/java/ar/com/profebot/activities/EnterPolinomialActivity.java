@@ -258,12 +258,25 @@ public class EnterPolinomialActivity extends AppCompatActivity {
             }
             stringBuilder.append(operator);
             if(coefficient == 1.0){
-                stringBuilder.append("x^");
+                if(exponent != 0){
+                    stringBuilder.append("x");
+                    if(exponent > 1){
+                        stringBuilder.append("^");
+                        stringBuilder.append(exponent);
+                    }
+                }else{
+                    stringBuilder.append(coefficient);
+                }
             }else{
                 stringBuilder.append(coefficient);
-                stringBuilder.append("*x^");
+                if(exponent != 0){
+                    stringBuilder.append("*x");
+                    if(exponent > 1){
+                        stringBuilder.append("^");
+                        stringBuilder.append(exponent);
+                    }
+                }
             }
-            stringBuilder.append(exponent);
             firstTerm = false;
         }
 
