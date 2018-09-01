@@ -1277,16 +1277,6 @@ public class TreeUtils {
         return esReducible;
     }
 
-    public static boolean esReduciblePorDistributiva(TreeNode node) {
-        boolean esReducible = false;
-        if (node.esProducto() || node.esDivision()) {
-            if (esBinomio(node)) {
-                esReducible = true;
-            }
-        }
-        return esReducible;
-    }
-
     private static boolean esBinomio(TreeNode originalNode) {
         boolean esBinomio = false;
         TreeNode node = originalNode.clone();
@@ -1294,16 +1284,35 @@ public class TreeUtils {
             node = originalNode.getLeftNode();
         }
         if (node.esSuma() || node.esResta()) {
-            if (isSymbol(node.getLeftNode()) && isConstant(node.getRightNode())) {
+            if ((isSymbol(node.getLeftNode()) && isConstant(node.getRightNode()))
+                    || (isSymbol(node.getRightNode()) && isConstant(node.getLeftNode()))
+                    || (isConstant(node.getRightNode()) && isConstant(node.getLeftNode()))) {
                 esBinomio = true;
             }
         }
         return esBinomio;
     }
 
-    //TODO
+    public static boolean esReduciblePorDistributiva(TreeNode node) {
+        boolean esReducible = false;
+        if (node.esProducto() || node.esDivision()) {
+            if ((esBinomio(node.getLeftNode()) &&
+                    (esBinomio(node.getRightNode()) || isConstant(node.getRightNode()) || isSymbol(node.getRightNode())))
+                    || (esBinomio(node.getRightNode()) && (
+                    esBinomio(node.getLeftNode()) || isConstant(node.getLeftNode()) || isSymbol(node.getLeftNode())))) {
+                esReducible = true;
+            }
+        }
+        return esReducible;
+    }
+
     public static boolean esReduciblePorAsociativa(TreeNode node) {
         boolean esReducible = false;
+        if (node.esProducto() || node.esDivision()) {
+            if (esBinomio(node.getLeftNode()) || esBinomio(node.getRightNode())) {
+                esReducible = true;
+            }
+        }
         return esReducible;
     }
 
