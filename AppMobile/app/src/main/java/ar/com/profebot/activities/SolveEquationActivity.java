@@ -50,7 +50,7 @@ public class SolveEquationActivity extends GlobalActivity {
     private List<MultipleChoiceStep> initializeMultipleChoiceSteps(){
         List<MultipleChoiceStep> steps = new ArrayList<>();
         //TODO: pedirle este objeto al backend
-        steps.add(new MultipleChoiceStep("x+3*(2+x)=4", "x+6+3x=4", "Distribuir el 3",
+        steps.add(new MultipleChoiceStep(ExpressionsManager.getEquationAsLatex(), "x+6+3x=4", "Distribuir el 3",
                 "Multiplicar por 3 a cada término del binomio 2+x", "",
                 "Pasar el 3 dividiendo", "","Pasar el (2+x) dividiendo", "",
                 1, "Se puede aplicar distributiva",

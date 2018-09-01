@@ -119,28 +119,9 @@ public class ExpressionsManager {
     }
 
     private static String mapPhotoToOurAlphabet(String equationPhoto) {
-        String ecuacion;
-        String subEcuacion;
         equationPhoto = equationPhoto.replaceAll("\\s+", "");
-        if (equationPhoto.contains("rac{")) {
-            String numerador = equationPhoto.substring(equationPhoto.indexOf("rac{") + 3, closingParen(equationPhoto,equationPhoto.indexOf("rac{")+3)+1);
-            String denominador = equationPhoto.substring(equationPhoto.lastIndexOf(numerador) + numerador.length()) + "}";
-            denominador = denominador.substring(denominador.indexOf("{"), denominador.lastIndexOf("}"));
+        equationPhoto = contieneFrac(equationPhoto);
 
-            ecuacion = numerador + "/" + denominador;
-            if (denominador.contains("rac{")) {
-                while (denominador.contains("rac{")) {
-                    String nuevoNumerador = denominador.substring(denominador.indexOf("rac{") + 3, denominador.indexOf("}")) + "}";
-                    String nuevoDenominador = denominador.substring(denominador.lastIndexOf(nuevoNumerador) + nuevoNumerador.length());
-                    subEcuacion = nuevoNumerador + "/" + nuevoDenominador;
-                    denominador = nuevoDenominador;
-                    ecuacion = numerador + "/{" + subEcuacion + "}";
-                }
-            } else {
-                ecuacion = numerador + "/" + denominador;
-            }
-            equationPhoto = ecuacion;
-        }
         String equationWellWritten  = equationPhoto
                 .replaceAll("\\\\sqrt", "R")
                 .replaceAll("\\{", "(")
@@ -170,6 +151,29 @@ public class ExpressionsManager {
         }
         return equationWellWritten;
     }
+
+    private static String contieneFrac(String equationFrac) {
+        if (equationFrac.contains("\\frac{")) {
+            int inicioEquation=0;
+            int finEquation=0;
+            String fraccion="";
+            while (equationFrac.contains("\\frac{")) {
+                int cierreClosure = closingParen(equationFrac, equationFrac.indexOf("\\frac{") + 5);
+                String numerador = equationFrac.substring(equationFrac.indexOf("\\frac{") + 6, cierreClosure);
+                String denominador = equationFrac.substring(cierreClosure + 2, closingParen(equationFrac, cierreClosure + 1));
+                inicioEquation = equationFrac.indexOf("\\frac{");
+                finEquation = closingParen(equationFrac, cierreClosure + 1);
+                //denominador = denominador.substring(denominador.indexOf("{"), denominador.lastIndexOf("}"));
+                fraccion = "(" + numerador + ")/(" + denominador + ")";
+                equationFrac = equationFrac.replace(equationFrac.substring(inicioEquation,finEquation+1),fraccion);
+            }
+            return equationFrac;
+        }
+        else{
+            return equationFrac;
+        }
+    }
+
     public static int closingParen(String s, int n) {
         int counter = 0;
         char opening = '{';

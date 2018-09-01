@@ -11,4 +11,6 @@
     <string name="processing_image">Procesando imagen</string>
     <string name="positive">+</string>
     <string name="negative">-</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
 </resources>
