@@ -33,4 +33,26 @@ public class PhotoExpressionsManager {
         ExpressionsManager.setEquationPhoto(equation, null);
         Assert.assertEquals("(3)/(4)+(5)/(8)*X*4=3+10^3", ExpressionsManager.getEquationPhoto());
     }
+
+    @Test
+    public void ParseRegularFraction() {
+        String equation = "\\frac { 3 + 2 ^ { 4 } } { 3 x } = 5";
+        ExpressionsManager.setEquationPhoto(equation, null);
+        Assert.assertEquals("(3+2^4)/(3*X)=5", ExpressionsManager.getEquationPhoto());
+    }
+
+    @Test
+    public void ParseFractionWithAnotherFractionInDenominator() {
+        String equation = "\\frac { 3 + 2 ^ { 4 } } { \\frac { 3 x } { 5 } } = 5";
+        ExpressionsManager.setEquationPhoto(equation, null);
+        Assert.assertEquals("(3+2^4)/((3*X)/(5))=5", ExpressionsManager.getEquationPhoto());
+    }
+
+    @Test
+    public void ParseSquareEquation() {
+        String equation = "\\sqrt { ( 5 + 3 x ) } = 3";
+        ExpressionsManager.setEquationPhoto(equation, null);
+        Assert.assertEquals("R((5+3*X))=3", ExpressionsManager.getEquationPhoto());
+    }
+
 }
