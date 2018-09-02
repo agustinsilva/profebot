@@ -3,6 +3,7 @@ package ar.com.profebot.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -41,7 +42,7 @@ public class EnterPolinomialActivity extends AppCompatActivity {
     private TextInputEditText potentialTermInput;
     private ToggleButton signToogleButton;
     private String firstSign = "";
-    private ImageButton playButton;
+    private Button playButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,11 +66,12 @@ public class EnterPolinomialActivity extends AppCompatActivity {
         potentialTermInput.setOnEditorActionListener(customKeyboard);
 
         ((Button)findViewById(R.id.clear_blackboard_id)).setVisibility(View.INVISIBLE);
+        ((ImageButton)findViewById(R.id.solve_equation_id)).setVisibility(View.INVISIBLE);
 
         enterPolinomial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
-                addTerm();
+                addTerm(button);
             }
         });
 
@@ -86,16 +88,7 @@ public class EnterPolinomialActivity extends AppCompatActivity {
             }
         });
 
-        ((Button)findViewById(R.id.start_resolution_id)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), SolvePolynomialActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        playButton = (ImageButton)findViewById(R.id.solve_equation_id);
-        disablePlayButton();
+        playButton = (Button)findViewById(R.id.start_resolution_id);
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,24 +109,14 @@ public class EnterPolinomialActivity extends AppCompatActivity {
                 }else{
                     coefficientTermInput.clearFocus();
                     potentialTermInput.clearFocus();
-                    addTerm();
+                    addTerm(v);
                 }
             }
             return false;
         }
     }
 
-    private void disablePlayButton(){
-        playButton.setBackgroundResource(R.color.colorGreyText);
-        playButton.setEnabled(false);
-    }
-
-    private void enablePlayButton(){
-        playButton.setBackgroundResource(R.color.colorAccent);
-        playButton.setEnabled(true);
-    }
-
-    private void addTerm(){
+    private void addTerm(View view){
         if (this.validTerms(coefficientTermInput,potentialTermInput) & reachLimitOfTerms() ){
             Double coefficient = Double.parseDouble(coefficientTermInput.getText().toString());
             coefficient = signToogleButton.isChecked() ? -1 * coefficient : coefficient;
@@ -169,7 +152,18 @@ public class EnterPolinomialActivity extends AppCompatActivity {
             coefficientTermInput.setText("");
             potentialTermInput.setText("");
             enablePlayButton();
+
+            InputMethodManager keyboard = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    private void enablePlayButton(){
+        playButton.setEnabled(true);
+    }
+
+    private void disablePlayButton(){
+        playButton.setEnabled(false);
     }
 
     private boolean validTerms(TextInputEditText coefficientTermInput, TextInputEditText potentialTermInput) {

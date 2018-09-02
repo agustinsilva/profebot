@@ -116,8 +116,11 @@ public class IAModuleClient extends AsyncTask<String, Void, Void> {
             List<String> equationItems = Arrays.asList(equationStr.split("\\s*;\\s*"));
             for (Iterator<String> equationString = equationItems.iterator(); equationString.hasNext();) {
                 JSONObject pnObj = new JSONObject();
-                pnObj.put("equation", equationString.next());
-                equationsJsonToStore.accumulate("pendingExercises", pnObj);
+                String newEquation = equationString.next();
+                if(newEquation.contains("x")){
+                    pnObj.put("equation", newEquation);
+                    equationsJsonToStore.accumulate("pendingExercises", pnObj);
+                }
             }
             //Save equations in memory
             PreferenceManager.getDefaultSharedPreferences(context).edit()
