@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.http.SslCertificate;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import ar.com.profebot.service.ExpressionsManager;
+import ar.com.profebot.service.FactoringManager;
 import de.uni_bielefeld.cebitec.mzurowie.pretty_formula.main.FormulaParser;
 import io.github.kexanie.library.MathView;
 
@@ -128,10 +130,12 @@ public class EnterPolinomialActivity extends AppCompatActivity {
                 newCoefficient = (double) polynomialTerms.get(exponent) + coefficient;
                 polynomialTerms.remove(exponent);
             }
-            polynomialTerms.put(exponent, newCoefficient);
+            if(newCoefficient != 0){
+                polynomialTerms.put(exponent, newCoefficient);
+            }
 
-            String equation = beautifierEquation().trim();
-            if (equation.substring(0,1).matches("-")){
+            String equation = FactoringManager.getPolynomialGeneralForm(polynomialTerms);
+            if (!equation.isEmpty() && equation.substring(0,1).contains("-")){
                 firstSign = "-";
                 equation = equation.substring(1);
             } else {
@@ -146,7 +150,7 @@ public class EnterPolinomialActivity extends AppCompatActivity {
 
             equation = equation.replace("x", "a_1");
             System.out.println(equation);
-            equation = firstSign + FormulaParser.parseToLatex(equation).replace("{a}_{1}", "x");
+            equation = firstSign + (equation.isEmpty() ? "" : FormulaParser.parseToLatex(equation).replace("{a}_{1}", "x"));
 
             ((MathView) findViewById(R.id.equation_to_solve_id)).setText("\\(\\color{White}{" + equation + "}\\)" );
             coefficientTermInput.setText("");
@@ -195,8 +199,8 @@ public class EnterPolinomialActivity extends AppCompatActivity {
         if (polynomialTerms.size()!= 0) {
             polynomialTerms.remove(Collections.min(polynomialTerms.keySet()));
             if(polynomialTerms.size()!= 0){
-                String equation = beautifierEquation().trim();
-                if (beautifierEquation().trim().substring(0,1).matches("-")){
+                String equation = FactoringManager.getPolynomialGeneralForm(polynomialTerms);
+                if (equation.substring(0,1).matches("-")){
                     firstSign = "-";
                     equation = equation.substring(1);
                 } else {
@@ -231,50 +235,6 @@ public class EnterPolinomialActivity extends AppCompatActivity {
         else{
             return true;
         }
-    }
-
-    public String beautifierEquation(){
-        List<Integer> exponents = new ArrayList<>(polynomialTerms.keySet());
-        Collections.sort(exponents, new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                return o2 >= o1 ? 1 : -1;
-            }
-        });
-
-        StringBuilder stringBuilder = new StringBuilder("");
-        Boolean firstTerm = true;
-        for(Integer exponent : exponents){
-            Double coefficient = polynomialTerms.get(exponent);
-            String operator = "+";
-            if(coefficient < 0 || firstTerm){
-                operator = "";
-            }
-            stringBuilder.append(operator);
-            if(coefficient == 1.0){
-                if(exponent != 0){
-                    stringBuilder.append("x");
-                    if(exponent > 1){
-                        stringBuilder.append("^");
-                        stringBuilder.append(exponent);
-                    }
-                }else{
-                    stringBuilder.append(coefficient);
-                }
-            }else{
-                stringBuilder.append(coefficient);
-                if(exponent != 0){
-                    stringBuilder.append("*x");
-                    if(exponent > 1){
-                        stringBuilder.append("^");
-                        stringBuilder.append(exponent);
-                    }
-                }
-            }
-            firstTerm = false;
-        }
-
-        return stringBuilder.toString();
     }
 
     @Override

@@ -130,7 +130,12 @@ public class FactoringManager {
         if(!pendingPolynomial.isEmpty()){
             pendingPolynomialAux = pendingPolynomial;
             pendingPolynomialAux = pendingPolynomialAux.replace("x", "a_1");
-            pendingPolynomialAux = FormulaParser.parseToLatex(pendingPolynomialAux).replace("{a}_{1}", "x");
+            String firstSign = "";
+            if(pendingPolynomialAux.substring(0, 1).contains("-")){
+                firstSign = "-";
+                pendingPolynomialAux = pendingPolynomialAux.substring(1);
+            }
+            pendingPolynomialAux = firstSign + FormulaParser.parseToLatex(pendingPolynomialAux).replace("{a}_{1}", "x");
             pendingPolynomialAux = "\\mathbf{" + pendingPolynomialAux + "}";
         }
 
@@ -149,61 +154,28 @@ public class FactoringManager {
         String pendingPolynomialAux = "";
         if(!pendingPolynomial.isEmpty()){
             pendingPolynomialAux = pendingPolynomial;
+
+            String firstSign = "";
+            if(pendingPolynomialAux.substring(0, 1).contains("-")){
+                firstSign = "-";
+                pendingPolynomialAux = pendingPolynomialAux.substring(1);
+            }
             pendingPolynomialAux = pendingPolynomialAux.replace("x", "a_1");
-            pendingPolynomialAux = FormulaParser.parseToLatex(pendingPolynomialAux).replace("{a}_{1}", "x");
-            pendingPolynomialAux = pendingPolynomialAux;
+            pendingPolynomialAux = firstSign + FormulaParser.parseToLatex(pendingPolynomialAux).replace("{a}_{1}", "x");
         }
 
         return rootsFactorizedAux + pendingPolynomialAux;
     }
 
     public static void setFactors(){
-        List<Integer> exponents = new ArrayList<>(polynomialTerms.keySet());
-        Collections.sort(exponents, new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                return o2 >= o1 ? 1 : -1;
-            }
-        });
-
-        StringBuilder stringBuilder = new StringBuilder("");
-        Boolean firstTerm = true;
-        for(Integer exponent : exponents){
-            Double coefficient = polynomialTerms.get(exponent);
-            String operator = "+";
-            if(coefficient < 0 || firstTerm){
-                operator = "";
-            }
-            stringBuilder.append(operator);
-            stringBuilder.append(coefficient);
-            if(exponent != 0){
-                stringBuilder.append("*x");
-                if(exponent > 1){
-                    stringBuilder.append("^");
-                    stringBuilder.append(exponent);
-                }
-            }
-            firstTerm = false;
-        }
-
         // Polinomio a factorizar
-        String firstSign = "";
-        String equation = stringBuilder.toString().trim();
-        if(equation.isEmpty()){
-            pendingPolynomial = "";
-        }else{
-            if (equation.substring(0,1).matches("-")){
-                firstSign = "-";
-                equation = equation.substring(1);
-            }
-            pendingPolynomial = firstSign + equation;
-            if(!roots.isEmpty()){
-                pendingPolynomial = "(" + pendingPolynomial + ")";
-            }
+        pendingPolynomial = getPolynomialGeneralForm(polynomialTerms);
+        if(!roots.isEmpty() && !pendingPolynomial.isEmpty()){
+            pendingPolynomial = "(" + pendingPolynomial + ")";
         }
 
         // Raíces ya calculadas
-        stringBuilder = new StringBuilder("");
+        StringBuilder stringBuilder = new StringBuilder("");
         for(int i = 0 ; i < roots.size() ; i++){
             if(roots.get(i) == 0){
                 stringBuilder.append("x");
@@ -225,6 +197,57 @@ public class FactoringManager {
             }
         }
         rootsFactorized = stringBuilder.toString();
+    }
+
+    public static String getPolynomialGeneralForm(Map<Integer, Double> terms){
+        List<Integer> exponents = new ArrayList<>(terms.keySet());
+        Collections.sort(exponents, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2 >= o1 ? 1 : -1;
+            }
+        });
+
+        StringBuilder stringBuilder = new StringBuilder("");
+        Boolean firstTerm = true;
+        for(Integer exponent : exponents){
+            Double coefficient = terms.get(exponent);
+            String operator = "+";
+            if(firstTerm){
+                if(coefficient > 0){
+                    operator = "";
+                }else{
+                    operator = "-";
+                }
+            }else{
+                if(coefficient < 0){
+                    operator = "-";
+                }
+            }
+            stringBuilder.append(operator);
+            if(Math.abs(coefficient) == 1.0){
+                if(exponent != 0){
+                    stringBuilder.append("x");
+                    if(exponent > 1){
+                        stringBuilder.append("^");
+                        stringBuilder.append(exponent);
+                    }
+                }else{
+                    stringBuilder.append(Math.abs(coefficient.intValue()));
+                }
+            }else{
+                stringBuilder.append(Math.abs(coefficient.intValue()));
+                if(exponent != 0){
+                    stringBuilder.append("*x");
+                    if(exponent > 1){
+                        stringBuilder.append("^");
+                        stringBuilder.append(exponent);
+                    }
+                }
+            }
+            firstTerm = false;
+        }
+        return stringBuilder.toString().trim();
     }
 
     public static void factorizeBy(Integer option){
