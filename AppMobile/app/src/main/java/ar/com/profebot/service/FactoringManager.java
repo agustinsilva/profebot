@@ -1,25 +1,16 @@
 package ar.com.profebot.service;
 
-import android.content.Context;
-import android.widget.Toast;
-
 import com.profebot.activities.R;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import ar.com.profebot.Models.MultipleChoiceStep;
 import ar.com.profebot.activities.SolvePolynomialActivity;
-import ar.com.profebot.intelligent.module.IAModuleClient;
-import ar.com.profebot.parser.container.Tree;
-import ar.com.profebot.parser.exception.InvalidExpressionException;
-import ar.com.profebot.parser.service.ParserService;
 import de.uni_bielefeld.cebitec.mzurowie.pretty_formula.main.FormulaParser;
 
 public class FactoringManager {
@@ -56,6 +47,9 @@ public class FactoringManager {
         rootsMultiplicity = new HashMap<>();
         end = false;
         multiplier = 1.0;
+
+        // Checkear si el polinomio ingresado es factorizable
+        tryToFinishingExercise();
     }
 
     public static MultipleChoiceStep nextStep(){
@@ -83,7 +77,7 @@ public class FactoringManager {
 
         // Fomulo opciones correctas, regulares e incorrectas
 
-        Integer correctOption = null;
+        Integer correctOption;
         Integer regularOption1 = null;
         Integer regularOption2 = null;
 
@@ -120,7 +114,7 @@ public class FactoringManager {
 
     private static Boolean commonFactorIsPossible(){
         Boolean factorComunIsPossible = true;
-        if(polynomialTerms.get(getDegree()) == 1){ // Factor común numérico
+        if(!polynomialTerms.isEmpty() && polynomialTerms.get(getDegree()) == 1){ // Factor común numérico
             for(Integer exponent : polynomialTerms.keySet()){
                 if(exponent <= 1){
                     factorComunIsPossible = false;
@@ -289,13 +283,7 @@ public class FactoringManager {
 
         deleteNullTerms();
 
-        if(polynomialTerms.isEmpty() || cantFactorizeAnymore()){
-            end = true;
-            if(!polynomialTerms.isEmpty() && getDegree() <= 1){
-                Double lastRoot = polynomialTerms.containsKey(0) ? -1 * polynomialTerms.get(0) : 0;
-                addRoot(lastRoot);
-            }
-        }
+        tryToFinishingExercise();
     }
 
     private static void deleteNullTerms(){
@@ -307,21 +295,28 @@ public class FactoringManager {
         }
     }
 
-    private static Boolean cantFactorizeAnymore(){
-        if(getDegree() > 2 || commonFactorIsPossible()){
-            return false;
-        }
+    private static void tryToFinishingExercise(){
+        Boolean existsTerms = !polynomialTerms.isEmpty();
 
-        if(getDegree() == 2){
+        Boolean quadraticIsPossible = false;
+        if(existsTerms && getDegree() == 2){
             Double a = polynomialTerms.containsKey(2) ? polynomialTerms.get(2) : 0.0;
             Double b = polynomialTerms.containsKey(1) ? polynomialTerms.get(1) : 0.0;
             Double c = polynomialTerms.containsKey(0) ? polynomialTerms.get(0) : 0.0;
 
             Double discriminant = b * b - 4 * a * c;
-            return discriminant < 0;
+            quadraticIsPossible = discriminant >= 0;
         }
 
-        return true;
+        Boolean gaussIsPossible = existsTerms && (getDegree() > 2 || (getDegree() == 2 && quadraticIsPossible));
+
+        if(!commonFactorIsPossible() && !quadraticIsPossible && !gaussIsPossible){
+            end = true;
+            if(existsTerms && getDegree() <= 1){
+                Double lastRoot = polynomialTerms.containsKey(0) ? -1 * polynomialTerms.get(0) : 0;
+                addRoot(lastRoot);
+            }
+        }
     }
 
     private static void initializeVariables(){
