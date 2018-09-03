@@ -293,8 +293,7 @@ public class FactoringManager {
             end = true;
             if(!polynomialTerms.isEmpty() && getDegree() <= 1){
                 Double lastRoot = polynomialTerms.containsKey(0) ? -1 * polynomialTerms.get(0) : 0;
-                roots.add(lastRoot);
-                rootsMultiplicity.put(lastRoot, 1);
+                addRoot(lastRoot);
             }
         }
     }
@@ -348,8 +347,9 @@ public class FactoringManager {
                 polynomialTerms.remove(exponent);
             }
 
-            roots.add(0.0);
-            rootsMultiplicity.put(0.0, minExponent);
+            for(int i = 0 ; i < minExponent ; i++){
+                addRoot(0.0);
+            }
 
             currentRoot1 = 0.0;
             currentRootType = getMultiplicityName(minExponent);
@@ -372,15 +372,14 @@ public class FactoringManager {
 
             if(root1.equals(root2)){
                 currentRoot1 = root1;
-                roots.add(root1);
-                rootsMultiplicity.put(root1, 2);
+                // Agrego 2 veces la misma raíz, porque es doble
+                addRoot(root1);
+                addRoot(root1);
             }else{
                 currentRoot1 = root1;
                 currentRoot2 = root2;
-                roots.add(root1);
-                rootsMultiplicity.put(root1, 1);
-                roots.add(root2);
-                rootsMultiplicity.put(root2, 1);
+                addRoot(root1);
+                addRoot(root2);
             }
         }
 
@@ -452,8 +451,7 @@ public class FactoringManager {
 
         // Genero la nueva raíz
 
-        roots.add(possibleRoot);
-        rootsMultiplicity.put(possibleRoot, 1);
+        addRoot(possibleRoot);
 
         currentRoot1 = possibleRoot;
         currentRootType = getMultiplicityName(1);
@@ -464,6 +462,17 @@ public class FactoringManager {
         polynomialTerms = new HashMap<>();
         for(int i = 0 ; i < quotient.size() - 1 ; i++){
             polynomialTerms.put(currentDegree--, quotient.get(i));
+        }
+    }
+
+    private static void addRoot(Double root){
+        if(roots.contains(root)){
+            Integer multiplicity = rootsMultiplicity.get(root);
+            rootsMultiplicity.remove(root);
+            rootsMultiplicity.put(root, multiplicity + 1);
+        }else{
+            roots.add(root);
+            rootsMultiplicity.put(root, 1);
         }
     }
 

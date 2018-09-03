@@ -400,7 +400,7 @@ public class FactoringManagerTest {
         terms.put(2, 4.0);
         FactoringManager.setPolynomialTerms(terms);
 
-        // Factorizo por cuadrática
+        // Factorizo por gauss
         FactoringManager.factorizeBy(FactoringManager.GAUSS);
 
         // Raíz: 1/2
@@ -429,7 +429,7 @@ public class FactoringManagerTest {
         terms.put(3, 1.0);
         FactoringManager.setPolynomialTerms(terms);
 
-        // Factorizo por cuadrática
+        // Factorizo por gauss
         FactoringManager.factorizeBy(FactoringManager.GAUSS);
 
         // Raiz: -1
@@ -460,7 +460,7 @@ public class FactoringManagerTest {
         terms.put(3, 1.0);
         FactoringManager.setPolynomialTerms(terms);
 
-        // Factorizo por cuadrática
+        // Factorizo por gauss
         FactoringManager.factorizeBy(FactoringManager.GAUSS);
 
         // Raiz: -1
@@ -475,5 +475,38 @@ public class FactoringManagerTest {
         // Se puede seguir factoreando
         Assert.assertFalse(FactoringManager.end);
     }
+
+    @Test
+    public void gaussSucesivoYNoSePuedeSeguirFactorizando() {
+        Map<Integer, Double> terms;
+
+        SolvePolynomialActivity context = new SolvePolynomialActivity();
+        FactoringManager.setContext(context);
+
+        // x^3+3x^2+3x+9
+        terms = new HashMap<>();
+        terms.put(0, 1.0);
+        terms.put(1, 3.0);
+        terms.put(2, 3.0);
+        terms.put(3, 1.0);
+        FactoringManager.setPolynomialTerms(terms);
+
+        // Factorizo por gauss
+        FactoringManager.factorizeBy(FactoringManager.GAUSS);
+        FactoringManager.factorizeBy(FactoringManager.GAUSS);
+
+        // Raiz: -1
+        Assert.assertEquals(1, FactoringManager.roots.size());
+        Assert.assertTrue(FactoringManager.roots.contains(-1.0));
+        Assert.assertEquals(3, FactoringManager.rootsMultiplicity.get(-1.0).intValue());
+
+        // Polinomio pendiente: x^2+2x+1
+        Assert.assertEquals(2, FactoringManager.polynomialTerms.size());
+        Assert.assertEquals("x+1", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
+
+        // Se puede seguir factoreando
+        Assert.assertTrue(FactoringManager.end);
+    }
+
 
 }
