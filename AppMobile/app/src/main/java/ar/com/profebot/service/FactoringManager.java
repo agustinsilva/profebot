@@ -102,6 +102,12 @@ public class FactoringManager {
             regularOption1 = GAUSS;
         }
 
+        // Si no hay término independiente, no se puede hacer Gauss
+        if(!hasIndependentTerm()){
+            regularOption1 = GAUSS.equals(regularOption1) ? null : GAUSS;
+            regularOption2 = GAUSS.equals(regularOption2) ? null : GAUSS;
+        }
+
         setFactors();
 
         return new MultipleChoiceStep(getEquation(), "", "", "", "",
@@ -332,7 +338,7 @@ public class FactoringManager {
             for(Integer exponent : polynomialTerms.keySet()){
                 polynomialTerms.put(exponent, polynomialTerms.get(exponent) / mainCoefficient);
             }
-            multiplier = mainCoefficient;
+            incrementMultiplier(mainCoefficient);
         }else{
             Integer minExponent = Collections.min(polynomialTerms.keySet());
 
@@ -381,13 +387,17 @@ public class FactoringManager {
         polynomialTerms = new HashMap<>();
         if(a != 1.0){
             // Cuando se factoriza cuadrática, el resultado es: a*(x-r1)(x-r2)
-            polynomialTerms.put(0, a);
+            incrementMultiplier(a);
         }
         end = true;
     }
 
     private static void applyGauss(){
         if(hasIndependentTerm()){
+            if(getDegree() == 2){
+                incrementMultiplier(polynomialTerms.get(2));
+            }
+
             Double independentTerm = polynomialTerms.get(0);
             Double principalCoefficient = polynomialTerms.get(getDegree());
 
@@ -458,6 +468,10 @@ public class FactoringManager {
         for(int i = 0 ; i < quotient.size() - 1 ; i++){
             polynomialTerms.put(currentDegree--, quotient.get(i));
         }
+    }
+
+    private static void incrementMultiplier(Double newMultiplier){
+        multiplier *= newMultiplier;
     }
 
     private static void addRoot(Double root){

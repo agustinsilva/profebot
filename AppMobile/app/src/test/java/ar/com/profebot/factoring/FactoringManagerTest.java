@@ -584,7 +584,7 @@ public class FactoringManagerTest {
         SolvePolynomialActivity context = new SolvePolynomialActivity();
         FactoringManager.setContext(context);
 
-        // x^4+5x^3+9x^2+7x+2
+        // x^5+5x^4+9x^3+7x^2+2x
         terms = new HashMap<>();
         terms.put(1, 2.0);
         terms.put(2, 7.0);
@@ -623,7 +623,7 @@ public class FactoringManagerTest {
         SolvePolynomialActivity context = new SolvePolynomialActivity();
         FactoringManager.setContext(context);
 
-        // x^4+5x^3+9x^2+7x+2
+        // 2x^5+10x^4+18x^3+14x^2+4x
         terms = new HashMap<>();
         terms.put(1, 4.0);
         terms.put(2, 14.0);
@@ -639,6 +639,7 @@ public class FactoringManagerTest {
         FactoringManager.factorizeBy(FactoringManager.GAUSS);
         FactoringManager.factorizeBy(FactoringManager.GAUSS);
         FactoringManager.factorizeBy(FactoringManager.CUADRATICA);
+        Assert.assertEquals(2, FactoringManager.multiplier.intValue());
 
         // Raiz: -1 triple, -2 simple y 0 simple
         Assert.assertEquals(3, FactoringManager.roots.size());
@@ -656,4 +657,47 @@ public class FactoringManagerTest {
         // Se puede seguir factoreando
         Assert.assertTrue(FactoringManager.end);
     }
+
+    @Test
+    public void factorComunCongaussSucesivoSinCuadratica() {
+        Map<Integer, Double> terms;
+
+        SolvePolynomialActivity context = new SolvePolynomialActivity();
+        FactoringManager.setContext(context);
+
+        // 2x^5+10x^4+18x^3+14x^2+4x
+        terms = new HashMap<>();
+        terms.put(1, 4.0);
+        terms.put(2, 14.0);
+        terms.put(3, 18.0);
+        terms.put(4, 10.0);
+        terms.put(5, 2.0);
+        FactoringManager.setPolynomialTerms(terms);
+
+        // Factorizo por gauss
+        FactoringManager.factorizeBy(FactoringManager.FACTOR_COMUN);
+        FactoringManager.factorizeBy(FactoringManager.FACTOR_COMUN);
+        FactoringManager.factorizeBy(FactoringManager.GAUSS);
+        FactoringManager.factorizeBy(FactoringManager.GAUSS);
+        FactoringManager.factorizeBy(FactoringManager.GAUSS);
+        Assert.assertEquals(2, FactoringManager.multiplier.intValue());
+
+        // Raiz: -1 triple, -2 simple y 0 simple
+        Assert.assertEquals(3, FactoringManager.roots.size());
+        Assert.assertTrue(FactoringManager.roots.contains(0.0));
+        Assert.assertTrue(FactoringManager.roots.contains(-1.0));
+        Assert.assertTrue(FactoringManager.roots.contains(-2.0));
+        Assert.assertEquals(1, FactoringManager.rootsMultiplicity.get(0.0).intValue());
+        Assert.assertEquals(3, FactoringManager.rootsMultiplicity.get(-1.0).intValue());
+        Assert.assertEquals(1, FactoringManager.rootsMultiplicity.get(-2.0).intValue());
+
+        // Polinomio pendiente:
+        Assert.assertEquals(2, FactoringManager.polynomialTerms.size());
+        Assert.assertEquals("x+2", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
+
+        // Se puede seguir factoreando
+        Assert.assertTrue(FactoringManager.end);
+    }
+
+
 }
