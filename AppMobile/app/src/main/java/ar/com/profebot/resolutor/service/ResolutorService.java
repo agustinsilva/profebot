@@ -1,11 +1,12 @@
 package ar.com.profebot.resolutor.service;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 import ar.com.profebot.Models.MultipleChoiceStep;
 import ar.com.profebot.parser.container.Tree;
@@ -15,21 +16,33 @@ import ar.com.profebot.parser.service.ParserService;
 import ar.com.profebot.resolutor.container.EquationStatus;
 import ar.com.profebot.resolutor.container.InvalidStep;
 import ar.com.profebot.resolutor.container.NodeStatus;
+import ar.com.profebot.resolutor.container.StepOptionInfo;
 import ar.com.profebot.resolutor.utils.TreeUtils;
+import ar.com.profebot.service.JustificationsService;
 
 public class ResolutorService {
 
     private SimplifyService simplifyService = new SimplifyService();
     private InvalidOptionService invalidOptionService = new InvalidOptionService();
 
-    public List<MultipleChoiceStep> resolveExpression(String expression) throws InvalidExpressionException {
-        return resolveExpression(expression, false);
+    public List<MultipleChoiceStep> resolveExpression(String expression, Context context) throws InvalidExpressionException {
+        return resolveExpression(expression, false, context);
     }
 
-    public List<MultipleChoiceStep> resolveExpression(String expression, Boolean debug) throws InvalidExpressionException {
-
+    public List<MultipleChoiceStep> resolveExpression(String expression, Boolean debug, Context context) throws InvalidExpressionException {
         Tree tree = (new ParserService()).parseExpression(expression);
+        return resolveExpression(tree, debug, context);
+    }
+
+    public List<MultipleChoiceStep> resolveExpression(Tree expressionTree, Context context) {
+        return resolveExpression(expressionTree, false, context);
+    }
+
+    public List<MultipleChoiceStep> resolveExpression(Tree tree, Boolean debug,  Context context) {
+
+
         List<EquationStatus> steps = stepThrough(tree, debug);
+
 
         List<MultipleChoiceStep> result = new ArrayList<>();
         for(EquationStatus e: steps){
@@ -38,31 +51,67 @@ public class ResolutorService {
 
             String equationBase = originalEquation.toExpression();
             String newEquationBase = e.getNewEquation().toExpression();
-            String summary = "-";
 
-            // TODO Randomizar las opciones
+            // Posiciones random de opciones
+            StepOptionInfo[] stepOptionInfo = new StepOptionInfo[3];
+            Integer correctOptionIndex = ThreadLocalRandom.current().nextInt(0, 3);
+            Integer incorrectOptionIndex1;
+            Integer incorrectOptionIndex2;
+            if (correctOptionIndex.equals(0)){
+                incorrectOptionIndex1 = 1;
+                incorrectOptionIndex2 = 2;
+            }else if (correctOptionIndex.equals(1)){
+                incorrectOptionIndex1 = 0;
+                incorrectOptionIndex2 = 2;
+            }else{
+                incorrectOptionIndex1 = 1;
+                incorrectOptionIndex2 = 2;
+            }
 
             // Opción correcta
-            Integer correctOption = 1;
-            String optionA = newEquationBase;
-            String equationOptionA = "";
-            String correctOptionJustification = e.getUIDescription();
+            Map<String, String> justifications = JustificationsService.getCorrectJustificationsFrom(e.getChangeType(), context);
+            String summary = justifications.get("summary");
+            stepOptionInfo[correctOptionIndex] = new StepOptionInfo(justifications.get("option"),
+                    newEquationBase,
+                    justifications.get("correctOptionJustification"));
 
             // Opción incorrecta 1
             InvalidStep invalidStep = invalidOptionService.getFirstInvalidOption(originalEquation);
-            String optionB = invalidStep.getTree().toExpression();
-            String equationOptionB = "";
-            String incorrectOptionJustification1 = invalidStep.getUIDescription();
+            justifications = JustificationsService.getIncorrectJustificationsFrom(invalidStep.getType(), context);
+            stepOptionInfo[incorrectOptionIndex1] = new StepOptionInfo(justifications.get("option"),
+                    invalidStep.getTree().toExpression(),
+                    justifications.get("incorrectOptionJustification"));
 
             // Opción incorrecta 2
             invalidStep = invalidOptionService.getSecondInvalidOption(originalEquation);
-            String optionC = invalidStep.getTree().toExpression();
-            String equationOptionC = "";
-            String incorrectOptionJustification2 = invalidStep.getUIDescription();
+            justifications = JustificationsService.getIncorrectJustificationsFrom(invalidStep.getType(), context);
+            stepOptionInfo[incorrectOptionIndex2] = new StepOptionInfo(justifications.get("option"),
+                    invalidStep.getTree().toExpression(),
+                    justifications.get("incorrectOptionJustification"));
+
+
+            // Valores finales para el front
+            // Opcion A
+            int optionIndex = 0;
+            String optionA =  stepOptionInfo[optionIndex].getOptionText();
+            String equationOptionA = stepOptionInfo[optionIndex].getEquationText();
+            String correctOptionJustification = stepOptionInfo[optionIndex].getJustificationText();
+
+            // Opción B
+            optionIndex++;
+            String optionB = stepOptionInfo[optionIndex].getOptionText();
+            String equationOptionB = stepOptionInfo[optionIndex].getEquationText();
+            String incorrectOptionJustification1 =  stepOptionInfo[optionIndex].getJustificationText();
+
+            // Opción C
+            optionIndex++;
+            String optionC = stepOptionInfo[optionIndex].getOptionText();
+            String equationOptionC = stepOptionInfo[optionIndex].getEquationText();
+            String incorrectOptionJustification2 = stepOptionInfo[optionIndex].getJustificationText();
 
             MultipleChoiceStep multipleChoiceStep = new MultipleChoiceStep(equationBase,
                     newEquationBase, summary, optionA, equationOptionA,
-                    optionB, equationOptionB, optionC, equationOptionC, correctOption,
+                    optionB, equationOptionB, optionC, equationOptionC, (correctOptionIndex + 1),
                     correctOptionJustification, incorrectOptionJustification1, incorrectOptionJustification2);
             result.add(multipleChoiceStep);
         }

@@ -1,23 +1,85 @@
 package ar.com.profebot.service;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import com.profebot.activities.R;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import ar.com.profebot.intelligent.module.IAModuleClient;
-import ar.com.profebot.parser.container.Tree;
-import ar.com.profebot.parser.exception.InvalidExpressionException;
-import ar.com.profebot.parser.service.ParserService;
+import ar.com.profebot.resolutor.container.InvalidStep;
+
 import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes;
-import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.*;
-import de.uni_bielefeld.cebitec.mzurowie.pretty_formula.main.FormulaParser;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.ABSOLUTE_VALUE;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.ADD_COEFFICIENT_OF_ONE;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.ADD_EXPONENT_OF_ONE;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.ADD_FRACTIONS;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.ADD_NTH_ROOTS;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.ADD_NUMERATORS;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.ADD_POLYNOMIAL_TERMS;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.ADD_TO_BOTH_SIDES;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.BREAK_UP_FRACTION;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.CANCEL_EXPONENT;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.CANCEL_EXPONENT_AND_ROOT;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.CANCEL_MINUSES;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.CANCEL_ROOT;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.CANCEL_TERMS;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.COLLECT_AND_COMBINE_LIKE_TERMS;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.COLLECT_CONSTANT_EXPONENTS;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.COLLECT_LIKE_TERMS;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.COLLECT_POLYNOMIAL_EXPONENTS;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.COMBINE_NUMERATORS;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.COMBINE_UNDER_ROOT;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.COMMON_DENOMINATOR;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.CONVERT_INTEGER_TO_FRACTION;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.CONVERT_MULTIPLICATION_TO_EXPONENT;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.DISTRIBUTE;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.DISTRIBUTE_NEGATIVE_ONE;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.DISTRIBUTE_NTH_ROOT;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.DIVIDE_FRACTION_FOR_ADDITION;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.DIVIDE_FROM_BOTH_SIDES;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.DIVISION_BY_NEGATIVE_ONE;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.EVALUATE_DISTRIBUTED_NTH_ROOT;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.EXPAND_EXPONENT;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.FACTOR_DIFFERENCE_OF_SQUARES;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.FACTOR_INTO_PRIMES;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.FACTOR_PERFECT_SQUARE;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.FACTOR_SUM_PRODUCT_RULE;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.FACTOR_SYMBOL;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.FIND_ROOTS;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.GROUP_COEFFICIENTS;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.MULTIPLY_BOTH_SIDES_BY_INVERSE_FRACTION;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.MULTIPLY_BOTH_SIDES_BY_NEGATIVE_ONE;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.MULTIPLY_BY_INVERSE;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.MULTIPLY_BY_ZERO;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.MULTIPLY_COEFFICIENTS;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.MULTIPLY_DENOMINATORS;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.MULTIPLY_FRACTIONS;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.MULTIPLY_NTH_ROOTS;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.MULTIPLY_NUMERATORS;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.MULTIPLY_POLYNOMIAL_TERMS;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.MULTIPLY_TO_BOTH_SIDES;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.NTH_ROOT_VALUE;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.REARRANGE_COEFF;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.REDUCE_EXPONENT_BY_ZERO;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.REDUCE_ZERO_NUMERATOR;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.REMOVE_ADDING_ZERO;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.REMOVE_EXPONENT_BASE_ONE;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.REMOVE_EXPONENT_BY_ONE;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.REMOVE_MULTIPLYING_BY_NEGATIVE_ONE;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.REMOVE_MULTIPLYING_BY_ONE;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.RESOLVE_DOUBLE_MINUS;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.SIMPLIFY_ARITHMETIC;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.SIMPLIFY_DIVISION;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.SIMPLIFY_FRACTION;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.SIMPLIFY_LEFT_SIDE;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.SIMPLIFY_RIGHT_SIDE;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.SIMPLIFY_SIGNS;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.SIMPLIFY_TERMS;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.STATEMENT_IS_FALSE;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.STATEMENT_IS_TRUE;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.SUBTRACT_FROM_BOTH_SIDES;
+import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes.UNARY_MINUS_TO_NEGATIVE_ONE;
 
 public class JustificationsService {
 
@@ -173,8 +235,6 @@ public class JustificationsService {
                     R.string.SIMPLIFY_SIGNS_JUSTIFICATION,
                     R.string.SIMPLIFY_SIGNS_SUMMARY);
         }
-
-        // TODO: pending: FIND_GCD, CANCEL_GCD, CONVERT_MIXED_NUMBER_TO_IMPROPER_FRACTION, IMPROPER_FRACTION_NUMERATOR, COMBINE_NUMERATORS
 
         if(source.getDescrip().equals(ADD_FRACTIONS.getDescrip())
                 || source.getDescrip().equals(ADD_NUMERATORS.getDescrip())
@@ -425,6 +485,86 @@ public class JustificationsService {
         justifications.put("option", context.getString(optionId));
         justifications.put("correctOptionJustification", context.getString(justificationId));
         justifications.put("summary", context.getString(summaryId));
+        return justifications;
+    }
+
+    public static Map<String, String> getIncorrectJustificationsFrom(InvalidStep.InvalidTypes source, Context context) {
+
+        switch(source){
+
+            case PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_SUMA_COMO_SUMA:
+                break;
+            case PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RESTA_COMO_RESTA:
+                break;
+            case PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_MULTIPLICACION_COMO_MULTIPLICACION:
+                break;
+            case PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_DIVISION_COMO_DIVISION:
+                break;
+            case PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_POTENCIA_COMO_POTENCIA:
+                break;
+            case PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RAIZ_COMO_RAIZ:
+                break;
+            case PASAJE_TERMINO_DE_MULTIPLICACION_COMO_DIVISION_SIENDO_TERMINO_DE_SUMATORIA:
+                break;
+            case PASAJE_TERMINO_DE_DIVISION_COMO_MULTIPLICACION_SIENDO_TERMINO_DE_SUMATORIA:
+                break;
+            case PASAJE_TERMINO_DE_SUMA_COMO_RESTA_SIENDO_TERMINO_MUTIPLICATIVO:
+                break;
+            case PASAJE_TERMINO_DE_RESTA_COMO_SUMA_SIENDO_TERMINO_MUTIPLICATIVO:
+                return createIncorrectTextsFrom(context,
+                        R.string.FACTOR_SUM_PRODUCT_RULE_OPTION,
+                        R.string.FACTOR_SUM_PRODUCT_RULE_JUSTIFICATION);
+
+            case PASAJE_TERMINO_DE_RAIZ_COMO_POTENCIA:
+                break;
+            case PASAJE_TERMINO_DE_POTENCIA_COMO_RAIZ:
+                break;
+            case PASAJE_DE_TERMINO_DE_DESCENDENCIA_SUMA_COMO_SUMA:
+                break;
+            case PASAJE_DE_TERMINO_DE_DESCENDENCIA_RESTA_COMO_RESTA:
+                break;
+            case PASAJE_DE_TERMINO_DE_DESCENDENCIA_MULTIPLICACION_COMO_MULTIPLICACION:
+                break;
+            case PASAJE_DE_TERMINO_DE_DESCENDENCIA_DIVISION_COMO_DIVISION:
+                break;
+            case PASAJE_DE_TERMINO_DE_DESCENDENCIA_POTENCIA_COMO_POTENCIA:
+                break;
+            case PASAJE_DE_TERMINO_DE_DESCENDENCIA_RAIZ_COMO_RAIZ:
+                break;
+            case SUMA_RESUELTA_INCORRECTAMENTE:
+                break;
+            case RESTA_RESUELTA_INCORRECTAMENTE:
+                break;
+            case MULTIPLICACION_RESUELTA_INCORRECTAMENTE:
+                break;
+            case DIVISION_RESUELTA_INCORRECTAMENTE:
+                break;
+            case POTENCIA_RESUELTA_INCORRECTAMENTE:
+                break;
+            case RAIZ_RESUELTA_INCORRECTAMENTE:
+                break;
+            case DISTRIBUTIVA_BASICA_MAL_RESUELTA:
+                break;
+            case DISTRIBUTIVA_DOBLE_MAL_RESUELTA:
+                break;
+            case ASOCIATIVA_MAL_RESUELTA:
+                break;
+            case DISTRIBUTIVA_DE_POTENCIA_SOBRE_BINOMIO:
+                break;
+            case CONSTANTE_NO_ENCONTRADA:
+                break;
+        }
+
+        // TODO crear getIncorrectJustificationsFrom
+        return createIncorrectTextsFrom(context,
+                R.string.FACTOR_SUM_PRODUCT_RULE_OPTION,
+                R.string.FACTOR_SUM_PRODUCT_RULE_JUSTIFICATION);
+    }
+
+    private static Map<String, String> createIncorrectTextsFrom(Context context, int optionId, int justificationId){
+        Map<String, String> justifications = new HashMap<>();
+        justifications.put("option", context.getString(optionId));
+        justifications.put("incorrectOptionJustification", context.getString(justificationId));
         return justifications;
     }
 }

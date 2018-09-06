@@ -383,6 +383,8 @@ public class TreeNode {
             return getLeftNode().getIntegerValue() - getRightNode().getIntegerValue();
         }else if (esPotencia()){
             return (int)Math.pow((double)getLeftNode().getIntegerValue(), (double)getRightNode().getIntegerValue());
+        }else if (esRaiz()){
+            return (int)Math.sqrt((double)getRightNode().getIntegerValue());
         }else if (isParenthesis()){
             return this.getChild(0).getOperationResult();
         }else if (isUnaryMinus()){
@@ -561,4 +563,11 @@ public class TreeNode {
         return childIndex;
     }
 
+    public void setParentNode(TreeNode parentNode) {
+        this.parentNode = parentNode;
+    }
+
+    public void setChildIndex(Integer childIndex) {
+        this.childIndex = childIndex;
+    }
 }

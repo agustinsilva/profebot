@@ -110,8 +110,4 @@ public class EquationStatus {
                 '}';
     }
 
-    public String getUIDescription() {
-        // TODO Generar la prosa dado el tipo de cambio
-        return "Pendiente";
-    }
 }
