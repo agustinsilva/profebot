@@ -16,7 +16,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_profebot_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:largeHeap="true">
         <activity
             android:name="ar.com.profebot.activities.MainActivity"
             android:screenOrientation="portrait">
@@ -42,8 +43,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name="ar.com.profebot.activities.PendingExercisesActivity" />
-        <activity android:name="ar.com.profebot.activities.EnterPolinomialActivity"
-            android:windowSoftInputMode="stateAlwaysVisible" ></activity>
+        <activity android:name="ar.com.profebot.activities.EnterPolinomialActivity" android:windowSoftInputMode="stateAlwaysVisible"  android:screenOrientation="portrait"></activity>
         <activity android:name="ar.com.profebot.activities.EnterPolinomialEquationOptionsActivity" />
         <activity android:name="ar.com.profebot.activities.SolvePolynomialActivity" android:screenOrientation="portrait"/>
     </application>
