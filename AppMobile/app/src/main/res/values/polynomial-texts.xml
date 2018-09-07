@@ -21,4 +21,7 @@
 
     <string name="FACTOR_COMUN_NO_ES_CORRECTO">No se puede aplicar factor común, dado que no en todos los términos hay variables.</string>
     <string name="CUADRATICA_NO_ES_CORRECTO">No se puede aplicar la fórmula cuadrática porque el polinomio no es de grado 2.</string>
+    <string name="GAUSS_NO_ES_CORRECTO">No se puede aplicar el método de gauss cuando el polinomio no tiene término independiente. Tampoco es aplicable cuando el polinomio es de grado 1.</string>
+
+    <string name="RAIZ_EXTRA">También se encontró la raíz /raiz/.</string>
 </resources>

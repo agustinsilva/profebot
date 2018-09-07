@@ -2,6 +2,8 @@ package ar.com.profebot.service;
 
 import com.profebot.activities.R;
 
+import org.apache.xerces.impl.xpath.regex.RegularExpression;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -18,6 +20,10 @@ public class FactoringManager {
     public static final Integer FACTOR_COMUN = 1;
     public static final Integer CUADRATICA = 2;
     public static final Integer GAUSS = 3;
+
+    public static final String CORRECT_OPTION = "correctOption";
+    public static final String REGULAR_OPTION_1 = "regularOption1";
+    public static final String REGULAR_OPTION_2 = "regularOption2";
 
     // (exponente, coeficiente)
     public static Map<Integer, Double> polynomialTerms;
@@ -53,14 +59,27 @@ public class FactoringManager {
     }
 
     public static MultipleChoiceStep nextStep(){
-        // Veo qué casos son posibles
+        Map<String, Integer> cases = getNextPossibleCases();
+        setFactors();
 
+        return new MultipleChoiceStep(getEquation(), "", "", "", "",
+                context.getString(R.string.FACTOR_COMUN), "",
+                context.getString(R.string.CUADRATICA), "",
+                context.getString(R.string.GAUSS), "",
+                cases.get("correctOption"), cases.get("regularOption1"), cases.get("regularOption2"), "","",
+                "" );
+    }
+
+    public static Map<String, Integer> getNextPossibleCases(){
+        // Veo qué casos son posibles
+        Map<String, Integer> result = new HashMap<>();
         Boolean factorComunIsPossible = commonFactorIsPossible();
         Boolean quadraticIsPossible= quadraticIsPossible();
+        Boolean gaussIsPossible= gaussIsPossible();
 
         // Fomulo opciones correctas, regulares e incorrectas
 
-        Integer correctOption;
+        Integer correctOption = null;
         Integer regularOption1 = null;
         Integer regularOption2 = null;
 
@@ -70,35 +89,35 @@ public class FactoringManager {
          * gauss: 3
          */
 
-        if(!factorComunIsPossible && !quadraticIsPossible){
-            correctOption = GAUSS;
-        }else if (factorComunIsPossible){
-            correctOption = FACTOR_COMUN;
-            if(quadraticIsPossible){
-                regularOption1 = CUADRATICA;
-                regularOption2 = GAUSS;
-            }else if(getDegree() > 2){ // No se puede cuadrática porque el grado es > 2
-                regularOption1 = GAUSS;
+        if(!polynomialTerms.isEmpty()){
+            Integer degree = getDegree();
+            Boolean hasIndependentTerm = hasIndependentTerm();
+            if(!factorComunIsPossible && !quadraticIsPossible){
+                if(gaussIsPossible){
+                    correctOption = GAUSS;
+                }
+            }else if (factorComunIsPossible){
+                correctOption = FACTOR_COMUN;
+                if(quadraticIsPossible){
+                    regularOption1 = CUADRATICA;
+                    if(hasIndependentTerm){
+                        regularOption2 = GAUSS;
+                    }
+                }else if(degree > 2 && hasIndependentTerm){ // No se puede cuadrática porque el grado es != 2
+                    regularOption1 = GAUSS;
+                }
+            }else{
+                correctOption = CUADRATICA;
+                if(hasIndependentTerm){
+                    regularOption1 = GAUSS;
+                }
             }
-        }else{
-            correctOption = CUADRATICA;
-            regularOption1 = GAUSS;
         }
 
-        // Si no hay término independiente, no se puede hacer Gauss
-        if(!hasIndependentTerm()){
-            regularOption1 = GAUSS.equals(regularOption1) ? null : GAUSS;
-            regularOption2 = GAUSS.equals(regularOption2) ? null : GAUSS;
-        }
-
-        setFactors();
-
-        return new MultipleChoiceStep(getEquation(), "", "", "", "",
-                context.getString(R.string.FACTOR_COMUN), "",
-                context.getString(R.string.CUADRATICA), "",
-                context.getString(R.string.GAUSS), "",
-                correctOption, regularOption1, regularOption2, "","",
-                "" );
+        result.put(CORRECT_OPTION, correctOption);
+        result.put(REGULAR_OPTION_1, regularOption1);
+        result.put(REGULAR_OPTION_2, regularOption2);
+        return result;
     }
 
     private static Boolean commonFactorIsPossible(){
@@ -124,6 +143,11 @@ public class FactoringManager {
             quadraticIsPossible = discriminant >= 0;
         }
         return quadraticIsPossible;
+    }
+
+    private static Boolean gaussIsPossible(){
+        Boolean existsTerms = !polynomialTerms.isEmpty();
+        return existsTerms && hasIndependentTerm() && (getDegree() > 2 || (getDegree() == 2 && quadraticIsPossible()));
     }
 
     public static String getEquation(){
@@ -302,7 +326,7 @@ public class FactoringManager {
         Boolean existsTerms = !polynomialTerms.isEmpty();
 
         Boolean quadraticIsPossible = quadraticIsPossible();
-        Boolean gaussIsPossible = existsTerms && hasIndependentTerm() && (getDegree() > 2 || (getDegree() == 2 && quadraticIsPossible));
+        Boolean gaussIsPossible = gaussIsPossible();
 
         if(!commonFactorIsPossible() && !quadraticIsPossible && !gaussIsPossible){
             end = true;
@@ -312,8 +336,12 @@ public class FactoringManager {
                     Double lastRoot = -1 * polynomialTerms.get(0);
                     addRoot(lastRoot);
                     incrementMultiplier(polynomialTerms.get(1));
-                    currentRoot1 = lastRoot;
-                    currentRootType = getMultiplicityName(1);
+                    if(currentRoot1 == null){
+                        currentRoot1 = lastRoot;
+                        currentRootType = getMultiplicityName(1);
+                    }else{
+                        currentRoot2 = lastRoot;
+                    }
                     polynomialTerms.clear();
                 }else if(!hasIndependentTerm()){ // Ejemplo: x^3
                     for(int i = 0 ; i < degree ; i++){
@@ -537,9 +565,15 @@ public class FactoringManager {
         switch (option){
             case 1:
                 answer = "" + context.getText(R.string.FACTOR_COMUN_ES_EL_CORRECTO);
-                return  answer
+                answer =  answer
                         .replace("/raiz/", "" + currentRoot1)
                         .replace("/tipo/", currentRootType);
+                if(currentRoot2 == null){
+                    return answer;
+                }
+
+                answer += " " + context.getText(R.string.RAIZ_EXTRA);
+                return answer.replace("/raiz/", "" + currentRoot2);
             case 2:
                 if(currentRoot2 == null){
                     answer = "" + context.getText(R.string.CUADRATICA_RAIZ_DOBLE_ES_EL_CORRECTO);
@@ -620,6 +654,8 @@ public class FactoringManager {
                 return "" + context.getText(R.string.FACTOR_COMUN_NO_ES_CORRECTO);
             case 2:
                 return "" + context.getText(R.string.CUADRATICA_NO_ES_CORRECTO);
+            case 3:
+                return "" + context.getText(R.string.GAUSS_NO_ES_CORRECTO);
             default:
                 return "";
         }
