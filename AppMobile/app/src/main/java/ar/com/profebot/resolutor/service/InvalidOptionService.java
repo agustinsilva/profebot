@@ -1,6 +1,7 @@
 package ar.com.profebot.resolutor.service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import ar.com.profebot.parser.container.Tree;
@@ -19,6 +20,7 @@ public class InvalidOptionService {
         InvalidStep.InvalidTypes type;
         // Clonado para evitar modificar el original
         Tree tree = originalTree.clone();
+        tree.generateTwoWayLinkedTree();
 
         //1. Elegir rama izquierda o derecha del árbol
         boolean equalsLeftBranch = true;
@@ -30,8 +32,21 @@ public class InvalidOptionService {
 
         //2. Elegir un nodo random del subarbol que sea NO TERMINAL
         //generar un valor random de iteraciones (nivel dentro del subarbol)
-        int nodeLevel = getRandomValue(0, tree.getDepth());
-        TreeNode randomNode = getRandomNonTerminalNode(node, nodeLevel);
+        TreeNode randomNode = getRandomNonTerminalNode(node);
+        if (randomNode == null){
+            if (equalsLeftBranch){
+                node = tree.getRightNode();
+                equalsLeftBranch = false;
+            }else{
+                node = tree.getLeftNode();
+                equalsLeftBranch = true;
+            }
+            randomNode = getRandomNonTerminalNode(node);
+        }
+
+        if (randomNode == null){return null;}
+
+        int nodeLevel = Tree.getNodeDepth(node);
 
         //3. Si el nodo elegido es hijo del signo Igual, pasar este nodo y su decendencia al otro miembro
         //4. Si el nodo elegido NO es hijo del signo Igual, validar niveles de sus ancestros
@@ -101,21 +116,34 @@ public class InvalidOptionService {
      * Iterar nodos: random izquierdo o derecho mientras que no sea nodo terminal.
      * Si es nodo terminal, elegir el padre. Si no, seguir iterando
      **/
-    private TreeNode getRandomNonTerminalNode(TreeNode treeNode, int nodeLevel) {
-        TreeNode randomNode = treeNode;
-        int i = 1;
-        while (i <= nodeLevel) {
-            if (chooseRightNode() && randomNode.getRightNode() != null) {
-                randomNode = randomNode.getRightNode();
-            } else if (randomNode.getLeftNode() != null) {
-                randomNode = randomNode.getLeftNode();
-            } else {  // es nodo TERMINAL
-                nodeLevel = i;
-                randomNode = randomNode.getParentNode();
+    private TreeNode getRandomNonTerminalNode(TreeNode treeNode) {
+
+        List<TreeNode> nonTerminalNodeList = getNonTerminalNodeList(treeNode);
+        if (nonTerminalNodeList.isEmpty()){return null;}
+        // Si hay 1 solo nodo, devuelvo eso
+        if (nonTerminalNodeList.size()==1){return nonTerminalNodeList.get(0);}
+
+        // Sino hago un random
+        return nonTerminalNodeList.get(getRandomValue(0, nonTerminalNodeList.size()));
+    }
+
+    private List<TreeNode> getNonTerminalNodeList(TreeNode node) {
+        List<TreeNode> list = new ArrayList<>();
+
+        if (node != null){
+            // No terminal
+            if (!TreeUtils.isConstant(node) && !TreeUtils.isSymbol(node)){
+                list.add(node);
+
+                if (node.getArgs()!=null){
+                    for(TreeNode child: node.getArgs()){
+                        list.addAll(getNonTerminalNodeList(child));
+                    }
+                }
             }
-            i++;
         }
-        return randomNode;
+
+        return list;
     }
 
     /**
@@ -203,6 +231,7 @@ public class InvalidOptionService {
         // Clonado para evitar modificar el original
         Tree tree = originalTree.clone();
         InvalidStep.InvalidTypes type = null;
+        tree.generateTwoWayLinkedTree();
         //1. Elegir rama izquierda o derecha del árbol
         // (dejo que revise el arbol entero, y de ahi decida que paso tomar)
 
@@ -210,7 +239,11 @@ public class InvalidOptionService {
 
         //2. Analizar los posibles subarboles reducibles y guardarlos en la lista
         ArrayList<Reduction> reducibles = getReduciblesList(tree.getRootNode()); // Itera sobre todos los nodos recursivamente
-
+        if (reducibles.isEmpty()){
+            // Este caso implica que no hay constantes reducibles
+            // TODO agregar casos comodines
+            return new InvalidStep(InvalidStep.InvalidTypes.ASOCIATIVA_MAL_RESUELTA, tree);
+        }
         //3. Elegir uno de forma random y hacer la reduccion
         Reduction selectedReduction = reducibles.get(getRandomValue(0, reducibles.size()));
         Tree reducedTree = resolveExpression(selectedReduction);
@@ -314,6 +347,9 @@ public class InvalidOptionService {
                 reducedNode = resolveBinomialPower(reduction.getTreeNode());
                 break;
         }
+
+        // Se asigna al padre el mismo, sino sigue apuntando al otro nodo
+        reducedNode.getParentNode().setChild(reducedNode.getChildIndex(),reducedNode );
 
         // El arbol se regenera a partir del nodo
         return getTreeFromTreeNode(reducedNode);

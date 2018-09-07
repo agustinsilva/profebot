@@ -65,7 +65,7 @@ public class Tree {
         return getNodeDepth(getRootNode());
     }
 
-    private int getNodeDepth(TreeNode node) {
+    public static int getNodeDepth(TreeNode node) {
 
         if (node == null){return 0;}
 

@@ -1218,8 +1218,15 @@ public class TreeUtils {
     }
 
     public static boolean haveSameOperatorLevelCode(TreeNode treeNodeA, TreeNode treeNodeB) {
-        return (OperatorLevel.getBySimbol(treeNodeA.getValue()).getCode() ==
-                OperatorLevel.getBySimbol(treeNodeB.getValue()).getCode());
+
+        if (treeNodeA == null || treeNodeB == null){return false;}
+
+        OperatorLevel operatorLevelA = OperatorLevel.getBySimbol(treeNodeA.getValue());
+        OperatorLevel operatorLevelB = OperatorLevel.getBySimbol(treeNodeB.getValue());
+
+        if (operatorLevelA == null || operatorLevelB == null){return false;}
+
+        return operatorLevelA.getCode().equals(operatorLevelB.getCode());
     }
 
     public static boolean hasDifferentLevelAncestors(TreeNode treeNode) {
