@@ -699,5 +699,58 @@ public class FactoringManagerTest {
         Assert.assertTrue(FactoringManager.end);
     }
 
+    @Test
+    public void noSePuedeFactorearCuandoElPolinomioTieneUnSoloTermino() {
+        Map<Integer, Double> terms;
 
+        SolvePolynomialActivity context = new SolvePolynomialActivity();
+        FactoringManager.setContext(context);
+
+        // 4x^3
+        terms = new HashMap<>();
+        terms.put(3, 4.0);
+        FactoringManager.setPolynomialTerms(terms);
+
+        // Raiz: 0 triple
+        Assert.assertEquals(1, FactoringManager.roots.size());
+        Assert.assertTrue(FactoringManager.roots.contains(0.0));
+        Assert.assertEquals(3, FactoringManager.rootsMultiplicity.get(0.0).intValue());
+
+        // Polinomio pendiente:
+        Assert.assertEquals(1, FactoringManager.polynomialTerms.size());
+        Assert.assertEquals("4*x^3", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
+
+        // Se puede seguir factoreando
+        Assert.assertTrue(FactoringManager.end);
+    }
+
+    @Test
+    public void noSePuedeFactorearCuandoElPolinomioYaEstáTotalmenteFactorizado() {
+        Map<Integer, Double> terms;
+
+        SolvePolynomialActivity context = new SolvePolynomialActivity();
+        FactoringManager.setContext(context);
+
+        // 4x^3
+        terms = new HashMap<>();
+        terms.put(3, 4.0);
+        FactoringManager.setPolynomialTerms(terms);
+
+        // Intento facorizar un polinomio que ya está totalmente factorizado
+        FactoringManager.factorizeBy(FactoringManager.FACTOR_COMUN);
+        FactoringManager.factorizeBy(FactoringManager.CUADRATICA);
+        FactoringManager.factorizeBy(FactoringManager.GAUSS);
+
+        // Raiz: 0 triple
+        Assert.assertEquals(1, FactoringManager.roots.size());
+        Assert.assertTrue(FactoringManager.roots.contains(0.0));
+        Assert.assertEquals(3, FactoringManager.rootsMultiplicity.get(0.0).intValue());
+
+        // Polinomio pendiente:
+        Assert.assertEquals(1, FactoringManager.polynomialTerms.size());
+        Assert.assertEquals("4*x^3", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
+
+        // Se puede seguir factoreando
+        Assert.assertTrue(FactoringManager.end);
+    }
 }

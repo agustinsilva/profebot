@@ -119,16 +119,14 @@ public class FactoringManager {
     }
 
     private static Boolean commonFactorIsPossible(){
-        Boolean factorComunIsPossible = true;
-        if(!polynomialTerms.isEmpty() && polynomialTerms.get(getDegree()) == 1){ // Factor común numérico
-            for(Integer exponent : polynomialTerms.keySet()){
-                if(exponent <= 1){
-                    factorComunIsPossible = false;
-                    break;
-                }
-            }
+        if(polynomialTerms.size() == 1){
+            return false;
         }
-        return factorComunIsPossible;
+
+        Boolean numericCommonFactor = !polynomialTerms.isEmpty() && polynomialTerms.get(getDegree()) != 1;
+        Boolean variableCommonFactor = !hasIndependentTerm();
+
+        return numericCommonFactor || variableCommonFactor;
     }
 
     public static String getEquation(){
@@ -275,21 +273,23 @@ public class FactoringManager {
     }
 
     public static void factorizeBy(Integer option){
-        initializeVariables();
-        switch (option){
-            case 1:
-                applyCommonFactor();
-                break;
-            case 2:
-                applyQuadratic();
-                break;
-            default:
-                applyGauss();
+        if(!end){
+            initializeVariables();
+            switch (option){
+                case 1:
+                    applyCommonFactor();
+                    break;
+                case 2:
+                    applyQuadratic();
+                    break;
+                default:
+                    applyGauss();
+            }
+
+            deleteNullTerms();
+
+            tryToFinishingExercise();
         }
-
-        deleteNullTerms();
-
-        tryToFinishingExercise();
     }
 
     private static void deleteNullTerms(){
@@ -314,13 +314,18 @@ public class FactoringManager {
             quadraticIsPossible = discriminant >= 0;
         }
 
-        Boolean gaussIsPossible = existsTerms && (getDegree() > 2 || (getDegree() == 2 && quadraticIsPossible));
+        Boolean gaussIsPossible = existsTerms && hasIndependentTerm() && (getDegree() > 2 || (getDegree() == 2 && quadraticIsPossible));
 
         if(!commonFactorIsPossible() && !quadraticIsPossible && !gaussIsPossible){
             end = true;
-            if(existsTerms && getDegree() <= 1){
-                Double lastRoot = polynomialTerms.containsKey(0) ? -1 * polynomialTerms.get(0) : 0;
-                addRoot(lastRoot);
+            if(existsTerms){
+                if(hasIndependentTerm() && getDegree() <= 1){
+                    addRoot(-1 * polynomialTerms.get(0));
+                }else if(!hasIndependentTerm()){ // Ejemplo: x^3
+                    for(int i = 0 ; i < getDegree() ; i++){
+                        addRoot(0.0);
+                    }
+                }
             }
         }
     }
@@ -464,7 +469,7 @@ public class FactoringManager {
         // Genero el nuevo polinomio a factorizar
 
         Integer currentDegree = getDegree() - 1;
-        polynomialTerms = new HashMap<>();
+        polynomialTerms.clear();
         for(int i = 0 ; i < quotient.size() - 1 ; i++){
             polynomialTerms.put(currentDegree--, quotient.get(i));
         }
