@@ -124,11 +124,9 @@ public class FactoringManagerTest {
         Assert.assertTrue(FactoringManager.roots.contains(-0.5));
         Assert.assertEquals(1, FactoringManager.rootsMultiplicity.get(-0.5), 0.1);
 
-        // Polinomio pendiente: 4(x+1/2)
-        Assert.assertEquals(2, FactoringManager.polynomialTerms.size());
-        Assert.assertEquals(1, FactoringManager.polynomialTerms.get(1).intValue());
-        Assert.assertEquals(0.5, FactoringManager.polynomialTerms.get(0), 0.1);
-        Assert.assertEquals("x+0.5", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
+        // No hay polinomio pendiente
+        Assert.assertEquals(0, FactoringManager.polynomialTerms.size());
+        Assert.assertEquals("", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
 
         // No más factoreo posible
         Assert.assertTrue(FactoringManager.end);
@@ -158,11 +156,9 @@ public class FactoringManagerTest {
         Assert.assertEquals(1, FactoringManager.rootsMultiplicity.get(0.0).intValue());
         Assert.assertEquals(1, FactoringManager.rootsMultiplicity.get(-2.0).intValue());
 
-        // Polinomio pendiente: x+2
-        Assert.assertEquals(2, FactoringManager.polynomialTerms.size());
-        Assert.assertEquals(1, FactoringManager.polynomialTerms.get(1).intValue());
-        Assert.assertEquals(2, FactoringManager.polynomialTerms.get(0).intValue());
-        Assert.assertEquals("x+2", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
+        // No hay polinomio pendiente
+        Assert.assertEquals(0, FactoringManager.polynomialTerms.size());
+        Assert.assertEquals("", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
 
         // No más factoreo posible
         Assert.assertTrue(FactoringManager.end);
@@ -223,11 +219,9 @@ public class FactoringManagerTest {
         Assert.assertEquals(2, FactoringManager.rootsMultiplicity.get(0.0).intValue());
         Assert.assertEquals(1, FactoringManager.rootsMultiplicity.get(-4.0).intValue());
 
-        // Polinomio pendiente: x+2
-        Assert.assertEquals(2, FactoringManager.polynomialTerms.size());
-        Assert.assertEquals(1, FactoringManager.polynomialTerms.get(1).intValue());
-        Assert.assertEquals(4, FactoringManager.polynomialTerms.get(0).intValue());
-        Assert.assertEquals("x+4", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
+        // No hay polinomio pendiente
+        Assert.assertEquals(0, FactoringManager.polynomialTerms.size());
+        Assert.assertEquals("", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
 
         // No más factoreo posible
         Assert.assertTrue(FactoringManager.end);
@@ -500,9 +494,9 @@ public class FactoringManagerTest {
         Assert.assertTrue(FactoringManager.roots.contains(-1.0));
         Assert.assertEquals(3, FactoringManager.rootsMultiplicity.get(-1.0).intValue());
 
-        // Polinomio pendiente: x^2+2x+1
-        Assert.assertEquals(2, FactoringManager.polynomialTerms.size());
-        Assert.assertEquals("x+1", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
+        // No hay polinomio pendiente
+        Assert.assertEquals(0, FactoringManager.polynomialTerms.size());
+        Assert.assertEquals("", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
 
         // Se puede seguir factoreando
         Assert.assertTrue(FactoringManager.end);
@@ -691,9 +685,9 @@ public class FactoringManagerTest {
         Assert.assertEquals(3, FactoringManager.rootsMultiplicity.get(-1.0).intValue());
         Assert.assertEquals(1, FactoringManager.rootsMultiplicity.get(-2.0).intValue());
 
-        // Polinomio pendiente:
-        Assert.assertEquals(2, FactoringManager.polynomialTerms.size());
-        Assert.assertEquals("x+2", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
+        // No hay polinomio pendiente
+        Assert.assertEquals(0, FactoringManager.polynomialTerms.size());
+        Assert.assertEquals("", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
 
         // Se puede seguir factoreando
         Assert.assertTrue(FactoringManager.end);
@@ -715,10 +709,11 @@ public class FactoringManagerTest {
         Assert.assertEquals(1, FactoringManager.roots.size());
         Assert.assertTrue(FactoringManager.roots.contains(0.0));
         Assert.assertEquals(3, FactoringManager.rootsMultiplicity.get(0.0).intValue());
+        Assert.assertEquals(4, FactoringManager.multiplier.intValue());
 
         // Polinomio pendiente:
-        Assert.assertEquals(1, FactoringManager.polynomialTerms.size());
-        Assert.assertEquals("4*x^3", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
+        Assert.assertEquals(0, FactoringManager.polynomialTerms.size());
+        Assert.assertEquals("", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
 
         // Se puede seguir factoreando
         Assert.assertTrue(FactoringManager.end);
@@ -745,10 +740,11 @@ public class FactoringManagerTest {
         Assert.assertEquals(1, FactoringManager.roots.size());
         Assert.assertTrue(FactoringManager.roots.contains(0.0));
         Assert.assertEquals(3, FactoringManager.rootsMultiplicity.get(0.0).intValue());
+        Assert.assertEquals(4, FactoringManager.multiplier.intValue());
 
         // Polinomio pendiente:
-        Assert.assertEquals(1, FactoringManager.polynomialTerms.size());
-        Assert.assertEquals("4*x^3", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
+        Assert.assertEquals(0, FactoringManager.polynomialTerms.size());
+        Assert.assertEquals("", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
 
         // Se puede seguir factoreando
         Assert.assertTrue(FactoringManager.end);

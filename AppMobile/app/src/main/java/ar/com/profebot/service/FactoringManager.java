@@ -53,27 +53,10 @@ public class FactoringManager {
     }
 
     public static MultipleChoiceStep nextStep(){
-        Boolean factorComunIsPossible = true;
-        Boolean cuadraticIsPossible = true;
-
         // Veo qué casos son posibles
 
-        factorComunIsPossible = commonFactorIsPossible();
-
-        Boolean anyExponentIs2 = false;
-        Boolean firstTime = true;
-        for(Integer exponent : polynomialTerms.keySet()){
-            if(firstTime && exponent == 2){
-                anyExponentIs2 = true;
-                firstTime = false;
-            }
-
-            if(exponent > 2){
-                cuadraticIsPossible = false;
-                break;
-            }
-        }
-        cuadraticIsPossible = cuadraticIsPossible && anyExponentIs2;
+        Boolean factorComunIsPossible = commonFactorIsPossible();
+        Boolean quadraticIsPossible= quadraticIsPossible();
 
         // Fomulo opciones correctas, regulares e incorrectas
 
@@ -87,14 +70,14 @@ public class FactoringManager {
          * gauss: 3
          */
 
-        if(!factorComunIsPossible && !cuadraticIsPossible){
+        if(!factorComunIsPossible && !quadraticIsPossible){
             correctOption = GAUSS;
         }else if (factorComunIsPossible){
             correctOption = FACTOR_COMUN;
-            if(cuadraticIsPossible){
+            if(quadraticIsPossible){
                 regularOption1 = CUADRATICA;
                 regularOption2 = GAUSS;
-            }else{
+            }else if(getDegree() > 2){ // No se puede cuadrática porque el grado es > 2
                 regularOption1 = GAUSS;
             }
         }else{
@@ -127,6 +110,20 @@ public class FactoringManager {
         Boolean variableCommonFactor = !hasIndependentTerm();
 
         return numericCommonFactor || variableCommonFactor;
+    }
+
+    private static Boolean quadraticIsPossible(){
+        Boolean quadraticIsPossible = false;
+        Boolean existsTerms = !polynomialTerms.isEmpty();
+        if(existsTerms && getDegree() == 2){
+            Double a = polynomialTerms.containsKey(2) ? polynomialTerms.get(2) : 0.0;
+            Double b = polynomialTerms.containsKey(1) ? polynomialTerms.get(1) : 0.0;
+            Double c = polynomialTerms.containsKey(0) ? polynomialTerms.get(0) : 0.0;
+
+            Double discriminant = b * b - 4 * a * c;
+            quadraticIsPossible = discriminant >= 0;
+        }
+        return quadraticIsPossible;
     }
 
     public static String getEquation(){
@@ -176,7 +173,7 @@ public class FactoringManager {
             pendingPolynomialAux = firstSign + FormulaParser.parseToLatex(pendingPolynomialAux).replace("{a}_{1}", "x");
         }
 
-        return rootsFactorizedAux + pendingPolynomialAux;
+        return (multiplier != 1 ? multiplier + "*" : "") + rootsFactorizedAux + pendingPolynomialAux;
     }
 
     public static void setFactors(){
@@ -304,27 +301,28 @@ public class FactoringManager {
     private static void tryToFinishingExercise(){
         Boolean existsTerms = !polynomialTerms.isEmpty();
 
-        Boolean quadraticIsPossible = false;
-        if(existsTerms && getDegree() == 2){
-            Double a = polynomialTerms.containsKey(2) ? polynomialTerms.get(2) : 0.0;
-            Double b = polynomialTerms.containsKey(1) ? polynomialTerms.get(1) : 0.0;
-            Double c = polynomialTerms.containsKey(0) ? polynomialTerms.get(0) : 0.0;
-
-            Double discriminant = b * b - 4 * a * c;
-            quadraticIsPossible = discriminant >= 0;
-        }
-
+        Boolean quadraticIsPossible = quadraticIsPossible();
         Boolean gaussIsPossible = existsTerms && hasIndependentTerm() && (getDegree() > 2 || (getDegree() == 2 && quadraticIsPossible));
 
         if(!commonFactorIsPossible() && !quadraticIsPossible && !gaussIsPossible){
             end = true;
+            Integer degree = getDegree();
             if(existsTerms){
-                if(hasIndependentTerm() && getDegree() <= 1){
-                    addRoot(-1 * polynomialTerms.get(0));
+                if(hasIndependentTerm() && degree == 1){
+                    Double lastRoot = -1 * polynomialTerms.get(0);
+                    addRoot(lastRoot);
+                    incrementMultiplier(polynomialTerms.get(1));
+                    currentRoot1 = lastRoot;
+                    currentRootType = getMultiplicityName(1);
+                    polynomialTerms.clear();
                 }else if(!hasIndependentTerm()){ // Ejemplo: x^3
-                    for(int i = 0 ; i < getDegree() ; i++){
+                    for(int i = 0 ; i < degree ; i++){
                         addRoot(0.0);
                     }
+                    incrementMultiplier(polynomialTerms.get(degree));
+                    currentRoot1 = 0.0;
+                    currentRootType = getMultiplicityName(degree);
+                    polynomialTerms.clear();
                 }
             }
         }
@@ -551,9 +549,11 @@ public class FactoringManager {
                 return answer
                         .replace("/raiz1/", "" + currentRoot1)
                         .replace("/raiz2/", "" + currentRoot2);
-            default:
+            case 3:
                 answer = "" + context.getText(R.string.GAUSS_ES_EL_CORRECTO);
                 return answer.replace("/raiz/", "" + currentRoot1);
+            default:
+                return "";
         }
     }
 
@@ -582,8 +582,10 @@ public class FactoringManager {
         switch (regularOption){
             case 2:
                 return "" + context.getText(R.string.CUADRATICA_ERA_POSIBLE);
-            default:
+            case 3:
                 return "" + context.getText(R.string.GAUSS_ERA_POSIBLE);
+            default:
+                return "";
         }
     }
 
@@ -591,9 +593,11 @@ public class FactoringManager {
         switch (regularOption){
             case 2:
                 return "" + context.getText(R.string.CUADRATICA_ES_POSIBLE_PERO_NO_LO_MEJOR);
-            default:
+            case 3:
                 String answer = "" + context.getText(R.string.GAUSS_ES_POSIBLE_PERO_NO_LO_MEJOR);
                 return answer.replace("/raiz/", "" + currentRoot1);
+            default:
+                return "";
         }
     }
 
@@ -603,8 +607,10 @@ public class FactoringManager {
                 return "" + context.getText(R.string.FACTOR_COMUN_ERA_EL_CORRECTO);
             case 2:
                 return "" + context.getText(R.string.CUADRATICA_ERA_EL_CORRECTO);
-            default:
+            case 3:
                 return "" + context.getText(R.string.GAUSS_ERA_EL_CORRECTO);
+            default:
+                return "";
         }
     }
 
@@ -612,8 +618,10 @@ public class FactoringManager {
         switch (optionChosen){
             case 1:
                 return "" + context.getText(R.string.FACTOR_COMUN_NO_ES_CORRECTO);
-            default:
+            case 2:
                 return "" + context.getText(R.string.CUADRATICA_NO_ES_CORRECTO);
+            default:
+                return "";
         }
     }
 
@@ -623,8 +631,10 @@ public class FactoringManager {
                 return "" + context.getText(R.string.FACTOR_COMUN);
             case 2:
                 return "" + context.getText(R.string.CUADRATICA);
-            default:
+            case 3:
                 return "" + context.getText(R.string.GAUSS);
+            default:
+                return "";
         }
     }
 }
