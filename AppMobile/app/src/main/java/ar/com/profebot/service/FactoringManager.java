@@ -66,7 +66,7 @@ public class FactoringManager {
                 context.getString(R.string.FACTOR_COMUN), "",
                 context.getString(R.string.CUADRATICA), "",
                 context.getString(R.string.GAUSS), "",
-                cases.get("correctOption"), cases.get("regularOption1"), cases.get("regularOption2"), "","",
+                cases.get(CORRECT_OPTION), cases.get(REGULAR_OPTION_1), cases.get(REGULAR_OPTION_2), "","",
                 "" );
     }
 

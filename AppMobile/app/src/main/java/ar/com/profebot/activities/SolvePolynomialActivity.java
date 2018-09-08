@@ -40,7 +40,11 @@ public class SolvePolynomialActivity extends GlobalActivity {
         LinearLayoutManager llm = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(llm);
         multipleChoiceSteps = this.initializeMultipleChoiceSteps();
-        adapter = new RVMultipleChoicePlynomialAdapter(multipleChoiceSteps.get(0), multipleChoiceSteps);
+        if(!FactoringManager.end){
+            adapter = new RVMultipleChoicePlynomialAdapter(multipleChoiceSteps.get(0), multipleChoiceSteps);
+        }else {
+            adapter = new RVMultipleChoicePlynomialAdapter(null, new ArrayList<>());
+        }
         recyclerView.setAdapter(adapter);
     }
 

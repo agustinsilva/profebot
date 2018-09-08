@@ -235,9 +235,10 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
 
     public RVMultipleChoicePlynomialAdapter(MultipleChoiceStep firstStep, List<MultipleChoiceStep> multipleChoiceSteps){
         this.multipleChoiceSteps = multipleChoiceSteps;
-        List<MultipleChoiceStep> steps = new ArrayList<>();
-        steps.add(firstStep);
-        this.currentMultipleChoiceSteps = steps;
+        this.currentMultipleChoiceSteps = new ArrayList<>();
+        if(firstStep != null){
+            this.currentMultipleChoiceSteps.add(firstStep);
+        }
     }
 
     @Override
