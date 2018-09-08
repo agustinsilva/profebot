@@ -46,6 +46,9 @@ public class SolvePolynomialActivity extends GlobalActivity {
             adapter = new RVMultipleChoicePlynomialAdapter(null, new ArrayList<>());
         }
         recyclerView.setAdapter(adapter);
+        if(FactoringManager.end){
+            FactoringManager.showPopUp();
+        }
     }
 
     public static SolvePolynomialActivity getContext(){

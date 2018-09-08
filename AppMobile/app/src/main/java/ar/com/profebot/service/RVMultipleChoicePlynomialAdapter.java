@@ -126,8 +126,8 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
                             currentMultipleChoiceStep.setSolved(true);
                             setUpNextStepButton();
                         }else{
-                            // TODO: mostrar pop up mostrando las raíces + el polinomio factorizado
                             nextStep.setVisibility(View.GONE);
+                            FactoringManager.showPopUp();
                         }
                     }
                 });

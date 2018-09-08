@@ -24,4 +24,7 @@
     <string name="GAUSS_NO_ES_CORRECTO">No se puede aplicar el método de gauss cuando el polinomio no tiene término independiente. Tampoco es aplicable cuando el polinomio es de grado 1.</string>
 
     <string name="RAIZ_EXTRA">También se encontró la raíz /raiz/.</string>
+
+    <string name="RAIZ_ENCONTRADA">La raíz del polinomio es: /raiz/</string>
+    <string name="RAICES_ENCONTRADAS">Las raíces del polinomio son: /raices/</string>
 </resources>

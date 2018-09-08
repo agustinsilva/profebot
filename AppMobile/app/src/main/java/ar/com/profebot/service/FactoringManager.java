@@ -1,5 +1,14 @@
 package ar.com.profebot.service;
 
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.profebot.activities.R;
 
 import org.apache.xerces.impl.xpath.regex.RegularExpression;
@@ -12,8 +21,13 @@ import java.util.List;
 import java.util.Map;
 
 import ar.com.profebot.Models.MultipleChoiceStep;
+import ar.com.profebot.activities.EnterPolinomialActivity;
+import ar.com.profebot.activities.EnterPolinomialEquationOptionsActivity;
+import ar.com.profebot.activities.MainActivity;
+import ar.com.profebot.activities.SolveEquationActivity;
 import ar.com.profebot.activities.SolvePolynomialActivity;
 import de.uni_bielefeld.cebitec.mzurowie.pretty_formula.main.FormulaParser;
+import io.github.kexanie.library.MathView;
 
 public class FactoringManager {
 
@@ -39,6 +53,8 @@ public class FactoringManager {
     public static Boolean end;
     private static SolvePolynomialActivity context;
 
+    private static String originalPolynomial;
+
     public static void setContext(SolvePolynomialActivity context) {
         FactoringManager.context = context;
     }
@@ -49,6 +65,7 @@ public class FactoringManager {
 
     public static void setPolynomialTerms(Map<Integer, Double> polynomialTerms) {
         FactoringManager.polynomialTerms = polynomialTerms;
+        originalPolynomial = getOriginalPolynomial(polynomialTerms);
         roots = new ArrayList<>();
         rootsMultiplicity = new HashMap<>();
         end = false;
@@ -56,6 +73,71 @@ public class FactoringManager {
 
         // Checkear si el polinomio ingresado es factorizable
         tryToFinishingExercise();
+    }
+
+    private static String getOriginalPolynomial(Map<Integer, Double> polynomialTerms){
+        String pendingPolynomialAux = getPolynomialGeneralForm(polynomialTerms).replace("x", "a_1");
+        String firstSign = "";
+        if(pendingPolynomialAux.substring(0, 1).contains("-")){
+            firstSign = "-";
+            pendingPolynomialAux = pendingPolynomialAux.substring(1);
+        }
+        pendingPolynomialAux = firstSign + FormulaParser.parseToLatex(pendingPolynomialAux).replace("{a}_{1}", "x");
+        return "\\mathbf{" + pendingPolynomialAux + "}";
+    }
+
+    public static void showPopUp(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        View view = context.getLayoutInflater().inflate(R.layout.polynomial_results_pop_up, null);
+
+        MathView firstEquation = ((MathView) view.findViewById(R.id.first_polynomial_id));
+        firstEquation.setEngine(MathView.Engine.MATHJAX);
+        firstEquation.config("MathJax.Hub.Config({\n"+
+                "  CommonHTML: { linebreaks: { automatic: true } },\n"+
+                "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
+                "         SVG: { linebreaks: { automatic: true } }\n"+
+                "});");
+        firstEquation.setText("$$" + originalPolynomial + "$$");
+
+        MathView lastEquation = ((MathView) view.findViewById(R.id.last_polynomial_id));
+        lastEquation.setEngine(MathView.Engine.MATHJAX);
+        lastEquation.config("MathJax.Hub.Config({\n"+
+                "  CommonHTML: { linebreaks: { automatic: true } },\n"+
+                "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
+                "         SVG: { linebreaks: { automatic: true } }\n"+
+                "});");
+        lastEquation.setText("$$" + getEquationAfterFactorizing() + "$$");
+
+        String rootsCommaSeparated = android.text.TextUtils.join(" ; ", roots);
+        TextView rootsLabel = (TextView) view.findViewById(R.id.roots_label_id);
+        if(roots.size() > 1){
+            String rootsAsText = "" + context.getText(R.string.RAICES_ENCONTRADAS);
+            rootsLabel.setText(rootsAsText.replace("/raices/", rootsCommaSeparated));
+        }else{
+            String rootsAsText = "" + context.getText(R.string.RAIZ_ENCONTRADA);
+            rootsLabel.setText(rootsAsText.replace("/raiz/", rootsCommaSeparated));
+        }
+
+        view.setClipToOutline(true);
+        builder.setView(view);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        ((Button) view.findViewById(R.id.go_to_main_menu_id)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                context.startActivity(new Intent(context, MainActivity.class));
+                dialog.cancel();
+            }
+        });
+
+        ((Button) view.findViewById(R.id.go_to_enter_polynomial_id)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                context.startActivity(new Intent(context, EnterPolinomialEquationOptionsActivity.class));
+                dialog.cancel();
+            }
+        });
     }
 
     public static MultipleChoiceStep nextStep(){
