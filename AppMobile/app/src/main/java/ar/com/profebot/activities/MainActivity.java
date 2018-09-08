@@ -15,7 +15,9 @@ import android.widget.ProgressBar;
 import com.profebot.activities.R;
 
 public class MainActivity extends AppCompatActivity {
-
+    public static final String EQUATION = "EQUATION";
+    public static final String POLINOMIAL = "POLINOMIAL";
+    public static String photoReference;
     private ProgressBar spinner;
 
     @Override

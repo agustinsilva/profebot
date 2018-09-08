@@ -33,15 +33,23 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
+import ar.com.profebot.activities.EnterPolinomialActivity;
 import ar.com.profebot.activities.SolveEquationActivity;
+import ar.com.profebot.activities.SolvePolynomialActivity;
 import ar.com.profebot.service.ExpressionsManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static ar.com.profebot.activities.MainActivity.EQUATION;
+import static ar.com.profebot.activities.MainActivity.photoReference;
 
 public class CameraFragment extends Fragment {
     private static final String TAG = CameraFragment.class.getSimpleName();
@@ -259,14 +267,20 @@ public class CameraFragment extends Fragment {
                 Log.d("Latex_NEW", mLatestLatex);
                 // Volver al SolveEquationActivity y mostrar el String
                 if (latex != "") {
-                    ExpressionsManager.setEquationPhoto(mLatestLatex, getActivity().getApplicationContext());
-                    ExpressionsManager.setEquationDrawn(null);
-                    if (ExpressionsManager.getTreeOfExpression() != null) {
-                        Intent intent = new Intent(getActivity(), SolveEquationActivity.class);
-                        startActivity(intent);
+                    if (photoReference == EQUATION) {
+                        ExpressionsManager.setEquationPhoto(mLatestLatex, getActivity().getApplicationContext());
+                        ExpressionsManager.setEquationDrawn(null);
+                        if (ExpressionsManager.getTreeOfExpression() != null) {
+                            Intent intent = new Intent(getActivity(), SolveEquationActivity.class);
+                            startActivity(intent);
+                        } else {
+                            showErrorAndReset("Hubo un error al procesar la imagen, por favor, volve a intentarlo.");
+                        }
                     }
                     else{
-                        showErrorAndReset("Hubo un error al procesar la imagen, por favor, volve a intentarlo.");
+                        SetPolinomialForPolinomialActivity(latex);
+                        Intent intent = new Intent(getActivity(), SolvePolynomialActivity.class);
+                        startActivity(intent);
                     }
                 }
                 else{
@@ -275,6 +289,76 @@ public class CameraFragment extends Fragment {
             }
         });
         task.execute(params);
+    }
+
+    public void SetPolinomialForPolinomialActivity(String latex) {
+        Map<Integer, Double> polynomialMap = new HashMap<>();
+        String polinomialPhoto = ExpressionsManager.containsFrac(latex);
+        polinomialPhoto = polinomialPhoto.replaceAll("-","+!").replaceAll("\\s+","");
+        String[] terms = polinomialPhoto.split("\\+");
+
+        try {
+        for (String term : terms) {
+            if(!term.isEmpty()) {
+                String potential, coefficient;
+                if (term.contains("x^")) {
+                    int position = term.indexOf("x^");
+                    switch (position) {
+                        case 1:
+                            if (term.substring(0, position).contains("!")) {
+                                coefficient = "-1";
+                            } else {
+                                coefficient = term.substring(0, position);
+                            }
+                            break;
+                        case 0:
+                            coefficient = "1";
+                            break;
+                        default:
+                            coefficient = term.substring(0, position).replace("!", "-");
+                            break;
+                    }
+                    potential = term.substring(position + 2, term.length());
+                    coefficient = coefficient.replaceAll("\\{", "").replaceAll("\\}", "").replaceAll("\\)", "").replaceAll("\\(", "");
+                    potential = potential.replaceAll("\\{", "").replaceAll("\\}", "").replaceAll("\\)", "").replaceAll("\\(", "");
+                    polynomialMap.put(Integer.parseInt(potential), fractionToDouble(coefficient));
+                } else if (term.contains("x")) {//es un coeficeinte lineal
+                    int positionLineal = term.indexOf("x");
+                    if (positionLineal == 0) {
+                        polynomialMap.put(1, Double.parseDouble("1"));
+                    } else {
+                        coefficient = term.substring(0, positionLineal);
+                        polynomialMap.put(1, Double.parseDouble(coefficient));
+                    }
+                } else {//es un termino independiente
+                    polynomialMap.put(0, fractionToDouble(term));
+                }
+            }
+        }
+        EnterPolinomialActivity.polynomialTerms = polynomialMap;
+        } catch (Exception ex){
+            Log.d("Error parse polinomio", "Error parseando polinomio desde la camara", ex);
+        }
+    }
+
+    public static Double fractionToDouble(String fraction) {
+        Double d = null;
+        if (fraction != null) {
+            if (fraction.contains("/")) {
+                String[] numbers = fraction.split("/");
+                if (numbers.length == 2) {
+                    Double d1 = Double.valueOf(numbers[0]);
+                    Double d2 = Double.valueOf(numbers[1]);
+                    d = Double.parseDouble(String.format("%.2f", d1/d2).replace(",","."));
+                }
+            }
+            else {
+                d = Double.parseDouble(fraction);
+            }
+        }
+        if (d == null) {
+        }
+        return d;
     }
 
     private String mLatestLatex;

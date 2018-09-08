@@ -143,7 +143,7 @@ public class ExpressionsManager {
 
     private static String mapPhotoToOurAlphabet(String equationPhoto) {
         equationPhoto = equationPhoto.replaceAll("\\s+", "");
-        equationPhoto = contieneFrac(equationPhoto);
+        equationPhoto = containsFrac(equationPhoto);
 
         String equationWellWritten  = equationPhoto
                 .replaceAll("\\\\sqrt", "R")
@@ -175,7 +175,7 @@ public class ExpressionsManager {
         return equationWellWritten;
     }
 
-    private static String contieneFrac(String equationFrac) {
+    public static String containsFrac(String equationFrac) {
         if (equationFrac.contains("\\frac{")) {
             int inicioEquation=0;
             int finEquation=0;

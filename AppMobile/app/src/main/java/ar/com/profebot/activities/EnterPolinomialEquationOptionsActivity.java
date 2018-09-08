@@ -9,10 +9,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
-
 import com.profebot.activities.R;
-
 import ar.com.profebot.service.ExpressionsManager;
+import static ar.com.profebot.activities.MainActivity.POLINOMIAL;
+import static ar.com.profebot.activities.MainActivity.photoReference;
 
 public class EnterPolinomialEquationOptionsActivity extends GlobalActivity {
 
@@ -26,7 +26,7 @@ public class EnterPolinomialEquationOptionsActivity extends GlobalActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.enter_polinomial_options_layout);
-
+        photoReference = POLINOMIAL;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_id);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
