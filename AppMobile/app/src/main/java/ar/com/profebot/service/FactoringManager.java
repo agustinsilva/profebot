@@ -108,7 +108,7 @@ public class FactoringManager {
                 "});");
         lastEquation.setText("$$" + getEquationAfterFactorizing() + "$$");
 
-        String rootsCommaSeparated = android.text.TextUtils.join(" ; ", roots);
+        String rootsCommaSeparated = removeDecimals(android.text.TextUtils.join(" ; ", roots));
         TextView rootsLabel = (TextView) view.findViewById(R.id.roots_label_id);
         if(roots.size() > 1){
             String rootsAsText = "" + context.getText(R.string.RAICES_ENCONTRADAS);
@@ -260,7 +260,7 @@ public class FactoringManager {
     public static String getEquationAfterFactorizing(){
         String rootsFactorizedAux = "";
         if(!rootsFactorized.isEmpty()){
-            rootsFactorizedAux = rootsFactorized;
+            rootsFactorizedAux = removeDecimals(rootsFactorized);
             rootsFactorizedAux = rootsFactorizedAux.replace("x", "a_1");
             rootsFactorizedAux = FormulaParser.parseToLatex(rootsFactorizedAux).replace("{a}_{1}", "x");
             rootsFactorizedAux = "\\mathbf{" + rootsFactorizedAux + "}" + (!pendingPolynomial.isEmpty() ? "*" : "");
@@ -268,7 +268,7 @@ public class FactoringManager {
 
         String pendingPolynomialAux = "";
         if(!pendingPolynomial.isEmpty()){
-            pendingPolynomialAux = pendingPolynomial;
+            pendingPolynomialAux = removeDecimals(pendingPolynomial);
 
             String firstSign = "";
             if(pendingPolynomialAux.substring(0, 1).contains("-")){
@@ -363,7 +363,11 @@ public class FactoringManager {
             }
             firstTerm = false;
         }
-        return stringBuilder.toString().trim()
+        return removeDecimals(stringBuilder.toString());
+    }
+
+    private static String removeDecimals(String expression){
+        return expression.trim()
                 .replaceAll("\\.0\\+", "+")
                 .replaceAll("\\.0\\-", "-")
                 .replaceAll("\\.0\\/", "/")
@@ -372,6 +376,7 @@ public class FactoringManager {
                 .replaceAll("\\.0\\(", "(")
                 .replaceAll("\\.0\\)", ")")
                 .replaceAll("\\.0x", "x")
+                .replaceAll("\\.0 ", " ")
                 .replaceAll("\\.0$", "");
     }
 
