@@ -14,6 +14,9 @@ import com.profebot.activities.R;
 
 import ar.com.profebot.service.ExpressionsManager;
 
+import static ar.com.profebot.activities.MainActivity.EQUATION;
+import static ar.com.profebot.activities.MainActivity.photoReference;
+
 public class EnterEquationOptionsActivity extends GlobalActivity {
 
     private ImageView handdrawEquationPicture;
@@ -26,7 +29,7 @@ public class EnterEquationOptionsActivity extends GlobalActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.enter_equation_options_layout);
-
+        photoReference = EQUATION;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_id);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

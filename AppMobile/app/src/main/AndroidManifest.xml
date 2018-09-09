@@ -43,8 +43,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name="ar.com.profebot.activities.PendingExercisesActivity" />
-        <activity android:name="ar.com.profebot.activities.EnterPolinomialActivity"
-            android:windowSoftInputMode="stateAlwaysVisible" ></activity>
+        <activity android:name="ar.com.profebot.activities.EnterPolinomialActivity" android:windowSoftInputMode="stateAlwaysVisible"  android:screenOrientation="portrait"></activity>
         <activity android:name="ar.com.profebot.activities.EnterPolinomialEquationOptionsActivity" />
         <activity android:name="ar.com.profebot.activities.SolvePolynomialActivity" android:screenOrientation="portrait"/>
     </application>

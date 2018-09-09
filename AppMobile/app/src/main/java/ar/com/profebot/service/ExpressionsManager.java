@@ -78,15 +78,38 @@ public class ExpressionsManager {
     }
 
     public static String getEquationAsLatex() {
+        String firstSign, secondSign;
         String infixEquation = getEquationAsInfix();
         String[] expressions = infixEquation.split("="); // TODO: se necesita el rool parametrizable
-        return FormulaParser.parseToLatex(expressions[0]) + "=" + FormulaParser.parseToLatex(expressions[1]);
+
+        if (expressions[0].substring(0,1).contains("-")){
+            firstSign = "-";
+            expressions[0] = expressions[0].substring(1);
+        } else {
+            firstSign = "";
+        }
+        if (expressions[1].substring(0,1).contains("-")){
+            secondSign = "-";
+            expressions[1] = expressions[1].substring(1);
+        } else {
+            secondSign = "";
+        }
+        String latexEquation = firstSign + FormulaParser.parseToLatex(expressions[0]) + "="+ secondSign + FormulaParser.parseToLatex(expressions[1]);
+
+        return latexEquation;
     }
 
     public static String getPolinomialEquationAsLatex() {
+        String firstSign;
         String infixEquation = getEquationAsInfix();
         String[] expressions = infixEquation.split("="); // TODO: se necesita el rool parametrizable
-        return FormulaParser.parseToLatex(expressions[0]);
+        if (expressions[0].substring(0,1).contains("-")){
+            firstSign = "-";
+            expressions[0] = expressions[0].substring(1);
+        } else {
+            firstSign = "";
+        }
+        return firstSign + FormulaParser.parseToLatex(expressions[0]);
     }
 
     public static String getEquationAsLatex(String infixEquation) {
@@ -120,7 +143,7 @@ public class ExpressionsManager {
 
     private static String mapPhotoToOurAlphabet(String equationPhoto) {
         equationPhoto = equationPhoto.replaceAll("\\s+", "");
-        equationPhoto = contieneFrac(equationPhoto);
+        equationPhoto = containsFrac(equationPhoto);
 
         String equationWellWritten  = equationPhoto
                 .replaceAll("\\\\sqrt", "R")
@@ -152,7 +175,7 @@ public class ExpressionsManager {
         return equationWellWritten;
     }
 
-    private static String contieneFrac(String equationFrac) {
+    public static String containsFrac(String equationFrac) {
         if (equationFrac.contains("\\frac{")) {
             int inicioEquation=0;
             int finEquation=0;

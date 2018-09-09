@@ -1,8 +1,5 @@
 package ar.com.profebot.resolutor.utils;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import ar.com.profebot.parser.container.TreeNode;
 
 /**
@@ -10,20 +7,20 @@ import ar.com.profebot.parser.container.TreeNode;
  **/
 public class Reduction {
 
-    TreeNode tree;
+    TreeNode treeNode;
     ReductionType reductionType;
 
-    public Reduction(TreeNode tree, ReductionType reductionType) {
-        this.tree = tree;
+    public Reduction(TreeNode treeNode, ReductionType reductionType) {
+        this.treeNode = treeNode;
         this.reductionType = reductionType;
     }
 
-    public TreeNode getTree() {
-        return tree;
+    public TreeNode getTreeNode() {
+        return treeNode;
     }
 
-    public void setTree(TreeNode tree) {
-        this.tree = tree;
+    public void setTreeNode(TreeNode treeNode) {
+        this.treeNode = treeNode;
     }
 
     public ReductionType getReductionType() {

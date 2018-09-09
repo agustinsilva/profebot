@@ -9,10 +9,10 @@ import android.support.v7.widget.Toolbar;
 import com.profebot.activities.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import ar.com.profebot.Models.MultipleChoiceStep;
+import ar.com.profebot.resolutor.service.ResolutorService;
 import ar.com.profebot.service.ExpressionsManager;
 import ar.com.profebot.service.RVMultipleChoiceAdapter;
 
@@ -49,8 +49,8 @@ public class SolveEquationActivity extends GlobalActivity {
 
     private List<MultipleChoiceStep> initializeMultipleChoiceSteps(){
         List<MultipleChoiceStep> steps = new ArrayList<>();
-        //TODO: pedirle este objeto al backend
-        steps.add(new MultipleChoiceStep(ExpressionsManager.getEquationAsLatex(), "x+6+3x=4", "Distribuir el 3",
+        steps = (new ResolutorService()).resolveExpression(ExpressionsManager.getTreeOfExpression(), context);
+       /* steps.add(new MultipleChoiceStep(ExpressionsManager.getEquationAsLatex(), "x+6+3x=4", "Distribuir el 3",
                 "Multiplicar por 3 a cada término del binomio 2+x", "",
                 "Pasar el 3 dividiendo", "","Pasar el (2+x) dividiendo", "",
                 1, "Se puede aplicar distributiva",
@@ -66,7 +66,7 @@ public class SolveEquationActivity extends GlobalActivity {
                 "Aplicar la resta, dando -3 como resultado", "",
                 "Aplicar la resta, dando -2 como resultado", "",3, "La diferencia entre 4 y 6 es 2, con signo negativo, por ser el 4 menor que 6",
                 "No se puede pasar el 3 dividiendo por separación de términos.",
-                "La resta no da -3. Para calcularlo, se hacer la resta 6-4, y cambiar de signo al resultado."));
+                "La resta no da -3. Para calcularlo, se hacer la resta 6-4, y cambiar de signo al resultado."));*/
         return steps;
     }
 

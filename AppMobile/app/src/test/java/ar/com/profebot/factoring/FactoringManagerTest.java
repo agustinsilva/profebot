@@ -116,6 +116,12 @@ public class FactoringManagerTest {
 
         FactoringManager.setPolynomialTerms(terms);
 
+        // Checkeo los casos posibles a aplicar
+        Map<String, Integer> nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.FACTOR_COMUN, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         // Factorizo por factor común
         FactoringManager.factorizeBy(FactoringManager.FACTOR_COMUN);
 
@@ -124,11 +130,9 @@ public class FactoringManagerTest {
         Assert.assertTrue(FactoringManager.roots.contains(-0.5));
         Assert.assertEquals(1, FactoringManager.rootsMultiplicity.get(-0.5), 0.1);
 
-        // Polinomio pendiente: 4(x+1/2)
-        Assert.assertEquals(2, FactoringManager.polynomialTerms.size());
-        Assert.assertEquals(1, FactoringManager.polynomialTerms.get(1).intValue());
-        Assert.assertEquals(0.5, FactoringManager.polynomialTerms.get(0), 0.1);
-        Assert.assertEquals("x+0.5", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
+        // No hay polinomio pendiente
+        Assert.assertEquals(0, FactoringManager.polynomialTerms.size());
+        Assert.assertEquals("", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
 
         // No más factoreo posible
         Assert.assertTrue(FactoringManager.end);
@@ -148,6 +152,12 @@ public class FactoringManagerTest {
 
         FactoringManager.setPolynomialTerms(terms);
 
+        // Checkeo los casos posibles a aplicar
+        Map<String, Integer> nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.FACTOR_COMUN, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertEquals(FactoringManager.CUADRATICA, nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         // Factorizo por factor común
         FactoringManager.factorizeBy(FactoringManager.FACTOR_COMUN);
 
@@ -158,11 +168,9 @@ public class FactoringManagerTest {
         Assert.assertEquals(1, FactoringManager.rootsMultiplicity.get(0.0).intValue());
         Assert.assertEquals(1, FactoringManager.rootsMultiplicity.get(-2.0).intValue());
 
-        // Polinomio pendiente: x+2
-        Assert.assertEquals(2, FactoringManager.polynomialTerms.size());
-        Assert.assertEquals(1, FactoringManager.polynomialTerms.get(1).intValue());
-        Assert.assertEquals(2, FactoringManager.polynomialTerms.get(0).intValue());
-        Assert.assertEquals("x+2", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
+        // No hay polinomio pendiente
+        Assert.assertEquals(0, FactoringManager.polynomialTerms.size());
+        Assert.assertEquals("", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
 
         // No más factoreo posible
         Assert.assertTrue(FactoringManager.end);
@@ -182,8 +190,20 @@ public class FactoringManagerTest {
 
         FactoringManager.setPolynomialTerms(terms);
 
+        // Checkeo los casos posibles a aplicar
+        Map<String, Integer> nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.FACTOR_COMUN, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         // Factorizo por factor común
         FactoringManager.factorizeBy(FactoringManager.FACTOR_COMUN);
+
+        // Checkeo los casos posibles a aplicar
+        nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertNull(nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
 
         // Raíz 0
         Assert.assertEquals(1, FactoringManager.roots.size());
@@ -213,6 +233,12 @@ public class FactoringManagerTest {
         terms.put(2, 4.0);
         FactoringManager.setPolynomialTerms(terms);
 
+        // Checkeo los casos posibles a aplicar
+        Map<String, Integer> nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.FACTOR_COMUN, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         // Factorizo por factor común
         FactoringManager.factorizeBy(FactoringManager.FACTOR_COMUN);
 
@@ -223,11 +249,9 @@ public class FactoringManagerTest {
         Assert.assertEquals(2, FactoringManager.rootsMultiplicity.get(0.0).intValue());
         Assert.assertEquals(1, FactoringManager.rootsMultiplicity.get(-4.0).intValue());
 
-        // Polinomio pendiente: x+2
-        Assert.assertEquals(2, FactoringManager.polynomialTerms.size());
-        Assert.assertEquals(1, FactoringManager.polynomialTerms.get(1).intValue());
-        Assert.assertEquals(4, FactoringManager.polynomialTerms.get(0).intValue());
-        Assert.assertEquals("x+4", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
+        // No hay polinomio pendiente
+        Assert.assertEquals(0, FactoringManager.polynomialTerms.size());
+        Assert.assertEquals("", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
 
         // No más factoreo posible
         Assert.assertTrue(FactoringManager.end);
@@ -246,6 +270,12 @@ public class FactoringManagerTest {
         terms.put(1, 2.0);
         terms.put(2, 1.0);
         FactoringManager.setPolynomialTerms(terms);
+
+        // Checkeo los casos posibles a aplicar
+        Map<String, Integer> nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.CUADRATICA, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertEquals(FactoringManager.GAUSS, nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
 
         // Factorizo por cuadrática
         FactoringManager.factorizeBy(FactoringManager.CUADRATICA);
@@ -277,6 +307,12 @@ public class FactoringManagerTest {
         terms.put(2, 1.0);
         FactoringManager.setPolynomialTerms(terms);
 
+        // Checkeo los casos posibles a aplicar
+        Map<String, Integer> nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.CUADRATICA, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertEquals(FactoringManager.GAUSS, nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         // Factorizo por cuadrática
         FactoringManager.factorizeBy(FactoringManager.CUADRATICA);
 
@@ -306,6 +342,12 @@ public class FactoringManagerTest {
         terms.put(1, 5.0);
         terms.put(2, 1.0);
         FactoringManager.setPolynomialTerms(terms);
+
+        // Checkeo los casos posibles a aplicar
+        Map<String, Integer> nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.CUADRATICA, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertEquals(FactoringManager.GAUSS, nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
 
         // Factorizo por cuadrática
         FactoringManager.factorizeBy(FactoringManager.CUADRATICA);
@@ -338,6 +380,12 @@ public class FactoringManagerTest {
         terms.put(2, 1.0);
         FactoringManager.setPolynomialTerms(terms);
 
+        // Checkeo los casos posibles a aplicar
+        Map<String, Integer> nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.CUADRATICA, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertEquals(FactoringManager.GAUSS, nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         // Factorizo por cuadrática
         FactoringManager.factorizeBy(FactoringManager.CUADRATICA);
 
@@ -368,6 +416,12 @@ public class FactoringManagerTest {
         terms.put(1, -1.0);
         terms.put(2, 1.0);
         FactoringManager.setPolynomialTerms(terms);
+
+        // Checkeo los casos posibles a aplicar
+        Map<String, Integer> nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.FACTOR_COMUN, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertEquals(FactoringManager.CUADRATICA, nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
 
         // Factorizo por cuadrática
         FactoringManager.factorizeBy(FactoringManager.CUADRATICA);
@@ -400,8 +454,20 @@ public class FactoringManagerTest {
         terms.put(2, 4.0);
         FactoringManager.setPolynomialTerms(terms);
 
+        // Checkeo los casos posibles a aplicar
+        Map<String, Integer> nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.FACTOR_COMUN, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertEquals(FactoringManager.CUADRATICA, nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertEquals(FactoringManager.GAUSS, nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         // Factorizo por gauss
         FactoringManager.factorizeBy(FactoringManager.GAUSS);
+
+        // Checkeo los casos posibles a aplicar
+        nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.FACTOR_COMUN, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
 
         // Raíz: 1/2
         Assert.assertEquals(1, FactoringManager.roots.size());
@@ -429,8 +495,20 @@ public class FactoringManagerTest {
         terms.put(3, 1.0);
         FactoringManager.setPolynomialTerms(terms);
 
+        // Checkeo los casos posibles a aplicar
+        Map<String, Integer> nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.GAUSS, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         // Factorizo por gauss
         FactoringManager.factorizeBy(FactoringManager.GAUSS);
+
+        // Checkeo los casos posibles a aplicar
+        nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertNull(nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
 
         // Raiz: -1
         Assert.assertEquals(1, FactoringManager.roots.size());
@@ -460,8 +538,20 @@ public class FactoringManagerTest {
         terms.put(3, 1.0);
         FactoringManager.setPolynomialTerms(terms);
 
+        // Checkeo los casos posibles a aplicar
+        Map<String, Integer> nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.GAUSS, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         // Factorizo por gauss
         FactoringManager.factorizeBy(FactoringManager.GAUSS);
+
+        // Checkeo los casos posibles a aplicar
+        nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.CUADRATICA, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertEquals(FactoringManager.GAUSS, nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
 
         // Raiz: -1
         Assert.assertEquals(1, FactoringManager.roots.size());
@@ -491,8 +581,21 @@ public class FactoringManagerTest {
         terms.put(3, 1.0);
         FactoringManager.setPolynomialTerms(terms);
 
+        // Checkeo los casos posibles a aplicar
+        Map<String, Integer> nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.GAUSS, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         // Factorizo por gauss
         FactoringManager.factorizeBy(FactoringManager.GAUSS);
+
+        // Checkeo los casos posibles a aplicar
+        nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.CUADRATICA, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertEquals(FactoringManager.GAUSS, nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         FactoringManager.factorizeBy(FactoringManager.GAUSS);
 
         // Raiz: -1 triple
@@ -500,9 +603,9 @@ public class FactoringManagerTest {
         Assert.assertTrue(FactoringManager.roots.contains(-1.0));
         Assert.assertEquals(3, FactoringManager.rootsMultiplicity.get(-1.0).intValue());
 
-        // Polinomio pendiente: x^2+2x+1
-        Assert.assertEquals(2, FactoringManager.polynomialTerms.size());
-        Assert.assertEquals("x+1", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
+        // No hay polinomio pendiente
+        Assert.assertEquals(0, FactoringManager.polynomialTerms.size());
+        Assert.assertEquals("", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
 
         // Se puede seguir factoreando
         Assert.assertTrue(FactoringManager.end);
@@ -524,9 +627,28 @@ public class FactoringManagerTest {
         terms.put(4, 1.0);
         FactoringManager.setPolynomialTerms(terms);
 
+        // Checkeo los casos posibles a aplicar
+        Map<String, Integer> nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.GAUSS, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         // Factorizo por gauss
         FactoringManager.factorizeBy(FactoringManager.GAUSS);
+
+        // Checkeo los casos posibles a aplicar
+        nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.GAUSS, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         FactoringManager.factorizeBy(FactoringManager.GAUSS);
+
+        // Checkeo los casos posibles a aplicar
+        nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.CUADRATICA, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertEquals(FactoringManager.GAUSS, nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
 
         // Raiz: -1 doble
         Assert.assertEquals(1, FactoringManager.roots.size());
@@ -557,9 +679,29 @@ public class FactoringManagerTest {
         terms.put(4, 1.0);
         FactoringManager.setPolynomialTerms(terms);
 
+        // Checkeo los casos posibles a aplicar
+        Map<String, Integer> nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.GAUSS, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         // Factorizo por gauss
         FactoringManager.factorizeBy(FactoringManager.GAUSS);
+
+        // Checkeo los casos posibles a aplicar
+        nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.GAUSS, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         FactoringManager.factorizeBy(FactoringManager.GAUSS);
+
+        // Checkeo los casos posibles a aplicar
+        nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.CUADRATICA, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertEquals(FactoringManager.GAUSS, nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         FactoringManager.factorizeBy(FactoringManager.CUADRATICA);
 
         // Raiz: -1 triple y -2 simple
@@ -593,10 +735,37 @@ public class FactoringManagerTest {
         terms.put(5, 1.0);
         FactoringManager.setPolynomialTerms(terms);
 
+        // Checkeo los casos posibles a aplicar
+        Map<String, Integer> nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.FACTOR_COMUN, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         // Factorizo por gauss
         FactoringManager.factorizeBy(FactoringManager.FACTOR_COMUN);
+
+        // Checkeo los casos posibles a aplicar
+        nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.GAUSS, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         FactoringManager.factorizeBy(FactoringManager.GAUSS);
+
+        // Checkeo los casos posibles a aplicar
+        nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.GAUSS, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         FactoringManager.factorizeBy(FactoringManager.GAUSS);
+
+        // Checkeo los casos posibles a aplicar
+        nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.CUADRATICA, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertEquals(FactoringManager.GAUSS, nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         FactoringManager.factorizeBy(FactoringManager.CUADRATICA);
 
         // Raiz: -1 triple, -2 simple y 0 simple
@@ -632,12 +801,46 @@ public class FactoringManagerTest {
         terms.put(5, 2.0);
         FactoringManager.setPolynomialTerms(terms);
 
+        // Checkeo los casos posibles a aplicar
+        Map<String, Integer> nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.FACTOR_COMUN, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         // Factorizo por gauss
         FactoringManager.factorizeBy(FactoringManager.FACTOR_COMUN);
         Assert.assertEquals(2, FactoringManager.multiplier.intValue());
+
+        // Checkeo los casos posibles a aplicar
+        nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.FACTOR_COMUN, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         FactoringManager.factorizeBy(FactoringManager.FACTOR_COMUN);
+
+        // Checkeo los casos posibles a aplicar
+        nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.GAUSS, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         FactoringManager.factorizeBy(FactoringManager.GAUSS);
+
+        // Checkeo los casos posibles a aplicar
+        nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.GAUSS, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         FactoringManager.factorizeBy(FactoringManager.GAUSS);
+
+        // Checkeo los casos posibles a aplicar
+        nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.CUADRATICA, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertEquals(FactoringManager.GAUSS, nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         FactoringManager.factorizeBy(FactoringManager.CUADRATICA);
         Assert.assertEquals(2, FactoringManager.multiplier.intValue());
 
@@ -674,6 +877,12 @@ public class FactoringManagerTest {
         terms.put(5, 2.0);
         FactoringManager.setPolynomialTerms(terms);
 
+        // Checkeo los casos posibles a aplicar
+        Map<String, Integer> nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.FACTOR_COMUN, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
         // Factorizo por gauss
         FactoringManager.factorizeBy(FactoringManager.FACTOR_COMUN);
         FactoringManager.factorizeBy(FactoringManager.FACTOR_COMUN);
@@ -691,13 +900,80 @@ public class FactoringManagerTest {
         Assert.assertEquals(3, FactoringManager.rootsMultiplicity.get(-1.0).intValue());
         Assert.assertEquals(1, FactoringManager.rootsMultiplicity.get(-2.0).intValue());
 
-        // Polinomio pendiente:
-        Assert.assertEquals(2, FactoringManager.polynomialTerms.size());
-        Assert.assertEquals("x+2", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
+        // No hay polinomio pendiente
+        Assert.assertEquals(0, FactoringManager.polynomialTerms.size());
+        Assert.assertEquals("", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
 
         // Se puede seguir factoreando
         Assert.assertTrue(FactoringManager.end);
     }
 
+    @Test
+    public void noSePuedeFactorearCuandoElPolinomioTieneUnSoloTermino() {
+        Map<Integer, Double> terms;
 
+        SolvePolynomialActivity context = new SolvePolynomialActivity();
+        FactoringManager.setContext(context);
+
+        // 4x^3
+        terms = new HashMap<>();
+        terms.put(3, 4.0);
+        FactoringManager.setPolynomialTerms(terms);
+
+        // Checkeo los casos posibles a aplicar
+        Map<String, Integer> nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertNull(nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
+        // Raiz: 0 triple
+        Assert.assertEquals(1, FactoringManager.roots.size());
+        Assert.assertTrue(FactoringManager.roots.contains(0.0));
+        Assert.assertEquals(3, FactoringManager.rootsMultiplicity.get(0.0).intValue());
+        Assert.assertEquals(4, FactoringManager.multiplier.intValue());
+
+        // Polinomio pendiente:
+        Assert.assertEquals(0, FactoringManager.polynomialTerms.size());
+        Assert.assertEquals("", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
+
+        // Se puede seguir factoreando
+        Assert.assertTrue(FactoringManager.end);
+    }
+
+    @Test
+    public void noSePuedeFactorearCuandoElPolinomioYaEstáTotalmenteFactorizado() {
+        Map<Integer, Double> terms;
+
+        SolvePolynomialActivity context = new SolvePolynomialActivity();
+        FactoringManager.setContext(context);
+
+        // 4x^3
+        terms = new HashMap<>();
+        terms.put(3, 4.0);
+        FactoringManager.setPolynomialTerms(terms);
+
+        // Checkeo los casos posibles a aplicar
+        Map<String, Integer> nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertNull(nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
+        // Intento facorizar un polinomio que ya está totalmente factorizado
+        FactoringManager.factorizeBy(FactoringManager.FACTOR_COMUN);
+        FactoringManager.factorizeBy(FactoringManager.CUADRATICA);
+        FactoringManager.factorizeBy(FactoringManager.GAUSS);
+
+        // Raiz: 0 triple
+        Assert.assertEquals(1, FactoringManager.roots.size());
+        Assert.assertTrue(FactoringManager.roots.contains(0.0));
+        Assert.assertEquals(3, FactoringManager.rootsMultiplicity.get(0.0).intValue());
+        Assert.assertEquals(4, FactoringManager.multiplier.intValue());
+
+        // Polinomio pendiente:
+        Assert.assertEquals(0, FactoringManager.polynomialTerms.size());
+        Assert.assertEquals("", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
+
+        // Se puede seguir factoreando
+        Assert.assertTrue(FactoringManager.end);
+    }
 }

@@ -1218,8 +1218,15 @@ public class TreeUtils {
     }
 
     public static boolean haveSameOperatorLevelCode(TreeNode treeNodeA, TreeNode treeNodeB) {
-        return (OperatorLevel.getBySimbol(treeNodeA.getValue()).getCode() ==
-                OperatorLevel.getBySimbol(treeNodeB.getValue()).getCode());
+
+        if (treeNodeA == null || treeNodeB == null){return false;}
+
+        OperatorLevel operatorLevelA = OperatorLevel.getBySimbol(treeNodeA.getValue());
+        OperatorLevel operatorLevelB = OperatorLevel.getBySimbol(treeNodeB.getValue());
+
+        if (operatorLevelA == null || operatorLevelB == null){return false;}
+
+        return operatorLevelA.getCode().equals(operatorLevelB.getCode());
     }
 
     public static boolean hasDifferentLevelAncestors(TreeNode treeNode) {
@@ -1277,11 +1284,11 @@ public class TreeUtils {
         return esReducible;
     }
 
-    private static boolean esBinomio(TreeNode originalNode) {
+    public static boolean esBinomio(TreeNode originalNode) {
         boolean esBinomio = false;
-        TreeNode node = originalNode.clone();
-        if (originalNode.isParenthesis()) {
-            node = originalNode.getLeftNode();
+        TreeNode node = originalNode;
+        if (node.isParenthesis()) {
+            node = node.getLeftNode();
         }
         if (node.esSuma() || node.esResta()) {
             if ((isSymbol(node.getLeftNode()) && isConstant(node.getRightNode()))
@@ -1308,10 +1315,26 @@ public class TreeUtils {
 
     public static boolean esReduciblePorAsociativa(TreeNode node) {
         boolean esReducible = false;
-        if (node.esProducto() || node.esDivision()) {
-            if (esBinomio(node.getLeftNode()) || esBinomio(node.getRightNode())) {
-                esReducible = true;
+        // Asocia sumas y productos, ej: 3+5*3
+        if (node.esSuma() || node.esResta()) {
+
+            TreeNode productNode = null;
+            TreeNode singleNode = null;
+            if (node.getLeftNode().esProducto() || node.getLeftNode().esDivision()) {
+                productNode = node.getLeftNode();
+                singleNode = node.getRightNode();
+            }else if (node.getRightNode().esProducto() || node.getRightNode().esDivision()) {
+                productNode = node.getRightNode();
+                singleNode = node.getLeftNode();
             }
+
+            if (singleNode != null &&
+                    isConstant(singleNode)  &&
+                    isConstant(productNode.getLeftNode())  &&
+                    isConstant(productNode.getRightNode())){
+                esReducible=true;
+            }
+
         }
         return esReducible;
     }
@@ -1319,11 +1342,11 @@ public class TreeUtils {
     public static boolean esReduciblePorCuadradoDeBinomio(TreeNode node) {
         boolean esReducible = false;
         if (node.esPotencia()) {
-            //un Hijo es binomio, y el otro exponente
-            if ((esBinomio(node.getLeftNode()) && isConstant(node.getRightNode())) ||
-                    (esBinomio(node.getRightNode()) && isConstant(node.getLeftNode()))) {
-                esReducible = true;
-            }
+            TreeNode base = node.getLeftNode();
+            if (base.isParenthesis()){base = base.getContent();}
+
+            //la bases binomio, y el otro exponente
+            if (esBinomio(base)){return true;}
         }
         return esReducible;
     }

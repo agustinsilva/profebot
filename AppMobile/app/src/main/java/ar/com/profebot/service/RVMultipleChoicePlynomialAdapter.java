@@ -127,6 +127,7 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
                             setUpNextStepButton();
                         }else{
                             nextStep.setVisibility(View.GONE);
+                            FactoringManager.showPopUp();
                         }
                     }
                 });
@@ -234,9 +235,10 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
 
     public RVMultipleChoicePlynomialAdapter(MultipleChoiceStep firstStep, List<MultipleChoiceStep> multipleChoiceSteps){
         this.multipleChoiceSteps = multipleChoiceSteps;
-        List<MultipleChoiceStep> steps = new ArrayList<>();
-        steps.add(firstStep);
-        this.currentMultipleChoiceSteps = steps;
+        this.currentMultipleChoiceSteps = new ArrayList<>();
+        if(firstStep != null){
+            this.currentMultipleChoiceSteps.add(firstStep);
+        }
     }
 
     @Override
@@ -254,6 +256,7 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
 
     @Override
     public void onBindViewHolder(MultipleChoiceViewHolder multipleChoiceViewHolder, int position) {
+        multipleChoiceViewHolder.equationBase.setEngine(MathView.Engine.MATHJAX);
         multipleChoiceViewHolder.equationBase.config("MathJax.Hub.Config({\n"+
                 "  CommonHTML: { linebreaks: { automatic: true } },\n"+
                 "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
