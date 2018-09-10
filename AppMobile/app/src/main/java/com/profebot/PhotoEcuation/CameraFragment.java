@@ -242,7 +242,7 @@ public class CameraFragment extends Fragment {
 
     private void imageCropped(final Bitmap bitmap) {
         //esto debe comentarse para hardcodear
-        //mCropImageView.setImageBitmap(bitmap);
+        mCropImageView.setImageBitmap(bitmap);
         mCropStatusTextView.setText(R.string.processing_image);
         uploadImage(bitmap);
     }
@@ -274,17 +274,22 @@ public class CameraFragment extends Fragment {
                             Intent intent = new Intent(getActivity(), SolveEquationActivity.class);
                             startActivity(intent);
                         } else {
-                            showErrorAndReset("Hubo un error al procesar la imagen, por favor, volve a intentarlo.");
+                            showErrorAndReset("Hubo un error al procesar la imagen, por favor, volvé a intentarlo.");
                         }
                     }
                     else{
-                        SetPolinomialForPolinomialActivity(latex);
-                        Intent intent = new Intent(getActivity(), SolvePolynomialActivity.class);
-                        startActivity(intent);
+                        try {
+                            SetPolinomialForPolinomialActivity(latex);
+                            Intent intent = new Intent(getActivity(), SolvePolynomialActivity.class);
+                            startActivity(intent);
+                        }
+                        catch (Exception ex){
+                            showErrorAndReset("La expresión no es un polinomio, por favor, volvé a intentarlo.");
+                        }
                     }
                 }
                 else{
-                    showErrorAndReset("La imagen no se pudo procesar, por favor, volve a intentarlo.");
+                    showErrorAndReset("La imagen no se pudo procesar, por favor, volvé a intentarlo.");
                 }
             }
         });
@@ -297,7 +302,6 @@ public class CameraFragment extends Fragment {
         polinomialPhoto = polinomialPhoto.replaceAll("-","+!").replaceAll("\\s+","");
         String[] terms = polinomialPhoto.split("\\+");
 
-        try {
         for (String term : terms) {
             if(!term.isEmpty()) {
                 String potential, coefficient;
@@ -336,9 +340,6 @@ public class CameraFragment extends Fragment {
             }
         }
         EnterPolinomialActivity.polynomialTerms = polynomialMap;
-        } catch (Exception ex){
-            Log.d("Error parse polinomio", "Error parseando polinomio desde la camara", ex);
-        }
     }
 
     public static Double fractionToDouble(String fraction) {
