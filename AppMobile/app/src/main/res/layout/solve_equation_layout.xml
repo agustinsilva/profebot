@@ -8,6 +8,36 @@
 
     <include layout="@layout/main_toolbar"/>
 
-    <include layout="@layout/rv_resolution"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:weightSum="100"
+        android:background="@color/colorBackground">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="90">
+
+            <include layout="@layout/rv_resolution"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/see_summary_id"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="10"
+            android:text="Ver resumen"
+            android:textSize="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/rounded_corners_polynomial_summary"/>
+
+    </LinearLayout>
 
 </LinearLayout>

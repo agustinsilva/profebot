@@ -1,10 +1,13 @@
 package ar.com.profebot.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.Button;
 
 import com.profebot.activities.R;
 
@@ -21,6 +24,7 @@ public class SolvePolynomialActivity extends GlobalActivity {
 
     private static List<MultipleChoiceStep> multipleChoiceSteps;
     private static RVMultipleChoicePlynomialAdapter adapter;
+    private static Button seeSummary;
     public static RecyclerView recyclerView;
     public static SolvePolynomialActivity context;
 
@@ -47,8 +51,30 @@ public class SolvePolynomialActivity extends GlobalActivity {
         }
         recyclerView.setAdapter(adapter);
         if(FactoringManager.end){
+            FactoringManager.setUpPopUp(true);
             FactoringManager.showPopUp();
         }
+
+        seeSummary = (Button) findViewById(R.id.see_summary_id);
+        seeSummary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FactoringManager.showPopUp();
+            }
+        });
+        disableSummary();
+    }
+
+    private void disableSummary(){
+        seeSummary.setBackgroundResource(R.drawable.rounded_corners_disable_button);
+        seeSummary.setTextColor(Color.GRAY);
+        seeSummary.setEnabled(false);
+    }
+
+    public void enableSummary(){
+        seeSummary.setBackgroundResource(R.drawable.rounded_corners_polynomial_summary);
+        seeSummary.setTextColor(Color.WHITE);
+        seeSummary.setEnabled(true);
     }
 
     public static SolvePolynomialActivity getContext(){

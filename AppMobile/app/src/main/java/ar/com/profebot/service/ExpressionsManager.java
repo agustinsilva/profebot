@@ -410,4 +410,18 @@ public class ExpressionsManager {
         return expression.replace("X", "x")
                 .matches(".*(\\(.*x.*\\))\\*(\\(.*x.*\\)).*|.*x\\*(\\(.*x.*\\)).*|.*(\\(.*x.*\\))\\*x.*|.*x\\*x.*|.*x\\^2.*|.*(\\(.*x.*\\))\\^2.*");
     }
+
+    public static String removeDecimals(String expression){
+        return expression.trim()
+                .replaceAll("\\.0\\+", "+")
+                .replaceAll("\\.0\\-", "-")
+                .replaceAll("\\.0\\/", "/")
+                .replaceAll("\\.0\\*", "*")
+                .replaceAll("\\.0\\^", "^")
+                .replaceAll("\\.0\\(", "(")
+                .replaceAll("\\.0\\)", ")")
+                .replaceAll("\\.0x", "x")
+                .replaceAll("\\.0 ", " ")
+                .replaceAll("\\.0$", "");
+    }
 }

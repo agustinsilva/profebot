@@ -127,7 +127,7 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
                             setUpNextStepButton();
                         }else{
                             nextStep.setVisibility(View.GONE);
-                            FactoringManager.showPopUp();
+                            FactoringManager.enableSummary(false);
                         }
                     }
                 });

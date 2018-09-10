@@ -20,6 +20,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import ar.com.profebot.service.ExpressionsManager;
+
 public class IAModuleClient extends AsyncTask<String, Void, Void> {
 
     private String json;
@@ -118,7 +120,7 @@ public class IAModuleClient extends AsyncTask<String, Void, Void> {
                 JSONObject pnObj = new JSONObject();
                 String newEquation = equationString.next();
                 if(newEquation.contains("x")){
-                    pnObj.put("equation", newEquation);
+                    pnObj.put("equation", ExpressionsManager.removeDecimals(newEquation));
                     equationsJsonToStore.accumulate("pendingExercises", pnObj);
                 }
             }

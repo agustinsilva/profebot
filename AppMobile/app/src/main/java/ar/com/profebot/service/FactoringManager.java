@@ -55,6 +55,8 @@ public class FactoringManager {
 
     private static String originalPolynomial;
 
+    private static AlertDialog dialog;
+
     public static void setContext(SolvePolynomialActivity context) {
         FactoringManager.context = context;
     }
@@ -87,6 +89,10 @@ public class FactoringManager {
     }
 
     public static void showPopUp(){
+        dialog.show();
+    }
+
+    public static void setUpPopUp(Boolean isFirstStep){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View view = context.getLayoutInflater().inflate(R.layout.polynomial_results_pop_up, null);
 
@@ -108,7 +114,7 @@ public class FactoringManager {
                 "});");
         lastEquation.setText("$$" + getEquationAfterFactorizing() + "$$");
 
-        String rootsCommaSeparated = removeDecimals(android.text.TextUtils.join(" ; ", roots));
+        String rootsCommaSeparated = ExpressionsManager.removeDecimals(android.text.TextUtils.join(" ; ", roots));
         TextView rootsLabel = (TextView) view.findViewById(R.id.roots_label_id);
         if(roots.size() > 1){
             String rootsAsText = "" + context.getText(R.string.RAICES_ENCONTRADAS);
@@ -120,22 +126,16 @@ public class FactoringManager {
 
         view.setClipToOutline(true);
         builder.setView(view);
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        dialog = builder.create();
 
-        ((Button) view.findViewById(R.id.go_to_main_menu_id)).setOnClickListener(new View.OnClickListener() {
+        ((Button) view.findViewById(R.id.close_pop_up_id)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                context.startActivity(new Intent(context, MainActivity.class));
-                dialog.cancel();
-            }
-        });
-
-        ((Button) view.findViewById(R.id.go_to_enter_polynomial_id)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                context.startActivity(new Intent(context, EnterPolinomialEquationOptionsActivity.class));
-                dialog.cancel();
+                if(isFirstStep){
+                    v.getContext().startActivity(new Intent(v.getContext(), EnterPolinomialEquationOptionsActivity.class));
+                    dialog.cancel();
+                }
+                dialog.hide();
             }
         });
     }
@@ -260,7 +260,7 @@ public class FactoringManager {
     public static String getEquationAfterFactorizing(){
         String rootsFactorizedAux = "";
         if(!rootsFactorized.isEmpty()){
-            rootsFactorizedAux = removeDecimals(rootsFactorized);
+            rootsFactorizedAux = ExpressionsManager.removeDecimals(rootsFactorized);
             rootsFactorizedAux = rootsFactorizedAux.replace("x", "a_1");
             rootsFactorizedAux = FormulaParser.parseToLatex(rootsFactorizedAux).replace("{a}_{1}", "x");
             rootsFactorizedAux = "\\mathbf{" + rootsFactorizedAux + "}" + (!pendingPolynomial.isEmpty() ? "*" : "");
@@ -268,7 +268,7 @@ public class FactoringManager {
 
         String pendingPolynomialAux = "";
         if(!pendingPolynomial.isEmpty()){
-            pendingPolynomialAux = removeDecimals(pendingPolynomial);
+            pendingPolynomialAux = ExpressionsManager.removeDecimals(pendingPolynomial);
 
             String firstSign = "";
             if(pendingPolynomialAux.substring(0, 1).contains("-")){
@@ -363,21 +363,7 @@ public class FactoringManager {
             }
             firstTerm = false;
         }
-        return removeDecimals(stringBuilder.toString());
-    }
-
-    private static String removeDecimals(String expression){
-        return expression.trim()
-                .replaceAll("\\.0\\+", "+")
-                .replaceAll("\\.0\\-", "-")
-                .replaceAll("\\.0\\/", "/")
-                .replaceAll("\\.0\\*", "*")
-                .replaceAll("\\.0\\^", "^")
-                .replaceAll("\\.0\\(", "(")
-                .replaceAll("\\.0\\)", ")")
-                .replaceAll("\\.0x", "x")
-                .replaceAll("\\.0 ", " ")
-                .replaceAll("\\.0$", "");
+        return ExpressionsManager.removeDecimals(stringBuilder.toString());
     }
 
     public static void factorizeBy(Integer option){
@@ -630,6 +616,11 @@ public class FactoringManager {
 
     private static Boolean hasIndependentTerm(){
         return polynomialTerms.containsKey(0);
+    }
+
+    public static void enableSummary(Boolean isFirstStep){
+        setUpPopUp(isFirstStep);
+        context.enableSummary();
     }
 
     private static String getMultiplicityName(Integer multiplicity){
