@@ -34,7 +34,7 @@ public class PendingExercise {
     }
 
     public String getInfixEquation() {
-        return infixEquation;
+        return ExpressionsManager.removeDecimals(infixEquation);
     }
 
     public String getDescription() {

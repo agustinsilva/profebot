@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_SUMA_COMO_SUMA_OPTION">Pasar de térmimo la suma</string>
+    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_SUMA_COMO_SUMA_OPTION">Pasar de término la suma</string>
     <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_SUMA_COMO_SUMA_JUSTIFICATION">Cuando se pasa un término que está sumando, de un lado del igual al otro, se lo debe pasar como resta (es decir, invirtiendo la operación con la que aparece originalmente)</string>
 
-    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RESTA_COMO_RESTA_OPTION">Pasar de térmimo la resta</string>
+    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RESTA_COMO_RESTA_OPTION">Pasar de término la resta</string>
     <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RESTA_COMO_RESTA_JUSTIFICATION">Cuando se pasa un término que está restando, de un lado del igual al otro, se lo debe pasar como suma (es decir, invirtiendo la operación con la que aparece originalmente)</string>
 
-    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_MULTIPLICACION_COMO_MULTIPLICACION_OPTION">Pasar de térmimo la multiplicación</string>
+    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_MULTIPLICACION_COMO_MULTIPLICACION_OPTION">Pasar de término la multiplicación</string>
     <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_MULTIPLICACION_COMO_MULTIPLICACION_JUSTIFICATION">Cuando se pasa un término que está multiplicando, de un lado del igual al otro, se lo debe pasar como división (es decir, invirtiendo la operación con la que aparece originalmente)</string>
 
-    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_DIVISION_COMO_DIVISION_OPTION">Pasar de térmimo la división</string>
+    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_DIVISION_COMO_DIVISION_OPTION">Pasar de término la división</string>
     <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_DIVISION_COMO_DIVISION_JUSTIFICATION">Cuando se pasa un término que está dividiendo, de un lado del igual al otro, se lo debe pasar como multiplicación (es decir, invirtiendo la operación con la que aparece originalmente)</string>
 
-    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_POTENCIA_COMO_POTENCIA_OPTION">Pasar de térmimo la potencia</string>
+    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_POTENCIA_COMO_POTENCIA_OPTION">Pasar de término la potencia</string>
     <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_POTENCIA_COMO_POTENCIA_JUSTIFICATION">Cuando se pasa un exponente, de un lado del igual al otro, se lo debe pasar como raíz (es decir, invirtiendo la operación con la que aparece originalmente)</string>
 
-    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RAIZ_COMO_RAIZ_OPTION">Pasar de térmimo la raíz</string>
+    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RAIZ_COMO_RAIZ_OPTION">Pasar de término la raíz</string>
     <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RAIZ_COMO_RAIZ_JUSTIFICATION">Cuando se pasa una raíz, de un lado del igual al otro, se lo debe pasar como potencia (es decir, invirtiendo la operación con la que aparece originalmente)</string>
 
     <string name="PASAJE_TERMINO_DE_MULTIPLICACION_COMO_DIVISION_SIENDO_TERMINO_DE_SUMATORIA_OPTION">Pasar la multiplicación como división</string>

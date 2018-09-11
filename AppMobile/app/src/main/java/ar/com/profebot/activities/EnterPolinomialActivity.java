@@ -48,11 +48,13 @@ public class EnterPolinomialActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.polinomial_layout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_id);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        super.onCreate(savedInstanceState);
+
         polynomialTerms = new HashMap<>();
 
         Button enterPolinomial = (Button)findViewById(R.id.AddEquationButton);
@@ -119,10 +121,10 @@ public class EnterPolinomialActivity extends AppCompatActivity {
     }
 
     private void addTerm(View view){
-        if (this.validTerms(coefficientTermInput,potentialTermInput) & reachLimitOfTerms() ){
+        Integer exponent = Integer.parseInt(potentialTermInput.getText().toString());
+        if (this.validTerms(coefficientTermInput,potentialTermInput) & reachLimitOfTerms(exponent) ){
             Double coefficient = Double.parseDouble(coefficientTermInput.getText().toString());
             coefficient = signToogleButton.isChecked() ? -1 * coefficient : coefficient;
-            Integer exponent = Integer.parseInt(potentialTermInput.getText().toString());
             Double newCoefficient;
             if(!polynomialTerms.containsKey(exponent)){
                 newCoefficient = coefficient;
@@ -224,9 +226,9 @@ public class EnterPolinomialActivity extends AppCompatActivity {
             ((MathView) findViewById(R.id.equation_to_solve_id)).setText("$$" + "$$" );
         }
     }
-    private boolean reachLimitOfTerms() {
+    private boolean reachLimitOfTerms(Integer exponent) {
         int maxSize = 10;
-        if (polynomialTerms.size() >= maxSize) {
+        if (polynomialTerms.size() >= maxSize && !polynomialTerms.containsKey(exponent)) {
             Toast toast1 = Toast.makeText(getApplicationContext(), "El polinomio ingresado no puede tener más de " + maxSize + " términos", Toast.LENGTH_LONG);
             toast1.setGravity(Gravity.CENTER, 0, 0);
             toast1.show();
