@@ -1350,4 +1350,14 @@ public class TreeUtils {
         }
         return esReducible;
     }
+
+    /**
+     * No tiene exponente ni coeficiente, son ambos 1
+     * @param node
+     * @return
+     */
+    public static boolean isSingleSymbol(TreeNode node) {
+        if (node == null){return false;}
+        return "X".equals(node.getValue());
+    }
 }

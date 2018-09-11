@@ -64,8 +64,8 @@ public class ResolutorService {
                 incorrectOptionIndex1 = 0;
                 incorrectOptionIndex2 = 2;
             }else{
-                incorrectOptionIndex1 = 1;
-                incorrectOptionIndex2 = 2;
+                incorrectOptionIndex1 = 0;
+                incorrectOptionIndex2 = 1;
             }
 
             // Opción correcta
@@ -111,6 +111,89 @@ public class ResolutorService {
 
             MultipleChoiceStep multipleChoiceStep = new MultipleChoiceStep(equationBase,
                     newEquationBase, summary, optionA, equationOptionA,
+                    optionB, equationOptionB, optionC, equationOptionC, (correctOptionIndex + 1),
+                    correctOptionJustification, incorrectOptionJustification1, incorrectOptionJustification2);
+            result.add(multipleChoiceStep);
+        }
+
+        // El ultimo paso es el que resuelve
+        if (!result.isEmpty()){
+            result.get(result.size()-1).setSolved(true);
+        }
+
+        return result;
+    }
+
+    public List<MultipleChoiceStep> resolveExpressionTestWithoutContext(String expression) throws InvalidExpressionException {
+
+        Tree tree = (new ParserService()).parseExpression(expression);
+
+        List<EquationStatus> steps = stepThrough(tree, false);
+
+
+        List<MultipleChoiceStep> result = new ArrayList<>();
+        for(EquationStatus e: steps){
+
+            Tree originalEquation = e.getOldEquation();
+
+            String equationBase = originalEquation.toExpression();
+            String newEquationBase = e.getNewEquation().toExpression();
+
+            // Posiciones random de opciones
+            StepOptionInfo[] stepOptionInfo = new StepOptionInfo[3];
+            Integer correctOptionIndex = ThreadLocalRandom.current().nextInt(0, 3);
+            Integer incorrectOptionIndex1;
+            Integer incorrectOptionIndex2;
+            if (correctOptionIndex.equals(0)){
+                incorrectOptionIndex1 = 1;
+                incorrectOptionIndex2 = 2;
+            }else if (correctOptionIndex.equals(1)){
+                incorrectOptionIndex1 = 0;
+                incorrectOptionIndex2 = 2;
+            }else{
+                incorrectOptionIndex1 = 0;
+                incorrectOptionIndex2 = 1;
+            }
+
+            // Opción correcta
+            stepOptionInfo[correctOptionIndex] = new StepOptionInfo("",
+                    newEquationBase,
+                    "");
+
+
+            InvalidStep[] invalidSteps = invalidOptionService.getInvalidSteps(originalEquation);
+
+            stepOptionInfo[incorrectOptionIndex1] = new StepOptionInfo("",
+                    invalidSteps[0].getTree().toExpression(),
+                    "");
+
+            // Opción incorrecta 2
+            stepOptionInfo[incorrectOptionIndex2] = new StepOptionInfo("",
+                    invalidSteps[1].getTree().toExpression(),
+                    "");
+
+
+            // Valores finales para el front
+            // Opcion A
+            int optionIndex = 0;
+            String optionA =  stepOptionInfo[optionIndex].getOptionText();
+            String equationOptionA = stepOptionInfo[optionIndex].getEquationText();
+            String correctOptionJustification = stepOptionInfo[optionIndex].getJustificationText();
+
+            // Opción B
+            optionIndex++;
+            String optionB = stepOptionInfo[optionIndex].getOptionText();
+            String equationOptionB = stepOptionInfo[optionIndex].getEquationText();
+            String incorrectOptionJustification1 =  stepOptionInfo[optionIndex].getJustificationText();
+
+            // Opción C
+            optionIndex++;
+            String optionC = stepOptionInfo[optionIndex].getOptionText();
+            String equationOptionC = stepOptionInfo[optionIndex].getEquationText();
+            String incorrectOptionJustification2 = stepOptionInfo[optionIndex].getJustificationText();
+
+            MultipleChoiceStep multipleChoiceStep = new MultipleChoiceStep(equationBase,
+                    newEquationBase, "", optionA, equationOptionA,
                     optionB, equationOptionB, optionC, equationOptionC, (correctOptionIndex + 1),
                     correctOptionJustification, incorrectOptionJustification1, incorrectOptionJustification2);
             result.add(multipleChoiceStep);

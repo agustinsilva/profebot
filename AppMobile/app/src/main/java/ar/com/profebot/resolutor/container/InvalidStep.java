@@ -120,4 +120,12 @@ public class InvalidStep {
     public void setTree(Tree tree) {
         this.tree = tree;
     }
+
+    @Override
+    public String toString() {
+        return "InvalidStep{" +
+                "type=" + type +
+                ", tree=" + tree +
+                '}';
+    }
 }

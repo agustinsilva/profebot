@@ -12,6 +12,15 @@ import ar.com.profebot.resolutor.utils.TreeUtils;
 
 public class InvalidOptionService {
 
+    public InvalidStep[] getInvalidSteps(Tree originalTree) {
+        InvalidStep[] steps = new InvalidStep[2];
+
+        steps[0] = getFirstInvalidOption(originalTree);
+        steps[1] = getSecondInvalidOption(originalTree);
+
+        return steps;
+    }
+
     /***
      * @param originalTree arbol del cual se quiere generar un paso inválido
      * @return devuelve la info del nuevo arbol generado con un pasaje de términos inválido
@@ -64,6 +73,29 @@ public class InvalidOptionService {
             }
         } else {
             type = getTipoPasajeTerminoPrimerAncestro(randomNode);
+        }
+
+        // En el caso de que sea una X, voy a dividir el nodo para que pueda seguir la lógica normal
+        if (TreeUtils.isSymbol(randomNode)){
+            TreeNode symbolNode;
+            if (!randomNode.getCoefficient().equals(1)){
+                symbolNode = TreeNode.createOperator("*",
+                        TreeNode.createConstant(randomNode.getCoefficient()),
+                        TreeNode.createPolynomialTerm("X", randomNode.getExponent(), 1));
+            } else if (!randomNode.getExponent().equals(1)){
+                symbolNode = TreeNode.createOperator("^",
+                        TreeNode.createPolynomialTerm("X",1,  randomNode.getCoefficient()),
+                        TreeNode.createConstant(randomNode.getExponent()));
+            } else{
+                symbolNode = randomNode.clone();
+            }
+
+            // Actualizo el arbol (como esta clonado puedo)
+            symbolNode.setChildIndex(randomNode.getChildIndex());
+            symbolNode.setParentNode(randomNode.getParentNode());
+            randomNode = symbolNode;
+            randomNode.getParentNode().setChild(randomNode.getChildIndex(), symbolNode);
+
         }
 
         /****Magic begins****/
@@ -132,7 +164,7 @@ public class InvalidOptionService {
 
         if (node != null){
             // No terminal
-            if (!TreeUtils.isConstant(node) && !TreeUtils.isSymbol(node)){
+            if (!TreeUtils.isConstant(node) && !TreeUtils.isSingleSymbol(node)){
                 list.add(node);
 
                 if (node.getArgs()!=null){
@@ -195,7 +227,7 @@ public class InvalidOptionService {
             return InvalidStep.InvalidTypes.PASAJE_DE_TERMINO_DE_DESCENDENCIA_RESTA_COMO_RESTA;
         } else if (node.esDivision()) {
             return InvalidStep.InvalidTypes.PASAJE_DE_TERMINO_DE_DESCENDENCIA_DIVISION_COMO_DIVISION;
-        } else if (node.esProducto()) {
+        } else if (node.esProducto() || TreeUtils.isSymbol(node) ) {
             return InvalidStep.InvalidTypes.PASAJE_DE_TERMINO_DE_DESCENDENCIA_MULTIPLICACION_COMO_MULTIPLICACION;
         } else if (node.esRaiz()) {
             return InvalidStep.InvalidTypes.PASAJE_DE_TERMINO_DE_DESCENDENCIA_RAIZ_COMO_RAIZ;
