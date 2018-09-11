@@ -103,7 +103,14 @@ public class PendingExercisesActivity extends AppCompatActivity {
                         public void onItemClick(PendingExercise pendingExercise) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(thisActivity);
                             View view = getLayoutInflater().inflate(R.layout.pending_exercise_pop_up, null);
-                            ((MathView) view.findViewById(R.id.equation_to_solve_id)).setText("$$" + ExpressionsManager.getEquationAsLatex(pendingExercise.getInfixEquation()) + "$$");
+                            MathView equation = ((MathView) view.findViewById(R.id.equation_to_solve_id));
+                            equation.setEngine(MathView.Engine.MATHJAX);
+                            equation.config("MathJax.Hub.Config({\n"+
+                                    "  CommonHTML: { linebreaks: { automatic: true } },\n"+
+                                    "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
+                                    "         SVG: { linebreaks: { automatic: true } }\n"+
+                                    "});");
+                            equation.setText("$$" + ExpressionsManager.getEquationAsLatex(pendingExercise.getInfixEquation()) + "$$");
                             ((TextView) view.findViewById(R.id.pop_up_title_id)).setText(pendingExercise.getExerciseId());
                             view.setClipToOutline(true);
                             builder.setView(view);

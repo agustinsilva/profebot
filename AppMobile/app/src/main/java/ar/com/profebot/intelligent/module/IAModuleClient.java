@@ -29,71 +29,88 @@ public class IAModuleClient extends AsyncTask<String, Void, Void> {
     private Context context;
 
     public IAModuleClient(String root, String term, String termContext, Context context) {
-        this.json = "{\"root\": \"" + root + "\",\"term\":\"" + term + "\",\"context\":\"" + termContext + "\"}";
+        String termToUse = term;
+        String contextToUse = termContext;
+        if(!this.containsVariable(term) && !this.containsVariable(termContext)){
+            termToUse = "no-variable";
+            contextToUse = "no-variable";
+        }else if(!this.containsVariable(term)){
+            termToUse = contextToUse;
+        }else{
+            contextToUse = termToUse;
+        }
+
+        this.json = "{\"root\": \"" + root + "\",\"term\":\"" + termToUse + "\",\"context\":\"" + contextToUse + "\"}";
         this.timeout = 3600000;
         this.context = context;
     }
 
+    private Boolean containsVariable(String expression){
+        return expression.replace("X", "x").contains("x");
+    }
+
     @Override
     protected Void doInBackground(String... params) {
-        HttpURLConnection connection = null;
-        try {
-            URL u = new URL(context.getString(R.string.url));
-            connection = (HttpURLConnection) u.openConnection();
-            connection.setRequestMethod(context.getString(R.string.method));
+        if(!this.json.contains("no-variable")){
+            HttpURLConnection connection = null;
+            try {
+                URL u = new URL(context.getString(R.string.url));
+                connection = (HttpURLConnection) u.openConnection();
+                connection.setRequestMethod(context.getString(R.string.method));
 
-            //set the sending type and receiving type to json
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setRequestProperty("Accept", "application/json");
+                //set the sending type and receiving type to json
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setRequestProperty("Accept", "application/json");
 
-            connection.setAllowUserInteraction(false);
-            connection.setConnectTimeout(timeout);
-            connection.setReadTimeout(timeout);
+                connection.setAllowUserInteraction(false);
+                connection.setConnectTimeout(timeout);
+                connection.setReadTimeout(timeout);
 
-            if (json != null) {
-                //set the content length of the body
-                connection.setRequestProperty("Content-length", json.getBytes().length + "");
-                connection.setDoInput(true);
-                connection.setDoOutput(true);
-                connection.setUseCaches(false);
+                if (json != null) {
+                    //set the content length of the body
+                    connection.setRequestProperty("Content-length", json.getBytes().length + "");
+                    connection.setDoInput(true);
+                    connection.setDoOutput(true);
+                    connection.setUseCaches(false);
 
-                //send the json as body of the request
-                OutputStream outputStream = connection.getOutputStream();
-                outputStream.write(json.getBytes("UTF-8"));
-                outputStream.close();
-            }
+                    //send the json as body of the request
+                    OutputStream outputStream = connection.getOutputStream();
+                    outputStream.write(json.getBytes("UTF-8"));
+                    outputStream.close();
+                }
 
-            //Connect to the server
-            connection.connect();
+                //Connect to the server
+                connection.connect();
 
-            int status = connection.getResponseCode();
-            Log.i("HTTP Client", "HTTP status code : " + status);
-            switch (status) {
-                case 200:
-                case 201:
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                    final StringBuilder sb = new StringBuilder();
-                    String line;
-                    while ((line = bufferedReader.readLine()) != null) {
-                        sb.append(line + "\n");
+                int status = connection.getResponseCode();
+                Log.i("HTTP Client", "HTTP status code : " + status);
+                switch (status) {
+                    case 200:
+                    case 201:
+                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                        final StringBuilder sb = new StringBuilder();
+                        String line;
+                        while ((line = bufferedReader.readLine()) != null) {
+                            sb.append(line + "\n");
+                        }
+                        bufferedReader.close();
+                        Log.i("HTTP Client", "Received String : " + sb.toString());
+                        // Save received string
+                        saveEquationsFromIAModule(sb.toString(), context);
+                }
+            } catch (MalformedURLException ex) {
+                Log.e("HTTP Client", "Error in http connection" + ex.toString());
+            } catch (IOException ex) {
+                Log.e("HTTP Client", "Error in http connection" + ex.toString());
+            } catch (Exception ex) {
+                Log.e("HTTP Client", "Error in http connection" + ex.toString());
+            } finally {
+                if (connection != null) {
+                    try {
+                        connection.disconnect();
+                    } catch (Exception ex) {
+                        Log.e("HTTP Client", "Error in http connection" + ex.toString());
                     }
-                    bufferedReader.close();
-                    Log.i("HTTP Client", "Received String : " + sb.toString());
-                    // Save received string
-                    saveEquationsFromIAModule(sb.toString(), context);
-            }
-        } catch (MalformedURLException ex) {
-            Log.e("HTTP Client", "Error in http connection" + ex.toString());
-        } catch (IOException ex) {
-            Log.e("HTTP Client", "Error in http connection" + ex.toString());
-        } catch (Exception ex) {
-            Log.e("HTTP Client", "Error in http connection" + ex.toString());
-        } finally {
-            if (connection != null) {
-                try {
-                    connection.disconnect();
-                } catch (Exception ex) {
-                    Log.e("HTTP Client", "Error in http connection" + ex.toString());
                 }
             }
         }
@@ -119,10 +136,8 @@ public class IAModuleClient extends AsyncTask<String, Void, Void> {
             for (Iterator<String> equationString = equationItems.iterator(); equationString.hasNext();) {
                 JSONObject pnObj = new JSONObject();
                 String newEquation = equationString.next();
-                if(newEquation.contains("x")){
-                    pnObj.put("equation", ExpressionsManager.removeDecimals(newEquation));
-                    equationsJsonToStore.accumulate("pendingExercises", pnObj);
-                }
+                pnObj.put("equation", ExpressionsManager.removeDecimals(newEquation));
+                equationsJsonToStore.accumulate("pendingExercises", pnObj);
             }
             //Save equations in memory
             PreferenceManager.getDefaultSharedPreferences(context).edit()
