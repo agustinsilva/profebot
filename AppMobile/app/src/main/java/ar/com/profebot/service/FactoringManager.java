@@ -642,16 +642,22 @@ public class FactoringManager {
         String answer;
         switch (option){
             case 1:
-                answer = "" + context.getText(R.string.FACTOR_COMUN_ES_EL_CORRECTO);
-                answer =  answer
-                        .replace("/raiz/", "" + currentRoot1)
-                        .replace("/tipo/", currentRootType);
-                if(currentRoot2 == null){
-                    return answer;
+                if(currentRoot1 != null){
+                    answer = "" + context.getText(R.string.FACTOR_COMUN_ES_EL_CORRECTO);
+                    answer =  answer
+                            .replace("/raiz/", "" + currentRoot1)
+                            .replace("/tipo/", currentRootType);
+                    if(currentRoot2 == null){
+                        return answer;
+                    }
+
+                    answer += " " + context.getText(R.string.RAIZ_EXTRA);
+                    return answer.replace("/raiz/", "" + currentRoot2);
+
                 }
 
-                answer += " " + context.getText(R.string.RAIZ_EXTRA);
-                return answer.replace("/raiz/", "" + currentRoot2);
+                return "" + context.getText(R.string.FACTOR_COMUN_NUMERICO_ES_EL_CORRECTO);
+
             case 2:
                 if(currentRoot2 == null){
                     answer = "" + context.getText(R.string.CUADRATICA_RAIZ_DOBLE_ES_EL_CORRECTO);
