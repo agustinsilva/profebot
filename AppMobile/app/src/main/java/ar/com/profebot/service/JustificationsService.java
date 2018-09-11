@@ -550,15 +550,15 @@ public class JustificationsService {
                         R.string.PASAJE_TERMINO_DE_RESTA_COMO_SUMA_SIENDO_TERMINO_MUTIPLICATIVO_OPTION,
                         R.string.PASAJE_TERMINO_DE_RESTA_COMO_SUMA_SIENDO_TERMINO_MUTIPLICATIVO_JUSTIFICATION);
 
-            // TODO: checkear
             case PASAJE_TERMINO_DE_RAIZ_COMO_POTENCIA:
                 return createTextsFrom(context,
-                        R.string.PASAJE_TERMINO_DE_RESTA_COMO_SUMA_SIENDO_TERMINO_MUTIPLICATIVO_OPTION,
-                        R.string.PASAJE_TERMINO_DE_RESTA_COMO_SUMA_SIENDO_TERMINO_MUTIPLICATIVO_JUSTIFICATION);
+                        R.string.PASAJE_TERMINO_DE_RAIZ_COMO_POTENCIA_OPTION,
+                        R.string.PASAJE_TERMINO_DE_RAIZ_COMO_POTENCIA_JUSTIFICATION);
 
-            // TODO: checkear
             case PASAJE_TERMINO_DE_POTENCIA_COMO_RAIZ:
-                break;
+                return createTextsFrom(context,
+                        R.string.PASAJE_TERMINO_DE_POTENCIA_COMO_RAIZ_OPTION,
+                        R.string.PASAJE_TERMINO_DE_POTENCIA_COMO_RAIZ_JUSTIFICATION);
 
             // Tipo 1 - bullet 2 - todos los ancestros del mismo tipo
 

@@ -30,6 +30,12 @@
     <string name="PASAJE_TERMINO_DE_RESTA_COMO_SUMA_SIENDO_TERMINO_MUTIPLICATIVO_OPTION">Pasar la resta como suma</string>
     <string name="PASAJE_TERMINO_DE_RESTA_COMO_SUMA_SIENDO_TERMINO_MUTIPLICATIVO_JUSTIFICATION">Si bien es correcto que un término que está restando pase sumando, no se puede hacer este tipo de pasajes cuando la resta es un factor dentro de una multiplicación; de esta forma, para lograr el despeje, se debe pasar primero el otro factor que está multiplicando para despejar la resta.</string>
 
+    <string name="PASAJE_TERMINO_DE_RAIZ_COMO_POTENCIA_OPTION">Pasar la raíz como potencia</string>
+    <string name="PASAJE_TERMINO_DE_RAIZ_COMO_POTENCIA_JUSTIFICATION">Si bien es correcto que una raíz se pase como potencia, no se puede hacer este tipo de pasajes cuando la raíz es un término dentro de una suma o resta, o un factor dentro de una multiplicación o división; de esta forma, para lograr el despeje, se deben pasar primero los otros términos para despejar la raíz.</string>
+
+    <string name="PASAJE_TERMINO_DE_POTENCIA_COMO_RAIZ_OPTION">Pasar la potencia como raíz</string>
+    <string name="PASAJE_TERMINO_DE_POTENCIA_COMO_RAIZ_JUSTIFICATION">Si bien es correcto que un exponente se pase como raíz, no se puede hacer este tipo de pasajes cuando la potencia es un término dentro de una suma o resta, o un factor dentro de una multiplicación o división; de esta forma, para lograr el despeje, se deben pasar primero los otros términos para despejar la potencia.</string>
+
     <string name="SUMA_RESUELTA_INCORRECTAMENTE_OPTION">Resolver la suma</string>
     <string name="SUMA_RESUELTA_INCORRECTAMENTE_JUSTIFICATION">La suma no está bien resuelta; el resultado indicado no era el esperado.</string>
 
