@@ -488,69 +488,168 @@ public class JustificationsService {
         return justifications;
     }
 
+    private static Map<String, String> createTextsFrom(Context context, int optionId, int justificationId){
+        Map<String, String> justifications = new HashMap<>();
+        justifications.put("option", context.getString(optionId));
+        justifications.put("incorrectOptionJustification", context.getString(justificationId));
+        return justifications;
+    }
+
     public static Map<String, String> getIncorrectJustificationsFrom(InvalidStep.InvalidTypes source, Context context) {
-
         switch(source){
-
+            // Tipo 1 - bullet 1
             case PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_SUMA_COMO_SUMA:
-                break;
-            case PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RESTA_COMO_RESTA:
-                break;
-            case PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_MULTIPLICACION_COMO_MULTIPLICACION:
-                break;
-            case PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_DIVISION_COMO_DIVISION:
-                break;
-            case PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_POTENCIA_COMO_POTENCIA:
-                break;
-            case PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RAIZ_COMO_RAIZ:
-                break;
-            case PASAJE_TERMINO_DE_MULTIPLICACION_COMO_DIVISION_SIENDO_TERMINO_DE_SUMATORIA:
-                break;
-            case PASAJE_TERMINO_DE_DIVISION_COMO_MULTIPLICACION_SIENDO_TERMINO_DE_SUMATORIA:
-                break;
-            case PASAJE_TERMINO_DE_SUMA_COMO_RESTA_SIENDO_TERMINO_MUTIPLICATIVO:
-                break;
-            case PASAJE_TERMINO_DE_RESTA_COMO_SUMA_SIENDO_TERMINO_MUTIPLICATIVO:
-                return createIncorrectTextsFrom(context,
-                        R.string.FACTOR_SUM_PRODUCT_RULE_OPTION,
-                        R.string.FACTOR_SUM_PRODUCT_RULE_JUSTIFICATION);
+                return createTextsFrom(context,
+                        R.string.PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_SUMA_COMO_SUMA_OPTION,
+                        R.string.PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_SUMA_COMO_SUMA_JUSTIFICATION);
 
+            case PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RESTA_COMO_RESTA:
+                return createTextsFrom(context,
+                        R.string.PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RESTA_COMO_RESTA_OPTION,
+                        R.string.PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RESTA_COMO_RESTA_JUSTIFICATION);
+
+            case PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_MULTIPLICACION_COMO_MULTIPLICACION:
+                return createTextsFrom(context,
+                        R.string.PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_MULTIPLICACION_COMO_MULTIPLICACION_OPTION,
+                        R.string.PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_MULTIPLICACION_COMO_MULTIPLICACION_JUSTIFICATION);
+
+            case PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_DIVISION_COMO_DIVISION:
+                return createTextsFrom(context,
+                        R.string.PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_DIVISION_COMO_DIVISION_OPTION,
+                        R.string.PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_DIVISION_COMO_DIVISION_JUSTIFICATION);
+
+            case PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_POTENCIA_COMO_POTENCIA:
+                return createTextsFrom(context,
+                        R.string.PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_POTENCIA_COMO_POTENCIA_OPTION,
+                        R.string.PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_POTENCIA_COMO_POTENCIA_JUSTIFICATION);
+
+            case PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RAIZ_COMO_RAIZ:
+                return createTextsFrom(context,
+                        R.string.PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RAIZ_COMO_RAIZ_OPTION,
+                        R.string.PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RAIZ_COMO_RAIZ_JUSTIFICATION);
+
+            // Tipo 1 - bullet 2 - al menos un ancestro de distinto tipo
+
+            case PASAJE_TERMINO_DE_MULTIPLICACION_COMO_DIVISION_SIENDO_TERMINO_DE_SUMATORIA:
+                return createTextsFrom(context,
+                        R.string.PASAJE_TERMINO_DE_MULTIPLICACION_COMO_DIVISION_SIENDO_TERMINO_DE_SUMATORIA_OPTION,
+                        R.string.PASAJE_TERMINO_DE_MULTIPLICACION_COMO_DIVISION_SIENDO_TERMINO_DE_SUMATORIA_JUSTIFICATION);
+
+            case PASAJE_TERMINO_DE_DIVISION_COMO_MULTIPLICACION_SIENDO_TERMINO_DE_SUMATORIA:
+                return createTextsFrom(context,
+                        R.string.PASAJE_TERMINO_DE_DIVISION_COMO_MULTIPLICACION_SIENDO_TERMINO_DE_SUMATORIA_OPTION,
+                        R.string.PASAJE_TERMINO_DE_DIVISION_COMO_MULTIPLICACION_SIENDO_TERMINO_DE_SUMATORIA_JUSTIFICATION);
+
+            case PASAJE_TERMINO_DE_SUMA_COMO_RESTA_SIENDO_TERMINO_MUTIPLICATIVO:
+                return createTextsFrom(context,
+                        R.string.PASAJE_TERMINO_DE_SUMA_COMO_RESTA_SIENDO_TERMINO_MUTIPLICATIVO_OPTION,
+                        R.string.PASAJE_TERMINO_DE_SUMA_COMO_RESTA_SIENDO_TERMINO_MUTIPLICATIVO_JUSTIFICATION);
+
+            case PASAJE_TERMINO_DE_RESTA_COMO_SUMA_SIENDO_TERMINO_MUTIPLICATIVO:
+                return createTextsFrom(context,
+                        R.string.PASAJE_TERMINO_DE_RESTA_COMO_SUMA_SIENDO_TERMINO_MUTIPLICATIVO_OPTION,
+                        R.string.PASAJE_TERMINO_DE_RESTA_COMO_SUMA_SIENDO_TERMINO_MUTIPLICATIVO_JUSTIFICATION);
+
+            // TODO: checkear
             case PASAJE_TERMINO_DE_RAIZ_COMO_POTENCIA:
-                break;
+                return createTextsFrom(context,
+                        R.string.PASAJE_TERMINO_DE_RESTA_COMO_SUMA_SIENDO_TERMINO_MUTIPLICATIVO_OPTION,
+                        R.string.PASAJE_TERMINO_DE_RESTA_COMO_SUMA_SIENDO_TERMINO_MUTIPLICATIVO_JUSTIFICATION);
+
+            // TODO: checkear
             case PASAJE_TERMINO_DE_POTENCIA_COMO_RAIZ:
                 break;
+
+            // Tipo 1 - bullet 2 - todos los ancestros del mismo tipo
+
             case PASAJE_DE_TERMINO_DE_DESCENDENCIA_SUMA_COMO_SUMA:
-                break;
+                return createTextsFrom(context,
+                        R.string.PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_SUMA_COMO_SUMA_OPTION,
+                        R.string.PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_SUMA_COMO_SUMA_JUSTIFICATION);
+
             case PASAJE_DE_TERMINO_DE_DESCENDENCIA_RESTA_COMO_RESTA:
-                break;
+                return createTextsFrom(context,
+                        R.string.PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RESTA_COMO_RESTA_OPTION,
+                        R.string.PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RESTA_COMO_RESTA_JUSTIFICATION);
+
             case PASAJE_DE_TERMINO_DE_DESCENDENCIA_MULTIPLICACION_COMO_MULTIPLICACION:
-                break;
+                return createTextsFrom(context,
+                        R.string.PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_MULTIPLICACION_COMO_MULTIPLICACION_OPTION,
+                        R.string.PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_MULTIPLICACION_COMO_MULTIPLICACION_JUSTIFICATION);
+
             case PASAJE_DE_TERMINO_DE_DESCENDENCIA_DIVISION_COMO_DIVISION:
-                break;
+                return createTextsFrom(context,
+                        R.string.PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_DIVISION_COMO_DIVISION_OPTION,
+                        R.string.PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_DIVISION_COMO_DIVISION_JUSTIFICATION);
+
             case PASAJE_DE_TERMINO_DE_DESCENDENCIA_POTENCIA_COMO_POTENCIA:
-                break;
+                return createTextsFrom(context,
+                        R.string.PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_POTENCIA_COMO_POTENCIA_OPTION,
+                        R.string.PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_POTENCIA_COMO_POTENCIA_JUSTIFICATION);
+
             case PASAJE_DE_TERMINO_DE_DESCENDENCIA_RAIZ_COMO_RAIZ:
-                break;
+                return createTextsFrom(context,
+                        R.string.PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RAIZ_COMO_RAIZ_OPTION,
+                        R.string.PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RAIZ_COMO_RAIZ_JUSTIFICATION);
+
+            // Tipo 2 - operación aritmética mal resuelta
+
             case SUMA_RESUELTA_INCORRECTAMENTE:
-                break;
+                return createTextsFrom(context,
+                        R.string.SUMA_RESUELTA_INCORRECTAMENTE_OPTION,
+                        R.string.SUMA_RESUELTA_INCORRECTAMENTE_JUSTIFICATION);
+
             case RESTA_RESUELTA_INCORRECTAMENTE:
-                break;
+                return createTextsFrom(context,
+                        R.string.RESTA_RESUELTA_INCORRECTAMENTE_OPTION,
+                        R.string.RESTA_RESUELTA_INCORRECTAMENTE_JUSTIFICATION);
+
             case MULTIPLICACION_RESUELTA_INCORRECTAMENTE:
-                break;
+                return createTextsFrom(context,
+                        R.string.MULTIPLICACION_RESUELTA_INCORRECTAMENTE_OPTION,
+                        R.string.MULTIPLICACION_RESUELTA_INCORRECTAMENTE_JUSTIFICATION);
+
             case DIVISION_RESUELTA_INCORRECTAMENTE:
-                break;
+                return createTextsFrom(context,
+                        R.string.DIVISION_RESUELTA_INCORRECTAMENTE_OPTION,
+                        R.string.DIVISION_RESUELTA_INCORRECTAMENTE_JUSTIFICATION);
+
             case POTENCIA_RESUELTA_INCORRECTAMENTE:
-                break;
+                return createTextsFrom(context,
+                        R.string.POTENCIA_RESUELTA_INCORRECTAMENTE_OPTION,
+                        R.string.POTENCIA_RESUELTA_INCORRECTAMENTE_JUSTIFICATION);
+
             case RAIZ_RESUELTA_INCORRECTAMENTE:
-                break;
+                return createTextsFrom(context,
+                        R.string.RAIZ_RESUELTA_INCORRECTAMENTE_OPTION,
+                        R.string.RAIZ_RESUELTA_INCORRECTAMENTE_JUSTIFICATION);
+
+            // Tipo 2 - distributiva mal hecha
+
             case DISTRIBUTIVA_BASICA_MAL_RESUELTA:
-                break;
+                return createTextsFrom(context,
+                        R.string.DISTRIBUTIVA_BASICA_MAL_RESUELTA_OPTION,
+                        R.string.DISTRIBUTIVA_BASICA_MAL_RESUELTA_JUSTIFICATION);
+
             case DISTRIBUTIVA_DOBLE_MAL_RESUELTA:
-                break;
+                return createTextsFrom(context,
+                        R.string.DISTRIBUTIVA_DOBLE_MAL_RESUELTA_OPTION,
+                        R.string.DISTRIBUTIVA_DOBLE_MAL_RESUELTA_JUSTIFICATION);
+
+            // Tipo 2 - asociativa mal hecha
+
             case ASOCIATIVA_MAL_RESUELTA:
-                break;
+                return createTextsFrom(context,
+                        R.string.ASOCIATIVA_MAL_RESUELTA_OPTION,
+                        R.string.ASOCIATIVA_MAL_RESUELTA_JUSTIFICATION);
+
+            // Tipo 2 - potencia de binomio mal resuelta
+
             case DISTRIBUTIVA_DE_POTENCIA_SOBRE_BINOMIO:
-                break;
+                return createTextsFrom(context,
+                        R.string.DISTRIBUTIVA_DE_POTENCIA_SOBRE_BINOMIO_OPTION,
+                        R.string.DISTRIBUTIVA_DE_POTENCIA_SOBRE_BINOMIO_JUSTIFICATION);
+
             case CONSTANTE_NO_ENCONTRADA:
                 break;
         }
