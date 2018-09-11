@@ -119,9 +119,11 @@ public class FactoringManager {
         if(roots.size() > 1){
             String rootsAsText = "" + context.getText(R.string.RAICES_ENCONTRADAS);
             rootsLabel.setText(rootsAsText.replace("/raices/", rootsCommaSeparated));
-        }else{
+        }else if(roots.size() == 1){
             String rootsAsText = "" + context.getText(R.string.RAIZ_ENCONTRADA);
             rootsLabel.setText(rootsAsText.replace("/raiz/", rootsCommaSeparated));
+        }else{
+            rootsLabel.setVisibility(View.INVISIBLE);
         }
 
         view.setClipToOutline(true);
@@ -254,7 +256,7 @@ public class FactoringManager {
             pendingPolynomialAux = "\\mathbf{" + pendingPolynomialAux + "}";
         }
 
-        return rootsFactorizedAux + pendingPolynomialAux;
+        return addMultiplier(rootsFactorizedAux, pendingPolynomialAux);
     }
 
     public static String getEquationAfterFactorizing(){
@@ -279,7 +281,21 @@ public class FactoringManager {
             pendingPolynomialAux = firstSign + FormulaParser.parseToLatex(pendingPolynomialAux).replace("{a}_{1}", "x");
         }
 
-        return (multiplier != 1 ? multiplier + "*" : "") + rootsFactorizedAux + pendingPolynomialAux;
+        return addMultiplier(rootsFactorizedAux, pendingPolynomialAux);
+    }
+
+    private static String addMultiplier(String roots, String pending){
+        String equation;
+        if(multiplier != 1){
+            if(roots.isEmpty()){
+                equation = multiplier + "*(" + pending + ")";
+            }else{
+                equation = multiplier + "*" + roots + pending;
+            }
+        }else{
+            equation = roots + pending;
+        }
+        return ExpressionsManager.removeDecimals(equation);
     }
 
     public static void setFactors(){
@@ -287,7 +303,6 @@ public class FactoringManager {
         pendingPolynomial = getPolynomialGeneralForm(polynomialTerms);
         if(!roots.isEmpty() && !pendingPolynomial.isEmpty()){
             pendingPolynomial = "(" + pendingPolynomial + ")";
-            pendingPolynomial = (multiplier != 1 ? multiplier + "*" : "") + pendingPolynomial;
         }
 
         // Raíces ya calculadas
@@ -440,7 +455,7 @@ public class FactoringManager {
         if(polynomialTerms.get(getDegree()) != 1){
             Double mainCoefficient = polynomialTerms.get(getDegree());
             for(Integer exponent : polynomialTerms.keySet()){
-                polynomialTerms.put(exponent, polynomialTerms.get(exponent) / mainCoefficient);
+                polynomialTerms.put(exponent, (double) Math.round(((polynomialTerms.get(exponent) / mainCoefficient) * 100)) / 100);
             }
             incrementMultiplier(mainCoefficient);
         }else{
