@@ -80,7 +80,16 @@ public class ExpressionsManager {
     public static String getEquationAsLatex() {
         String firstSign, secondSign;
         String infixEquation = getEquationAsInfix();
-        String[] expressions = infixEquation.split("="); // TODO: se necesita el rool parametrizable
+        String root;
+        if(infixEquation.contains("=")){
+            root = "=";
+        }else if(infixEquation.contains(">")){
+            root = ">";
+        }else{
+            root = "<";
+        }
+
+        String[] expressions = infixEquation.split(root);
 
         if (expressions[0].substring(0,1).contains("-")){
             firstSign = "-";
@@ -94,15 +103,14 @@ public class ExpressionsManager {
         } else {
             secondSign = "";
         }
-        String latexEquation = firstSign + FormulaParser.parseToLatex(expressions[0]) + "="+ secondSign + FormulaParser.parseToLatex(expressions[1]);
 
-        return latexEquation;
+        return firstSign + FormulaParser.parseToLatex(expressions[0]) + root + secondSign + FormulaParser.parseToLatex(expressions[1]);
     }
 
     public static String getPolinomialEquationAsLatex() {
         String firstSign;
         String infixEquation = getEquationAsInfix();
-        String[] expressions = infixEquation.split("="); // TODO: se necesita el rool parametrizable
+        String[] expressions = infixEquation.split("=");
         if (expressions[0].substring(0,1).contains("-")){
             firstSign = "-";
             expressions[0] = expressions[0].substring(1);

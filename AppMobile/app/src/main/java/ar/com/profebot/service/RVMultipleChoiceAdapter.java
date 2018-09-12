@@ -100,6 +100,7 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
                             setUpNextStepButton();
                         }else{
                             nextStep.setVisibility(View.GONE);
+                            EquationManager.enableSummary();
                         }
                     }
                 });
