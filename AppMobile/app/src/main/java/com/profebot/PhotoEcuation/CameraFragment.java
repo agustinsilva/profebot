@@ -47,8 +47,10 @@ import ar.com.profebot.service.ExpressionsManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.github.kexanie.library.MathView;
 
 import static ar.com.profebot.activities.MainActivity.EQUATION;
+import static ar.com.profebot.activities.MainActivity.POLINOMIAL;
 import static ar.com.profebot.activities.MainActivity.photoReference;
 
 public class CameraFragment extends Fragment {
@@ -59,6 +61,10 @@ public class CameraFragment extends Fragment {
     ImageView mTakePhotoButton;
     @BindView(R.id.crop_status_text_view)
     TextView mCropStatusTextView;
+    @BindView(R.id.help_text_view)
+    TextView HelpTextView;
+    @BindView(R.id.formula_one)
+    MathView formula_one;
     @BindView(R.id.crop_control)
     RelativeLayout mCropControl;
     @BindView(R.id.image_view)
@@ -179,9 +185,32 @@ public class CameraFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_camera, container, false);
         ButterKnife.bind(this, rootView);
-
+        setHelpText();
         setupCropControl(rootView);
         return rootView;
+    }
+
+    private void setHelpText() {
+        if(photoReference == POLINOMIAL)
+        {
+            HelpTextView.setText("Escanea un polinomio del estilo..");
+            formula_one.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    formula_one.setVisibility(View.VISIBLE);
+                }
+            }, 1500);
+        }
+        else if(photoReference == EQUATION){
+            HelpTextView.setText("Escanea una ecuación del estilo..");
+            formula_one.setText("\\begin{aligned}\\LARGE\\color{White}{ 3 + 4.x = 30 }\\end{aligned}");
+            formula_one.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    formula_one.setVisibility(View.VISIBLE);
+                }
+            }, 1500);
+        }
     }
 
     //region Camera Preview
@@ -377,6 +406,8 @@ public class CameraFragment extends Fragment {
             @Override
             public void onDragBegan() {
                 mCropStatusTextView.setText(R.string.release_to_take_photo);
+                formula_one.setVisibility(View.GONE);
+                HelpTextView.setVisibility(View.GONE);
             }
 
             @Override
