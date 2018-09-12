@@ -193,7 +193,7 @@ public class CameraFragment extends Fragment {
     private void setHelpText() {
         if(photoReference == POLINOMIAL)
         {
-            HelpTextView.setText("Escanea un polinomio del estilo..");
+            HelpTextView.setText("Escaneá un polinomio del estilo..");
             formula_one.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -202,7 +202,7 @@ public class CameraFragment extends Fragment {
             }, 1500);
         }
         else if(photoReference == EQUATION){
-            HelpTextView.setText("Escanea una ecuación del estilo..");
+            HelpTextView.setText("Escaneá una ecuación del estilo..");
             formula_one.setText("\\begin{aligned}\\LARGE\\color{White}{ 3 + 4.x = 30 }\\end{aligned}");
             formula_one.postDelayed(new Runnable() {
                 @Override
