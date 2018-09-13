@@ -93,6 +93,7 @@ public class EnterPolinomialActivity extends AppCompatActivity {
         });
 
         playButton = (Button)findViewById(R.id.start_resolution_id);
+        disablePlayButton();
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
