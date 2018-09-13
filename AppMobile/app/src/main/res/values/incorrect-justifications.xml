@@ -1,69 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_SUMA_COMO_SUMA_OPTION">Pasar de término la suma</string>
-    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_SUMA_COMO_SUMA_JUSTIFICATION">Cuando se pasa un término que está sumando, de un lado del igual al otro, se lo debe pasar como resta (es decir, invirtiendo la operación con la que aparece originalmente)</string>
+    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_SUMA_COMO_SUMA_OPTION">Pasar de término la suma.</string>
+    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_SUMA_COMO_SUMA_JUSTIFICATION">Cuando se pasa un término que está sumando, de un lado del igual al otro, se lo debe pasar como resta (es decir, invirtiendo la operación con la que aparece originalmente).</string>
 
-    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RESTA_COMO_RESTA_OPTION">Pasar de término la resta</string>
-    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RESTA_COMO_RESTA_JUSTIFICATION">Cuando se pasa un término que está restando, de un lado del igual al otro, se lo debe pasar como suma (es decir, invirtiendo la operación con la que aparece originalmente)</string>
+    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RESTA_COMO_RESTA_OPTION">Pasar de término la resta.</string>
+    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RESTA_COMO_RESTA_JUSTIFICATION">Cuando se pasa un término que está restando, de un lado del igual al otro, se lo debe pasar como suma (es decir, invirtiendo la operación con la que aparece originalmente).</string>
 
-    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_MULTIPLICACION_COMO_MULTIPLICACION_OPTION">Pasar de término la multiplicación</string>
-    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_MULTIPLICACION_COMO_MULTIPLICACION_JUSTIFICATION">Cuando se pasa un término que está multiplicando, de un lado del igual al otro, se lo debe pasar como división (es decir, invirtiendo la operación con la que aparece originalmente)</string>
+    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_MULTIPLICACION_COMO_MULTIPLICACION_OPTION">Pasar de término la multiplicación.</string>
+    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_MULTIPLICACION_COMO_MULTIPLICACION_JUSTIFICATION">Cuando se pasa un término que está multiplicando, de un lado del igual al otro, se lo debe pasar como división (es decir, invirtiendo la operación con la que aparece originalmente).</string>
 
-    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_DIVISION_COMO_DIVISION_OPTION">Pasar de término la división</string>
-    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_DIVISION_COMO_DIVISION_JUSTIFICATION">Cuando se pasa un término que está dividiendo, de un lado del igual al otro, se lo debe pasar como multiplicación (es decir, invirtiendo la operación con la que aparece originalmente)</string>
+    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_DIVISION_COMO_DIVISION_OPTION">Pasar de término la división.</string>
+    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_DIVISION_COMO_DIVISION_JUSTIFICATION">Cuando se pasa un término que está dividiendo, de un lado del igual al otro, se lo debe pasar como multiplicación (es decir, invirtiendo la operación con la que aparece originalmente).</string>
 
-    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_POTENCIA_COMO_POTENCIA_OPTION">Pasar de término la potencia</string>
-    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_POTENCIA_COMO_POTENCIA_JUSTIFICATION">Cuando se pasa un exponente, de un lado del igual al otro, se lo debe pasar como raíz (es decir, invirtiendo la operación con la que aparece originalmente)</string>
+    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_POTENCIA_COMO_POTENCIA_OPTION">Pasar de término la potencia.</string>
+    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_POTENCIA_COMO_POTENCIA_JUSTIFICATION">Cuando se pasa un exponente, de un lado del igual al otro, se lo debe pasar como raíz (es decir, invirtiendo la operación con la que aparece originalmente).</string>
 
-    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RAIZ_COMO_RAIZ_OPTION">Pasar de término la raíz</string>
-    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RAIZ_COMO_RAIZ_JUSTIFICATION">Cuando se pasa una raíz, de un lado del igual al otro, se lo debe pasar como potencia (es decir, invirtiendo la operación con la que aparece originalmente)</string>
+    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RAIZ_COMO_RAIZ_OPTION">Pasar de término la raíz.</string>
+    <string name="PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_RAIZ_COMO_RAIZ_JUSTIFICATION">Cuando se pasa una raíz, de un lado del igual al otro, se lo debe pasar como potencia (es decir, invirtiendo la operación con la que aparece originalmente).</string>
 
-    <string name="PASAJE_TERMINO_DE_MULTIPLICACION_COMO_DIVISION_SIENDO_TERMINO_DE_SUMATORIA_OPTION">Pasar la multiplicación como división</string>
+    <string name="PASAJE_TERMINO_DE_MULTIPLICACION_COMO_DIVISION_SIENDO_TERMINO_DE_SUMATORIA_OPTION">Pasar la multiplicación como división.</string>
     <string name="PASAJE_TERMINO_DE_MULTIPLICACION_COMO_DIVISION_SIENDO_TERMINO_DE_SUMATORIA_JUSTIFICATION">Si bien es correcto que un término que está multiplicando pase dividiendo, no se puede hacer este tipo de pasajes cuando la multiplicación es un término de una suma o resta; de esta forma, y separando en términos, primero se deben pasar los términos que están sumando o restando, para luego pasar los productos y las divisiones.</string>
 
-    <string name="PASAJE_TERMINO_DE_DIVISION_COMO_MULTIPLICACION_SIENDO_TERMINO_DE_SUMATORIA_OPTION">Pasar la división como multiplicación</string>
+    <string name="PASAJE_TERMINO_DE_DIVISION_COMO_MULTIPLICACION_SIENDO_TERMINO_DE_SUMATORIA_OPTION">Pasar la división como multiplicación.</string>
     <string name="PASAJE_TERMINO_DE_DIVISION_COMO_MULTIPLICACION_SIENDO_TERMINO_DE_SUMATORIA_JUSTIFICATION">Si bien es correcto que un término que está dividiendo pase multiplicando, no se puede hacer este tipo de pasajes cuando la multiplicación es un término de una suma o resta; de esta forma, y separando en términos, primero se deben pasar los términos que están sumando o restando, para luego pasar los productos y las divisiones.</string>
 
-    <string name="PASAJE_TERMINO_DE_SUMA_COMO_RESTA_SIENDO_TERMINO_MUTIPLICATIVO_OPTION">Pasar la suma como resta</string>
+    <string name="PASAJE_TERMINO_DE_SUMA_COMO_RESTA_SIENDO_TERMINO_MUTIPLICATIVO_OPTION">Pasar la suma como resta.</string>
     <string name="PASAJE_TERMINO_DE_SUMA_COMO_RESTA_SIENDO_TERMINO_MUTIPLICATIVO_JUSTIFICATION">Si bien es correcto que un término que está sumando pase restando, no se puede hacer este tipo de pasajes cuando la suma es un factor dentro de una multiplicación; de esta forma, para lograr el despeje, se debe pasar primero el otro factor que está multiplicando para despejar la suma.</string>
 
-    <string name="PASAJE_TERMINO_DE_RESTA_COMO_SUMA_SIENDO_TERMINO_MUTIPLICATIVO_OPTION">Pasar la resta como suma</string>
+    <string name="PASAJE_TERMINO_DE_RESTA_COMO_SUMA_SIENDO_TERMINO_MUTIPLICATIVO_OPTION">Pasar la resta como suma.</string>
     <string name="PASAJE_TERMINO_DE_RESTA_COMO_SUMA_SIENDO_TERMINO_MUTIPLICATIVO_JUSTIFICATION">Si bien es correcto que un término que está restando pase sumando, no se puede hacer este tipo de pasajes cuando la resta es un factor dentro de una multiplicación; de esta forma, para lograr el despeje, se debe pasar primero el otro factor que está multiplicando para despejar la resta.</string>
 
-    <string name="PASAJE_TERMINO_DE_RAIZ_COMO_POTENCIA_OPTION">Pasar la raíz como potencia</string>
+    <string name="PASAJE_TERMINO_DE_RAIZ_COMO_POTENCIA_OPTION">Pasar la raíz como potencia.</string>
     <string name="PASAJE_TERMINO_DE_RAIZ_COMO_POTENCIA_JUSTIFICATION">Si bien es correcto que una raíz se pase como potencia, no se puede hacer este tipo de pasajes cuando la raíz es un término dentro de una suma o resta, o un factor dentro de una multiplicación o división; de esta forma, para lograr el despeje, se deben pasar primero los otros términos para despejar la raíz.</string>
 
-    <string name="PASAJE_TERMINO_DE_POTENCIA_COMO_RAIZ_OPTION">Pasar la potencia como raíz</string>
+    <string name="PASAJE_TERMINO_DE_POTENCIA_COMO_RAIZ_OPTION">Pasar la potencia como raíz.</string>
     <string name="PASAJE_TERMINO_DE_POTENCIA_COMO_RAIZ_JUSTIFICATION">Si bien es correcto que un exponente se pase como raíz, no se puede hacer este tipo de pasajes cuando la potencia es un término dentro de una suma o resta, o un factor dentro de una multiplicación o división; de esta forma, para lograr el despeje, se deben pasar primero los otros términos para despejar la potencia.</string>
 
-    <string name="SUMA_RESUELTA_INCORRECTAMENTE_OPTION">Resolver la suma</string>
+    <string name="SUMA_RESUELTA_INCORRECTAMENTE_OPTION">Resolver la suma.</string>
     <string name="SUMA_RESUELTA_INCORRECTAMENTE_JUSTIFICATION">La suma no está bien resuelta; el resultado indicado no era el esperado.</string>
 
-    <string name="RESTA_RESUELTA_INCORRECTAMENTE_OPTION">Resolver la resta</string>
+    <string name="RESTA_RESUELTA_INCORRECTAMENTE_OPTION">Resolver la resta.</string>
     <string name="RESTA_RESUELTA_INCORRECTAMENTE_JUSTIFICATION">La resta no está bien resuelta; el resultado indicado no era el esperado.</string>
 
-    <string name="MULTIPLICACION_RESUELTA_INCORRECTAMENTE_OPTION">Resolver la multiplicación</string>
+    <string name="MULTIPLICACION_RESUELTA_INCORRECTAMENTE_OPTION">Resolver la multiplicación.</string>
     <string name="MULTIPLICACION_RESUELTA_INCORRECTAMENTE_JUSTIFICATION">La multiplicación no está bien resuelta; el resultado indicado no era el esperado.</string>
 
-    <string name="DIVISION_RESUELTA_INCORRECTAMENTE_OPTION">Resolver la división</string>
+    <string name="DIVISION_RESUELTA_INCORRECTAMENTE_OPTION">Resolver la división.</string>
     <string name="DIVISION_RESUELTA_INCORRECTAMENTE_JUSTIFICATION">La división no está bien resuelta; el resultado indicado no era el esperado.</string>
 
-    <string name="POTENCIA_RESUELTA_INCORRECTAMENTE_OPTION">Resolver la potencia</string>
+    <string name="POTENCIA_RESUELTA_INCORRECTAMENTE_OPTION">Resolver la potencia.</string>
     <string name="POTENCIA_RESUELTA_INCORRECTAMENTE_JUSTIFICATION">La potencia no está bien resuelta; el resultado indicado no era el esperado.</string>
 
-    <string name="RAIZ_RESUELTA_INCORRECTAMENTE_OPTION">Resolver la raíz</string>
+    <string name="RAIZ_RESUELTA_INCORRECTAMENTE_OPTION">Resolver la raíz.</string>
     <string name="RAIZ_RESUELTA_INCORRECTAMENTE_JUSTIFICATION">La raíz no está bien resuelta; el resultado indicado no era el esperado.</string>
 
-    <string name="DISTRIBUTIVA_BASICA_MAL_RESUELTA_OPTION">Realizar la distributiva</string>
+    <string name="DISTRIBUTIVA_BASICA_MAL_RESUELTA_OPTION">Realizar la distributiva.</string>
     <string name="DISTRIBUTIVA_BASICA_MAL_RESUELTA_JUSTIFICATION">La distributiva no se hizo correctamente. Cuando se distribuye un número o una variable a una suma o resta, cada término de la suma o resta se debe multiplicar o dividir por el número o variable que se distribuye.</string>
 
-    <string name="DISTRIBUTIVA_DOBLE_MAL_RESUELTA_OPTION">Realizar la distributiva</string>
+    <string name="DISTRIBUTIVA_DOBLE_MAL_RESUELTA_OPTION">Realizar la distributiva.</string>
     <string name="DISTRIBUTIVA_DOBLE_MAL_RESUELTA_JUSTIFICATION">La distributiva no se hizo correctamente. Cuando dos sumas o restas están multiplicadas entre sí, la cantidad de términos que surja de la distributiva es igual a la cantidad de términos de uno de los factores, multiplicada por la cantidad de términos del otro factor; por ejemplo, si se tiene (x+1)(x+2), cada suma tiene 2 términos, por tanto, luego de distribuír se tendrán 4 términos. Cada término de un factor se debe multiplicar por cada uno de los términos del otro factor (idem con sus signos, aplicando la regla de los signos).</string>
 
-    <string name="ASOCIATIVA_MAL_RESUELTA_OPTION">Resolver operaciones aplicando asociativa</string>
+    <string name="ASOCIATIVA_MAL_RESUELTA_OPTION">Resolver operaciones aplicando asociativa.</string>
     <string name="ASOCIATIVA_MAL_RESUELTA_JUSTIFICATION">Cuando se tienen operaciones con distinta precedencia, por ejemplo 2+4*3, solo se puede alterar el orden en que se resuelve si existieran paréntesis. En caso de no haber paréntesis, se debe respetar la separación de términos por sumas y restas. En el ejemplo mostrado, se debe primero resolver 4*3, y al resultado, sumarle 2.</string>
 
-    <string name="DISTRIBUTIVA_DE_POTENCIA_SOBRE_BINOMIO_OPTION">Distribuir la potencia a la suma o resta</string>
+    <string name="DISTRIBUTIVA_DE_POTENCIA_SOBRE_BINOMIO_OPTION">Distribuir la potencia a la suma o resta.</string>
     <string name="DISTRIBUTIVA_DE_POTENCIA_SOBRE_BINOMIO_JUSTIFICATION">Nunca se puede distribuir una potencia a una suma o resta; para resolverlo, se debe convertir la potencia en una multiplicación de la suma o resta (entre paréntesis) por sí misma, tantas veces como diga el exponente, y finalmente, aplicar las distributivas.</string>
 
 </resources>

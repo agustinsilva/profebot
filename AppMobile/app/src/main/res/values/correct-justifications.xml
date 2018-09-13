@@ -152,60 +152,60 @@
     <string name="ADD_NTH_ROOTS_JUSTIFICATION">2 o más raíces con mismo índice y mismo radicando, que se están sumando o restando, se pueden unificar, tratandolas como si fueran variables. De esta forma, la raíz cuadrada de 2 más la raíz cuadrada de 2, resulta en 2 por la raíz cuadrada de 2.</string>
     <string name="ADD_NTH_ROOTS_SUMMARY">Sumar raíces</string>
 
-    <string name="MULTIPLY_NTH_ROOTS_OPTION">Multiplicar raíces</string>
+    <string name="MULTIPLY_NTH_ROOTS_OPTION">Multiplicar raíces.</string>
     <string name="MULTIPLY_NTH_ROOTS_JUSTIFICATION">2 o más raíces con mismo índice y mismo radicando, que se están multiplicando o dividiendo, se pueden unificar, tratandolas como si fueran variables. De esta forma, la raíz cuadrada de 2 por la raíz cuadrada de 2, resulta en la raíz cuarta de 2.</string>
     <string name="MULTIPLY_NTH_ROOTS_SUMMARY">Multiplicar raíces</string>
 
-    <string name="ADD_TO_BOTH_SIDES_OPTION">Sumar a ambos miembros para cancelar términos</string>
-    <string name="ADD_TO_BOTH_SIDES_JUSTIFICATION">Para cancelar un término que está restando de un lado del igual, se puede sumar miembro a miembro dicho término; de esta forma, se logrará "pasar" dicho término de un lado del igual al otro, con el objetivo de despejar la X</string>
+    <string name="ADD_TO_BOTH_SIDES_OPTION">Sumar a ambos miembros para cancelar términos.</string>
+    <string name="ADD_TO_BOTH_SIDES_JUSTIFICATION">Para cancelar un término que está restando de un lado del igual, se puede sumar miembro a miembro dicho término; de esta forma, se logrará "pasar" dicho término de un lado del igual al otro, con el objetivo de despejar la X.</string>
     <string name="ADD_TO_BOTH_SIDES_SUMMARY">Sumar miembro a miembro</string>
 
-    <string name="DIVIDE_FROM_BOTH_SIDES_OPTION">Dividir a ambos miembros para cancelar términos</string>
-    <string name="DIVIDE_FROM_BOTH_SIDES_JUSTIFICATION">Para cancelar un término que está multiplicando de un lado del igual, se puede dividir miembro a miembro dicho término; de esta forma, se logrará "pasar" dicho término de un lado del igual al otro, con el objetivo de despejar la X</string>
+    <string name="DIVIDE_FROM_BOTH_SIDES_OPTION">Dividir a ambos miembros para cancelar términos.</string>
+    <string name="DIVIDE_FROM_BOTH_SIDES_JUSTIFICATION">Para cancelar un término que está multiplicando de un lado del igual, se puede dividir miembro a miembro dicho término; de esta forma, se logrará "pasar" dicho término de un lado del igual al otro, con el objetivo de despejar la X.</string>
     <string name="DIVIDE_FROM_BOTH_SIDES_SUMMARY">Dividir miembro a miembro</string>
 
-    <string name="MULTIPLY_BOTH_SIDES_BY_INVERSE_FRACTION_OPTION">Multiplicar a ambos miembros para cancelar términos</string>
-    <string name="MULTIPLY_BOTH_SIDES_BY_INVERSE_FRACTION_JUSTIFICATION">Para cancelar un término que está dividiendo de un lado del igual, se puede multiplicar miembro a miembro dicho término; de esta forma, se logrará "pasar" dicho término de un lado del igual al otro, con el objetivo de despejar la X</string>
+    <string name="MULTIPLY_BOTH_SIDES_BY_INVERSE_FRACTION_OPTION">Multiplicar a ambos miembros para cancelar términos.</string>
+    <string name="MULTIPLY_BOTH_SIDES_BY_INVERSE_FRACTION_JUSTIFICATION">Para cancelar un término que está dividiendo de un lado del igual, se puede multiplicar miembro a miembro dicho término; de esta forma, se logrará "pasar" dicho término de un lado del igual al otro, con el objetivo de despejar la X.</string>
     <string name="MULTIPLY_BOTH_SIDES_BY_INVERSE_FRACTION_SUMMARY">Multiplicar miembro a miembro</string>
 
-    <string name="SIMPLIFY_LEFT_SIDE_OPTION">Simplificar el lado izquierdo del igual</string>
-    <string name="SIMPLIFY_LEFT_SIDE_JUSTIFICATION">Simplificar el lado izquierdo del igual para despejar la X</string>
+    <string name="SIMPLIFY_LEFT_SIDE_OPTION">Simplificar el lado izquierdo del igual.</string>
+    <string name="SIMPLIFY_LEFT_SIDE_JUSTIFICATION">Simplificar el lado izquierdo del igual para despejar la X.</string>
     <string name="SIMPLIFY_LEFT_SIDE_SUMMARY">Simplificar términos</string>
 
-    <string name="SIMPLIFY_RIGHT_SIDE_OPTION">Simplificar el lado derecho del igual</string>
-    <string name="SIMPLIFY_RIGHT_SIDE_JUSTIFICATION">Simplificar el lado derecho del igual para despejar la X</string>
+    <string name="SIMPLIFY_RIGHT_SIDE_OPTION">Simplificar el lado derecho del igual.</string>
+    <string name="SIMPLIFY_RIGHT_SIDE_JUSTIFICATION">Simplificar el lado derecho del igual para despejar la X.</string>
     <string name="SIMPLIFY_RIGHT_SIDE_SUMMARY">Simplificar términos</string>
 
-    <string name="SUBTRACT_FROM_BOTH_SIDES_OPTION">Simplificar ambos miembros del igual</string>
-    <string name="SUBTRACT_FROM_BOTH_SIDES_JUSTIFICATION">Simplificar ambos miembros del igual para despejar la X</string>
+    <string name="SUBTRACT_FROM_BOTH_SIDES_OPTION">Simplificar ambos miembros del igual.</string>
+    <string name="SUBTRACT_FROM_BOTH_SIDES_JUSTIFICATION">Simplificar ambos miembros del igual para despejar la X.</string>
     <string name="SUBTRACT_FROM_BOTH_SIDES_SUMMARY">Simplificar términos</string>
 
-    <string name="FIND_ROOTS_OPTION">Extraer raíces del polinomio factorizado</string>
-    <string name="FIND_ROOTS_JUSTIFICATION">Un polinomio factorizado permite extraer sus raíces, tomando los números de cada binomio cambiado de signo. Estos valores son los que reemplazados en la X, si se resuelven las operaciones aritméticas se llega a 0</string>
+    <string name="FIND_ROOTS_OPTION">Extraer raíces del polinomio factorizado.</string>
+    <string name="FIND_ROOTS_JUSTIFICATION">Un polinomio factorizado permite extraer sus raíces, tomando los números de cada binomio cambiado de signo. Estos valores son los que reemplazados en la X, si se resuelven las operaciones aritméticas se llega a 0.</string>
     <string name="FIND_ROOTS_SUMMARY">Extraer raíces</string>
 
-    <string name="STATEMENT_IS_TRUE_OPTION">Existen infinitas soluciones para X</string>
-    <string name="STATEMENT_IS_TRUE_JUSTIFICATION">Cuando los dos miembros del igual son iguales y numéricos, se dice que existen infinitas soluciones, porque para cualquier valor de X, la igualdad se cumple</string>
+    <string name="STATEMENT_IS_TRUE_OPTION">Existen infinitas soluciones para X.</string>
+    <string name="STATEMENT_IS_TRUE_JUSTIFICATION">Cuando los dos miembros del igual son iguales y numéricos, se dice que existen infinitas soluciones, porque para cualquier valor de X, la igualdad se cumple.</string>
     <string name="STATEMENT_IS_TRUE_SUMMARY">Infinitas soluciones</string>
 
-    <string name="STATEMENT_IS_FALSE_OPTION">No existen soluciones para X</string>
-    <string name="STATEMENT_IS_FALSE_JUSTIFICATION">Cuando los dos miembros del igual son distintos y numéricos, se dice que no existen soluciones, porque para cualquier valor de X, la igualdad nunca se cumple</string>
+    <string name="STATEMENT_IS_FALSE_OPTION">No existen soluciones para X.</string>
+    <string name="STATEMENT_IS_FALSE_JUSTIFICATION">Cuando los dos miembros del igual son distintos y numéricos, se dice que no existen soluciones, porque para cualquier valor de X, la igualdad nunca se cumple.</string>
     <string name="STATEMENT_IS_FALSE_SUMMARY">Ninguna solución</string>
 
-    <string name="FACTOR_SYMBOL_OPTION">Extraer factor común</string>
-    <string name="FACTOR_SYMBOL_JUSTIFICATION">Se puede extraer factor común de "letra" o "número", en la medida que haya una suma o resta de términos, con operandos repetidos. Por ejemplo: x+3x puede ser factoreado por "x", quedando x(3+1)</string>
+    <string name="FACTOR_SYMBOL_OPTION">Extraer factor común.</string>
+    <string name="FACTOR_SYMBOL_JUSTIFICATION">Se puede extraer factor común de "letra" o "número", en la medida que haya una suma o resta de términos, con operandos repetidos. Por ejemplo: x+3x puede ser factoreado por "x", quedando x(3+1).</string>
     <string name="FACTOR_SYMBOL_SUMMARY">Factor común</string>
 
-    <string name="FACTOR_DIFFERENCE_OF_SQUARES_OPTION">Aplicar diferencia de cuadrados</string>
-    <string name="FACTOR_DIFFERENCE_OF_SQUARES_JUSTIFICATION">Se puede factorear por diferencia de cuadrados, cuando se tiene una resta, en donde ambos términos pueden convertirse en otras expresiones elevadas al cuadrado. Por ejemplo, 9 puede ser reescrito como 3 al cuadrado</string>
+    <string name="FACTOR_DIFFERENCE_OF_SQUARES_OPTION">Aplicar diferencia de cuadrados.</string>
+    <string name="FACTOR_DIFFERENCE_OF_SQUARES_JUSTIFICATION">Se puede factorear por diferencia de cuadrados, cuando se tiene una resta, en donde ambos términos pueden convertirse en otras expresiones elevadas al cuadrado. Por ejemplo, 9 puede ser reescrito como 3 al cuadrado.</string>
     <string name="FACTOR_DIFFERENCE_OF_SQUARES_SUMMARY">Diferencia de cuadrados</string>
 
-    <string name="FACTOR_PERFECT_SQUARE_OPTION">Aplicar trinomio cuadrado perfecto</string>
-    <string name="FACTOR_PERFECT_SQUARE_JUSTIFICATION">Factorear por trinomio cuadrado perfecto implica convertir un trinomio, en un binomio al cuadrado. Esto se puede lograr, cuando en el trinomio (3 términos sumados o restados) existen 2 que pueden reescribirse como una expresión al cuadrado, y un tercero que resulta del doble producto de las expresiones elevadas al cuadrado (sin el cuadrado)</string>
+    <string name="FACTOR_PERFECT_SQUARE_OPTION">Aplicar trinomio cuadrado perfecto.</string>
+    <string name="FACTOR_PERFECT_SQUARE_JUSTIFICATION">Factorear por trinomio cuadrado perfecto implica convertir un trinomio, en un binomio al cuadrado. Esto se puede lograr, cuando en el trinomio (3 términos sumados o restados) existen 2 que pueden reescribirse como una expresión al cuadrado, y un tercero que resulta del doble producto de las expresiones elevadas al cuadrado (sin el cuadrado).</string>
     <string name="FACTOR_PERFECT_SQUARE_SUMMARY">Trinomio cuadrado perfecto</string>
 
-    <string name="FACTOR_SUM_PRODUCT_RULE_OPTION">Aplicar fórmula resolvente</string>
-    <string name="FACTOR_SUM_PRODUCT_RULE_JUSTIFICATION">Factorear por fórmula resolvente es posible cuando el polinomio es cuadrático. La fórmula permitirá extraer las 2 raíces del polinomio, el cual podrá ser reescrito en forma factorizada como (x - raíz1) * (x - raíz2)</string>
+    <string name="FACTOR_SUM_PRODUCT_RULE_OPTION">Aplicar fórmula resolvente.</string>
+    <string name="FACTOR_SUM_PRODUCT_RULE_JUSTIFICATION">Factorear por fórmula resolvente es posible cuando el polinomio es cuadrático. La fórmula permitirá extraer las 2 raíces del polinomio, el cual podrá ser reescrito en forma factorizada como (x - raíz1) * (x - raíz2).</string>
     <string name="FACTOR_SUM_PRODUCT_RULE_SUMMARY">Fómula resolvente</string>
 
 
