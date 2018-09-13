@@ -122,46 +122,48 @@ public class EnterPolinomialActivity extends AppCompatActivity {
     }
 
     private void addTerm(View view){
-        Integer exponent = Integer.parseInt(potentialTermInput.getText().toString());
-        if (this.validTerms(coefficientTermInput,potentialTermInput) & reachLimitOfTerms(exponent) ){
-            Double coefficient = Double.parseDouble(coefficientTermInput.getText().toString());
-            coefficient = signToogleButton.isChecked() ? -1 * coefficient : coefficient;
-            Double newCoefficient;
-            if(!polynomialTerms.containsKey(exponent)){
-                newCoefficient = coefficient;
-            }else {
-                newCoefficient = (double) polynomialTerms.get(exponent) + coefficient;
-                polynomialTerms.remove(exponent);
+        if (this.validTerms(coefficientTermInput,potentialTermInput)){
+            Integer exponent = Integer.parseInt(potentialTermInput.getText().toString());
+            if(!reachLimitOfTerms(exponent)){
+                Double coefficient = Double.parseDouble(coefficientTermInput.getText().toString());
+                coefficient = signToogleButton.isChecked() ? -1 * coefficient : coefficient;
+                Double newCoefficient;
+                if(!polynomialTerms.containsKey(exponent)){
+                    newCoefficient = coefficient;
+                }else {
+                    newCoefficient = (double) polynomialTerms.get(exponent) + coefficient;
+                    polynomialTerms.remove(exponent);
+                }
+                if(newCoefficient != 0){
+                    polynomialTerms.put(exponent, newCoefficient);
+                }
+
+                String equation = FactoringManager.getPolynomialGeneralForm(polynomialTerms);
+                if (!equation.isEmpty() && equation.substring(0,1).contains("-")){
+                    firstSign = "-";
+                    equation = equation.substring(1);
+                } else {
+                    firstSign = "";
+                }
+                ((MathView) findViewById(R.id.equation_to_solve_id)).config(
+                        "MathJax.Hub.Config({\n"+
+                                "  CommonHTML: { linebreaks: { automatic: true } },\n"+
+                                "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
+                                "         SVG: { linebreaks: { automatic: true } }\n"+
+                                "});");
+
+                equation = equation.replace("x", "a_1");
+                System.out.println(equation);
+                equation = firstSign + (equation.isEmpty() ? "" : FormulaParser.parseToLatex(equation).replace("{a}_{1}", "x"));
+
+                ((MathView) findViewById(R.id.equation_to_solve_id)).setText("\\(\\color{White}{" + equation + "}\\)" );
+                coefficientTermInput.setText("");
+                potentialTermInput.setText("");
+                enablePlayButton();
+
+                InputMethodManager keyboard = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
-            if(newCoefficient != 0){
-                polynomialTerms.put(exponent, newCoefficient);
-            }
-
-            String equation = FactoringManager.getPolynomialGeneralForm(polynomialTerms);
-            if (!equation.isEmpty() && equation.substring(0,1).contains("-")){
-                firstSign = "-";
-                equation = equation.substring(1);
-            } else {
-                firstSign = "";
-            }
-            ((MathView) findViewById(R.id.equation_to_solve_id)).config(
-                    "MathJax.Hub.Config({\n"+
-                            "  CommonHTML: { linebreaks: { automatic: true } },\n"+
-                            "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
-                            "         SVG: { linebreaks: { automatic: true } }\n"+
-                            "});");
-
-            equation = equation.replace("x", "a_1");
-            System.out.println(equation);
-            equation = firstSign + (equation.isEmpty() ? "" : FormulaParser.parseToLatex(equation).replace("{a}_{1}", "x"));
-
-            ((MathView) findViewById(R.id.equation_to_solve_id)).setText("\\(\\color{White}{" + equation + "}\\)" );
-            coefficientTermInput.setText("");
-            potentialTermInput.setText("");
-            enablePlayButton();
-
-            InputMethodManager keyboard = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
@@ -233,10 +235,10 @@ public class EnterPolinomialActivity extends AppCompatActivity {
             Toast toast1 = Toast.makeText(getApplicationContext(), "El polinomio ingresado no puede tener más de " + maxSize + " términos", Toast.LENGTH_LONG);
             toast1.setGravity(Gravity.CENTER, 0, 0);
             toast1.show();
-            return false;
+            return true;
         }
         else{
-            return true;
+            return false;
         }
     }
 
