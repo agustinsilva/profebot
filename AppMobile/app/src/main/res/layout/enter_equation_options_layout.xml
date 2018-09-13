@@ -119,7 +119,7 @@
                         android:layout_height="wrap_content"
                         style="@style/AppButtonDisable"
                         android:enabled="false"
-                        android:text="Comenzar!"
+                        android:text="¡Comenzar!"
                         android:padding="5dp"/>
                 </LinearLayout>
             </LinearLayout>
