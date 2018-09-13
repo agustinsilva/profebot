@@ -228,8 +228,22 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
 
     @Override
     public void onBindViewHolder(MultipleChoiceViewHolder multipleChoiceViewHolder, int position) {
+        multipleChoiceViewHolder.equationBase.setEngine(MathView.Engine.MATHJAX);
+        multipleChoiceViewHolder.equationBase.config("MathJax.Hub.Config({\n"+
+                "  CommonHTML: { linebreaks: { automatic: true } },\n"+
+                "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
+                "         SVG: { linebreaks: { automatic: true } }\n"+
+                "});");
         multipleChoiceViewHolder.equationBase.setText("\\(" + currentMultipleChoiceSteps.get(position).getEquationBase() + "\\)");
+
+        multipleChoiceViewHolder.newEquationBase.setEngine(MathView.Engine.MATHJAX);
+        multipleChoiceViewHolder.newEquationBase.config("MathJax.Hub.Config({\n"+
+                "  CommonHTML: { linebreaks: { automatic: true } },\n"+
+                "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
+                "         SVG: { linebreaks: { automatic: true } }\n"+
+                "});");
         multipleChoiceViewHolder.newEquationBase.setText("\\(" + currentMultipleChoiceSteps.get(position).getNewEquationBase() + "\\)");
+
         if(currentMultipleChoiceSteps.get(position).getSolved()){
             multipleChoiceViewHolder.summary.setText(currentMultipleChoiceSteps.get(position).getSummary());
         }
