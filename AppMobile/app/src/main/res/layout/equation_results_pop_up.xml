@@ -13,7 +13,7 @@
         android:id="@+id/pop_up_title_id"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="Factoreo terminado"
+        android:text="Ecuación resuelta"
         android:textSize="40dp"
         android:textColor="@color/colorAccent"
         android:textStyle="bold"
