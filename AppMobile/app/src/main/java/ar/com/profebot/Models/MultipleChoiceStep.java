@@ -121,4 +121,28 @@ public class MultipleChoiceStep {
     public void setSolved(Boolean solved) {
         isSolved = solved;
     }
+
+    public String getEquationOptionA() {
+        return equationOptionA;
+    }
+
+    public void setEquationOptionA(String equationOptionA) {
+        this.equationOptionA = equationOptionA;
+    }
+
+    public String getEquationOptionB() {
+        return equationOptionB;
+    }
+
+    public void setEquationOptionB(String equationOptionB) {
+        this.equationOptionB = equationOptionB;
+    }
+
+    public String getEquationOptionC() {
+        return equationOptionC;
+    }
+
+    public void setEquationOptionC(String equationOptionC) {
+        this.equationOptionC = equationOptionC;
+    }
 }

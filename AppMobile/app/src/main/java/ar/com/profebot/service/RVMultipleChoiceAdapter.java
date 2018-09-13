@@ -44,6 +44,9 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
         RadioButton optionA;
         RadioButton optionB;
         RadioButton optionC;
+        MathView equationOptionA;
+        MathView equationOptionB;
+        MathView equationOptionC;
         RadioButton correctOptionRadio;
         RadioButton incorrectOptionRadio;
         Integer chosenOption;
@@ -161,6 +164,7 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
                 MultipleChoiceViewHolder viewHolder = this;
 
                 optionA = itemView.findViewById(R.id.option_a_id);
+                equationOptionA = itemView.findViewById(R.id.equation_option_a_id);
                 optionA.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -170,6 +174,7 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
                 });
 
                 optionB = itemView.findViewById(R.id.option_b_id);
+                equationOptionB = itemView.findViewById(R.id.equation_option_b_id);
                 optionB.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -179,6 +184,7 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
                 });
 
                 optionC = itemView.findViewById(R.id.option_c_id);
+                equationOptionC = itemView.findViewById(R.id.equation_option_c_id);
                 optionC.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -248,8 +254,11 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
             multipleChoiceViewHolder.summary.setText(currentMultipleChoiceSteps.get(position).getSummary());
         }
         multipleChoiceViewHolder.optionA.setText(currentMultipleChoiceSteps.get(position).getOptionA());
+        multipleChoiceViewHolder.equationOptionA.setText(alignEquationCentered(currentMultipleChoiceSteps.get(position).getEquationOptionA()));
         multipleChoiceViewHolder.optionB.setText(currentMultipleChoiceSteps.get(position).getOptionB());
+        multipleChoiceViewHolder.equationOptionB.setText(alignEquationCentered(currentMultipleChoiceSteps.get(position).getEquationOptionB()));
         multipleChoiceViewHolder.optionC.setText(currentMultipleChoiceSteps.get(position).getOptionC());
+        multipleChoiceViewHolder.equationOptionC.setText(alignEquationCentered(currentMultipleChoiceSteps.get(position).getEquationOptionC()));
         multipleChoiceViewHolder.correctOption = currentMultipleChoiceSteps.get(position).getCorrectOption();
         multipleChoiceViewHolder.correctOptionJustification = currentMultipleChoiceSteps.get(position).getCorrectOptionJustification();
         multipleChoiceViewHolder.incorrectOptionJustification1 = currentMultipleChoiceSteps.get(position).getIncorrectOptionJustification1();
@@ -257,6 +266,10 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
         multipleChoiceViewHolder.currentMultipleChoiceSteps = currentMultipleChoiceSteps;
         multipleChoiceViewHolder.multipleChoiceSteps = multipleChoiceSteps;
         multipleChoiceViewHolder.numberStep.setText((position+1) + ")");
+    }
+
+    private String alignEquationCentered(String equationOption) {
+        return "\\begin{aligned}{" + equationOption + "}\\end{aligned}";
     }
 
     @Override
