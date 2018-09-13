@@ -8,7 +8,7 @@
     <string name="FACTOR_COMUN_NUMERICO_ES_EL_CORRECTO">Aplicar factor común numérico es lo más conveniente.</string>
     <string name="CUADRATICA_RAICES_SIMPLES_ES_EL_CORRECTO">Aplicar la fórmula cuadrática es lo más conveniente. Se encontraron las raíces /raiz1/ y /raiz2/.</string>
     <string name="CUADRATICA_RAIZ_DOBLE_ES_EL_CORRECTO">Aplicar la fórmula cuadrática es lo más conveniente. Se encontró la raíz doble /raiz/.</string>
-    <string name="GAUSS_ES_EL_CORRECTO">El método de Gauss es el caso más conveniente. Se entonctró la raíz simple /raiz/.</string>
+    <string name="GAUSS_ES_EL_CORRECTO">El método de Gauss es el caso más conveniente. Se encontró la raíz simple /raiz/.</string>
 
     <string name="CUADRATICA_ERA_POSIBLE">La fórmula cuadrática también se podría haber aplicado, por tratarse de un polinomio de grado 2.</string>
     <string name="GAUSS_ERA_POSIBLE">El método de Gauss también se podría haber aplicado, por tratarse de un polinomio de grado mayor a 1.</string>
@@ -22,10 +22,10 @@
 
     <string name="FACTOR_COMUN_NO_ES_CORRECTO">No se puede aplicar factor común, dado que no en todos los términos hay variables.</string>
     <string name="CUADRATICA_NO_ES_CORRECTO">No se puede aplicar la fórmula cuadrática porque el polinomio no es de grado 2.</string>
-    <string name="GAUSS_NO_ES_CORRECTO">No se puede aplicar el método de gauss cuando el polinomio no tiene término independiente. Tampoco es aplicable cuando el polinomio es de grado 1.</string>
+    <string name="GAUSS_NO_ES_CORRECTO">No se puede aplicar el método de Gauss cuando el polinomio no tiene término independiente. Tampoco es aplicable cuando el polinomio es de grado 1.</string>
 
     <string name="RAIZ_EXTRA">También se encontró la raíz /raiz/.</string>
 
-    <string name="RAIZ_ENCONTRADA">La raíz del polinomio es: /raiz/</string>
-    <string name="RAICES_ENCONTRADAS">Las raíces del polinomio son: /raices/</string>
+    <string name="RAIZ_ENCONTRADA">La raíz del polinomio es: /raiz/ .</string>
+    <string name="RAICES_ENCONTRADAS">Las raíces del polinomio son: /raices/ .</string>
 </resources>
