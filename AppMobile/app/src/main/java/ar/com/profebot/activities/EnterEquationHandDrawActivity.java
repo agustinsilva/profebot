@@ -79,7 +79,7 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
                     Intent intent = new Intent(button.getContext(), SolveEquationActivity.class);
                     startActivity(intent);
                 }else{
-                    invalidEquationMessage = Toast.makeText(button.getContext(),"Fijate si la ecuación está bien escrita!", Toast.LENGTH_LONG);
+                    invalidEquationMessage = Toast.makeText(button.getContext(),"¡Fijate si la ecuación está bien escrita!", Toast.LENGTH_LONG);
                     invalidEquationMessage.setGravity(Gravity.CENTER, 0, 0);
                     invalidEquationMessage.show();
                 }

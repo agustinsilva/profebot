@@ -175,10 +175,10 @@ public class EnterPolinomialActivity extends AppCompatActivity {
     private boolean validTerms(TextInputEditText coefficientTermInput, TextInputEditText potentialTermInput) {
         StringBuilder message = new StringBuilder("");
         if(coefficientTermInput.getText().toString().matches("")){
-            message.append("No olvides ingresar el coeficiente!\n");
+            message.append("¡No olvides ingresar el coeficiente!\n");
         }
         if(potentialTermInput.getText().toString().matches("")){
-            message.append("No olvides ingresar el exponente!\n");
+            message.append("¡No olvides ingresar el exponente!\n");
         }
 
         if (message.length() > 0) {

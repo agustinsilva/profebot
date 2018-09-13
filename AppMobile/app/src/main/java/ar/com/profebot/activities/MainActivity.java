@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         new AlertDialog.Builder(this)
                 .setTitle("¿Queres salir?")
-                .setMessage("Te esperamos pronto para seguir practicando")
+                .setMessage("Te esperamos pronto para seguir practicando.")
                 .setNegativeButton(R.string.no, null)
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 
