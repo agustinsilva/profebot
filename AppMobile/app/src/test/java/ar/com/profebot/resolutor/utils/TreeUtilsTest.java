@@ -1265,4 +1265,17 @@ public class TreeUtilsTest {
         TreeNode flattenedNode = TreeUtils.flattenOperands(node);
         Assert.assertFalse(TreeUtils.canSimplifyPolynomialTerms(flattenedNode));
     }
+
+    @Test
+    public void isRootNode() {
+        Assert.assertTrue(TreeUtils.isRootNode(new TreeNode("=")));
+        Assert.assertTrue(TreeUtils.isRootNode(new TreeNode("<=")));
+        Assert.assertTrue(TreeUtils.isRootNode(new TreeNode(">=")));
+        Assert.assertTrue(TreeUtils.isRootNode(new TreeNode("<")));
+        Assert.assertTrue(TreeUtils.isRootNode(new TreeNode(">")));
+
+        Assert.assertFalse(TreeUtils.isRootNode(new TreeNode("=<")));
+        Assert.assertFalse(TreeUtils.isRootNode(new TreeNode("=>")));
+        Assert.assertFalse(TreeUtils.isRootNode(new TreeNode("+")));
+    }
 }

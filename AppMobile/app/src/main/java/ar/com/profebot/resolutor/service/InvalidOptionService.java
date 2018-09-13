@@ -390,7 +390,7 @@ public class InvalidOptionService {
     private Tree getTreeFromTreeNode(TreeNode node){
         // El arbol se regenera a partir del nodo
         TreeNode rootNode = node;
-        while(!rootNode.getValue().equals("=")) { // TODO faltan los otros simbolos
+        while(!TreeUtils.isRootNode(rootNode)) {
             rootNode = rootNode.getParentNode();
         }
 

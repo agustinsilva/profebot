@@ -12,6 +12,7 @@ public class TreeNode {
     private Boolean unaryMinus;
     private Integer changeGroup;
     private Boolean explicitCoeff;
+    private Boolean marked;
 
   //  private TreeNode leftNode; Los reemplazo por la lista, para unificar criterios
   //  private TreeNode rightNode;
@@ -190,7 +191,12 @@ public class TreeNode {
     }
 
     public String toExpression() {
-        TreeNode leftNode = this.esRaiz()?null:this.getLeftNode(); // Las raices solo tienen termino derecho
+        return toExpression(false);
+    }
+    public String toExpression(Boolean includeMarks) {
+        TreeNode leftNode = this.esRaiz() ? null : this.getLeftNode(); // Las raices solo tienen termino derecho
+
+        // TODO incluir marcas
 
         if (this.isList()){
             // Muestra la lista
@@ -569,5 +575,13 @@ public class TreeNode {
 
     public void setChildIndex(Integer childIndex) {
         this.childIndex = childIndex;
+    }
+
+    public Boolean getMarked() {
+        return marked;
+    }
+
+    public void setMarked(Boolean marked) {
+        this.marked = marked;
     }
 }

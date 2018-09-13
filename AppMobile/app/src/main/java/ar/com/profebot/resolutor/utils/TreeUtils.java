@@ -2,6 +2,7 @@ package ar.com.profebot.resolutor.utils;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,6 +13,9 @@ import ar.com.profebot.resolutor.container.OperatorLevel;
 import ar.com.profebot.resolutor.service.SimplifyService;
 
 public class TreeUtils {
+
+    public static String COLOR_TAG_NODE_START = "<color>";
+    public static String COLOR_TAG_NODE_END = "</color>";
 
     private static SimplifyService simplifyService = new SimplifyService();
 
@@ -1359,5 +1363,10 @@ public class TreeUtils {
     public static boolean isSingleSymbol(TreeNode node) {
         if (node == null){return false;}
         return "X".equals(node.getValue());
+    }
+
+    public static boolean isRootNode(TreeNode rootNode) {
+        if (rootNode == null){return false;}
+        return new ArrayList<String>(Arrays.asList("=", "<", "<=", ">", ">=")).contains(rootNode.getValue());
     }
 }
