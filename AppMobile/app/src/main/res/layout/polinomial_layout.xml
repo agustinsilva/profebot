@@ -86,7 +86,7 @@
                     android:hint="Coeficiente"
                     android:imeOptions="actionDone"
                     android:inputType="number"
-                    android:maxLength="2"
+                    android:maxLength="3"
                     android:textAlignment="center" />
             </android.support.design.widget.TextInputLayout>
 
