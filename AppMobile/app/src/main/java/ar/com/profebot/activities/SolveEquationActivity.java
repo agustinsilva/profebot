@@ -45,8 +45,18 @@ public class SolveEquationActivity extends GlobalActivity {
         LinearLayoutManager llm = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(llm);
         multipleChoiceSteps = this.initializeMultipleChoiceSteps();
-        adapter = new RVMultipleChoiceAdapter(multipleChoiceSteps.get(0), multipleChoiceSteps);
+
+        if(!multipleChoiceSteps.isEmpty()){
+            adapter = new RVMultipleChoiceAdapter(multipleChoiceSteps.get(0), multipleChoiceSteps);
+        }else{
+            adapter = new RVMultipleChoiceAdapter(null, new ArrayList<>());
+        }
         recyclerView.setAdapter(adapter);
+
+        if(multipleChoiceSteps.isEmpty()){
+            EquationManager.setUpPopUp(this, true);
+            EquationManager.showPopUp();
+        }
 
         seeSummary = (Button) findViewById(R.id.see_summary_id);
         seeSummary.setOnClickListener(new View.OnClickListener() {
@@ -56,8 +66,6 @@ public class SolveEquationActivity extends GlobalActivity {
             }
         });
         disableSummary();
-
-        EquationManager.setUpPopUp(this);
     }
 
     private void disableSummary(){

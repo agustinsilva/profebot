@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import ar.com.profebot.Models.MultipleChoiceStep;
+import ar.com.profebot.activities.EnterEquationOptionsActivity;
 import ar.com.profebot.activities.EnterPolinomialEquationOptionsActivity;
 import ar.com.profebot.activities.SolveEquationActivity;
 import ar.com.profebot.activities.SolvePolynomialActivity;
@@ -33,7 +34,7 @@ public class EquationManager {
         dialog.show();
     }
 
-    public static void setUpPopUp(SolveEquationActivity aContext){
+    public static void setUpPopUp(SolveEquationActivity aContext, Boolean isFirstStep){
         context = aContext;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View view = context.getLayoutInflater().inflate(R.layout.equation_results_pop_up, null);
@@ -56,12 +57,17 @@ public class EquationManager {
         ((Button) view.findViewById(R.id.close_pop_up_id)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(isFirstStep){
+                    v.getContext().startActivity(new Intent(v.getContext(), EnterEquationOptionsActivity.class));
+                    dialog.cancel();
+                }
                 dialog.hide();
             }
         });
     }
 
     public static void enableSummary(){
+        EquationManager.setUpPopUp(context, false);
         context.enableSummary();
     }
 }

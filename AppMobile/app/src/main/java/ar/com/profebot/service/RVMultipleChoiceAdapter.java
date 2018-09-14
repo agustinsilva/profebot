@@ -215,7 +215,9 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
     public RVMultipleChoiceAdapter(MultipleChoiceStep firstStep, List<MultipleChoiceStep> multipleChoiceSteps){
         this.multipleChoiceSteps = multipleChoiceSteps;
         List<MultipleChoiceStep> steps = new ArrayList<>();
-        steps.add(firstStep);
+        if(firstStep != null){
+            steps.add(firstStep);
+        }
         this.currentMultipleChoiceSteps = steps;
     }
 
