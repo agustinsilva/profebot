@@ -308,9 +308,11 @@ public class CameraFragment extends Fragment {
                     }
                     else{
                         try {
-                            SetPolinomialForPolinomialActivity(latex);
-                            Intent intent = new Intent(getActivity(), SolvePolynomialActivity.class);
-                            startActivity(intent);
+                            if(correctExpression(latex)) {
+                                SetPolinomialForPolinomialActivity(latex);
+                                Intent intent = new Intent(getActivity(), SolvePolynomialActivity.class);
+                                startActivity(intent);
+                            }
                         }
                         catch (Exception ex){
                             showErrorAndReset("La expresión no es un polinomio, por favor, volvé a intentarlo.");
@@ -323,6 +325,18 @@ public class CameraFragment extends Fragment {
             }
         });
         task.execute(params);
+    }
+
+    private boolean correctExpression(String latex) {
+        try
+        {
+            double isOnlyNumeric = Double.parseDouble(latex);
+            return false;
+        }
+        catch(NumberFormatException nfe)
+        {
+            return true;
+        }
     }
 
     public void SetPolinomialForPolinomialActivity(String latex) {
