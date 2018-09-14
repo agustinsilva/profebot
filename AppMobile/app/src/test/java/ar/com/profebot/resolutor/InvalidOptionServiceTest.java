@@ -29,6 +29,12 @@ public class InvalidOptionServiceTest  extends InvalidOptionService {
     }
 
     @Test
+    public void general_test_2() throws InvalidExpressionException {
+        String expression = "3/X = 1";
+        List<MultipleChoiceStep> steps = resolutorService.resolveExpressionTestWithoutContext(expression);
+    }
+
+    @Test
     public void getTipoPasajeTerminoPrimerAncestro() {
         // TODO
     }

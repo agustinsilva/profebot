@@ -1367,6 +1367,6 @@ public class TreeUtils {
 
     public static boolean isRootNode(TreeNode rootNode) {
         if (rootNode == null){return false;}
-        return new ArrayList<String>(Arrays.asList("=", "<", "<=", ">", ">=")).contains(rootNode.getValue());
+        return new ArrayList<>(Arrays.asList("=", "<", "<=", ">", ">=")).contains(rootNode.getValue());
     }
 }

@@ -57,6 +57,7 @@ public class InvalidOptionService {
 
         int nodeLevel = Tree.getNodeDepth(node);
 
+        // En el caso de que se
         //3. Si el nodo elegido es hijo del signo Igual, pasar este nodo y su decendencia al otro miembro
         //4. Si el nodo elegido NO es hijo del signo Igual, validar niveles de sus ancestros
         /*4.a Ancestros de distinto nivel: pasar este nodo (inviertiendo operador) y uno de sus hijos/ramas
