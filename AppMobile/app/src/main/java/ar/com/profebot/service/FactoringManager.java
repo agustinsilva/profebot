@@ -187,12 +187,12 @@ public class FactoringManager {
                     if(hasIndependentTerm){
                         regularOption2 = GAUSS;
                     }
-                }else if(degree > 2 && hasIndependentTerm){ // No se puede cuadrática porque el grado es != 2
+                }else if(gaussIsPossible){ // No se puede cuadrática porque el grado es != 2
                     regularOption1 = GAUSS;
                 }
             }else{
                 correctOption = CUADRATICA;
-                if(hasIndependentTerm){
+                if(gaussIsPossible){
                     regularOption1 = GAUSS;
                 }
             }
@@ -231,7 +231,8 @@ public class FactoringManager {
 
     private static Boolean gaussIsPossible(){
         Boolean existsTerms = !polynomialTerms.isEmpty();
-        return existsTerms && hasIndependentTerm() && (getDegree() > 2 || (getDegree() == 2 && quadraticIsPossible()));
+        Boolean existsAtLeastOneRoot = existsTerms && hasIndependentTerm() && !rootsOfPolynomial().isEmpty();
+        return existsAtLeastOneRoot && (getDegree() > 2 || (getDegree() == 2 && quadraticIsPossible()));
     }
 
     public static String getEquation(){
@@ -517,30 +518,34 @@ public class FactoringManager {
                 incrementMultiplier(polynomialTerms.get(2));
             }
 
-            Double independentTerm = polynomialTerms.get(0);
-            Double principalCoefficient = polynomialTerms.get(getDegree());
-
-            List<Integer> independentTermDivisors = divisorsOf(independentTerm);
-            List<Integer> principalCoefficientDivisors = divisorsOf(principalCoefficient);
-
-            List<Double> possibleRoots = new ArrayList<>();
-            for(Integer independentTermDivisor : independentTermDivisors){
-                for(Integer principalCoefficientDivisor : principalCoefficientDivisors){
-                    possibleRoots.add((double) independentTermDivisor / principalCoefficientDivisor);
-                }
+            List<Double> possibleRoots = rootsOfPolynomial();
+            try{
+                // Aplico gauss con la primer raíz que aparezca
+                applyRuffini(possibleRoots.get(0));
+            }catch (Exception e){
+                System.out.println(e.getMessage() + " - Raíces: " + possibleRoots.toString());
             }
+        }
+    }
 
-            for(Double possibleRoot : possibleRoots){
-                if(isRoot(possibleRoot)){
-                    try{
-                        applyRuffini(possibleRoot);
-                        break;
-                    }catch (Exception e){
-                        System.out.println(e.getMessage() + " - Raiz: " + possibleRoot);
-                    }
+    private static List<Double> rootsOfPolynomial(){
+        Double independentTerm = polynomialTerms.get(0);
+        Double principalCoefficient = polynomialTerms.get(getDegree());
+
+        List<Integer> independentTermDivisors = divisorsOf(independentTerm);
+        List<Integer> principalCoefficientDivisors = divisorsOf(principalCoefficient);
+
+        List<Double> totalRoots = new ArrayList<>();
+        for(Integer independentTermDivisor : independentTermDivisors){
+            for(Integer principalCoefficientDivisor : principalCoefficientDivisors){
+                Double candidate = (double) independentTermDivisor / principalCoefficientDivisor;
+                if(isRoot(candidate)){
+                    totalRoots.add(candidate);
                 }
             }
         }
+
+        return totalRoots;
     }
 
     private static void applyRuffini(Double possibleRoot) throws Exception{
