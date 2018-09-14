@@ -21,7 +21,7 @@
     <string name="GAUSS_ERA_EL_CORRECTO">Aplicar el método de Gauss era lo más conveniente, por tratarse de un polinomio de grado mayor a 1.</string>
 
     <string name="FACTOR_COMUN_NO_ES_CORRECTO">No se puede aplicar factor común, dado que no en todos los términos hay variables.</string>
-    <string name="CUADRATICA_NO_ES_CORRECTO">No se puede aplicar la fórmula cuadrática porque el polinomio no es de grado 2.</string>
+    <string name="CUADRATICA_NO_ES_CORRECTO">No se puede aplicar la fórmula cuadrática cuando el polinomio no es de grado 2, o bien cuando es de grado 2 pero el discriminante es negativo (b*b - 4*a*c).</string>
     <string name="GAUSS_NO_ES_CORRECTO">No se puede aplicar el método de Gauss cuando el polinomio no tiene término independiente. Tampoco es aplicable cuando el polinomio es de grado 1.</string>
 
     <string name="RAIZ_EXTRA">También se encontró la raíz /raiz/.</string>

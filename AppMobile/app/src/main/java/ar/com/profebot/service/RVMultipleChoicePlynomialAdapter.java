@@ -119,7 +119,7 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
 
                         summary.setText(summaryText);
                         FactoringManager.setFactors();
-                        newEquationBase.setText("\\(" + FactoringManager.getEquationAfterFactorizing() + "\\)");
+                        newEquationBase.setText("$$" + FactoringManager.getEquationAfterFactorizing() + "$$");
                         if(!FactoringManager.end){
                             multipleChoiceSteps.add(FactoringManager.nextStep());
                             MultipleChoiceStep currentMultipleChoiceStep = multipleChoiceSteps.get(currentMultipleChoiceSteps.size()-1);
