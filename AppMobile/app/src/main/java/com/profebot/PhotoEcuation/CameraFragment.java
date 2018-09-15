@@ -368,21 +368,35 @@ public class CameraFragment extends Fragment {
                     potential = term.substring(position + 2, term.length());
                     coefficient = coefficient.replaceAll("\\{", "").replaceAll("\\}", "").replaceAll("\\)", "").replaceAll("\\(", "");
                     potential = potential.replaceAll("\\{", "").replaceAll("\\}", "").replaceAll("\\)", "").replaceAll("\\(", "");
-                    polynomialMap.put(Integer.parseInt(potential), fractionToDouble(coefficient));
+                    polynomialMap = AddTerm(potential,coefficient, polynomialMap);
                 } else if (term.contains("x")) {//es un coeficeinte lineal
                     int positionLineal = term.indexOf("x");
                     if (positionLineal == 0) {
-                        polynomialMap.put(1, Double.parseDouble("1"));
+                        polynomialMap = AddTerm("1","1", polynomialMap);
                     } else {
                         coefficient = term.substring(0, positionLineal);
-                        polynomialMap.put(1, Double.parseDouble(coefficient));
+                        polynomialMap = AddTerm("1",coefficient, polynomialMap);
                     }
                 } else {//es un termino independiente
-                    polynomialMap.put(0, fractionToDouble(term));
+                    polynomialMap = AddTerm("0",term, polynomialMap);
                 }
             }
         }
         EnterPolinomialActivity.polynomialTerms = polynomialMap;
+    }
+
+    private Map<Integer, Double> AddTerm(String potential, String coefficient, Map<Integer, Double> polynomialMap) {
+        Double newCoefficient;
+        if(!polynomialMap.containsKey(Integer.parseInt(potential))){
+            newCoefficient = fractionToDouble(coefficient);
+        }else {
+            newCoefficient = polynomialMap.get(Integer.parseInt(potential)) + fractionToDouble(coefficient);
+            polynomialMap.remove(potential);
+        }
+        if(newCoefficient != 0){
+            polynomialMap.put(Integer.parseInt(potential), newCoefficient);
+        }
+        return polynomialMap;
     }
 
     public static Double fractionToDouble(String fraction) {
