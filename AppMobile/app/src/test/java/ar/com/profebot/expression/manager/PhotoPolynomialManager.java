@@ -37,6 +37,40 @@ public class PhotoPolynomialManager {
     }
 
     @Test
+    public void ParseClassicPolynomialNegativeLinealTerm() {
+        String latex = "x ^ { 4 } - x ^ { 3 } + 3 x ^ { 2 } - 5 x + 1";
+
+        CameraFragment fragment = new CameraFragment();
+        fragment.SetPolinomialForPolinomialActivity(latex);
+
+        Map<Integer, Double> myMap = new HashMap<>();
+        //Exponente, Coeficiente
+        myMap.put(0, 1.0);
+        myMap.put(1, -5.0);
+        myMap.put(2, 3.0);
+        myMap.put(3, -1.0);
+        myMap.put(4, 1.0);
+
+        Assert.assertEquals(EnterPolinomialActivity.polynomialTerms, myMap);
+    }
+
+    @Test
+    public void ParseClassicPolynomialNegativeLinealTermComplex() {
+        String latex = "3 x ^ { 2 } - 5 x - 15 x + 1";
+
+        CameraFragment fragment = new CameraFragment();
+        fragment.SetPolinomialForPolinomialActivity(latex);
+
+        Map<Integer, Double> myMap = new HashMap<>();
+        //Exponente, Coeficiente
+        myMap.put(0, 1.0);
+        myMap.put(1, -20.0);
+        myMap.put(2, 3.0);
+
+        Assert.assertEquals(EnterPolinomialActivity.polynomialTerms, myMap);
+    }
+
+    @Test
     public void ParseClassicNegativePolynomial() {
         String latex = "-x ^ { 4 } - x ^ { 3 } + 3 x ^ { 2 } + x + 1";
 

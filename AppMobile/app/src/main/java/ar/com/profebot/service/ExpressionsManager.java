@@ -143,23 +143,41 @@ public class ExpressionsManager {
         equationPhoto = containsFrac(equationPhoto);
 
         String equationWellWritten  = equationPhoto
+                .replaceAll("\\\\cdot", "*")
                 .replaceAll("\\\\sqrt", "R")
                 .replaceAll("\\{", "(")
                 .replaceAll("\\}", ")")
                 .replaceAll("\\[", "(")
                 .replaceAll("\\]", ")")
+                .replaceAll("\\[", "(")
+                .replaceAll("]", ")")
+                .replaceAll("\\)\\(", ")*(")
+                .replaceAll("\\.\\(", "*(")
+                .replaceAll("\\)\\.", ")*")
                 .replaceAll(":", "/")
                 .replaceAll(",", ".")
                 .replaceAll("\\^\\(\\*\\)", "*") // After replacing [] by (), we must search ^(*)
-                .replaceAll("n", "X")
                 .replaceAll("x", "X")
+                .replaceAll("\\.X", "*X")
+                .replaceAll("X\\.", "X*")
                 .replaceAll("\\)X", ")*X")
-                .replaceAll("\\(X\\(", "(X*(")
+                .replaceAll("^\\+\\(", "0+(")
+                .replaceAll("^-\\(", "0-(")
+                .replaceAll("^\\+X", "X")
+                .replaceAll("^-X", "0-X")
+                .replaceAll("\\(\\+", "(0+")
+                .replaceAll("\\(-", "(0-")
+                .replaceAll("=\\+\\(", "=(")
+                .replaceAll("=-\\(", "=0-(")
+                .replaceAll("=\\+X", "=X")
+                .replaceAll("=-X", "=0-X")
                 .replaceAll("×", "*")
                 .replaceAll("√", "R")
-                .replaceAll("\\\\cdot", "*")
+                .replaceAll("sqrt", "R")
                 .replaceAll("e", "2.718281828459045235360")
-                .replaceAll("pi", "3.14159265358979323846");
+                .replaceAll("pi", "3.14159265358979323846")
+                .replaceAll("\\.0", "");
+
         for(int i = 0 ; i <= 9 ; i++){
             equationWellWritten = equationWellWritten
                     .replaceAll("\\^[\\(\\[]" + i + "[\\)\\]]", "^" + i)

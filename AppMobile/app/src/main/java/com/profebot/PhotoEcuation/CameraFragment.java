@@ -371,12 +371,22 @@ public class CameraFragment extends Fragment {
                     polynomialMap = AddTerm(potential,coefficient, polynomialMap);
                 } else if (term.contains("x")) {//es un coeficeinte lineal
                     int positionLineal = term.indexOf("x");
-                    if (positionLineal == 0) {
-                        polynomialMap = AddTerm("1","1", polynomialMap);
-                    } else {
-                        coefficient = term.substring(0, positionLineal);
-                        polynomialMap = AddTerm("1",coefficient, polynomialMap);
+                    switch (positionLineal) {
+                        case 1:
+                            if (term.substring(0, positionLineal).contains("!")) {
+                                coefficient = "-1";
+                            } else {
+                                coefficient = term.substring(0, positionLineal);
+                            }
+                            break;
+                        case 0:
+                            coefficient = "1";
+                            break;
+                        default:
+                            coefficient = term.substring(0, positionLineal).replace("!", "-");
+                            break;
                     }
+                    polynomialMap = AddTerm("1",coefficient, polynomialMap);
                 } else {//es un termino independiente
                     polynomialMap = AddTerm("0",term, polynomialMap);
                 }

@@ -55,4 +55,14 @@ public class PhotoExpressionsManager {
         Assert.assertEquals("R((5+3*X))=3", ExpressionsManager.getEquationPhoto());
     }
 
+    @Test
+    public void ParseEquationSeveralFractionsWithoutMultiplySimbol() {
+        String equation = "( 9 x - 7 ) \\frac { 1 } { 8 } = \\frac { - 1 } { 3 x }";
+        ExpressionsManager.setEquationPhoto(equation, null);
+        Assert.assertEquals("(9*X-7)*(1)/(8)=(0-1)/(3*X)", ExpressionsManager.getEquationPhoto());
+    }
+
+
+
+
 }
