@@ -37,10 +37,6 @@ public class ExpressionsManager {
         try{
             setTreeOfExpression(new ParserService().parseExpression(getEquationPhoto()));
         }catch (InvalidExpressionException e){
-            CharSequence text = "Se produjo un error en la expresion:" + e.getMessage();
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
             equationDrawn = null;
             treeOfExpression = null;
         }
