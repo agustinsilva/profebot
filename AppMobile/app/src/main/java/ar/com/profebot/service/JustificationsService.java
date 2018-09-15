@@ -483,15 +483,32 @@ public class JustificationsService {
     private static Map<String, String> createTextsFrom(Context context, int optionId, int justificationId, int summaryId){
         Map<String, String> justifications = new HashMap<>();
         justifications.put("option", context.getString(optionId));
-        justifications.put("correctOptionJustification", context.getString(justificationId));
+        justifications.put("correctOptionJustification", context.getString(justificationId).replace("/comparador/", textOfComparator(ExpressionsManager.comparatorOperator)));
         justifications.put("summary", context.getString(summaryId));
         return justifications;
+    }
+
+    public static String textOfComparator(String comparator){
+        switch (comparator){
+            case ">":
+                return "mayor";
+            case "<":
+                return "menor";
+            case ">=":
+                return "mayor o igual";
+            case "<=":
+                return "menor o igual";
+            case "=":
+                return "igual";
+            default:
+                return "error";
+        }
     }
 
     private static Map<String, String> createTextsFrom(Context context, int optionId, int justificationId){
         Map<String, String> justifications = new HashMap<>();
         justifications.put("option", context.getString(optionId));
-        justifications.put("incorrectOptionJustification", context.getString(justificationId));
+        justifications.put("incorrectOptionJustification", context.getString(justificationId).replace("/comparador/", textOfComparator(ExpressionsManager.comparatorOperator)));
         return justifications;
     }
 

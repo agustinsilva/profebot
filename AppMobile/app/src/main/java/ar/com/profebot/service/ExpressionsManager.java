@@ -19,6 +19,7 @@ public class ExpressionsManager {
     private static String equationPhoto;
     private static String equationPolinomial;
     private static Tree treeOfExpression;
+    public static String comparatorOperator;
 
     public static String getEquationDrawn() {
         return equationDrawn;
@@ -76,16 +77,8 @@ public class ExpressionsManager {
     public static String getEquationAsLatex() {
         String firstSign, secondSign;
         String infixEquation = getEquationAsInfix();
-        String root;
-        if(infixEquation.contains("=")){
-            root = "=";
-        }else if(infixEquation.contains(">")){
-            root = ">";
-        }else{
-            root = "<";
-        }
 
-        String[] expressions = infixEquation.split(root);
+        String[] expressions = infixEquation.split(comparatorOperator);
 
         if (expressions[0].substring(0,1).contains("-")){
             firstSign = "-";
@@ -100,7 +93,7 @@ public class ExpressionsManager {
             secondSign = "";
         }
 
-        return firstSign + FormulaParser.parseToLatex(expressions[0]) + root + secondSign + FormulaParser.parseToLatex(expressions[1]);
+        return firstSign + FormulaParser.parseToLatex(expressions[0]) + comparatorOperator + secondSign + FormulaParser.parseToLatex(expressions[1]);
     }
 
     public static String getPolinomialEquationAsLatex() {
@@ -117,9 +110,8 @@ public class ExpressionsManager {
     }
 
     public static String getEquationAsLatex(String infixEquation) {
-        String root = getRootOfEquation(infixEquation);
-        String[] expressions = getEquationAsInfix(infixEquation).split(root);
-        return FormulaParser.parseToLatex(expressions[0]) + root + FormulaParser.parseToLatex(expressions[1]);
+        String[] expressions = getEquationAsInfix(infixEquation).split(comparatorOperator);
+        return FormulaParser.parseToLatex(expressions[0]) + comparatorOperator + FormulaParser.parseToLatex(expressions[1]);
     }
 
     public static String getEquationAsString() {
@@ -132,6 +124,7 @@ public class ExpressionsManager {
 
     public static void setTreeOfExpression(Tree treeOfExpression) {
         ExpressionsManager.treeOfExpression = treeOfExpression;
+        comparatorOperator = getRootOfEquation(equationDrawn);
     }
 
     public static Boolean expressionDrawnIsValid(){
@@ -335,15 +328,23 @@ public class ExpressionsManager {
     }
 
     public static String getRootOfEquation(String infixEquation){
-         return infixEquation.contains("=") ? "=" : (infixEquation.contains(">") ? ">" : "<");
+         if(infixEquation.contains("<=")){
+             return "<=";
+         }else if(infixEquation.contains(">=")){
+             return ">=";
+         }else if(infixEquation.contains("<")){
+             return "<";
+         }else if(infixEquation.contains(">")){
+             return ">";
+         }
+        return "=";
     }
 
     public static List<String> getTermAndContextFromReduction(String equationBase, String newEquationBase){
-        String root = getRootOfEquation(equationBase);
-        List<String> equationBaseMembers = Arrays.asList(equationBase.split(root));
-        List<String> newEquationBaseMembers = Arrays.asList(newEquationBase.split(root));
+        List<String> equationBaseMembers = Arrays.asList(equationBase.split(comparatorOperator));
+        List<String> newEquationBaseMembers = Arrays.asList(newEquationBase.split(comparatorOperator));
         List<String> result = new ArrayList<>();
-        result.add(root);
+        result.add(comparatorOperator);
 
         if(isTermPassage(equationBaseMembers, newEquationBaseMembers)){
             result.add(longestEquationMember(equationBaseMembers));
