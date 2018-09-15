@@ -116,11 +116,6 @@ public class ResolutorService {
             result.add(multipleChoiceStep);
         }
 
-        // El ultimo paso es el que resuelve
-        if (!result.isEmpty()){
-            result.get(result.size()-1).setSolved(true);
-        }
-
         return result;
     }
 

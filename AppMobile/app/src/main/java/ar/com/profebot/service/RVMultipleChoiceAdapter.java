@@ -127,7 +127,9 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
                     nextStep.setVisibility(View.GONE);
                     layoutToUse.setVisibility(View.GONE);
                     expandCollapseIndicator.setScaleY(1f);
-                    currentMultipleChoiceSteps.add(multipleChoiceSteps.get(currentMultipleChoiceSteps.size()));
+                    MultipleChoiceStep currentMultipleChoiceStep = multipleChoiceSteps.get(currentMultipleChoiceSteps.size());
+                    currentMultipleChoiceSteps.add(currentMultipleChoiceStep);
+                    SolveEquationActivity.recyclerView.scrollToPosition(currentMultipleChoiceSteps.size() - 1);
                 }
             });
         }

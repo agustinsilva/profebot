@@ -482,7 +482,7 @@ public class JustificationsService {
 
     private static Map<String, String> createTextsFrom(Context context, int optionId, int justificationId, int summaryId){
         Map<String, String> justifications = new HashMap<>();
-        justifications.put("option", context.getString(optionId));
+        justifications.put("option", context.getString(optionId).replace("/comparador/", textOfComparator(ExpressionsManager.comparatorOperator)));
         justifications.put("correctOptionJustification", context.getString(justificationId).replace("/comparador/", textOfComparator(ExpressionsManager.comparatorOperator)));
         justifications.put("summary", context.getString(summaryId));
         return justifications;
@@ -507,7 +507,7 @@ public class JustificationsService {
 
     private static Map<String, String> createTextsFrom(Context context, int optionId, int justificationId){
         Map<String, String> justifications = new HashMap<>();
-        justifications.put("option", context.getString(optionId));
+        justifications.put("option", context.getString(optionId).replace("/comparador/", textOfComparator(ExpressionsManager.comparatorOperator)));
         justifications.put("incorrectOptionJustification", context.getString(justificationId).replace("/comparador/", textOfComparator(ExpressionsManager.comparatorOperator)));
         return justifications;
     }
