@@ -53,8 +53,9 @@ public class SolveEquationActivity extends GlobalActivity {
         }
         recyclerView.setAdapter(adapter);
 
+        EquationManager.setContext(this);
         if(multipleChoiceSteps.isEmpty()){
-            EquationManager.setUpPopUp(this, true);
+            EquationManager.setUpPopUp(true);
             EquationManager.showPopUp();
         }
 

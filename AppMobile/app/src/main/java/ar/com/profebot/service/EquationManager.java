@@ -34,8 +34,7 @@ public class EquationManager {
         dialog.show();
     }
 
-    public static void setUpPopUp(SolveEquationActivity aContext, Boolean isFirstStep){
-        context = aContext;
+    public static void setUpPopUp(Boolean isFirstStep){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View view = context.getLayoutInflater().inflate(R.layout.equation_results_pop_up, null);
 
@@ -67,7 +66,11 @@ public class EquationManager {
     }
 
     public static void enableSummary(){
-        EquationManager.setUpPopUp(context, false);
+        EquationManager.setUpPopUp(false);
         context.enableSummary();
+    }
+
+    public static void setContext(SolveEquationActivity context) {
+        EquationManager.context = context;
     }
 }
