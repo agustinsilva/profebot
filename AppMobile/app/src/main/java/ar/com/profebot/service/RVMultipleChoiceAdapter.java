@@ -258,11 +258,29 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
             multipleChoiceViewHolder.summary.setText(currentMultipleChoiceSteps.get(position).getSummary());
         }
         multipleChoiceViewHolder.optionA.setText(currentMultipleChoiceSteps.get(position).getOptionA());
-        multipleChoiceViewHolder.equationOptionA.setText(alignEquationCentered(currentMultipleChoiceSteps.get(position).getEquationOptionA()));
+        multipleChoiceViewHolder.equationOptionA.config("MathJax.Hub.Config({\n"+
+                "  CommonHTML: { linebreaks: { automatic: true } },\n"+
+                "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
+                "         SVG: { linebreaks: { automatic: true } }\n"+
+                "});");
+        multipleChoiceViewHolder.equationOptionA.setText("$$" + currentMultipleChoiceSteps.get(position).getEquationOptionA() + "$$");
+
         multipleChoiceViewHolder.optionB.setText(currentMultipleChoiceSteps.get(position).getOptionB());
-        multipleChoiceViewHolder.equationOptionB.setText(alignEquationCentered(currentMultipleChoiceSteps.get(position).getEquationOptionB()));
+        multipleChoiceViewHolder.equationOptionB.config("MathJax.Hub.Config({\n"+
+                "  CommonHTML: { linebreaks: { automatic: true } },\n"+
+                "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
+                "         SVG: { linebreaks: { automatic: true } }\n"+
+                "});");
+        multipleChoiceViewHolder.equationOptionB.setText("$$" + currentMultipleChoiceSteps.get(position).getEquationOptionB() + "$$");
+
         multipleChoiceViewHolder.optionC.setText(currentMultipleChoiceSteps.get(position).getOptionC());
-        multipleChoiceViewHolder.equationOptionC.setText(alignEquationCentered(currentMultipleChoiceSteps.get(position).getEquationOptionC()));
+        multipleChoiceViewHolder.equationOptionC.config("MathJax.Hub.Config({\n"+
+                "  CommonHTML: { linebreaks: { automatic: true } },\n"+
+                "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
+                "         SVG: { linebreaks: { automatic: true } }\n"+
+                "});");
+        multipleChoiceViewHolder.equationOptionC.setText("$$" + currentMultipleChoiceSteps.get(position).getEquationOptionC() + "$$");
+
         multipleChoiceViewHolder.correctOption = currentMultipleChoiceSteps.get(position).getCorrectOption();
         multipleChoiceViewHolder.correctOptionJustification = currentMultipleChoiceSteps.get(position).getCorrectOptionJustification();
         multipleChoiceViewHolder.incorrectOptionJustification1 = currentMultipleChoiceSteps.get(position).getIncorrectOptionJustification1();
