@@ -124,7 +124,7 @@ public class ExpressionsManager {
 
     public static void setTreeOfExpression(Tree treeOfExpression) {
         ExpressionsManager.treeOfExpression = treeOfExpression;
-        comparatorOperator = getRootOfEquation(equationDrawn);
+        comparatorOperator = getRootOfEquation(equationDrawn != null ? equationDrawn : equationPhoto);
     }
 
     public static Boolean expressionDrawnIsValid(){
