@@ -56,13 +56,17 @@ public class PhotoExpressionsManager {
     }
 
     @Test
-    public void ParseEquationSeveralFractionsWithoutMultiplySimbol() {
-        String equation = "( 9 x - 7 ) \\frac { 1 } { 8 } = \\frac { - 1 } { 3 x }";
+    public void ParseMajorEqualSimbolEquation() {
+        String equation = "x - 6 \\geq 10";
         ExpressionsManager.setEquationPhoto(equation, null);
-        Assert.assertEquals("(9*X-7)*(1)/(8)=(0-1)/(3*X)", ExpressionsManager.getEquationPhoto());
+        Assert.assertEquals("X-6>=10", ExpressionsManager.getEquationPhoto());
     }
 
-
-
+    @Test
+    public void ParseMinorEqualSimbolEquation() {
+        String equation = "x - 6 \\leq 10";
+        ExpressionsManager.setEquationPhoto(equation, null);
+        Assert.assertEquals("X-6<=10", ExpressionsManager.getEquationPhoto());
+    }
 
 }

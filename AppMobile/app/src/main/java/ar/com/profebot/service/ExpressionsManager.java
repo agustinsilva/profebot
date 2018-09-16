@@ -139,6 +139,8 @@ public class ExpressionsManager {
         equationPhoto = containsFrac(equationPhoto);
 
         String equationWellWritten  = equationPhoto
+                .replaceAll("\\\\leq", "<=")
+                .replaceAll("\\\\geq", ">=")
                 .replaceAll("\\\\cdot", "*")
                 .replaceAll("\\\\sqrt", "R")
                 .replaceAll("\\{", "(")
