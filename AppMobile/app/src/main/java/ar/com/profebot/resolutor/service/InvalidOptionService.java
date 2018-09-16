@@ -13,11 +13,53 @@ import ar.com.profebot.resolutor.utils.TreeUtils;
 public class InvalidOptionService {
 
     public InvalidStep[] getInvalidSteps(Tree originalTree) {
+
         InvalidStep[] steps = new InvalidStep[2];
 
-        steps[0] = getFirstInvalidOption(originalTree);
-        steps[1] = getSecondInvalidOption(originalTree);
+        List<InvalidStep> invalidStepsTypeI = getFirstInvalidOptions(originalTree);
+        List<InvalidStep> invalidStepsTypeII = getSecondInvalidOptions(originalTree);
 
+        // Saco 1 de tipo 1 si encontro alguna
+        int index = 0;
+        if (!invalidStepsTypeI.isEmpty()){
+            steps[index] = popRandomElement(invalidStepsTypeI);
+            index++;
+        }
+
+        // Saco 1 de tipo 2 si encontro alguna
+        if (!invalidStepsTypeII.isEmpty()){
+            steps[index] = popRandomElement(invalidStepsTypeII);
+            index++;
+        }
+
+        // Muy raro, no encontro nada, genero 2 triviales
+        if (index == 0){
+            steps[index] = getTrivialInvalidOption(originalTree);
+            steps[++index] = getTrivialInvalidOption(originalTree);
+
+            // Encontro 1 sola
+        }else if (index == 1){
+            // Busco otra en las de tipo 1 si hay
+            if (!invalidStepsTypeI.isEmpty()){
+                steps[index] = popRandomElement(invalidStepsTypeI);
+                index++;
+                // Sino en tipo 2
+            }else if (!invalidStepsTypeII.isEmpty()){
+                steps[index] = popRandomElement(invalidStepsTypeII);
+                index++;
+            }
+
+            // Si ya no habia de ningun tipo
+            if (index == 1){
+                steps[index] = getTrivialInvalidOption(originalTree);
+                index++;
+            }
+        }
+
+
+       /* steps[0] = getFirstInvalidOption(originalTree);
+        steps[1] = getSecondInvalidOption(originalTree);
+        */
         return steps;
     }
 
@@ -25,55 +67,62 @@ public class InvalidOptionService {
      * @param originalTree arbol del cual se quiere generar un paso inválido
      * @return devuelve la info del nuevo arbol generado con un pasaje de términos inválido
      **/
-    public InvalidStep getFirstInvalidOption(Tree originalTree) {
-        InvalidStep.InvalidTypes type;
+    public List<InvalidStep> getFirstInvalidOptions(Tree originalTree) {
+
+        List<InvalidStep> invalidSteps = new ArrayList<>();
+
         // Clonado para evitar modificar el original
         Tree tree = originalTree.clone();
         tree.generateTwoWayLinkedTree();
 
-        //1. Elegir rama izquierda o derecha del árbol
-        boolean equalsLeftBranch = true;
-        TreeNode node = tree.getLeftNode();
-        if (chooseRightNode()) {
-            node = tree.getRightNode();
-            equalsLeftBranch = false;
+        // 1. Obtengo todos los nodos no temrinales del arbol
+        List<TreeNode> nonTerminalNodeList = getNonTerminalNodeList(tree.getRootNode());
+        if (nonTerminalNodeList.isEmpty()){return invalidSteps;} // Sin resultados
+
+        // Genero 2 nodos, por si el otro metodo no logra conseguir nada
+        TreeNode candidateNode1;
+        TreeNode candidateNode2;
+        Boolean chooseRightBranch1;
+        Boolean chooseRightBranch2;
+        if (nonTerminalNodeList.size() ==1){
+            candidateNode1 = nonTerminalNodeList.get(0);
+            candidateNode2 = nonTerminalNodeList.get(0);
+
+            // Cuando tengo 1 solo resultado, fuerzo a que tome las 2 ramas del mismo nodo
+            chooseRightBranch1 = true;
+            chooseRightBranch2 = false;
+        }else{
+            // Selecciona un nodo al azar y lo remueve de la lista
+            candidateNode1 = popRandomElement(nonTerminalNodeList);
+            candidateNode2 = popRandomElement(nonTerminalNodeList);
+            chooseRightBranch1 = chooseRightNode();
+            chooseRightBranch2 = chooseRightNode();
         }
 
-        //2. Elegir un nodo random del subarbol que sea NO TERMINAL
-        //generar un valor random de iteraciones (nivel dentro del subarbol)
-        TreeNode randomNode = getRandomNonTerminalNode(node);
-        if (randomNode == null){
-            if (equalsLeftBranch){
-                node = tree.getRightNode();
-                equalsLeftBranch = false;
-            }else{
-                node = tree.getLeftNode();
-                equalsLeftBranch = true;
-            }
-            randomNode = getRandomNonTerminalNode(node);
+        invalidSteps.add(getInvalidOptionFromNode(candidateNode1, chooseRightBranch1, tree));
+        invalidSteps.add(getInvalidOptionFromNode(candidateNode2, chooseRightBranch2, tree));
+
+        return invalidSteps;
+    }
+
+    private <T> T popRandomElement(List<T> termList) {
+
+        T element;
+        int randomIndex = 0;
+        if (termList.size() > 1){
+            randomIndex = getRandomValue(0, termList.size());
         }
 
-        if (randomNode == null){return null;}
+        element = termList.get(randomIndex);
+        termList.remove(randomIndex);
 
-        int nodeLevel = Tree.getNodeDepth(node);
+        return element;
+    }
 
-        //3. Si el nodo elegido es hijo del signo Igual, pasar este nodo y su decendencia al otro miembro
-        //4. Si el nodo elegido NO es hijo del signo Igual, validar niveles de sus ancestros
-        /*4.a Ancestros de distinto nivel: pasar este nodo (inviertiendo operador) y uno de sus hijos/ramas
-         * 4.b Ancestros de igual nivel: pasar este nodo (sin invertir el operador) y uno de sus hijos/ramas */
-        boolean reverseOperator;
-        if (!isEqualsChild(nodeLevel)) {
-            reverseOperator = TreeUtils.hasDifferentLevelAncestors(randomNode);
-            if (reverseOperator) {
-                type = getTipoPasajeTerminoAncestrosDeDistintoNivel(randomNode);
-                String newReverseOperator = TreeUtils.inverseComparator(randomNode.getValue());
-                randomNode.setValue(newReverseOperator);
-            } else {
-                type = getTipoPasajeTerminoAncestrosDeMismoNivel(randomNode);
-            }
-        } else {
-            type = getTipoPasajeTerminoPrimerAncestro(randomNode);
-        }
+    private InvalidStep getInvalidOptionFromNode(TreeNode candidateNode, Boolean chooseRightBranch, Tree tree) {
+
+        InvalidStep.InvalidTypes type;
+        TreeNode randomNode = candidateNode.cloneDeep();
 
         // En el caso de que sea una X, voy a dividir el nodo para que pueda seguir la lógica normal
         if (TreeUtils.isSymbol(randomNode)){
@@ -95,13 +144,32 @@ public class InvalidOptionService {
             symbolNode.setParentNode(randomNode.getParentNode());
             randomNode = symbolNode;
             randomNode.getParentNode().setChild(randomNode.getChildIndex(), symbolNode);
+        }
 
+        int nodeLevel = Tree.getNodeDepth(randomNode);
+        boolean equalsLeftBranch = nodeBelongsToLeftBranch(candidateNode);
+
+        //3. Si el nodo elegido es hijo del signo Igual, pasar este nodo y su decendencia al otro miembro
+        //4. Si el nodo elegido NO es hijo del signo Igual, validar niveles de sus ancestros
+        /*4.a Ancestros de distinto nivel: pasar este nodo (inviertiendo operador) y uno de sus hijos/ramas
+         * 4.b Ancestros de igual nivel: pasar este nodo (sin invertir el operador) y uno de sus hijos/ramas */
+        boolean reverseOperator;
+        if (!isEqualsChild(nodeLevel)) {
+            reverseOperator = TreeUtils.hasDifferentLevelAncestors(randomNode);
+            if (reverseOperator) {
+                type = getTipoPasajeTerminoAncestrosDeDistintoNivel(randomNode);
+                String newReverseOperator = TreeUtils.inverseComparator(randomNode.getValue());
+                randomNode.setValue(newReverseOperator);
+            } else {
+                type = getTipoPasajeTerminoAncestrosDeMismoNivel(randomNode);
+            }
+        } else {
+            type = getTipoPasajeTerminoPrimerAncestro(randomNode);
         }
 
         /****Magic begins****/
         //5. Reestructurar el arbol
         // 5.a Sacar el randomNode y una de sus ramas (elijo random). La otra rama, debe enlazarse al padre de randomNode
-        boolean chooseRightBranch = chooseRightNode();
         if (isLeftChild(randomNode)) {
             if (chooseRightBranch) {
                 randomNode.getParentNode().setLeftNode(randomNode.getLeftNode());
@@ -138,6 +206,18 @@ public class InvalidOptionService {
         }
 
         return new InvalidStep(type, tree);
+
+    }
+
+    private boolean nodeBelongsToLeftBranch(TreeNode node) {
+        if (node == null){return false;}
+
+        while(node.getParentNode() != null && !TreeUtils.isRootNode(node.getParentNode())){
+            node = node.getParentNode(); // Busca el nodo anterior a la raiz
+        }
+        if (node.getParentNode() == null){return false;}
+
+        return node.getChildIndex().equals(0);
     }
 
     private boolean isLeftChild(TreeNode node) {
@@ -165,7 +245,11 @@ public class InvalidOptionService {
         if (node != null){
             // No terminal
             if (!TreeUtils.isConstant(node) && !TreeUtils.isSingleSymbol(node)){
-                list.add(node);
+
+                // El = es no temrinal pero se ignora
+                if (!TreeUtils.isRootNode(node)) {
+                    list.add(node);
+                }
 
                 if (node.getArgs()!=null){
                     for(TreeNode child: node.getArgs()){
@@ -258,29 +342,40 @@ public class InvalidOptionService {
      * @param originalTree arbol del cual se quiere generar un paso inválido
      * @return devuelve la info del nuevo arbol generado con un pasaje de términos inválido
      **/
-    public InvalidStep getSecondInvalidOption(Tree originalTree) {
+    public List<InvalidStep> getSecondInvalidOptions(Tree originalTree) {
+
+        List<InvalidStep> invalidSteps = new ArrayList<>();
 
         // Clonado para evitar modificar el original
         Tree tree = originalTree.clone();
         InvalidStep.InvalidTypes type = null;
         tree.generateTwoWayLinkedTree();
-        //1. Elegir rama izquierda o derecha del árbol
-        // (dejo que revise el arbol entero, y de ahi decida que paso tomar)
 
-        // TODO esta revisando solo los 2 primeros hijos, si lo queremos dejar así deberíamos restringir en las validaciones que tengan 2 argumentos max
-
-        //2. Analizar los posibles subarboles reducibles y guardarlos en la lista
+        //1. Analizar los posibles subarboles reducibles y guardarlos en la lista
         ArrayList<Reduction> reducibles = getReduciblesList(tree.getRootNode()); // Itera sobre todos los nodos recursivamente
-        if (reducibles.isEmpty()){
-            // Este caso implica que no hay constantes reducibles
-            // TODO agregar casos comodines
-            return new InvalidStep(InvalidStep.InvalidTypes.ASOCIATIVA_MAL_RESUELTA, tree);
-        }
-        //3. Elegir uno de forma random y hacer la reduccion
-        Reduction selectedReduction = reducibles.get(getRandomValue(0, reducibles.size()));
-        Tree reducedTree = resolveExpression(selectedReduction);
+        if (reducibles.isEmpty()){return invalidSteps;}
 
-        return new InvalidStep(getSecondInvalidOptionInvalidTypes(selectedReduction), reducedTree);
+        //2. Elegir dos de forma random (si se puede) y hacer la reduccion
+        Reduction reduction1;
+        Reduction reduction2 = null;
+        if (reducibles.size() == 1){
+            reduction1 = reducibles.get(0);
+        }else{
+            reduction1 = popRandomElement(reducibles);
+            reduction2 = popRandomElement(reducibles);
+        }
+
+        invalidSteps.add(getSecondInvalidOption(reduction1));
+        if (reduction2 != null){
+            invalidSteps.add(getSecondInvalidOption(reduction2));
+        }
+
+        return invalidSteps;
+    }
+
+    private InvalidStep getSecondInvalidOption(Reduction reduction){
+        Tree reducedTree = resolveExpression(reduction);
+        return new InvalidStep(getSecondInvalidOptionInvalidTypes(reduction), reducedTree);
     }
 
     protected InvalidStep.InvalidTypes getSecondInvalidOptionInvalidTypes(Reduction reduction) {
@@ -549,5 +644,46 @@ public class InvalidOptionService {
         reducedNode.setChildIndex(originalNode.getChildIndex());
 
         return reducedNode;
+    }
+
+    private InvalidStep getTrivialInvalidOption(Tree originalTree) {
+
+        Tree tree = originalTree.clone();
+
+        // Nodo inventado
+        String newOpertator = this.getRandomValue(0, 2) ==0? "+": "*";
+        // Random branch
+        boolean chooseRightNode = chooseRightNode();
+
+        TreeNode rootNode = tree.getRootNode();
+        TreeNode newNode;
+        if (chooseRightNode){
+            newNode = TreeNode.createOperator(newOpertator,
+                    rootNode.getRightNode(),
+                    TreeNode.createConstant( this.getRandomValue(1, 15)));
+
+            rootNode.setRightNode(newNode);
+            newNode.setParentNode(rootNode);
+            newNode.setChildIndex(1);
+
+        }else{
+            newNode = TreeNode.createOperator(newOpertator,
+                    rootNode.getLeftNode(),
+                    TreeNode.createConstant( this.getRandomValue(3, 18)));
+
+            rootNode.setLeftNode(newNode);
+            newNode.setParentNode(rootNode);
+            newNode.setChildIndex(0);
+        }
+
+        InvalidStep.InvalidTypes type;
+        if (newNode.esSuma()){
+            type = InvalidStep.InvalidTypes.AGREGAR_SUMA_A_MIEMBRO;
+        }else{
+            type = InvalidStep.InvalidTypes.AGREGAR_PRODUCTO_A_MIEMBRO;
+        }
+
+        return new InvalidStep(type, tree);
+
     }
 }

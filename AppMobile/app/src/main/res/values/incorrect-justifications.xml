@@ -66,4 +66,10 @@
     <string name="DISTRIBUTIVA_DE_POTENCIA_SOBRE_BINOMIO_OPTION">Distribuir la potencia a la suma o resta.</string>
     <string name="DISTRIBUTIVA_DE_POTENCIA_SOBRE_BINOMIO_JUSTIFICATION">Nunca se puede distribuir una potencia a una suma o resta; para resolverlo, se debe convertir la potencia en una multiplicación de la suma o resta (entre paréntesis) por sí misma, tantas veces como diga el exponente, y finalmente, aplicar las distributivas.</string>
 
+    <string name="AGREGAR_PRODUCTO_A_MIEMBRO_OPTION">Agregar término multiplicando.</string>
+    <string name="AGREGAR_PRODUCTO_A_MIEMBRO_JUSTIFICATION">No existe el término para agregar como producto en la fórmula.</string>
+
+    <string name="AGREGAR_SUMA_A_MIEMBRO_OPTION">Agregar término sumando.</string>
+    <string name="AGREGAR_SUMA_A_MIEMBRO_JUSTIFICATION">No existe el término para agregar como suma en la fórmula.</string>
+
 </resources>

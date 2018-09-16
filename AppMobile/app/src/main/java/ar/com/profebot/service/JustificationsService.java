@@ -667,6 +667,15 @@ public class JustificationsService {
                         R.string.DISTRIBUTIVA_DE_POTENCIA_SOBRE_BINOMIO_OPTION,
                         R.string.DISTRIBUTIVA_DE_POTENCIA_SOBRE_BINOMIO_JUSTIFICATION);
 
+            case AGREGAR_PRODUCTO_A_MIEMBRO:
+                return createTextsFrom(context,
+                        R.string.AGREGAR_PRODUCTO_A_MIEMBRO_OPTION,
+                        R.string.AGREGAR_PRODUCTO_A_MIEMBRO_JUSTIFICATION);
+            case AGREGAR_SUMA_A_MIEMBRO:
+                return createTextsFrom(context,
+                        R.string.AGREGAR_SUMA_A_MIEMBRO_OPTION,
+                        R.string.AGREGAR_SUMA_A_MIEMBRO_JUSTIFICATION);
+
             case CONSTANTE_NO_ENCONTRADA:
                 break;
         }
