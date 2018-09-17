@@ -89,7 +89,11 @@ public class ExpressionsManager {
             secondSign = "";
         }
 
-        return firstSign + FormulaParser.parseToLatex(expressions[0]) + comparatorOperator + secondSign + FormulaParser.parseToLatex(expressions[1]);
+        return firstSign
+                + FormulaParser.parseToLatex(expressions[0].replace("x", "a_1")).replace("{a}_{1}", "x")
+                + comparatorOperator
+                + secondSign
+                + FormulaParser.parseToLatex(expressions[1].replace("x", "a_1")).replace("{a}_{1}", "x");
     }
 
     public static String getPolinomialEquationAsLatex() {
