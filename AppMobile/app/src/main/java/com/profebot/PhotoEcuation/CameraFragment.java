@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import ar.com.profebot.activities.EnterFunctionActivity;
 import ar.com.profebot.activities.EnterPolinomialActivity;
 import ar.com.profebot.activities.SolveEquationActivity;
 import ar.com.profebot.activities.SolvePolynomialActivity;
@@ -47,9 +48,11 @@ import ar.com.profebot.service.ExpressionsManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import flanagan.math.Polynomial;
 import io.github.kexanie.library.MathView;
 
 import static ar.com.profebot.activities.MainActivity.EQUATION;
+import static ar.com.profebot.activities.MainActivity.FUNCTION;
 import static ar.com.profebot.activities.MainActivity.POLINOMIAL;
 import static ar.com.profebot.activities.MainActivity.photoReference;
 
@@ -294,9 +297,9 @@ public class CameraFragment extends Fragment {
                 stopScanAnimation();
                 mLatestLatex = latex;
                 Log.d("Latex_NEW", mLatestLatex);
-                // Volver al SolveEquationActivity y mostrar el String
                 if (latex != "") {
-                    if (photoReference == EQUATION) {
+                    switch (photoReference){
+                    case EQUATION :
                         ExpressionsManager.setEquationPhoto(mLatestLatex, getActivity().getApplicationContext());
                         ExpressionsManager.setEquationDrawn(null);
                         if (ExpressionsManager.getTreeOfExpression() != null) {
@@ -305,8 +308,8 @@ public class CameraFragment extends Fragment {
                         } else {
                             showErrorAndReset("Hubo un error al procesar la imagen, por favor, volvé a intentarlo.");
                         }
-                    }
-                    else{
+                        break;
+                    case POLINOMIAL :
                         try {
                             if(correctExpression(latex)) {
                                 SetPolinomialForPolinomialActivity(latex);
@@ -317,6 +320,10 @@ public class CameraFragment extends Fragment {
                         catch (Exception ex){
                             showErrorAndReset("La expresión no es un polinomio, por favor, volvé a intentarlo.");
                         }
+                        break;
+                    case FUNCTION :
+                        Intent intent = new Intent(getActivity(), EnterFunctionActivity.class);
+                        startActivity(intent);
                     }
                 }
                 else{

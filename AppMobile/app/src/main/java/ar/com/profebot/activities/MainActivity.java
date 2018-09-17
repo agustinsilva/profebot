@@ -17,6 +17,7 @@ import com.profebot.activities.R;
 public class MainActivity extends AppCompatActivity {
     public static final String EQUATION = "EQUATION";
     public static final String POLINOMIAL = "POLINOMIAL";
+    public static final String FUNCTION = "FUNCTION";
     public static String photoReference;
     private ProgressBar spinner;
 
@@ -46,7 +47,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+        Button enterFunction = (Button)findViewById(R.id.enter_function_id);
+        enterFunction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View button) {
+                Intent intent = new Intent(MainActivity.this, EnterFunctionOptionsActivity.class);
+                startActivity(intent);
+            }
+        });
         this.setMainMenuShortCut();
     }
 

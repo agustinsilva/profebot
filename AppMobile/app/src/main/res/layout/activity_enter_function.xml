@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/colorBackground">
+
+    <include layout="@layout/main_toolbar" />
+    <TextView
+        android:id="@+id/function_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="sans-serif"
+        android:gravity="left"
+        android:includeFontPadding="false"
+        android:text="Funciones"
+        android:textColor="@color/colorWhite"
+        android:textSize="25dp" />
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/ejercicios"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_marginBottom="5dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="5dp"
+        android:gravity="left|center_vertical"
+        android:orientation="horizontal">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left|start"
+        android:textColor="@color/colorWhite"
+        android:text="F(x) = "
+        android:textSize="25dp" />
+
+    <io.github.kexanie.library.MathView
+        android:id="@+id/equation_to_solve_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="25dp"
+        android:layout_marginTop="30dp"
+        android:textColor="@color/colorWhite"
+        app:engine="MathJax"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/operations_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="sans-serif"
+        android:gravity="left"
+        android:includeFontPadding="false"
+        android:text="Operaciones"
+        android:textColor="@color/colorWhite"
+        android:textSize="25dp" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal">
+
+            <Button
+                android:id="@+id/button"
+                style="@style/OperationOptionButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dominio" />
+
+            <Button
+                android:id="@+id/button2"
+                style="@style/OperationOptionButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Imagen" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="fill_vertical|center_horizontal">
+
+            <Button
+                android:id="@+id/button4"
+                style="@style/OperationOptionButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:text="@string/ordenada_al_origen" />
+
+            <Button
+                android:id="@+id/button3"
+                style="@style/OperationOptionButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:text="Raices" />
+        </TableRow>
+
+    </TableLayout>
+</LinearLayout>
