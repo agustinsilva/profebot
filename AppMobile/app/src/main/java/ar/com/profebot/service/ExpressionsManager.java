@@ -76,7 +76,10 @@ public class ExpressionsManager {
 
     public static String getEquationAsLatex(String infixEquation) {
         String firstSign, secondSign;
-        String[] expressions = mapPhotoToOurAlphabet(infixEquation).replace("X", "x").split(comparatorOperator);
+        System.out.println("Ecuación infija: " + infixEquation);
+        String infixEquationCleaned = mapToOurAlphabet(infixEquation).replace("X", "x");
+        System.out.println("Ecuación: " + infixEquationCleaned);
+        String[] expressions = infixEquationCleaned.split(comparatorOperator);
 
         if (expressions[0].substring(0,1).contains("-")){
             firstSign = "-";
@@ -91,11 +94,15 @@ public class ExpressionsManager {
             secondSign = "";
         }
 
+        String expression1 = expressions[0].replace("x", "a_1");
+        String expression2 = expressions[1].replace("x", "a_1");
+        System.out.println("Ecuación 1: " + expression1);
+        System.out.println("Ecuación 2: " + expression2);
         return firstSign
-                + FormulaParser.parseToLatex(expressions[0].replace("x", "a_1")).replace("{a}_{1}", "x")
+                + FormulaParser.parseToLatex(expression1).replace("{a}_{1}", "x")
                 + comparatorOperator
                 + secondSign
-                + FormulaParser.parseToLatex(expressions[1].replace("x", "a_1")).replace("{a}_{1}", "x");
+                + FormulaParser.parseToLatex(expression2).replace("{a}_{1}", "x");
     }
 
     private static String replaceComparatorWithMathViewTag(String latex){
@@ -342,6 +349,9 @@ public class ExpressionsManager {
 
                 .replaceAll("=\\+X", "=X")
                 .replaceAll("=-X", "=0-X")
+
+                .replaceAll("≤", "<=")
+                .replaceAll("≥", ">=")
 
                 .replaceAll("×", "*")
                 .replaceAll("√", "R")
