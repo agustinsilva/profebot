@@ -70,11 +70,13 @@ public class ExpressionsManager {
                 .replaceAll("X", "x");
     }
 
-    public static String getEquationAsLatex() {
-        String firstSign, secondSign;
-        String infixEquation = getEquationAsInfix();
+    public static String mapToLatexAndReplaceComparator(String infixEquation){
+        return replaceComparatorWithMathViewTag(getEquationAsLatex(infixEquation));
+    }
 
-        String[] expressions = infixEquation.split(comparatorOperator);
+    public static String getEquationAsLatex(String infixEquation) {
+        String firstSign, secondSign;
+        String[] expressions = mapPhotoToOurAlphabet(infixEquation).replace("X", "x").split(comparatorOperator);
 
         if (expressions[0].substring(0,1).contains("-")){
             firstSign = "-";
@@ -96,6 +98,32 @@ public class ExpressionsManager {
                 + FormulaParser.parseToLatex(expressions[1].replace("x", "a_1")).replace("{a}_{1}", "x");
     }
 
+    private static String replaceComparatorWithMathViewTag(String latex){
+        String newComparator;
+        switch (comparatorOperator){
+            case "<":
+                newComparator = " \\lt ";
+                break;
+            case "<=":
+                newComparator = " \\leqslant ";
+                break;
+            case ">":
+                newComparator =" \\gt ";
+                break;
+            case ">=":
+                newComparator = " \\geqslant ";
+                break;
+            case "!=":
+                newComparator = " \\neq ";
+                break;
+            default:
+                newComparator = "=";
+                break;
+        }
+
+        return latex.replace(comparatorOperator, newComparator);
+    }
+
     public static String getPolinomialEquationAsLatex() {
         String firstSign;
         String infixEquation = getEquationAsInfix();
@@ -107,11 +135,6 @@ public class ExpressionsManager {
             firstSign = "";
         }
         return firstSign + FormulaParser.parseToLatex(expressions[0]);
-    }
-
-    public static String getEquationAsLatex(String infixEquation) {
-        String[] expressions = getEquationAsInfix(infixEquation).split(comparatorOperator);
-        return FormulaParser.parseToLatex(expressions[0]) + comparatorOperator + FormulaParser.parseToLatex(expressions[1]);
     }
 
     public static String getEquationAsString() {
@@ -283,12 +306,12 @@ public class ExpressionsManager {
         }
     }
 
-    private static String mapToOurAlphabet(String equationDrawn){
-        if(equationDrawn == null){
+    private static String mapToOurAlphabet(String equation){
+        if(equation == null){
             return "";
         }
 
-        String equationWellWritten = fixEquationFormat(equationDrawn);
+        String equationWellWritten = fixEquationFormat(equation);
         
         return equationWellWritten
                 .replaceAll("\\[", "(")

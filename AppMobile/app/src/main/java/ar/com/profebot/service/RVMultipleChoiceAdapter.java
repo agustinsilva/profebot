@@ -244,7 +244,7 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
                 "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
                 "         SVG: { linebreaks: { automatic: true } }\n"+
                 "});");
-        multipleChoiceViewHolder.equationBase.setText("\\(" + multipleChoiceSteps.get(position).getEquationBase() + "\\)");
+        multipleChoiceViewHolder.equationBase.setText("\\(" + ExpressionsManager.mapToLatexAndReplaceComparator(multipleChoiceSteps.get(position).getEquationBase()) + "\\)");
 
         multipleChoiceViewHolder.newEquationBase.setEngine(MathView.Engine.MATHJAX);
         multipleChoiceViewHolder.newEquationBase.config("MathJax.Hub.Config({\n"+
@@ -252,7 +252,7 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
                 "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
                 "         SVG: { linebreaks: { automatic: true } }\n"+
                 "});");
-        multipleChoiceViewHolder.newEquationBase.setText("$$" + multipleChoiceSteps.get(position).getNewEquationBase() + "$$");
+        multipleChoiceViewHolder.newEquationBase.setText("$$" + ExpressionsManager.mapToLatexAndReplaceComparator(multipleChoiceSteps.get(position).getNewEquationBase()) + "$$");
 
         multipleChoiceViewHolder.optionA.setText(multipleChoiceSteps.get(position).getOptionA());
         multipleChoiceViewHolder.equationOptionA.config("MathJax.Hub.Config({\n"+
@@ -260,7 +260,7 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
                 "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
                 "         SVG: { linebreaks: { automatic: true } }\n"+
                 "});");
-        multipleChoiceViewHolder.equationOptionA.setText("$$" + multipleChoiceSteps.get(position).getEquationOptionA() + "$$");
+        multipleChoiceViewHolder.equationOptionA.setText("$$" + ExpressionsManager.mapToLatexAndReplaceComparator(multipleChoiceSteps.get(position).getEquationOptionA()) + "$$");
 
         multipleChoiceViewHolder.optionB.setText(multipleChoiceSteps.get(position).getOptionB());
         multipleChoiceViewHolder.equationOptionB.config("MathJax.Hub.Config({\n"+
@@ -268,7 +268,7 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
                 "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
                 "         SVG: { linebreaks: { automatic: true } }\n"+
                 "});");
-        multipleChoiceViewHolder.equationOptionB.setText("$$" + multipleChoiceSteps.get(position).getEquationOptionB() + "$$");
+        multipleChoiceViewHolder.equationOptionB.setText("$$" + ExpressionsManager.mapToLatexAndReplaceComparator(multipleChoiceSteps.get(position).getEquationOptionB()) + "$$");
 
         multipleChoiceViewHolder.optionC.setText(multipleChoiceSteps.get(position).getOptionC());
         multipleChoiceViewHolder.equationOptionC.config("MathJax.Hub.Config({\n"+
@@ -276,7 +276,7 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
                 "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
                 "         SVG: { linebreaks: { automatic: true } }\n"+
                 "});");
-        multipleChoiceViewHolder.equationOptionC.setText("$$" + multipleChoiceSteps.get(position).getEquationOptionC() + "$$");
+        multipleChoiceViewHolder.equationOptionC.setText("$$" + ExpressionsManager.mapToLatexAndReplaceComparator(multipleChoiceSteps.get(position).getEquationOptionC()) + "$$");
 
         multipleChoiceViewHolder.correctOption = multipleChoiceSteps.get(position).getCorrectOption();
         multipleChoiceViewHolder.correctOptionJustification = multipleChoiceSteps.get(position).getCorrectOptionJustification();

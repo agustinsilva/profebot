@@ -45,7 +45,7 @@ public class EquationManager {
                 "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
                 "         SVG: { linebreaks: { automatic: true } }\n"+
                 "});");
-        originalEquation.setText("$$" + ExpressionsManager.getEquationAsLatex() + "$$");
+        originalEquation.setText("$$" + ExpressionsManager.mapToLatexAndReplaceComparator(ExpressionsManager.getEquationAsInfix()) + "$$");
 
         rootsSummary = (TextView) view.findViewById(R.id.roots_summary_id);
 
