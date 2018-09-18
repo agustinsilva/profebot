@@ -93,6 +93,10 @@ public class InvalidStep {
         // ejemplo: 2+3^2 → hago 2^2 + 3^2
         DISTRIBUTIVA_DE_POTENCIA_SOBRE_BINOMIO,
 
+        // Soluciones triviales cuando no hay opciones invalidas
+        AGREGAR_SUMA_A_MIEMBRO,
+        AGREGAR_PRODUCTO_A_MIEMBRO,
+
         CONSTANTE_NO_ENCONTRADA
         ;
     }

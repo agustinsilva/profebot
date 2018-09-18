@@ -13,4 +13,5 @@
     <string name="negative">-</string>
     <string name="yes">Si</string>
     <string name="no">No</string>
+    <string name="ordenada_al_origen">Ordenada &#10;al origen</string>
 </resources>

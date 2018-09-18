@@ -43,6 +43,8 @@ public class TreeNode {
         node.setUnaryMinus(this.unaryMinus);
         node.setChangeGroup(this.changeGroup);
         node.setExplicitCoeff(this.explicitCoeff);
+        node.setChildIndex(this.getChildIndex());
+        node.setParentNode(this.getParentNode()); // No se clona por como se usa
 
         if(this.getLeftNode() != null) {
             node.setLeftNode(this.getLeftNode().clone());

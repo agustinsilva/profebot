@@ -55,4 +55,18 @@ public class PhotoExpressionsManager {
         Assert.assertEquals("R((5+3*X))=3", ExpressionsManager.getEquationPhoto());
     }
 
+    @Test
+    public void ParseMajorEqualSimbolEquation() {
+        String equation = "x - 6 \\geq 10";
+        ExpressionsManager.setEquationPhoto(equation, null);
+        Assert.assertEquals("X-6>=10", ExpressionsManager.getEquationPhoto());
+    }
+
+    @Test
+    public void ParseMinorEqualSimbolEquation() {
+        String equation = "x - 6 \\leq 10";
+        ExpressionsManager.setEquationPhoto(equation, null);
+        Assert.assertEquals("X-6<=10", ExpressionsManager.getEquationPhoto());
+    }
+
 }

@@ -599,13 +599,14 @@ public class FactoringManager {
     }
 
     private static void addRoot(Double root){
-        if(roots.contains(root)){
-            Integer multiplicity = rootsMultiplicity.get(root);
-            rootsMultiplicity.remove(root);
-            rootsMultiplicity.put(root, multiplicity + 1);
+        Double roundedRoot = (double) Math.round(root * 100) / 100;
+        if(roots.contains(roundedRoot)){
+            Integer multiplicity = rootsMultiplicity.get(roundedRoot);
+            rootsMultiplicity.remove(roundedRoot);
+            rootsMultiplicity.put(roundedRoot, multiplicity + 1);
         }else{
-            roots.add(root);
-            rootsMultiplicity.put(root, 1);
+            roots.add(roundedRoot);
+            rootsMultiplicity.put(roundedRoot, 1);
         }
     }
 

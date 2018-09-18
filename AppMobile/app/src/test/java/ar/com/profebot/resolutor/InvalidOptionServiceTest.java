@@ -19,13 +19,19 @@ public class InvalidOptionServiceTest  extends InvalidOptionService {
     public void getFirstInvalidOption() throws InvalidExpressionException {
         String expression = "3X-5 = 8";
         Tree tree = (new ParserService()).parseExpression(expression);
-        super.getFirstInvalidOption(tree);
+        super.getFirstInvalidOptions(tree);
     }
 
     @Test
     public void general_test_1() throws InvalidExpressionException {
         String expression = "3X = 12";
         List<MultipleChoiceStep> steps = resolutorService.resolveExpressionTestWithoutContext(expression);
+    }
+    @Test
+    public void general_test_2() throws InvalidExpressionException {
+        String expression = "3/X=1";
+        List<MultipleChoiceStep> steps = resolutorService.resolveExpressionTestWithoutContext(expression);
+        steps = steps;
     }
 
     @Test
@@ -58,7 +64,7 @@ public class InvalidOptionServiceTest  extends InvalidOptionService {
     public void getSecondInvalidOptionInvalidTypes() throws InvalidExpressionException {
         String expression = "3X-5 = 8+2";
         Tree tree = (new ParserService()).parseExpression(expression);
-        super.getSecondInvalidOption(tree);
+        super.getSecondInvalidOptions(tree);
     }
 
     @Test

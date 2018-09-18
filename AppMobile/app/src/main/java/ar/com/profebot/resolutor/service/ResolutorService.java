@@ -75,15 +75,17 @@ public class ResolutorService {
                     newEquationBase,
                     justifications.get("correctOptionJustification"));
 
+            InvalidStep[] invalidSteps = invalidOptionService.getInvalidSteps(originalEquation);
+
             // Opción incorrecta 1
-            InvalidStep invalidStep = invalidOptionService.getFirstInvalidOption(originalEquation);
+            InvalidStep invalidStep = invalidSteps[0];
             justifications = JustificationsService.getIncorrectJustificationsFrom(invalidStep.getType(), context);
             stepOptionInfo[incorrectOptionIndex1] = new StepOptionInfo(justifications.get("option"),
                     invalidStep.getTree().toExpression(),
                     justifications.get("incorrectOptionJustification"));
 
             // Opción incorrecta 2
-            invalidStep = invalidOptionService.getSecondInvalidOption(originalEquation);
+            invalidStep = invalidSteps[1];
             justifications = JustificationsService.getIncorrectJustificationsFrom(invalidStep.getType(), context);
             stepOptionInfo[incorrectOptionIndex2] = new StepOptionInfo(justifications.get("option"),
                     invalidStep.getTree().toExpression(),
@@ -114,11 +116,6 @@ public class ResolutorService {
                     optionB, equationOptionB, optionC, equationOptionC, (correctOptionIndex + 1),
                     correctOptionJustification, incorrectOptionJustification1, incorrectOptionJustification2);
             result.add(multipleChoiceStep);
-        }
-
-        // El ultimo paso es el que resuelve
-        if (!result.isEmpty()){
-            result.get(result.size()-1).setSolved(true);
         }
 
         return result;

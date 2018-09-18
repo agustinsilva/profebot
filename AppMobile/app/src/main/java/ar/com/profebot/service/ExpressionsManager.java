@@ -19,6 +19,7 @@ public class ExpressionsManager {
     private static String equationPhoto;
     private static String equationPolinomial;
     private static Tree treeOfExpression;
+    public static String comparatorOperator;
 
     public static String getEquationDrawn() {
         return equationDrawn;
@@ -37,10 +38,6 @@ public class ExpressionsManager {
         try{
             setTreeOfExpression(new ParserService().parseExpression(getEquationPhoto()));
         }catch (InvalidExpressionException e){
-            CharSequence text = "Se produjo un error en la expresion:" + e.getMessage();
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
             equationDrawn = null;
             treeOfExpression = null;
         }
@@ -52,10 +49,6 @@ public class ExpressionsManager {
         try{
             setTreeOfExpression(new ParserService().parseExpression(getPolinomialEquation()));
         }catch (InvalidExpressionException e){
-            CharSequence text = "Se produjo un error en la expresion:" + e.getMessage();
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
             equationPolinomial = null;
             treeOfExpression = null;
         }
@@ -77,19 +70,16 @@ public class ExpressionsManager {
                 .replaceAll("X", "x");
     }
 
-    public static String getEquationAsLatex() {
-        String firstSign, secondSign;
-        String infixEquation = getEquationAsInfix();
-        String root;
-        if(infixEquation.contains("=")){
-            root = "=";
-        }else if(infixEquation.contains(">")){
-            root = ">";
-        }else{
-            root = "<";
-        }
+    public static String mapToLatexAndReplaceComparator(String infixEquation){
+        return replaceComparatorWithMathViewTag(getEquationAsLatex(infixEquation));
+    }
 
-        String[] expressions = infixEquation.split(root);
+    public static String getEquationAsLatex(String infixEquation) {
+        String firstSign, secondSign;
+        System.out.println("Ecuación infija: " + infixEquation);
+        String infixEquationCleaned = mapToOurAlphabet(infixEquation).replace("X", "x");
+        System.out.println("Ecuación: " + infixEquationCleaned);
+        String[] expressions = infixEquationCleaned.split(comparatorOperator);
 
         if (expressions[0].substring(0,1).contains("-")){
             firstSign = "-";
@@ -104,7 +94,41 @@ public class ExpressionsManager {
             secondSign = "";
         }
 
-        return firstSign + FormulaParser.parseToLatex(expressions[0]) + root + secondSign + FormulaParser.parseToLatex(expressions[1]);
+        String expression1 = expressions[0].replace("x", "a_1");
+        String expression2 = expressions[1].replace("x", "a_1");
+        System.out.println("Ecuación 1: " + expression1);
+        System.out.println("Ecuación 2: " + expression2);
+        return firstSign
+                + FormulaParser.parseToLatex(expression1).replace("{a}_{1}", "x")
+                + comparatorOperator
+                + secondSign
+                + FormulaParser.parseToLatex(expression2).replace("{a}_{1}", "x");
+    }
+
+    private static String replaceComparatorWithMathViewTag(String latex){
+        String newComparator;
+        switch (comparatorOperator){
+            case "<":
+                newComparator = " \\lt ";
+                break;
+            case "<=":
+                newComparator = " \\leqslant ";
+                break;
+            case ">":
+                newComparator =" \\gt ";
+                break;
+            case ">=":
+                newComparator = " \\geqslant ";
+                break;
+            case "!=":
+                newComparator = " \\neq ";
+                break;
+            default:
+                newComparator = "=";
+                break;
+        }
+
+        return latex.replace(comparatorOperator, newComparator);
     }
 
     public static String getPolinomialEquationAsLatex() {
@@ -120,12 +144,6 @@ public class ExpressionsManager {
         return firstSign + FormulaParser.parseToLatex(expressions[0]);
     }
 
-    public static String getEquationAsLatex(String infixEquation) {
-        String root = getRootOfEquation(infixEquation);
-        String[] expressions = getEquationAsInfix(infixEquation).split(root);
-        return FormulaParser.parseToLatex(expressions[0]) + root + FormulaParser.parseToLatex(expressions[1]);
-    }
-
     public static String getEquationAsString() {
         return treeOfExpression.toExpression();
     }
@@ -136,6 +154,7 @@ public class ExpressionsManager {
 
     public static void setTreeOfExpression(Tree treeOfExpression) {
         ExpressionsManager.treeOfExpression = treeOfExpression;
+        comparatorOperator = getRootOfEquation(equationDrawn != null ? equationDrawn : equationPhoto);
     }
 
     public static Boolean expressionDrawnIsValid(){
@@ -154,23 +173,43 @@ public class ExpressionsManager {
         equationPhoto = containsFrac(equationPhoto);
 
         String equationWellWritten  = equationPhoto
+                .replaceAll("\\\\leq", "<=")
+                .replaceAll("\\\\geq", ">=")
+                .replaceAll("\\\\cdot", "*")
                 .replaceAll("\\\\sqrt", "R")
                 .replaceAll("\\{", "(")
                 .replaceAll("\\}", ")")
                 .replaceAll("\\[", "(")
                 .replaceAll("\\]", ")")
+                .replaceAll("\\[", "(")
+                .replaceAll("]", ")")
+                .replaceAll("\\)\\(", ")*(")
+                .replaceAll("\\.\\(", "*(")
+                .replaceAll("\\)\\.", ")*")
                 .replaceAll(":", "/")
                 .replaceAll(",", ".")
                 .replaceAll("\\^\\(\\*\\)", "*") // After replacing [] by (), we must search ^(*)
-                .replaceAll("n", "X")
                 .replaceAll("x", "X")
+                .replaceAll("\\.X", "*X")
+                .replaceAll("X\\.", "X*")
                 .replaceAll("\\)X", ")*X")
-                .replaceAll("\\(X\\(", "(X*(")
+                .replaceAll("^\\+\\(", "0+(")
+                .replaceAll("^-\\(", "0-(")
+                .replaceAll("^\\+X", "X")
+                .replaceAll("^-X", "0-X")
+                .replaceAll("\\(\\+", "(0+")
+                .replaceAll("\\(-", "(0-")
+                .replaceAll("=\\+\\(", "=(")
+                .replaceAll("=-\\(", "=0-(")
+                .replaceAll("=\\+X", "=X")
+                .replaceAll("=-X", "=0-X")
                 .replaceAll("×", "*")
                 .replaceAll("√", "R")
-                .replaceAll("\\\\cdot", "*")
+                .replaceAll("sqrt", "R")
                 .replaceAll("e", "2.718281828459045235360")
-                .replaceAll("pi", "3.14159265358979323846");
+                .replaceAll("pi", "3.14159265358979323846")
+                .replaceAll("\\.0", "");
+
         for(int i = 0 ; i <= 9 ; i++){
             equationWellWritten = equationWellWritten
                     .replaceAll("\\^[\\(\\[]" + i + "[\\)\\]]", "^" + i)
@@ -274,12 +313,12 @@ public class ExpressionsManager {
         }
     }
 
-    private static String mapToOurAlphabet(String equationDrawn){
-        if(equationDrawn == null){
+    private static String mapToOurAlphabet(String equation){
+        if(equation == null){
             return "";
         }
 
-        String equationWellWritten = fixEquationFormat(equationDrawn);
+        String equationWellWritten = fixEquationFormat(equation);
         
         return equationWellWritten
                 .replaceAll("\\[", "(")
@@ -311,6 +350,9 @@ public class ExpressionsManager {
                 .replaceAll("=\\+X", "=X")
                 .replaceAll("=-X", "=0-X")
 
+                .replaceAll("≤", "<=")
+                .replaceAll("≥", ">=")
+
                 .replaceAll("×", "*")
                 .replaceAll("√", "R")
                 .replaceAll("sqrt", "R")
@@ -339,15 +381,23 @@ public class ExpressionsManager {
     }
 
     public static String getRootOfEquation(String infixEquation){
-         return infixEquation.contains("=") ? "=" : (infixEquation.contains(">") ? ">" : "<");
+         if(infixEquation.contains("<=")){
+             return "<=";
+         }else if(infixEquation.contains(">=")){
+             return ">=";
+         }else if(infixEquation.contains("<")){
+             return "<";
+         }else if(infixEquation.contains(">")){
+             return ">";
+         }
+        return "=";
     }
 
     public static List<String> getTermAndContextFromReduction(String equationBase, String newEquationBase){
-        String root = getRootOfEquation(equationBase);
-        List<String> equationBaseMembers = Arrays.asList(equationBase.split(root));
-        List<String> newEquationBaseMembers = Arrays.asList(newEquationBase.split(root));
+        List<String> equationBaseMembers = Arrays.asList(equationBase.split(comparatorOperator));
+        List<String> newEquationBaseMembers = Arrays.asList(newEquationBase.split(comparatorOperator));
         List<String> result = new ArrayList<>();
-        result.add(root);
+        result.add(comparatorOperator);
 
         if(isTermPassage(equationBaseMembers, newEquationBaseMembers)){
             result.add(longestEquationMember(equationBaseMembers));

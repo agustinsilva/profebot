@@ -43,10 +43,23 @@ public class SolveEquationActivity extends GlobalActivity {
         
         recyclerView = (RecyclerView)findViewById(R.id.rv_resolution_id);
         LinearLayoutManager llm = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        llm.setReverseLayout(true);
+        llm.setStackFromEnd(true);
         recyclerView.setLayoutManager(llm);
         multipleChoiceSteps = this.initializeMultipleChoiceSteps();
-        adapter = new RVMultipleChoiceAdapter(multipleChoiceSteps.get(0), multipleChoiceSteps);
+
+        if(!multipleChoiceSteps.isEmpty()){
+            adapter = new RVMultipleChoiceAdapter(multipleChoiceSteps.get(0), multipleChoiceSteps);
+        }else{
+            adapter = new RVMultipleChoiceAdapter(null, new ArrayList<>());
+        }
         recyclerView.setAdapter(adapter);
+
+        EquationManager.setContext(this);
+        if(multipleChoiceSteps.isEmpty()){
+            EquationManager.setUpPopUp(true);
+            EquationManager.showPopUp();
+        }
 
         seeSummary = (Button) findViewById(R.id.see_summary_id);
         seeSummary.setOnClickListener(new View.OnClickListener() {
@@ -56,8 +69,6 @@ public class SolveEquationActivity extends GlobalActivity {
             }
         });
         disableSummary();
-
-        EquationManager.setUpPopUp(this);
     }
 
     private void disableSummary(){

@@ -55,6 +55,7 @@ public class MultipleChoiceStep {
         this.correctOptionJustification = correctOptionJustification;
         this.incorrectOptionJustification1 = incorrectOptionJustification1;
         this.incorrectOptionJustification2 = incorrectOptionJustification2;
+        this.isSolved = false;
     }
 
     public MultipleChoiceStep(String equationBase, String newEquationBase, String summary, String optionA, String equationOptionA,

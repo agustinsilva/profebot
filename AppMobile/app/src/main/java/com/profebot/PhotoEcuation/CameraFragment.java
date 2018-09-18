@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import ar.com.profebot.activities.EnterFunctionActivity;
 import ar.com.profebot.activities.EnterPolinomialActivity;
 import ar.com.profebot.activities.SolveEquationActivity;
 import ar.com.profebot.activities.SolvePolynomialActivity;
@@ -47,9 +48,11 @@ import ar.com.profebot.service.ExpressionsManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import flanagan.math.Polynomial;
 import io.github.kexanie.library.MathView;
 
 import static ar.com.profebot.activities.MainActivity.EQUATION;
+import static ar.com.profebot.activities.MainActivity.FUNCTION;
 import static ar.com.profebot.activities.MainActivity.POLINOMIAL;
 import static ar.com.profebot.activities.MainActivity.photoReference;
 
@@ -294,9 +297,9 @@ public class CameraFragment extends Fragment {
                 stopScanAnimation();
                 mLatestLatex = latex;
                 Log.d("Latex_NEW", mLatestLatex);
-                // Volver al SolveEquationActivity y mostrar el String
                 if (latex != "") {
-                    if (photoReference == EQUATION) {
+                    switch (photoReference){
+                    case EQUATION :
                         ExpressionsManager.setEquationPhoto(mLatestLatex, getActivity().getApplicationContext());
                         ExpressionsManager.setEquationDrawn(null);
                         if (ExpressionsManager.getTreeOfExpression() != null) {
@@ -305,8 +308,8 @@ public class CameraFragment extends Fragment {
                         } else {
                             showErrorAndReset("Hubo un error al procesar la imagen, por favor, volvé a intentarlo.");
                         }
-                    }
-                    else{
+                        break;
+                    case POLINOMIAL :
                         try {
                             if(correctExpression(latex)) {
                                 SetPolinomialForPolinomialActivity(latex);
@@ -317,6 +320,10 @@ public class CameraFragment extends Fragment {
                         catch (Exception ex){
                             showErrorAndReset("La expresión no es un polinomio, por favor, volvé a intentarlo.");
                         }
+                        break;
+                    case FUNCTION :
+                        Intent intent = new Intent(getActivity(), EnterFunctionActivity.class);
+                        startActivity(intent);
                     }
                 }
                 else{
@@ -368,21 +375,45 @@ public class CameraFragment extends Fragment {
                     potential = term.substring(position + 2, term.length());
                     coefficient = coefficient.replaceAll("\\{", "").replaceAll("\\}", "").replaceAll("\\)", "").replaceAll("\\(", "");
                     potential = potential.replaceAll("\\{", "").replaceAll("\\}", "").replaceAll("\\)", "").replaceAll("\\(", "");
-                    polynomialMap.put(Integer.parseInt(potential), fractionToDouble(coefficient));
+                    polynomialMap = AddTerm(potential,coefficient, polynomialMap);
                 } else if (term.contains("x")) {//es un coeficeinte lineal
                     int positionLineal = term.indexOf("x");
-                    if (positionLineal == 0) {
-                        polynomialMap.put(1, Double.parseDouble("1"));
-                    } else {
-                        coefficient = term.substring(0, positionLineal);
-                        polynomialMap.put(1, Double.parseDouble(coefficient));
+                    switch (positionLineal) {
+                        case 1:
+                            if (term.substring(0, positionLineal).contains("!")) {
+                                coefficient = "-1";
+                            } else {
+                                coefficient = term.substring(0, positionLineal);
+                            }
+                            break;
+                        case 0:
+                            coefficient = "1";
+                            break;
+                        default:
+                            coefficient = term.substring(0, positionLineal).replace("!", "-");
+                            break;
                     }
+                    polynomialMap = AddTerm("1",coefficient, polynomialMap);
                 } else {//es un termino independiente
-                    polynomialMap.put(0, fractionToDouble(term));
+                    polynomialMap = AddTerm("0",term, polynomialMap);
                 }
             }
         }
         EnterPolinomialActivity.polynomialTerms = polynomialMap;
+    }
+
+    private Map<Integer, Double> AddTerm(String potential, String coefficient, Map<Integer, Double> polynomialMap) {
+        Double newCoefficient;
+        if(!polynomialMap.containsKey(Integer.parseInt(potential))){
+            newCoefficient = fractionToDouble(coefficient);
+        }else {
+            newCoefficient = polynomialMap.get(Integer.parseInt(potential)) + fractionToDouble(coefficient);
+            polynomialMap.remove(potential);
+        }
+        if(newCoefficient != 0){
+            polynomialMap.put(Integer.parseInt(potential), newCoefficient);
+        }
+        return polynomialMap;
     }
 
     public static Double fractionToDouble(String fraction) {
