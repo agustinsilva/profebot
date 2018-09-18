@@ -340,7 +340,7 @@ public class ResolutorService {
 
         // there's no oldEquation or change groups because nothing actually changes
         // here, it's just a final step that states the solution
-        EquationStatus equationStatus = new EquationStatus(changeType, null, equation);
+        EquationStatus equationStatus = new EquationStatus(changeType, equation, equation);
         if (debug) {
             logSteps(equationStatus);
         }

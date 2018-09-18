@@ -1725,4 +1725,5 @@ public class ResolutorServiceTest extends ResolutorService {
         String expression = "1000000X+X=2";
         Tree tree = (new ParserService()).parseExpression(expression);
     }*/
+
 }

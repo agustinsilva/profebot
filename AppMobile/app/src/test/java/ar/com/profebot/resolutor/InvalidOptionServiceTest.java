@@ -31,12 +31,11 @@ public class InvalidOptionServiceTest  extends InvalidOptionService {
     public void general_test_2() throws InvalidExpressionException {
         String expression = "3/X=1";
         List<MultipleChoiceStep> steps = resolutorService.resolveExpressionTestWithoutContext(expression);
-        steps = steps;
     }
 
     @Test
-    public void general_test_2() throws InvalidExpressionException {
-        String expression = "3/X = 1";
+    public void stepThrough_ok65()  throws InvalidExpressionException {
+        String expression = "X-X+3=3";
         List<MultipleChoiceStep> steps = resolutorService.resolveExpressionTestWithoutContext(expression);
     }
 
