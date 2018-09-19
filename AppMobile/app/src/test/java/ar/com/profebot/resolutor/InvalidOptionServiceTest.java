@@ -11,7 +11,7 @@ import ar.com.profebot.parser.service.ParserService;
 import ar.com.profebot.resolutor.service.InvalidOptionService;
 import ar.com.profebot.resolutor.service.ResolutorService;
 
-public class InvalidOptionServiceTest  extends InvalidOptionService {
+public class InvalidOptionServiceTest extends InvalidOptionService {
 
     private ResolutorService resolutorService = new ResolutorService();
 

@@ -97,19 +97,22 @@ public class ResolutorService {
             int optionIndex = 0;
             String optionA =  stepOptionInfo[optionIndex].getOptionText();
             String equationOptionA = stepOptionInfo[optionIndex].getEquationText();
-            String correctOptionJustification = stepOptionInfo[optionIndex].getJustificationText();
 
             // Opción B
             optionIndex++;
             String optionB = stepOptionInfo[optionIndex].getOptionText();
             String equationOptionB = stepOptionInfo[optionIndex].getEquationText();
-            String incorrectOptionJustification1 =  stepOptionInfo[optionIndex].getJustificationText();
 
             // Opción C
             optionIndex++;
             String optionC = stepOptionInfo[optionIndex].getOptionText();
             String equationOptionC = stepOptionInfo[optionIndex].getEquationText();
-            String incorrectOptionJustification2 = stepOptionInfo[optionIndex].getJustificationText();
+
+            // Justificaciones
+            String correctOptionJustification = stepOptionInfo[correctOptionIndex].getJustificationText();
+            String incorrectOptionJustification1 =  stepOptionInfo[incorrectOptionIndex1].getJustificationText();
+            String incorrectOptionJustification2 = stepOptionInfo[incorrectOptionIndex2].getJustificationText();
+
 
             MultipleChoiceStep multipleChoiceStep = new MultipleChoiceStep(equationBase,
                     newEquationBase, summary, optionA, equationOptionA,
