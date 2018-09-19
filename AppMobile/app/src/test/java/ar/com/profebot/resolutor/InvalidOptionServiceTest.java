@@ -45,6 +45,18 @@ public class InvalidOptionServiceTest  extends InvalidOptionService {
         List<MultipleChoiceStep> steps = resolutorService.resolveExpressionTestWithoutContext(expression);
         steps=steps;
     }
+    @Test
+    public void general_test_5()  throws InvalidExpressionException {
+        String expression = "14x+(19x+18)=1";
+        List<MultipleChoiceStep> steps = resolutorService.resolveExpressionTestWithoutContext(expression);
+        steps=steps;
+    }
+    @Test
+    public void general_test_6()  throws InvalidExpressionException {
+        String expression = "3*(X-1)+2X<X+1";
+        List<MultipleChoiceStep> steps = resolutorService.resolveExpressionTestWithoutContext(expression);
+        steps=steps;
+    }
 
 
 

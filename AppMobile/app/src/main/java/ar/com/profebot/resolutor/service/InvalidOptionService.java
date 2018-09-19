@@ -520,11 +520,11 @@ public class InvalidOptionService {
             TreeNode simpleNode;
             TreeNode binomioNode;
             if (TreeUtils.esBinomio(operatorNode.getLeftNode())){
-                simpleNode = operatorNode.getLeftNode();
-                binomioNode = operatorNode.getRightNode();
-            }else{
                 simpleNode = operatorNode.getRightNode();
                 binomioNode = operatorNode.getLeftNode();
+            }else{
+                simpleNode = operatorNode.getLeftNode();
+                binomioNode = operatorNode.getRightNode();
             }
 
             // Remuevo parentesis por si existen
