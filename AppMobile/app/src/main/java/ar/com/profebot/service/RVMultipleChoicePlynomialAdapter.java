@@ -129,6 +129,9 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
                             nextStep.setVisibility(View.GONE);
                             FactoringManager.enableSummary(false);
                         }
+
+                        multipleChoiceSteps.get(currentMultipleChoiceSteps.size()-1).setSolved(true);
+                        SolvePolynomialActivity.recyclerView.scrollToPosition(currentMultipleChoiceSteps.size() - 1);
                     }
                 });
             }
@@ -286,6 +289,76 @@ public class RVMultipleChoicePlynomialAdapter extends RecyclerView.Adapter<RVMul
         multipleChoiceViewHolder.currentMultipleChoiceSteps = currentMultipleChoiceSteps;
         multipleChoiceViewHolder.multipleChoiceSteps = multipleChoiceSteps;
         multipleChoiceViewHolder.numberStep.setText((position+1) + ")");
+
+        if(multipleChoiceSteps.get(position).getSolved()){
+            multipleChoiceViewHolder.multipleChoiceSolvedResolutionStep.setVisibility(View.VISIBLE);
+            multipleChoiceViewHolder.multipleChoiceResolutionStep.setVisibility(View.INVISIBLE);
+            multipleChoiceViewHolder.layoutToUse = multipleChoiceViewHolder.multipleChoiceSolvedResolutionStep;
+        }else{
+            multipleChoiceViewHolder.multipleChoiceResolutionStep.setVisibility(View.VISIBLE);
+            multipleChoiceViewHolder.multipleChoiceSolvedResolutionStep.setVisibility(View.INVISIBLE);
+            multipleChoiceViewHolder.layoutToUse = multipleChoiceViewHolder.multipleChoiceResolutionStep;
+
+            multipleChoiceViewHolder.expandCollapseIndicatorColor.setVisibility(View.INVISIBLE);
+
+            multipleChoiceViewHolder.isSolved = false;
+
+            multipleChoiceViewHolder.summary.setText("Pendiente");
+
+            // When new card is added to RV. It indicates if has to be initialized as expanded or collapsed (default expanded)
+            multipleChoiceViewHolder.expandCollapseIndicator.setScaleY(-1f);
+
+            multipleChoiceViewHolder.solveStep.setEnabled(false);
+            if(currentMultipleChoiceSteps.size() < multipleChoiceSteps.size()){
+                multipleChoiceViewHolder.nextStep.setVisibility(View.VISIBLE);
+            }
+
+            multipleChoiceViewHolder.chosenOption = null;
+
+            multipleChoiceViewHolder.optionA = multipleChoiceViewHolder.itemView.findViewById(R.id.option_a_id);
+            multipleChoiceViewHolder.optionA.setChecked(false);
+            multipleChoiceViewHolder.optionA.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    multipleChoiceViewHolder.setUpSolveButton();
+                    multipleChoiceViewHolder.chosenOption = 1;
+                }
+            });
+
+            multipleChoiceViewHolder.optionB = multipleChoiceViewHolder.itemView.findViewById(R.id.option_b_id);
+            multipleChoiceViewHolder.optionB.setChecked(false);
+            multipleChoiceViewHolder.optionB.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    multipleChoiceViewHolder.setUpSolveButton();
+                    multipleChoiceViewHolder.chosenOption = 2;
+                }
+            });
+
+            multipleChoiceViewHolder.optionC = multipleChoiceViewHolder.itemView.findViewById(R.id.option_c_id);
+            multipleChoiceViewHolder.optionC.setChecked(false);
+            multipleChoiceViewHolder.optionC.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    multipleChoiceViewHolder.setUpSolveButton();
+                    multipleChoiceViewHolder.chosenOption = 3;
+                }
+            });
+
+            multipleChoiceViewHolder.expandCollapseIndicator.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    boolean shouldExpand = multipleChoiceViewHolder.layoutToUse.getVisibility() == View.GONE;
+                    if(shouldExpand){
+                        multipleChoiceViewHolder.expandCollapseIndicator.setScaleY(-1f);
+                        multipleChoiceViewHolder.layoutToUse.setVisibility(View.VISIBLE);
+                    }else{
+                        multipleChoiceViewHolder.layoutToUse.setVisibility(View.GONE);
+                        multipleChoiceViewHolder.expandCollapseIndicator.setScaleY(1f);
+                    }
+                }
+            });
+        }
     }
 
     @Override

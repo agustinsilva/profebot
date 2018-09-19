@@ -486,7 +486,9 @@ public class ExpressionsManager {
 
          // 1º: si el polinomio está entre paréntesis, removerlos
          Boolean betweenBrackets = false;
-         if(equationCleaned.substring(0, 1).contains("(") && equationCleaned.substring(equationCleaned.length() - 1, equationCleaned.length()).contains(")")){
+         if(equationCleaned.substring(0, 1).contains("(")
+                 && equationCleaned.substring(equationCleaned.length() - 1, equationCleaned.length()).contains(")")
+                 && noInconsistentBracket(equationCleaned)){
              betweenBrackets = true;
              equationCleaned = equationCleaned.substring(1, equationCleaned.length() - 1);
          }
@@ -512,5 +514,11 @@ public class ExpressionsManager {
          System.out.println("Latex con variable X: " + latex);
 
          return betweenBrackets ? "(" + latex + ")" : latex;
+    }
+
+    private static Boolean noInconsistentBracket(String equation){
+         String equationWithoutFirstAndLastBracket = equation.substring(1, equation.length() - 1);
+         return (!equationWithoutFirstAndLastBracket.contains("(") && !equationWithoutFirstAndLastBracket.contains(")"))
+                 || equationWithoutFirstAndLastBracket.indexOf("(") < equationWithoutFirstAndLastBracket.indexOf(")");
     }
 }
