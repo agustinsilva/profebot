@@ -78,13 +78,13 @@ public class FactoringManager {
     }
 
     private static String getOriginalPolynomial(Map<Integer, Double> polynomialTerms){
-        String pendingPolynomialAux = getPolynomialGeneralForm(polynomialTerms).replace("x", "a_1");
+        String pendingPolynomialAux = getPolynomialGeneralForm(polynomialTerms);
         String firstSign = "";
         if(pendingPolynomialAux.substring(0, 1).contains("-")){
             firstSign = "-";
             pendingPolynomialAux = pendingPolynomialAux.substring(1);
         }
-        pendingPolynomialAux = firstSign + FormulaParser.parseToLatex(pendingPolynomialAux).replace("{a}_{1}", "x");
+        pendingPolynomialAux = firstSign + ExpressionsManager.parseToLatex(pendingPolynomialAux);
         return "\\mathbf{" + pendingPolynomialAux + "}";
     }
 
@@ -239,21 +239,19 @@ public class FactoringManager {
         String rootsFactorizedAux = "";
         if(!rootsFactorized.isEmpty()){
             rootsFactorizedAux = rootsFactorized;
-            rootsFactorizedAux = rootsFactorizedAux.replace("x", "a_1");
-            rootsFactorizedAux = FormulaParser.parseToLatex(rootsFactorizedAux).replace("{a}_{1}", "x");
+            rootsFactorizedAux = ExpressionsManager.parseToLatex(rootsFactorizedAux);
             rootsFactorizedAux += !pendingPolynomial.isEmpty() ? "*" : "";
         }
 
         String pendingPolynomialAux = "";
         if(!pendingPolynomial.isEmpty()){
             pendingPolynomialAux = pendingPolynomial;
-            pendingPolynomialAux = pendingPolynomialAux.replace("x", "a_1");
             String firstSign = "";
             if(pendingPolynomialAux.substring(0, 1).contains("-")){
                 firstSign = "-";
                 pendingPolynomialAux = pendingPolynomialAux.substring(1);
             }
-            pendingPolynomialAux = firstSign + FormulaParser.parseToLatex(pendingPolynomialAux).replace("{a}_{1}", "x");
+            pendingPolynomialAux = firstSign + ExpressionsManager.parseToLatex(pendingPolynomialAux);
             pendingPolynomialAux = "\\mathbf{" + pendingPolynomialAux + "}";
         }
 
@@ -264,8 +262,8 @@ public class FactoringManager {
         String rootsFactorizedAux = "";
         if(!rootsFactorized.isEmpty()){
             rootsFactorizedAux = ExpressionsManager.removeDecimals(rootsFactorized);
-            rootsFactorizedAux = rootsFactorizedAux.replace("x", "a_1");
-            rootsFactorizedAux = FormulaParser.parseToLatex(rootsFactorizedAux).replace("{a}_{1}", "x");
+            System.out.println("Parte factorizada: " + rootsFactorizedAux);
+            rootsFactorizedAux = ExpressionsManager.parseToLatex(rootsFactorizedAux);
             rootsFactorizedAux = "\\mathbf{" + rootsFactorizedAux + "}" + (!pendingPolynomial.isEmpty() ? "*" : "");
         }
 
@@ -278,11 +276,13 @@ public class FactoringManager {
                 firstSign = "-";
                 pendingPolynomialAux = pendingPolynomialAux.substring(1);
             }
-            pendingPolynomialAux = pendingPolynomialAux.replace("x", "a_1");
-            pendingPolynomialAux = firstSign + FormulaParser.parseToLatex(pendingPolynomialAux).replace("{a}_{1}", "x");
+            System.out.println("Parte pendiente: " + pendingPolynomialAux);
+            pendingPolynomialAux = firstSign + ExpressionsManager.parseToLatex(pendingPolynomialAux);
         }
 
-        return addMultiplier(rootsFactorizedAux, pendingPolynomialAux);
+        String finalPolynomial = addMultiplier(rootsFactorizedAux, pendingPolynomialAux); 
+        System.out.println("Polinomio final: " + finalPolynomial);
+        return finalPolynomial;
     }
 
     private static String addMultiplier(String roots, String pending){

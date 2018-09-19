@@ -94,15 +94,13 @@ public class ExpressionsManager {
             secondSign = "";
         }
 
-        String expression1 = expressions[0].replace("x", "a_1");
-        String expression2 = expressions[1].replace("x", "a_1");
-        System.out.println("Ecuación 1: " + expression1);
-        System.out.println("Ecuación 2: " + expression2);
+        System.out.println("Ecuación 1: " + expressions[0]);
+        System.out.println("Ecuación 2: " + expressions[1]);
         return firstSign
-                + FormulaParser.parseToLatex(expression1).replace("{a}_{1}", "x")
+                + parseToLatex(expressions[0])
                 + comparatorOperator
                 + secondSign
-                + FormulaParser.parseToLatex(expression2).replace("{a}_{1}", "x");
+                + parseToLatex(expressions[1]);
     }
 
     private static String replaceComparatorWithMathViewTag(String latex){
@@ -481,5 +479,33 @@ public class ExpressionsManager {
                 .replaceAll("\\.0x", "x")
                 .replaceAll("\\.0 ", " ")
                 .replaceAll("\\.0$", "");
+    }
+
+    public static String parseToLatex(String equation){
+         String equationCleaned = equation.replace("x^", "(a_1)^");
+
+         Boolean betweenBrackets = false;
+         if(equationCleaned.substring(0, 1).contains("(") && equationCleaned.substring(equationCleaned.length() - 1, equationCleaned.length()).contains(")")){
+             betweenBrackets = true;
+             equationCleaned = equationCleaned.substring(1, equationCleaned.length() - 1);
+         }
+
+         String firstSign = "";
+         if(equationCleaned.substring(0, 1).contains("-")){
+             firstSign = "-";
+             equationCleaned = equationCleaned.substring(1);
+         }
+
+         System.out.println("Expresión a parsear a latex: " + equationCleaned);
+
+         String latex = FormulaParser.parseToLatex(equationCleaned);
+         System.out.println("Expreisón parseada a latex: " + latex);
+
+         latex = firstSign + latex
+                 .replace("{a}_{1}", "x")
+                 .replace("\\left(x\\right)", "x");
+         System.out.println("Latex con variable X: " + latex);
+
+         return betweenBrackets ? "(" + latex + ")" : latex;
     }
 }
