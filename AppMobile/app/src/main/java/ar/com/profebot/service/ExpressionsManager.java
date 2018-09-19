@@ -79,7 +79,7 @@ public class ExpressionsManager {
         System.out.println("Ecuación infija: " + infixEquation);
         String infixEquationCleaned = mapToOurAlphabet(infixEquation).replace("X", "x");
         System.out.println("Ecuación: " + infixEquationCleaned);
-        String[] expressions = infixEquationCleaned.split(comparatorOperator);
+        String[] expressions = infixEquationCleaned.split(getRootOfEquation(infixEquation));
 
         if (expressions[0].substring(0,1).contains("-")){
             firstSign = "-";
@@ -152,7 +152,7 @@ public class ExpressionsManager {
 
     public static void setTreeOfExpression(Tree treeOfExpression) {
         ExpressionsManager.treeOfExpression = treeOfExpression;
-        comparatorOperator = getRootOfEquation(equationDrawn != null ? equationDrawn : equationPhoto);
+        comparatorOperator = getRootOfEquation(equationDrawn != null ? equationDrawn : (equationPhoto != null ? equationPhoto : ""));
     }
 
     public static Boolean expressionDrawnIsValid(){
