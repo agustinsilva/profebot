@@ -567,9 +567,14 @@ public class InvalidOptionService {
                     rightBinomioNode.getChild(childIndex));
 
             // 2do termino del nodo izquierdo, con el 1ero o 2do del derecho
+            childIndex = getRandomValue(0, 2);
             TreeNode secondNode = TreeNode.createOperator(originalNode.getValue(),
-                    leftBinomioNode.getLeftNode(),
+                    leftBinomioNode.getRightNode(),
                     rightBinomioNode.getChild(childIndex));
+
+            if (leftBinomioNode.esResta()){
+                secondNode = TreeUtils.negate(secondNode);
+            }
 
             // queda conformado como 2 nodos distribuidos al azar, sumandose
             reducedNode = TreeNode.createOperator("+",

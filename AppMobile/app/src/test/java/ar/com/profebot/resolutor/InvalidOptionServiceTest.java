@@ -58,6 +58,25 @@ public class InvalidOptionServiceTest  extends InvalidOptionService {
         steps=steps;
     }
 
+    @Test
+    public void general_test_7()  throws InvalidExpressionException {
+        String expression = "(X-2)*(X+3)=1";
+        List<MultipleChoiceStep> steps = resolutorService.resolveExpressionTestWithoutContext(expression);
+        steps=steps;
+    }
+    @Test
+    public void general_test_8()  throws InvalidExpressionException {
+        String expression = "X^2+5-1=X";
+        List<MultipleChoiceStep> steps = resolutorService.resolveExpressionTestWithoutContext(expression);
+        steps=steps;
+    }
+
+    @Test
+    public void general_test_9()  throws InvalidExpressionException {
+        String expression = "100X+X=2";
+        List<MultipleChoiceStep> steps = resolutorService.resolveExpressionTestWithoutContext(expression);
+        steps=steps;
+    }
 
 
     @Test
