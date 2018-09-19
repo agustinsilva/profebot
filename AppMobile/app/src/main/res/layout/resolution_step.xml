@@ -54,21 +54,23 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="start"
-                android:layout_marginEnd="10dp">
+                android:layout_marginEnd="10dp"
+                android:weightSum="100">
 
                 <TextView
                     android:id="@+id/summary_id"
-                    android:layout_width="200dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="60"
                     android:layout_height="wrap_content"
                     android:text="Pendiente"
                     android:textSize="20dp"
                     android:maxLines="4"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="10dp"
-                    android:paddingTop="4dp"/>
+                    android:layout_marginStart="10dp" />
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="20"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="end"
@@ -85,14 +87,15 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="20"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="end"
                     android:paddingTop="9dp">
 
                     <RelativeLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="40dp"
                         android:layout_height="wrap_content">
 
                         <ImageView
