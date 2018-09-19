@@ -638,10 +638,12 @@ public class ResolutorService {
         String symbolName = "X";
         TreeNode leftSideSymbolTerm = TreeUtils.getLastSymbolTerm(
                 equation.getLeftNode(), symbolName);
+        Boolean containsSymbol = equation.getLeftNode().toExpression().contains(symbolName);
+
         TreeNode rightSideSymbolTerm = TreeUtils.getLastSymbolTerm(
                 equation.getRightNode(), symbolName);
 
-        if (leftSideSymbolTerm == null) {
+        if (leftSideSymbolTerm == null && !containsSymbol) {
             if (rightSideSymbolTerm != null) {
                 String comparator = TreeUtils.inverseComparator(equation.getRootNode().getValue());
                 Tree oldEquation = equation;
@@ -745,6 +747,10 @@ public class ResolutorService {
                 changeType = NodeStatus.ChangeTypes.SUBTRACT_FROM_BOTH_SIDES;
                 inverseTerm = symbolTerm;
             }
+        }else if (TreeUtils.hasDenominatorSymbol(rightNode)){
+            inverseOp = "*";
+            changeType = NodeStatus.ChangeTypes.MULTIPLY_TO_BOTH_SIDES;
+            inverseTerm = symbolTerm.getRightNode();
         }
         else if (rightNode.esOperador()) {
             if (rightNode.esSuma()) {

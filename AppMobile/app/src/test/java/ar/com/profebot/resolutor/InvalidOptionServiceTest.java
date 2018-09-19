@@ -34,10 +34,19 @@ public class InvalidOptionServiceTest  extends InvalidOptionService {
     }
 
     @Test
-    public void stepThrough_ok65()  throws InvalidExpressionException {
+    public void general_test_3()  throws InvalidExpressionException {
         String expression = "X-X+3=3";
         List<MultipleChoiceStep> steps = resolutorService.resolveExpressionTestWithoutContext(expression);
     }
+
+    @Test
+    public void general_test_4()  throws InvalidExpressionException {
+        String expression = "(9X-7)*(1/8)=-1/3X";
+        List<MultipleChoiceStep> steps = resolutorService.resolveExpressionTestWithoutContext(expression);
+        steps=steps;
+    }
+
+
 
     @Test
     public void getTipoPasajeTerminoPrimerAncestro() {

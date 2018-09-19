@@ -840,7 +840,7 @@ public class TreeUtils {
     // Return if `node` has a symbol in its denominator
     // e.g. true for 1/(2x)
     // e.g. false for 5x
-    private static boolean hasDenominatorSymbol(TreeNode node) {
+    public static boolean hasDenominatorSymbol(TreeNode node) {
         if (node.esDivision()) {
             return node.getChild(1).toExpression().contains("X");
         }
@@ -1320,7 +1320,7 @@ public class TreeUtils {
     public static boolean esReduciblePorAsociativa(TreeNode node) {
         boolean esReducible = false;
         // Asocia sumas y productos, ej: 3+5*3
-        if (node.esSuma() || node.esResta()) {
+        if (node.esSuma() || (node.esResta() && !node.isUnaryMinus())) {
 
             TreeNode productNode = null;
             TreeNode singleNode = null;
