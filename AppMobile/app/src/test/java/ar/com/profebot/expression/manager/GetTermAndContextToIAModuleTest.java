@@ -12,6 +12,7 @@ public class GetTermAndContextToIAModuleTest {
 
     @Before
     public void setUp() {
+        ExpressionsManager.comparatorOperator = "=";
     }
 
     @Test
@@ -28,6 +29,7 @@ public class GetTermAndContextToIAModuleTest {
         Assert.assertEquals("x+1", result.get(1));
         Assert.assertEquals("3-1", result.get(2));
 
+        ExpressionsManager.comparatorOperator = ">";
         result = ExpressionsManager.getTermAndContextFromReduction("3+x>2+2(x+3)+2", "x>2+2(x+3)+2-3");
         Assert.assertEquals(">", result.get(0));
         Assert.assertEquals("2+2(x+3)+2", result.get(1));
@@ -43,6 +45,7 @@ public class GetTermAndContextToIAModuleTest {
         Assert.assertEquals("2+2(x+3)+2", result.get(1));
         Assert.assertEquals("2+2(x+3)+2-3", result.get(2));
 
+        ExpressionsManager.comparatorOperator = "=";
         result = ExpressionsManager.getTermAndContextFromReduction("x/3=1", "x/3*3=1*3");
         Assert.assertEquals("=", result.get(0));
         Assert.assertEquals("x/3", result.get(1));

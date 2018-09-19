@@ -494,7 +494,9 @@ public class ExpressionsManager {
          }
 
          // 2º: si el polinomio tiene variables X elevadas, reemplazar las X por (a_1)
-         equationCleaned = equationCleaned.replace("x^", "(a_1)^");
+         equationCleaned = equationCleaned
+                 .replace("x^", "(a_1)^")
+                 .replace("x", "a_1");
 
          // 3º: si el polinomio empieza con signo (-), removerlo
          String firstSign = "";
@@ -503,6 +505,7 @@ public class ExpressionsManager {
              equationCleaned = equationCleaned.substring(1);
          }
 
+         equationCleaned = equationCleaned.replace("(-(", "((-1)*(");
          System.out.println("Expresión a parsear a latex: " + equationCleaned);
 
          String latex = FormulaParser.parseToLatex(equationCleaned);
@@ -510,7 +513,8 @@ public class ExpressionsManager {
 
          latex = firstSign + latex
                  .replace("{a}_{1}", "x")
-                 .replace("\\left(x\\right)", "x");
+                 .replace("\\left(x\\right)", "x")
+                 .replace("\\left(-1\\right)\\cdot", "-");
          System.out.println("Latex con variable X: " + latex);
 
          return betweenBrackets ? "(" + latex + ")" : latex;
