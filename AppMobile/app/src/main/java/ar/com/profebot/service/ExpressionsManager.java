@@ -482,14 +482,19 @@ public class ExpressionsManager {
     }
 
     public static String parseToLatex(String equation){
-         String equationCleaned = equation.replace("x^", "(a_1)^");
+         String equationCleaned = equation;
 
+         // 1º: si el polinomio está entre paréntesis, removerlos
          Boolean betweenBrackets = false;
          if(equationCleaned.substring(0, 1).contains("(") && equationCleaned.substring(equationCleaned.length() - 1, equationCleaned.length()).contains(")")){
              betweenBrackets = true;
              equationCleaned = equationCleaned.substring(1, equationCleaned.length() - 1);
          }
 
+         // 2º: si el polinomio tiene variables X elevadas, reemplazar las X por (a_1)
+         equationCleaned = equationCleaned.replace("x^", "(a_1)^");
+
+         // 3º: si el polinomio empieza con signo (-), removerlo
          String firstSign = "";
          if(equationCleaned.substring(0, 1).contains("-")){
              firstSign = "-";
