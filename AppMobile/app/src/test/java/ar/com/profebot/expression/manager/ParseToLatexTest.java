@@ -18,9 +18,9 @@ public class ParseToLatexTest {
         Assert.assertEquals("-x+1", ExpressionsManager.parseToLatex("-x+1"));
 
         Assert.assertEquals("{x}^{4}+1", ExpressionsManager.parseToLatex("x^4+1"));
-        Assert.assertEquals("({x}^{4}+1)", ExpressionsManager.parseToLatex("(x^4+1)"));
+        Assert.assertEquals("\\left({x}^{4}+1\\right)", ExpressionsManager.parseToLatex("(x^4+1)"));
         Assert.assertEquals("-{x}^{4}+1", ExpressionsManager.parseToLatex("-x^4+1"));
-        Assert.assertEquals("(-{x}^{4}+1)", ExpressionsManager.parseToLatex("(-x^4+1)"));
+        Assert.assertEquals("\\left(- {x}^{4}+1\\right)", ExpressionsManager.parseToLatex("(-x^4+1)"));
 
         Assert.assertEquals("\\left(x-1\\right)\\cdot \\left(x+1\\right)", ExpressionsManager.parseToLatex("(x-1)*(x+1)"));
         Assert.assertEquals("\\left(x-1\\right)\\cdot \\left({x}^{2}+2\\cdot x+1\\right)", ExpressionsManager.parseToLatex("(x-1)*(x^2+2*x+1)"));
@@ -32,5 +32,10 @@ public class ParseToLatexTest {
         Assert.assertEquals("-3\\cdot \\left(- {x}^{2}+2\\cdot x+1\\right)", ExpressionsManager.parseToLatex("-3*(-x^2+2*x+1)"));
 
         Assert.assertEquals("\\left(x-1\\right)\\cdot \\left(-3\\right)\\cdot \\left(- {x}^{2}+2\\cdot x+1\\right)", ExpressionsManager.parseToLatex("(x-1)*(-3)*(-x^2+2*x+1)"));
+
+        Assert.assertEquals("\\left(\\left(x-1\\right)\\cdot 3\\right)\\cdot \\left(x+2\\right)", ExpressionsManager.parseToLatex("((x-1)*3)*(x+2)"));
+        Assert.assertEquals("\\left(\\left(x-1\\right)\\cdot 3\\right)\\cdot \\left(\\left(x+2\\right)\\right)", ExpressionsManager.parseToLatex("((x-1)*3)*((x+2))"));
+        Assert.assertEquals("\\left(\\left(\\left(x-1\\right)\\cdot 3\\right)\\cdot \\left(\\left(x+2\\right)\\right)\\right)", ExpressionsManager.parseToLatex("(((x-1)*3)*((x+2)))"));
+        Assert.assertEquals("\\left(\\left(\\left(\\left(x-1\\right)\\cdot 3\\right)\\right)\\cdot \\left(\\left(x+2\\right)\\right)\\right)", ExpressionsManager.parseToLatex("((((x-1)*3))*((x+2)))"));
     }
 }

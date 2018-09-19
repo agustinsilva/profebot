@@ -5,7 +5,9 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ar.com.profebot.intelligent.module.IAModuleClient;
 import ar.com.profebot.parser.container.Tree;
@@ -482,47 +484,74 @@ public class ExpressionsManager {
     }
 
     public static String parseToLatex(String equation){
-         String equationCleaned = equation;
+        // 1º: si el polinomio está entre paréntesis, removerlos
+        Map<String, Integer> result  = removeGlobalBrackets(equation);
+        String equationCleaned = new ArrayList<>(result.keySet()).get(0);
+        Integer countOfGlobalBrackets = result.get(equationCleaned);
 
-         // 1º: si el polinomio está entre paréntesis, removerlos
-         Boolean betweenBrackets = false;
-         if(equationCleaned.substring(0, 1).contains("(")
-                 && equationCleaned.substring(equationCleaned.length() - 1, equationCleaned.length()).contains(")")
-                 && noInconsistentBracket(equationCleaned)){
-             betweenBrackets = true;
-             equationCleaned = equationCleaned.substring(1, equationCleaned.length() - 1);
-         }
+        // 2º: si el polinomio tiene variables X elevadas, reemplazar las X por (a_1)
+        equationCleaned = equationCleaned
+                .replace("x^", "(a_1)^")
+                .replace("x", "a_1");
 
-         // 2º: si el polinomio tiene variables X elevadas, reemplazar las X por (a_1)
-         equationCleaned = equationCleaned
-                 .replace("x^", "(a_1)^")
-                 .replace("x", "a_1");
+        // 3º: si el polinomio empieza con signo (-), removerlo
+        String firstSign = "";
+        if(equationCleaned.substring(0, 1).contains("-")){
+            firstSign = "-";
+            equationCleaned = equationCleaned.substring(1);
+        }
 
-         // 3º: si el polinomio empieza con signo (-), removerlo
-         String firstSign = "";
-         if(equationCleaned.substring(0, 1).contains("-")){
-             firstSign = "-";
-             equationCleaned = equationCleaned.substring(1);
-         }
+        equationCleaned = equationCleaned.replace("(-(", "((-1)*(");
+        System.out.println("Expresión a parsear a latex: " + equationCleaned);
 
-         equationCleaned = equationCleaned.replace("(-(", "((-1)*(");
-         System.out.println("Expresión a parsear a latex: " + equationCleaned);
+        String latex = FormulaParser.parseToLatex(equationCleaned);
+        System.out.println("Expreisón parseada a latex: " + latex);
 
-         String latex = FormulaParser.parseToLatex(equationCleaned);
-         System.out.println("Expreisón parseada a latex: " + latex);
+        latex = firstSign + latex
+                .replace("{a}_{1}", "x")
+                .replace("\\left(x\\right)", "x")
+                .replace("\\left(-1\\right)\\cdot", "-");
+        System.out.println("Latex con variable X: " + latex);
 
-         latex = firstSign + latex
-                 .replace("{a}_{1}", "x")
-                 .replace("\\left(x\\right)", "x")
-                 .replace("\\left(-1\\right)\\cdot", "-");
-         System.out.println("Latex con variable X: " + latex);
+        for(int i = 0; i < countOfGlobalBrackets; i++){
+            latex = "(" + latex + ")";
+        }
+        System.out.println("Latex a retornar: " + latex);
+        return latex;
+    }
 
-         return betweenBrackets ? "(" + latex + ")" : latex;
+    private static Map<String, Integer> removeGlobalBrackets(String equation){
+        String equationCleaned = equation;
+        Integer count = 0;
+        while(hasGlobalBrackets(equationCleaned) && noInconsistentBracket(equationCleaned)){
+            equationCleaned = equationCleaned.substring(1, equationCleaned.length() - 1);
+            count++;
+        }
+
+        Map<String, Integer> result = new HashMap<>();
+        result.put(equationCleaned, count);
+        return result;
+    }
+
+    private static Boolean hasGlobalBrackets(String equation){
+         return equation.length() > 2
+                 && equation.substring(0, 1).contains("(")
+                 && equation.substring(equation.length() -1, equation.length()).contains(")");
     }
 
     private static Boolean noInconsistentBracket(String equation){
-         String equationWithoutFirstAndLastBracket = equation.substring(1, equation.length() - 1);
-         return (!equationWithoutFirstAndLastBracket.contains("(") && !equationWithoutFirstAndLastBracket.contains(")"))
-                 || equationWithoutFirstAndLastBracket.indexOf("(") < equationWithoutFirstAndLastBracket.indexOf(")");
+         String equationWithTags = equation.substring(1, equation.length());
+
+         equationWithTags = equationWithTags
+                 .replace("(", "(A")
+                 .replace(")", ")C");
+
+         while(equationWithTags.contains("(A") && equationWithTags.contains(")C")){
+             equationWithTags = equationWithTags
+                     .replaceFirst("\\(A", "(")
+                     .replaceFirst("\\)C", ")");
+         }
+
+         return !equationWithTags.contains("(A") && !equationWithTags.contains(")C");
     }
 }
