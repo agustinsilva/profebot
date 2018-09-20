@@ -17,7 +17,6 @@ import java.util.List;
 import ar.com.profebot.Models.MultipleChoiceStep;
 import ar.com.profebot.service.ExpressionsManager;
 import ar.com.profebot.service.FactoringManager;
-import ar.com.profebot.service.RVMultipleChoiceAdapter;
 import ar.com.profebot.service.RVMultipleChoicePlynomialAdapter;
 
 public class SolvePolynomialActivity extends GlobalActivity {

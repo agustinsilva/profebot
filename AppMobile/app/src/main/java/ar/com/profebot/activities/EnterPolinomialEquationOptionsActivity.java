@@ -9,8 +9,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
+
 import com.profebot.activities.R;
+
 import ar.com.profebot.service.ExpressionsManager;
+
 import static ar.com.profebot.activities.MainActivity.POLINOMIAL;
 import static ar.com.profebot.activities.MainActivity.photoReference;
 

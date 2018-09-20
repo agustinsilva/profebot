@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ar.com.profebot.activities.EnterPolinomialActivity;
-import ar.com.profebot.service.ExpressionsManager;
 
 public class PhotoPolynomialManager {
 

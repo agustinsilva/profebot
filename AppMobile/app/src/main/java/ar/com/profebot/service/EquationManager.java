@@ -2,26 +2,14 @@ package ar.com.profebot.service;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.profebot.activities.R;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import ar.com.profebot.Models.MultipleChoiceStep;
 import ar.com.profebot.activities.EnterEquationOptionsActivity;
-import ar.com.profebot.activities.EnterPolinomialEquationOptionsActivity;
 import ar.com.profebot.activities.SolveEquationActivity;
-import ar.com.profebot.activities.SolvePolynomialActivity;
-import de.uni_bielefeld.cebitec.mzurowie.pretty_formula.main.FormulaParser;
 import io.github.kexanie.library.MathView;
 
 public class EquationManager {

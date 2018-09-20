@@ -18,7 +18,6 @@ import ar.com.profebot.Models.MultipleChoiceStep;
 import ar.com.profebot.resolutor.service.ResolutorService;
 import ar.com.profebot.service.EquationManager;
 import ar.com.profebot.service.ExpressionsManager;
-import ar.com.profebot.service.FactoringManager;
 import ar.com.profebot.service.RVMultipleChoiceAdapter;
 
 public class SolveEquationActivity extends GlobalActivity {

@@ -1,7 +1,5 @@
 package ar.com.profebot.Models;
 
-import java.util.Map;
-
 public class MultipleChoiceStep {
 
     private String equationBase;

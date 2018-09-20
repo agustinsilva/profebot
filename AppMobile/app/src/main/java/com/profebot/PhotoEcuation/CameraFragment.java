@@ -33,7 +33,6 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,7 +47,6 @@ import ar.com.profebot.service.ExpressionsManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import flanagan.math.Polynomial;
 import io.github.kexanie.library.MathView;
 
 import static ar.com.profebot.activities.MainActivity.EQUATION;

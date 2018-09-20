@@ -2,8 +2,8 @@ package ar.com.profebot.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
@@ -15,7 +15,6 @@ import com.profebot.activities.R;
 
 import ar.com.profebot.service.ExpressionsManager;
 
-import static ar.com.profebot.activities.MainActivity.EQUATION;
 import static ar.com.profebot.activities.MainActivity.FUNCTION;
 import static ar.com.profebot.activities.MainActivity.photoReference;
 

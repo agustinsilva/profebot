@@ -1,7 +1,6 @@
 package ar.com.profebot.service;
 
 import java.util.ArrayList;
-import java.util.IllegalFormatCodePointException;
 
 import flanagan.complex.Complex;
 import flanagan.math.Polynomial;

@@ -7,9 +7,7 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import ar.com.profebot.Models.MultipleChoiceStep;
 import ar.com.profebot.activities.SolvePolynomialActivity;
-import ar.com.profebot.service.ExpressionsManager;
 import ar.com.profebot.service.FactoringManager;
 
 public class FactoringManagerTest {
