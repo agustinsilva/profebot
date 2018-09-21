@@ -128,13 +128,6 @@ public class EnterPolinomialActivity extends AppCompatActivity {
                     polynomialTerms.put(exponent, newCoefficient);
                 }
 
-                String equation = FactoringManager.getPolynomialGeneralForm(polynomialTerms);
-                if (!equation.isEmpty() && equation.substring(0,1).contains("-")){
-                    firstSign = "-";
-                    equation = equation.substring(1);
-                } else {
-                    firstSign = "";
-                }
                 ((MathView) findViewById(R.id.equation_to_solve_id)).config(
                         "MathJax.Hub.Config({\n"+
                                 "  CommonHTML: { linebreaks: { automatic: true } },\n"+
@@ -142,9 +135,7 @@ public class EnterPolinomialActivity extends AppCompatActivity {
                                 "         SVG: { linebreaks: { automatic: true } }\n"+
                                 "});");
 
-                equation = equation.replace("x", "a_1");
-                System.out.println(equation);
-                equation = firstSign + (equation.isEmpty() ? "" : FormulaParser.parseToLatex(equation).replace("{a}_{1}", "x"));
+                String equation = ExpressionsManager.mapToLatexAndReplaceComparator(FactoringManager.getPolynomialGeneralForm(polynomialTerms));
 
                 ((MathView) findViewById(R.id.equation_to_solve_id)).setText("\\(\\color{White}{" + equation + "}\\)" );
                 coefficientTermInput.setText("");

@@ -79,20 +79,35 @@ public class ExpressionsManager {
         String firstSign, secondSign;
         System.out.println("Ecuación infija: " + infixEquation);
         String infixEquationCleaned = mapToOurAlphabet(infixEquation).replace("X", "x");
-        System.out.println("Ecuación: " + infixEquationCleaned);
+        System.out.println("Ecuación en nuestro alfabeto: " + infixEquationCleaned);
+
+        if(infixEquationCleaned == null || infixEquationCleaned.isEmpty()){
+            return "";
+        }
+
+        String comparatorOperator = getRootOfEquation(infixEquation);
+        if(comparatorOperator.isEmpty()){
+            firstSign = "";
+            if (infixEquationCleaned.substring(0,1).contains("-")){
+                firstSign = "-";
+                infixEquationCleaned = infixEquationCleaned.substring(1);
+            }
+
+            System.out.println("Expresión: " + infixEquationCleaned);
+            return firstSign + parseToLatex(infixEquationCleaned);
+        }
+
         String[] expressions = infixEquationCleaned.split(getRootOfEquation(infixEquation));
 
+        firstSign = "";
         if (expressions[0].substring(0,1).contains("-")){
             firstSign = "-";
             expressions[0] = expressions[0].substring(1);
-        } else {
-            firstSign = "";
         }
+        secondSign = "";
         if (expressions[1].substring(0,1).contains("-")){
             secondSign = "-";
             expressions[1] = expressions[1].substring(1);
-        } else {
-            secondSign = "";
         }
 
         System.out.println("Ecuación 1: " + expressions[0]);
@@ -106,28 +121,32 @@ public class ExpressionsManager {
 
     private static String replaceComparatorWithMathViewTag(String latex){
         String newComparator;
-        switch (comparatorOperator){
-            case "<":
-                newComparator = " \\lt ";
-                break;
+        String currentComparator = getRootOfEquation(latex);
+        switch (currentComparator){
             case "<=":
                 newComparator = " \\leqslant ";
-                break;
-            case ">":
-                newComparator =" \\gt ";
                 break;
             case ">=":
                 newComparator = " \\geqslant ";
                 break;
+            case "<":
+                newComparator = " \\lt ";
+                break;
+            case ">":
+                newComparator =" \\gt ";
+                break;
             case "!=":
                 newComparator = " \\neq ";
                 break;
-            default:
+            case "=":
                 newComparator = "=";
+                break;
+            default:
+                newComparator = "";
                 break;
         }
 
-        return latex.replace(comparatorOperator, newComparator);
+        return latex.replace(currentComparator, newComparator);
     }
 
     public static String getPolinomialEquationAsLatex() {
@@ -334,20 +353,15 @@ public class ExpressionsManager {
                 .replaceAll("X\\.", "X*")
                 .replaceAll("\\)X", ")*X")
 
-                .replaceAll("^\\+\\(", "0+(")
-                .replaceAll("^-\\(", "0-(")
+                .replaceAll("^\\+\\(", "(")
 
                 .replaceAll("^\\+X", "X")
-                .replaceAll("^-X", "0-X")
 
-                .replaceAll("\\(\\+", "(0+")
-                .replaceAll("\\(-", "(0-")
+                .replaceAll("\\(\\+", "(")
 
                 .replaceAll("=\\+\\(", "=(")
-                .replaceAll("=-\\(", "=0-(")
 
                 .replaceAll("=\\+X", "=X")
-                .replaceAll("=-X", "=0-X")
 
                 .replaceAll("≤", "<=")
                 .replaceAll("≥", ">=")
@@ -388,8 +402,13 @@ public class ExpressionsManager {
              return "<";
          }else if(infixEquation.contains(">")){
              return ">";
+         }else if(infixEquation.contains("!=")){
+             return "!=";
+         }else if(infixEquation.contains("=")){
+             return "=";
          }
-        return "=";
+
+         return "";
     }
 
     public static List<String> getTermAndContextFromReduction(String equationBase, String newEquationBase){

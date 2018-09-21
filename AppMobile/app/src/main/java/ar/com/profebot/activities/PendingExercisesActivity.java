@@ -110,7 +110,7 @@ public class PendingExercisesActivity extends AppCompatActivity {
                                     "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
                                     "         SVG: { linebreaks: { automatic: true } }\n"+
                                     "});");
-                            equation.setText("$$" + ExpressionsManager.getEquationAsLatex(pendingExercise.getInfixEquation()) + "$$");
+                            equation.setText("$$" + ExpressionsManager.mapToLatexAndReplaceComparator(pendingExercise.getInfixEquation()) + "$$");
                             ((TextView) view.findViewById(R.id.pop_up_title_id)).setText(pendingExercise.getExerciseId());
                             view.setClipToOutline(true);
                             builder.setView(view);
