@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/pop_up_id"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/borders_pop_up">
+
+    <TextView
+        android:id="@+id/pop_up_title_id"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:textSize="40dp"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_margin="5dp"/>
+
+    <TextView
+        android:id="@+id/explanation_pop_up"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cuenta la historia que el dominio es el valor ......"
+        android:textSize="20dp"
+        android:textColor="@color/colorBlack"
+        android:gravity="start"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        />
+
+    <io.github.kexanie.library.MathView
+        android:id="@+id/original_equation_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        app:engine="KaTeX">
+    </io.github.kexanie.library.MathView>
+
+    <TextView
+        android:id="@+id/roots_summary_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:textColor="@color/colorBlack"
+        android:gravity="start"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@color/colorGreyText" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="10dp">
+
+        <Button
+            android:id="@+id/close_pop_up_id"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Resolver"
+            android:textSize="15dp"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/rounded_corners_pop_up_back"/>
+
+    </LinearLayout>
+</LinearLayout>

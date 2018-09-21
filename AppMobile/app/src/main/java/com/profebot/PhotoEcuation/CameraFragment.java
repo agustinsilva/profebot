@@ -301,6 +301,8 @@ public class CameraFragment extends Fragment {
                         ExpressionsManager.setEquationPhoto(mLatestLatex, getActivity().getApplicationContext());
                         ExpressionsManager.setEquationDrawn(null);
                         if (ExpressionsManager.getTreeOfExpression() != null) {
+
+
                             Intent intent = new Intent(getActivity(), SolveEquationActivity.class);
                             startActivity(intent);
                         } else {
@@ -321,6 +323,7 @@ public class CameraFragment extends Fragment {
                         break;
                     case FUNCTION :
                         Intent intent = new Intent(getActivity(), EnterFunctionActivity.class);
+                        intent.putExtra("function",latex);
                         startActivity(intent);
                     }
                 }

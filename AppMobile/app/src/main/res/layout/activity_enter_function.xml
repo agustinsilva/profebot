@@ -77,14 +77,16 @@
             android:gravity="center_horizontal">
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/domainBtn"
+                android:onClick="domainBtn"
                 style="@style/OperationOptionButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Dominio" />
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/imageBtn"
+                android:onClick="imageBtn"
                 style="@style/OperationOptionButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -97,7 +99,8 @@
             android:gravity="fill_vertical|center_horizontal">
 
             <Button
-                android:id="@+id/button4"
+                android:id="@+id/originBtn"
+                android:onClick="originBtn"
                 style="@style/OperationOptionButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -105,7 +108,8 @@
                 android:text="@string/ordenada_al_origen" />
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/rootBtn"
+                android:onClick="rootBtn"
                 style="@style/OperationOptionButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
