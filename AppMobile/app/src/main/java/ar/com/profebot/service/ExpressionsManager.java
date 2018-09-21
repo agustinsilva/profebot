@@ -501,7 +501,7 @@ public class ExpressionsManager {
                 .replaceAll("\\.0$", "");
     }
 
-    public static String parseToLatex(String equation){
+    private static String parseToLatex(String equation){
         // 1º: si el polinomio está entre paréntesis, removerlos
         Map<String, Integer> result  = removeGlobalBrackets(equation);
         String equationCleaned = new ArrayList<>(result.keySet()).get(0);
