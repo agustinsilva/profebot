@@ -26,15 +26,6 @@ public class EquationManager {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View view = context.getLayoutInflater().inflate(R.layout.equation_results_pop_up, null);
 
-        MathView originalEquation = ((MathView) view.findViewById(R.id.original_equation_id));
-        originalEquation.setEngine(MathView.Engine.MATHJAX);
-        originalEquation.config("MathJax.Hub.Config({\n"+
-                "  CommonHTML: { linebreaks: { automatic: true } },\n"+
-                "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
-                "         SVG: { linebreaks: { automatic: true } }\n"+
-                "});");
-        originalEquation.setText("$$" + ExpressionsManager.mapToLatexAndReplaceComparator(ExpressionsManager.getEquationAsInfix()) + "$$");
-
         rootsSummary = (TextView) view.findViewById(R.id.roots_summary_id);
 
         view.setClipToOutline(true);

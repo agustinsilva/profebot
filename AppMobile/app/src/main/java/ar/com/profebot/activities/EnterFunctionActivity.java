@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.profebot.activities.R;
@@ -14,6 +15,7 @@ import ar.com.profebot.service.EquationManager;
 import ar.com.profebot.service.ExpressionsManager;
 import de.uni_bielefeld.cebitec.mzurowie.pretty_formula.main.FormulaParser;
 import io.github.kexanie.library.MathView;
+import me.grantland.widget.AutofitTextView;
 
 public class EnterFunctionActivity extends AppCompatActivity {
     private String firstSign = "";
@@ -50,14 +52,24 @@ public class EnterFunctionActivity extends AppCompatActivity {
     }
 
     public void domainBtn(View view) {
+        String title = "Dominio de una función";
+        String explanation = "En matemáticas, el dominio (conjunto de definición o conjunto de partida) " +
+                "de una función es el conjunto de existencia de ella misma, es decir, los valores para los cuales la" +
+                " función está definida. Es el conjunto de todos los objetos que puede transformar, se denota o bien .";
+        setPopUpToMultipleChoice(title, explanation);
+    }
+
+    private void setPopUpToMultipleChoice(String title, String explanation) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View popUpView = this.getLayoutInflater().inflate(R.layout.function_pop_up, null);
         popUpView.setElevation(0f);
-        MathView originalEquation = ((MathView) popUpView.findViewById(R.id.original_equation_id));
 
-        TextView rootsSummary = (TextView) popUpView.findViewById(R.id.roots_summary_id);
+        AutofitTextView titleTV = (AutofitTextView) popUpView.findViewById(R.id.pop_up_title_id);
+        titleTV.setText(title);
+        TextView explanationTV = (TextView) popUpView.findViewById(R.id.explanation_pop_up);
+        explanationTV.setText(explanation);
 
-        rootsSummary.setText("El dominio es un texto que se usa para blablablabla");
+
 
         popUpView.setClipToOutline(true);
         builder.setView(popUpView);
@@ -65,6 +77,13 @@ public class EnterFunctionActivity extends AppCompatActivity {
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         dialog.show();
         ((Button) popUpView.findViewById(R.id.close_pop_up_id)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.hide();
+            }
+        });
+        ImageButton backBtn = (ImageButton) popUpView.findViewById(R.id.back_pop_up_id);
+        backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.hide();

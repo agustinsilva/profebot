@@ -13,8 +13,7 @@
         android:id="@+id/pop_up_title_id"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="Ecuación resuelta"
-        android:textSize="40dp"
+        android:textSize="30dp"
         android:textColor="@color/colorAccent"
         android:textStyle="bold"
         android:gravity="center"
@@ -31,17 +30,6 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         />
-
-    <io.github.kexanie.library.MathView
-        android:id="@+id/original_equation_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        app:engine="KaTeX">
-    </io.github.kexanie.library.MathView>
 
     <TextView
         android:id="@+id/roots_summary_id"
