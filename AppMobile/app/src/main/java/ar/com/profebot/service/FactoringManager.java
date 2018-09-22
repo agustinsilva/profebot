@@ -2,6 +2,7 @@ package ar.com.profebot.service;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -20,7 +21,7 @@ import ar.com.profebot.activities.EnterPolinomialEquationOptionsActivity;
 import ar.com.profebot.activities.SolvePolynomialActivity;
 import io.github.kexanie.library.MathView;
 
-public class FactoringManager {
+public class FactoringManager extends Manager{
 
     public static final Integer FACTOR_COMUN = 1;
     public static final Integer CUADRATICA = 2;
@@ -96,7 +97,7 @@ public class FactoringManager {
                 "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
                 "         SVG: { linebreaks: { automatic: true } }\n"+
                 "});");
-        lastEquation.setText("$$" + getEquationAfterFactorizing() + "$$");
+        lastEquation.setText("$$" + getEquationAsLatexAfterFactorizing() + "$$");
 
         String rootsCommaSeparated = ExpressionsManager.removeDecimals(android.text.TextUtils.join(" ; ", roots));
         TextView rootsLabel = (TextView) view.findViewById(R.id.roots_label_id);
@@ -130,7 +131,7 @@ public class FactoringManager {
         Map<String, Integer> cases = getNextPossibleCases();
         setFactors();
 
-        return new MultipleChoiceStep(getEquation(), "", "", "", "",
+        return new MultipleChoiceStep(getEquationAsLatex(), "", "", "", "",
                 context.getString(R.string.FACTOR_COMUN), "",
                 context.getString(R.string.CUADRATICA), "",
                 context.getString(R.string.GAUSS), "",
@@ -219,7 +220,7 @@ public class FactoringManager {
         return existsAtLeastOneRoot && (getDegree() > 2 || (getDegree() == 2 && quadraticIsPossible()));
     }
 
-    public static String getEquation(){
+    public static String getEquationAsLatex(){
         String rootsFactorizedAux = "";
         if(!rootsFactorized.isEmpty()){
             rootsFactorizedAux = rootsFactorized;
@@ -236,7 +237,7 @@ public class FactoringManager {
         return addMultiplier(rootsFactorizedAux, pendingPolynomialAux);
     }
 
-    public static String getEquationAfterFactorizing(){
+    public static String getEquationAsLatexAfterFactorizing(){
         String rootsFactorizedAux = "";
         if(!rootsFactorized.isEmpty()){
             rootsFactorizedAux = ExpressionsManager.removeDecimals(rootsFactorized);
@@ -261,9 +262,9 @@ public class FactoringManager {
         String equation;
         if(multiplier != 1){
             if(roots.isEmpty()){
-                equation = multiplier + " \\cdot (" + pending + ")";
+                equation = multiplier + "*(" + pending + ")";
             }else{
-                equation = multiplier + " \\cdot " + roots + pending;
+                equation = multiplier + "*" + roots + pending;
             }
         }else{
             equation = roots + pending;
@@ -749,5 +750,85 @@ public class FactoringManager {
             default:
                 return "";
         }
+    }
+
+    @Override
+    public void setUpSolveButton(Button button, RVMultipleChoiceAdapter.MultipleChoiceViewHolder holder, List<MultipleChoiceStep> multipleChoiceSteps, List<MultipleChoiceStep> currentMultipleChoiceSteps) {
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SolvePolynomialActivity.recyclerView.scrollToPosition(0);
+                holder.isSolved = true;
+                holder.multipleChoiceResolutionStep.setVisibility(View.GONE);
+                holder.multipleChoiceSolvedResolutionStep.setVisibility(View.VISIBLE);
+                holder.layoutToUse = holder.multipleChoiceSolvedResolutionStep;
+
+                holder.correctOptionRadio.setText(holder.correctOptionJustification);
+                String summaryText;
+                if(holder.chosenOption.equals(holder.correctOption)){
+                    holder.incorrectOptionRadio.setVisibility(View.GONE);
+                    holder.expandCollapseIndicatorColor.setBackgroundResource(R.drawable.solved_right);
+                    FactoringManager.factorizeBy(holder.chosenOption);
+                    String correctText = FactoringManager.getMessageOfRightOption(holder.chosenOption);
+                    String complementText = FactoringManager.getMessageOfRegularOptions(holder.regularOption1, holder.regularOption2);
+                    holder.correctOptionRadio.setText(correctText + " " + complementText);
+                    summaryText = FactoringManager.getCaseNameFrom(holder.chosenOption);
+                }else if(holder.chosenOption.equals(holder.regularOption1) || holder.chosenOption.equals(holder.regularOption2)){
+                    holder.incorrectOptionRadio.setVisibility(View.GONE);
+                    holder.expandCollapseIndicatorColor.setBackgroundResource(R.drawable.solved_right);
+                    FactoringManager.factorizeBy(holder.chosenOption);
+                    String regularText = FactoringManager.getMessageOfRegularOptionChosen(holder.chosenOption);
+                    String complementText = holder.chosenOption.equals(holder.regularOption1)
+                            ? (holder.regularOption2 == null ? "" : FactoringManager.getMessageOfRegularOptionNotChosen(holder.regularOption2))
+                            : (holder.regularOption1 == null ? "" : FactoringManager.getMessageOfRegularOptionNotChosen(holder.regularOption1));
+                    String correctText = FactoringManager.getMessageOfRightOptionNotChosen(holder.correctOption);
+                    holder.correctOptionRadio.setText(regularText + " " + complementText + " " + correctText);
+                    summaryText = FactoringManager.getCaseNameFrom(holder.chosenOption);
+                }else{
+                    holder.expandCollapseIndicatorColor.setBackgroundResource(R.drawable.solved_wrong);
+                    Map<Integer, String> incorrectOptions = new HashMap<>();
+                    for(int i = 1 ; i <= 3 ; i++){
+                        if(i != holder.correctOption){
+                            if(incorrectOptions.isEmpty()){
+                                incorrectOptions.put(i, holder.incorrectOptionJustification1);
+                            }else{
+                                incorrectOptions.put(i, holder.incorrectOptionJustification2);
+                            }
+                        }
+                    }
+                    holder.incorrectOptionRadio.setVisibility(View.VISIBLE);
+                    holder.incorrectOptionRadio.setText(FactoringManager.getMessageOfWrongOptionChosen(holder.chosenOption));
+
+                    FactoringManager.factorizeBy(holder.correctOption);
+                    String regularText = (holder.regularOption1 == null ? "" : FactoringManager.getMessageOfRegularOptionNotChosen(holder.regularOption1));
+                    regularText += (holder.regularOption2 == null ? "" : FactoringManager.getMessageOfRegularOptionNotChosen(holder.regularOption2));
+                    String correctText = FactoringManager.getMessageOfRightOptionNotChosen(holder.correctOption);
+                    holder.correctOptionRadio.setText(correctText + " " + regularText);
+                    summaryText = FactoringManager.getCaseNameFrom(holder.correctOption);
+                }
+                holder.expandCollapseIndicatorColor.setVisibility(View.VISIBLE);
+
+                holder.summary.setText(summaryText);
+                FactoringManager.setFactors();
+                holder.newEquationBase.setText("$$" + FactoringManager.getEquationAsLatexAfterFactorizing() + "$$");
+                if(!FactoringManager.end){
+                    multipleChoiceSteps.add(FactoringManager.nextStep());
+                    MultipleChoiceStep currentMultipleChoiceStep = multipleChoiceSteps.get(currentMultipleChoiceSteps.size()-1);
+                    currentMultipleChoiceStep.setSolved(true);
+                    setUpNextStepButton(holder, multipleChoiceSteps, currentMultipleChoiceSteps);
+                }else{
+                    holder.nextStep.setVisibility(View.GONE);
+                    enableSummary(false);
+                }
+
+                multipleChoiceSteps.get(currentMultipleChoiceSteps.size()-1).setSolved(true);
+                SolvePolynomialActivity.recyclerView.scrollToPosition(currentMultipleChoiceSteps.size() - 1);
+            }
+        });
+    }
+
+    @Override
+    public RecyclerView getRecyclerView() {
+        return SolvePolynomialActivity.recyclerView;
     }
 }

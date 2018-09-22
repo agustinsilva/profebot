@@ -17,12 +17,12 @@ import java.util.List;
 import ar.com.profebot.Models.MultipleChoiceStep;
 import ar.com.profebot.service.ExpressionsManager;
 import ar.com.profebot.service.FactoringManager;
-import ar.com.profebot.service.RVMultipleChoicePlynomialAdapter;
+import ar.com.profebot.service.RVMultipleChoiceAdapter;
 
 public class SolvePolynomialActivity extends GlobalActivity {
 
     private static List<MultipleChoiceStep> multipleChoiceSteps;
-    private static RVMultipleChoicePlynomialAdapter adapter;
+    private static RVMultipleChoiceAdapter adapter;
     private static Button seeSummary;
     public static RecyclerView recyclerView;
     public static SolvePolynomialActivity context;
@@ -46,9 +46,9 @@ public class SolvePolynomialActivity extends GlobalActivity {
         recyclerView.setLayoutManager(llm);
         multipleChoiceSteps = this.initializeMultipleChoiceSteps();
         if(!FactoringManager.end){
-            adapter = new RVMultipleChoicePlynomialAdapter(multipleChoiceSteps.get(0), multipleChoiceSteps);
+            adapter = new RVMultipleChoiceAdapter(multipleChoiceSteps.get(0), multipleChoiceSteps, new FactoringManager());
         }else {
-            adapter = new RVMultipleChoicePlynomialAdapter(null, new ArrayList<>());
+            adapter = new RVMultipleChoiceAdapter(null, new ArrayList<>(), new FactoringManager());
         }
         recyclerView.setAdapter(adapter);
         if(FactoringManager.end){

@@ -48,9 +48,9 @@ public class SolveEquationActivity extends GlobalActivity {
         multipleChoiceSteps = this.initializeMultipleChoiceSteps();
 
         if(!multipleChoiceSteps.isEmpty()){
-            adapter = new RVMultipleChoiceAdapter(multipleChoiceSteps.get(0), multipleChoiceSteps);
+            adapter = new RVMultipleChoiceAdapter(multipleChoiceSteps.get(0), multipleChoiceSteps, new EquationManager());
         }else{
-            adapter = new RVMultipleChoiceAdapter(null, new ArrayList<>());
+            adapter = new RVMultipleChoiceAdapter(null, new ArrayList<>(), null);
         }
         recyclerView.setAdapter(adapter);
 

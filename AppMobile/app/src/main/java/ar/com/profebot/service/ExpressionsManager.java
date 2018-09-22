@@ -85,6 +85,11 @@ public class ExpressionsManager {
             return "";
         }
 
+        if(infixEquation.contains("\\")){
+            System.out.println("La ecuación ya está en latex: " + infixEquation);
+            return infixEquation;
+        }
+
         String comparatorOperator = getRootOfEquation(infixEquation);
         if(comparatorOperator.isEmpty()){
             firstSign = "";

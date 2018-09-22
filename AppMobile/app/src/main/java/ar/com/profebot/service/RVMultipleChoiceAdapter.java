@@ -28,6 +28,7 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
     private List<MultipleChoiceStep> multipleChoiceSteps;
     private static List<MultipleChoiceStep> currentMultipleChoiceSteps;
     private static List<MultipleChoiceViewHolder> multipleChoiceViewHolders = new ArrayList<>();
+    private static Manager manager;
 
     public static class MultipleChoiceViewHolder extends RecyclerView.ViewHolder {
         CardView card;
@@ -51,6 +52,8 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
         RadioButton incorrectOptionRadio;
         Integer chosenOption;
         Integer correctOption;
+        Integer regularOption1;
+        Integer regularOption2;
         String correctOptionJustification;
         String incorrectOptionJustification1;
         String incorrectOptionJustification2;
@@ -63,75 +66,8 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
                 solveStep.setEnabled(true);
                 solveStep.setBackgroundResource(R.color.colorGreen);
                 solveStep.setTextColor(Color.WHITE);
-                solveStep.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        isSolved = true;
-                        multipleChoiceResolutionStep.setVisibility(View.GONE);
-                        multipleChoiceSolvedResolutionStep.setVisibility(View.VISIBLE);
-                        layoutToUse = multipleChoiceSolvedResolutionStep;
-
-                        correctOptionRadio.setText(correctOptionJustification);
-                        if(chosenOption.equals(correctOption)){
-                            incorrectOptionRadio.setVisibility(View.GONE);
-                            expandCollapseIndicatorColor.setBackgroundResource(R.drawable.solved_right);
-                        }else{
-                            expandCollapseIndicatorColor.setBackgroundResource(R.drawable.solved_wrong);
-                            Map<Integer, String> incorrectOptions = new HashMap<>();
-                            for(int i = 1 ; i <= 3 ; i++){
-                                if(i != correctOption){
-                                    if(incorrectOptions.isEmpty()){
-                                        incorrectOptions.put(i, incorrectOptionJustification1);
-                                    }else{
-                                        incorrectOptions.put(i, incorrectOptionJustification2);
-                                    }
-                                }
-                            }
-                            incorrectOptionRadio.setVisibility(View.VISIBLE);
-                            incorrectOptionRadio.setText(incorrectOptions.get(chosenOption));
-
-                            ExpressionsManager.requestNewExercises(getAsInfix(equationBase.getText()), getAsInfix(newEquationBase.getText()), equationBase.getContext());
-                        }
-                        expandCollapseIndicatorColor.setVisibility(View.VISIBLE);
-
-                        MultipleChoiceStep currentMultipleChoiceStep = multipleChoiceSteps.get(currentMultipleChoiceSteps.size()-1);
-                        currentMultipleChoiceStep.setSolved(true);
-                        summary.setText(currentMultipleChoiceStep.getSummary());
-                        if(currentMultipleChoiceSteps.size() < multipleChoiceSteps.size()){
-                            setUpNextStepButton();
-                        }else{
-                            nextStep.setVisibility(View.GONE);
-                            EquationManager.enableSummary();
-                        }
-
-                        currentMultipleChoiceStep.setSolved(true);
-                        SolveEquationActivity.recyclerView.scrollToPosition(currentMultipleChoiceSteps.size() - 1);
-                    }
-                });
+                manager.setUpSolveButton(solveStep, this, multipleChoiceSteps, currentMultipleChoiceSteps);
             }
-        }
-
-        private String getAsInfix(String equation){
-            return equation
-                    .replace("\\(", "")
-                    .replace("\\)", "");
-        }
-
-        private void setUpNextStepButton(){
-            nextStep.setEnabled(true);
-            nextStep.setBackgroundResource(R.color.colorGreen);
-            nextStep.setTextColor(Color.WHITE);
-            nextStep.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    nextStep.setVisibility(View.GONE);
-                    layoutToUse.setVisibility(View.GONE);
-                    expandCollapseIndicator.setScaleY(1f);
-                    MultipleChoiceStep currentMultipleChoiceStep = multipleChoiceSteps.get(currentMultipleChoiceSteps.size() - 1);
-                    currentMultipleChoiceSteps.add(currentMultipleChoiceStep);
-                    SolveEquationActivity.recyclerView.scrollToPosition(currentMultipleChoiceSteps.size() - 1);
-                }
-            });
         }
 
         MultipleChoiceViewHolder(View itemView, List<MultipleChoiceStep> currentMultipleChoiceSteps) {
@@ -214,7 +150,8 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
         }
     }
 
-    public RVMultipleChoiceAdapter(MultipleChoiceStep firstStep, List<MultipleChoiceStep> multipleChoiceSteps){
+    public RVMultipleChoiceAdapter(MultipleChoiceStep firstStep, List<MultipleChoiceStep> multipleChoiceSteps, Manager manager){
+        this.manager = manager;
         this.multipleChoiceSteps = multipleChoiceSteps;
         List<MultipleChoiceStep> steps = new ArrayList<>();
         if(firstStep != null){
@@ -254,29 +191,46 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
                 "});");
         multipleChoiceViewHolder.newEquationBase.setText("$$" + ExpressionsManager.mapToLatexAndReplaceComparator(multipleChoiceSteps.get(position).getNewEquationBase()) + "$$");
 
+        String equationAsLatexOption;
+
         multipleChoiceViewHolder.optionA.setText(multipleChoiceSteps.get(position).getOptionA());
-        multipleChoiceViewHolder.equationOptionA.config("MathJax.Hub.Config({\n"+
-                "  CommonHTML: { linebreaks: { automatic: true } },\n"+
-                "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
-                "         SVG: { linebreaks: { automatic: true } }\n"+
-                "});");
-        multipleChoiceViewHolder.equationOptionA.setText("$$" + ExpressionsManager.mapToLatexAndReplaceComparator(multipleChoiceSteps.get(position).getEquationOptionA()) + "$$");
+        equationAsLatexOption = ExpressionsManager.mapToLatexAndReplaceComparator(multipleChoiceSteps.get(position).getEquationOptionA());
+        if(!equationAsLatexOption.isEmpty()){
+            multipleChoiceViewHolder.equationOptionA.config("MathJax.Hub.Config({\n"+
+                    "  CommonHTML: { linebreaks: { automatic: true } },\n"+
+                    "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
+                    "         SVG: { linebreaks: { automatic: true } }\n"+
+                    "});");
+            multipleChoiceViewHolder.equationOptionA.setText("$$" + equationAsLatexOption + "$$");
+        }else{
+            multipleChoiceViewHolder.equationOptionA.setVisibility(View.GONE);
+        }
 
         multipleChoiceViewHolder.optionB.setText(multipleChoiceSteps.get(position).getOptionB());
-        multipleChoiceViewHolder.equationOptionB.config("MathJax.Hub.Config({\n"+
-                "  CommonHTML: { linebreaks: { automatic: true } },\n"+
-                "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
-                "         SVG: { linebreaks: { automatic: true } }\n"+
-                "});");
-        multipleChoiceViewHolder.equationOptionB.setText("$$" + ExpressionsManager.mapToLatexAndReplaceComparator(multipleChoiceSteps.get(position).getEquationOptionB()) + "$$");
+        equationAsLatexOption = ExpressionsManager.mapToLatexAndReplaceComparator(multipleChoiceSteps.get(position).getEquationOptionB());
+        if(!equationAsLatexOption.isEmpty()){
+            multipleChoiceViewHolder.equationOptionB.config("MathJax.Hub.Config({\n"+
+                    "  CommonHTML: { linebreaks: { automatic: true } },\n"+
+                    "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
+                    "         SVG: { linebreaks: { automatic: true } }\n"+
+                    "});");
+            multipleChoiceViewHolder.equationOptionB.setText("$$" + equationAsLatexOption + "$$");
+        }else{
+            multipleChoiceViewHolder.equationOptionB.setVisibility(View.GONE);
+        }
 
         multipleChoiceViewHolder.optionC.setText(multipleChoiceSteps.get(position).getOptionC());
-        multipleChoiceViewHolder.equationOptionC.config("MathJax.Hub.Config({\n"+
-                "  CommonHTML: { linebreaks: { automatic: true } },\n"+
-                "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
-                "         SVG: { linebreaks: { automatic: true } }\n"+
-                "});");
-        multipleChoiceViewHolder.equationOptionC.setText("$$" + ExpressionsManager.mapToLatexAndReplaceComparator(multipleChoiceSteps.get(position).getEquationOptionC()) + "$$");
+        equationAsLatexOption = ExpressionsManager.mapToLatexAndReplaceComparator(multipleChoiceSteps.get(position).getEquationOptionC());
+        if(!equationAsLatexOption.isEmpty()){
+            multipleChoiceViewHolder.equationOptionC.config("MathJax.Hub.Config({\n"+
+                    "  CommonHTML: { linebreaks: { automatic: true } },\n"+
+                    "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
+                    "         SVG: { linebreaks: { automatic: true } }\n"+
+                    "});");
+            multipleChoiceViewHolder.equationOptionC.setText("$$" + equationAsLatexOption + "$$");
+        }else{
+            multipleChoiceViewHolder.equationOptionC.setVisibility(View.GONE);
+        }
 
         multipleChoiceViewHolder.correctOption = multipleChoiceSteps.get(position).getCorrectOption();
         multipleChoiceViewHolder.correctOptionJustification = multipleChoiceSteps.get(position).getCorrectOptionJustification();
