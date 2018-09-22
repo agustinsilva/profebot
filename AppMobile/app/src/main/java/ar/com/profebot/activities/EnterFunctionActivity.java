@@ -51,15 +51,18 @@ public class EnterFunctionActivity extends AppCompatActivity {
 
     public void domainBtn(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        View popUpView = this.getLayoutInflater().inflate(R.layout.equation_results_pop_up, null);
-
+        View popUpView = this.getLayoutInflater().inflate(R.layout.function_pop_up, null);
+        popUpView.setElevation(0f);
         MathView originalEquation = ((MathView) popUpView.findViewById(R.id.original_equation_id));
 
         TextView rootsSummary = (TextView) popUpView.findViewById(R.id.roots_summary_id);
 
+        rootsSummary.setText("El dominio es un texto que se usa para blablablabla");
+
         popUpView.setClipToOutline(true);
         builder.setView(popUpView);
         AlertDialog dialog = builder.create();
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         dialog.show();
         ((Button) popUpView.findViewById(R.id.close_pop_up_id)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,6 +73,7 @@ public class EnterFunctionActivity extends AppCompatActivity {
     }
 
     public void rootBtn(View view) {
+
     }
 
     public void originBtn(View view) {
