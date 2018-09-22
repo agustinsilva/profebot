@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         new AlertDialog.Builder(this)
+                .setIcon(R.drawable.profebot_cara)
                 .setTitle("¿Queres salir?")
                 .setMessage("Te esperamos pronto para seguir practicando.")
                 .setNegativeButton(R.string.no, null)
