@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -24,6 +25,9 @@ public class EnterFunctionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_function);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_id);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         String equation = this.getIntent().getExtras().getString("function");
         setFunctionView(equation);
@@ -99,5 +103,11 @@ public class EnterFunctionActivity extends AppCompatActivity {
     }
 
     public void imageBtn(View view) {
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        startActivity(new Intent(this, EnterFunctionOptionsActivity.class));
+        return true;
     }
 }
