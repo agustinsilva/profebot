@@ -13,7 +13,8 @@ import ar.com.profebot.Models.MultipleChoiceStep;
 import ar.com.profebot.activities.SolveEquationActivity;
 
 public abstract class Manager {
-    abstract void setUpSolveButton(Button button, RVMultipleChoiceAdapter.MultipleChoiceViewHolder holder, List<MultipleChoiceStep> multipleChoiceSteps, List<MultipleChoiceStep> currentMultipleChoiceSteps);
+    abstract void setUpSolveButton(Button button, RVMultipleChoiceAdapter.MultipleChoiceViewHolder holder,
+                                   List<MultipleChoiceStep> multipleChoiceSteps, List<MultipleChoiceStep> currentMultipleChoiceSteps);
     abstract RecyclerView getRecyclerView();
 
     protected String getAsInfix(String equation){
@@ -22,7 +23,9 @@ public abstract class Manager {
                 .replace("\\)", "");
     }
 
-    protected void setUpNextStepButton(RVMultipleChoiceAdapter.MultipleChoiceViewHolder holder, List<MultipleChoiceStep> multipleChoiceSteps, List<MultipleChoiceStep> currentMultipleChoiceSteps){
+    protected void setUpNextStepButton(RVMultipleChoiceAdapter.MultipleChoiceViewHolder holder,
+                                       List<MultipleChoiceStep> multipleChoiceSteps,
+                                       List<MultipleChoiceStep> currentMultipleChoiceSteps){
         holder.nextStep.setEnabled(true);
         holder.nextStep.setBackgroundResource(R.color.colorGreen);
         holder.nextStep.setTextColor(Color.WHITE);
@@ -33,7 +36,8 @@ public abstract class Manager {
                 holder.layoutToUse.setVisibility(View.GONE);
                 holder.expandCollapseIndicator.setScaleY(1f);
                 currentMultipleChoiceSteps.add(multipleChoiceSteps.get(currentMultipleChoiceSteps.size() - 1));
-                getRecyclerView().scrollToPosition(currentMultipleChoiceSteps.size() - 1);
+                // TODO: FIXEAR PARA QUE SCROLLEE A LA ULTIMA POSICION
+                getRecyclerView().scrollToPosition(0);
             }
         });
     }

@@ -103,7 +103,8 @@ public class EquationManager extends Manager{
                 }
 
                 currentMultipleChoiceStep.setSolved(true);
-                SolveEquationActivity.recyclerView.scrollToPosition(currentMultipleChoiceSteps.size() - 1);
+                // TODO: FIXEAR PARA QUE SCROLLEE A LA ULTIMA POSICION
+                getRecyclerView().scrollToPosition(0);
             }
         });
     }

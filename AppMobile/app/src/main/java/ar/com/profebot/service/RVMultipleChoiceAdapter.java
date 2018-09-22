@@ -70,7 +70,7 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
             }
         }
 
-        MultipleChoiceViewHolder(View itemView, List<MultipleChoiceStep> currentMultipleChoiceSteps) {
+        MultipleChoiceViewHolder(View itemView) {
             super(itemView);
             card = itemView.findViewById(R.id.step_id);
             numberStep = itemView.findViewById(R.id.number_step_id);
@@ -168,7 +168,7 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
     @Override
     public MultipleChoiceViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.resolution_step, viewGroup, false);
-        MultipleChoiceViewHolder multipleChoiceViewHolder = new MultipleChoiceViewHolder(v, currentMultipleChoiceSteps);
+        MultipleChoiceViewHolder multipleChoiceViewHolder = new MultipleChoiceViewHolder(v);
         multipleChoiceViewHolders.add(multipleChoiceViewHolder);
         return multipleChoiceViewHolder;
     }

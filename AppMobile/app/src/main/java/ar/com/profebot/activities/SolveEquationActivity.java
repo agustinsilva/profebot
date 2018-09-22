@@ -42,8 +42,6 @@ public class SolveEquationActivity extends GlobalActivity {
         
         recyclerView = (RecyclerView)findViewById(R.id.rv_resolution_id);
         LinearLayoutManager llm = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        llm.setReverseLayout(true);
-        llm.setStackFromEnd(true);
         recyclerView.setLayoutManager(llm);
         multipleChoiceSteps = this.initializeMultipleChoiceSteps();
 

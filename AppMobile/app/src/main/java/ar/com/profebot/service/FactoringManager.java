@@ -822,7 +822,8 @@ public class FactoringManager extends Manager{
                 }
 
                 multipleChoiceSteps.get(currentMultipleChoiceSteps.size()-1).setSolved(true);
-                SolvePolynomialActivity.recyclerView.scrollToPosition(currentMultipleChoiceSteps.size() - 1);
+                // TODO: FIXEAR PARA QUE SCROLLEE A LA ULTIMA POSICION
+                getRecyclerView().scrollToPosition(0);
             }
         });
     }
