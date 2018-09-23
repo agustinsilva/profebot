@@ -10,6 +10,7 @@ import android.view.SurfaceView;
 import java.io.IOException;
 
 import static android.hardware.Camera.Parameters.FOCUS_MODE_AUTO;
+import static android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE;
 
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -32,7 +33,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
         //Setup Camera Parameters
         Camera.Parameters parameters = mCamera.getParameters();
-        parameters.setFocusMode(FOCUS_MODE_AUTO);
+        parameters.setFocusMode(FOCUS_MODE_CONTINUOUS_PICTURE);
         parameters.setPictureFormat(PixelFormat.JPEG);
         mCamera.setParameters(parameters);
 

@@ -51,7 +51,7 @@ public class EnterFunctionOptionsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 handdrawEquationPicture.setImageResource(R.drawable.handdraw_equation_selected);
-                photoEquationPicture.setImageResource(R.drawable.photo_equation);
+                photoEquationPicture.setImageResource(R.drawable.photo_equation1);
                 handdrawEquationOption.setChecked(true);
                 photoEquationOption.setChecked(false);
                 activateStartResolutionButton();
@@ -61,7 +61,7 @@ public class EnterFunctionOptionsActivity extends AppCompatActivity {
         photoEquationPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                photoEquationPicture.setImageResource(R.drawable.photo_equation_selected);
+                photoEquationPicture.setImageResource(R.drawable.photo_equation_selected1);
                 handdrawEquationPicture.setImageResource(R.drawable.handdraw_equation);
                 photoEquationOption.setChecked(true);
                 handdrawEquationOption.setChecked(false);
@@ -75,7 +75,7 @@ public class EnterFunctionOptionsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 handdrawEquationPicture.setImageResource(R.drawable.handdraw_equation_selected);
-                photoEquationPicture.setImageResource(R.drawable.photo_equation);
+                photoEquationPicture.setImageResource(R.drawable.photo_equation1);
                 activateStartResolutionButton();
             }
         });
@@ -83,7 +83,7 @@ public class EnterFunctionOptionsActivity extends AppCompatActivity {
         photoEquationOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                photoEquationPicture.setImageResource(R.drawable.photo_equation_selected);
+                photoEquationPicture.setImageResource(R.drawable.photo_equation_selected1);
                 handdrawEquationPicture.setImageResource(R.drawable.handdraw_equation);
                 activateStartResolutionButton();
             }
@@ -106,7 +106,7 @@ public class EnterFunctionOptionsActivity extends AppCompatActivity {
 
     private void restartScreen(){
         handdrawEquationPicture.setImageResource(R.drawable.handdraw_equation);
-        photoEquationPicture.setImageResource(R.drawable.photo_equation);
+        photoEquationPicture.setImageResource(R.drawable.photo_equation1);
         handdrawEquationOption.setChecked(false);
         photoEquationOption.setChecked(false);
         startResolution.setEnabled(false);

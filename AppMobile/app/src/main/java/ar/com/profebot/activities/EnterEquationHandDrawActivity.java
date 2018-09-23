@@ -22,6 +22,9 @@ import com.profebot.activities.R;
 import ar.com.profebot.certificate.MyCertificate;
 import ar.com.profebot.service.ExpressionsManager;
 
+import static ar.com.profebot.activities.MainActivity.FUNCTION;
+import static ar.com.profebot.activities.MainActivity.photoReference;
+
 public class EnterEquationHandDrawActivity extends GlobalActivity implements
         MathWidgetApi.OnConfigureListener,
         MathWidgetApi.OnRecognitionListener{
@@ -74,14 +77,22 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
-                if(ExpressionsManager.expressionDrawnIsValid()){
+                if(photoReference == FUNCTION) {
                     spinner.setVisibility(View.VISIBLE);
-                    Intent intent = new Intent(button.getContext(), SolveEquationActivity.class);
+                    Intent intent = new Intent(button.getContext(), EnterFunctionActivity.class);
+                    intent.putExtra("function",ExpressionsManager.getEquationDrawn());
                     startActivity(intent);
-                }else{
-                    invalidEquationMessage = Toast.makeText(button.getContext(),"¡Fijate si la ecuación está bien escrita!", Toast.LENGTH_LONG);
-                    invalidEquationMessage.setGravity(Gravity.CENTER, 0, 0);
-                    invalidEquationMessage.show();
+                }else {
+                    if(ExpressionsManager.expressionDrawnIsValid()){
+                        spinner.setVisibility(View.VISIBLE);
+                        Intent intent = new Intent(button.getContext(), SolveEquationActivity.class);
+                        startActivity(intent);
+                    }
+                    else{
+                        invalidEquationMessage = Toast.makeText(button.getContext(),"¡Fijate si la ecuación está bien escrita!", Toast.LENGTH_LONG);
+                        invalidEquationMessage.setGravity(Gravity.CENTER, 0, 0);
+                        invalidEquationMessage.show();
+                    }
                 }
             }
         });
