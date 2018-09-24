@@ -30,9 +30,9 @@ public abstract class Manager {
             holder.solveAndNextStepLayout.setVisibility(View.GONE);
         }else {
             holder.nextStep.setBackgroundResource(R.drawable.rounded_corners_multiple_choice_buttons);
+            currentMultipleChoiceSteps.add(multipleChoiceSteps.get(currentMultipleChoiceSteps.size() - 1));
         }
-        getRecyclerView().scrollToPosition(currentMultipleChoiceSteps.size() - 1);
-    };
+    }
 
     protected String getAsInfix(String equation){
         return equation
@@ -41,7 +41,6 @@ public abstract class Manager {
     }
 
     protected void setUpNextStepButton(RVMultipleChoiceAdapter.MultipleChoiceViewHolder holder,
-                                       List<MultipleChoiceStep> multipleChoiceSteps,
                                        List<MultipleChoiceStep> currentMultipleChoiceSteps){
         holder.nextStep.setEnabled(true);
         holder.nextStep.setBackgroundResource(R.color.colorGreen);
@@ -52,7 +51,6 @@ public abstract class Manager {
                 holder.solveAndNextStepLayout.setVisibility(View.GONE);
                 holder.multipleChoiceResolutionStep.setVisibility(View.GONE);
                 holder.expandCollapseIndicator.setScaleY(1f);
-                currentMultipleChoiceSteps.add(multipleChoiceSteps.get(currentMultipleChoiceSteps.size() - 1));
                 getRecyclerView().scrollToPosition(currentMultipleChoiceSteps.size() - 1);
             }
         });

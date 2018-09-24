@@ -802,7 +802,7 @@ public class FactoringManager extends Manager{
                     multipleChoiceSteps.add(FactoringManager.nextStep());
                     MultipleChoiceStep currentMultipleChoiceStep = multipleChoiceSteps.get(currentMultipleChoiceSteps.size()-1);
                     currentMultipleChoiceStep.setSolved(true);
-                    setUpNextStepButton(holder, multipleChoiceSteps, currentMultipleChoiceSteps);
+                    setUpNextStepButton(holder, currentMultipleChoiceSteps);
                 }else{
                     holder.nextStep.setVisibility(View.GONE);
                     enableSummary(false);

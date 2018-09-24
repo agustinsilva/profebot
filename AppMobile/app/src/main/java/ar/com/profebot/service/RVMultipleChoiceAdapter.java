@@ -177,13 +177,8 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
         multipleChoiceViewHolder.multipleChoiceSteps = multipleChoiceSteps;
         multipleChoiceViewHolder.numberStep.setText((position+1) + ")");
 
-        if(currentMultipleChoiceSteps.size() == 1){
-            multipleChoiceViewHolder.multipleChoiceResolutionStep.setVisibility(View.VISIBLE);
-            multipleChoiceViewHolder.expandCollapseIndicator.setScaleY(-1f);
-        }else {
-            multipleChoiceViewHolder.multipleChoiceResolutionStep.setVisibility(View.GONE);
-            multipleChoiceViewHolder.expandCollapseIndicator.setScaleY(1f);
-        }
+        multipleChoiceViewHolder.multipleChoiceResolutionStep.setVisibility(View.VISIBLE);
+        multipleChoiceViewHolder.expandCollapseIndicator.setScaleY(-1f);
 
         if(multipleChoiceSteps.get(position).getSolved()){
             multipleChoiceViewHolder.explanationStepLayout.setVisibility(View.VISIBLE);

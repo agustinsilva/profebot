@@ -90,7 +90,7 @@ public class EquationManager extends Manager{
                 currentMultipleChoiceStep.setSolved(true);
                 holder.summary.setText(currentMultipleChoiceStep.getSummary());
                 if(currentMultipleChoiceSteps.size() < holder.multipleChoiceSteps.size()){
-                    setUpNextStepButton(holder, multipleChoiceSteps, currentMultipleChoiceSteps);
+                    setUpNextStepButton(holder, currentMultipleChoiceSteps);
                 }else{
                     holder.nextStep.setVisibility(View.GONE);
                     enableSummary();
