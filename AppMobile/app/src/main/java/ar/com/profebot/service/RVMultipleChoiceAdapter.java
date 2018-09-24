@@ -10,17 +10,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.profebot.activities.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import ar.com.profebot.Models.MultipleChoiceStep;
-import ar.com.profebot.activities.SolveEquationActivity;
 import io.github.kexanie.library.MathView;
 
 public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoiceAdapter.MultipleChoiceViewHolder> {
@@ -32,24 +30,26 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
 
     public static class MultipleChoiceViewHolder extends RecyclerView.ViewHolder {
         CardView card;
-        MathView equationBase;
-        MathView newEquationBase;
+        MathView equationBaseAsLatex;
+        String equationBase;
+        String newEquationBase;
         ImageView expandCollapseIndicator;
-        ImageView expandCollapseIndicatorColor;
+        ImageView expandCollapseIndicatorAColor;
+        ImageView expandCollapseIndicatorBColor;
+        ImageView expandCollapseIndicatorCColor;
         TextView summary;
         LinearLayout multipleChoiceResolutionStep;
-        LinearLayout multipleChoiceSolvedResolutionStep;
+        LinearLayout explanationStepLayout;
+        RelativeLayout solveAndNextStepLayout;
         Button solveStep;
         Button nextStep;
-        LinearLayout layoutToUse;
+        Button explanationStep;
         RadioButton optionA;
         RadioButton optionB;
         RadioButton optionC;
         MathView equationOptionA;
         MathView equationOptionB;
         MathView equationOptionC;
-        RadioButton correctOptionRadio;
-        RadioButton incorrectOptionRadio;
         Integer chosenOption;
         Integer correctOption;
         Integer regularOption1;
@@ -64,9 +64,8 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
         private void setUpSolveButton(){
             if(!solveStep.isEnabled()){
                 solveStep.setEnabled(true);
-                solveStep.setBackgroundResource(R.color.colorGreen);
+                solveStep.setBackgroundResource(R.drawable.rounded_corners_multiple_choice_buttons);
                 solveStep.setTextColor(Color.WHITE);
-                manager.setUpSolveButton(solveStep, this, multipleChoiceSteps, currentMultipleChoiceSteps);
             }
         }
 
@@ -74,79 +73,24 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
             super(itemView);
             card = itemView.findViewById(R.id.step_id);
             numberStep = itemView.findViewById(R.id.number_step_id);
-            equationBase = itemView.findViewById(R.id.equation_base_id);
-            newEquationBase = itemView.findViewById(R.id.new_equation_base_id);
+            equationBaseAsLatex = itemView.findViewById(R.id.equation_base_id);
             expandCollapseIndicator = itemView.findViewById(R.id.expand_collapse_indicator_id);
-            expandCollapseIndicatorColor = itemView.findViewById(R.id.expand_collapse_indicator_color_id);
+            expandCollapseIndicatorAColor = itemView.findViewById(R.id.expand_collapse_indicator_color_a_id);
+            expandCollapseIndicatorBColor = itemView.findViewById(R.id.expand_collapse_indicator_color_b_id);
+            expandCollapseIndicatorCColor = itemView.findViewById(R.id.expand_collapse_indicator_color_c_id);
+            explanationStep = itemView.findViewById(R.id.explanation_step_id);
+            explanationStepLayout = itemView.findViewById(R.id.explanation_step_layout_id);
             summary = itemView.findViewById(R.id.summary_id);
-
+            solveAndNextStepLayout = itemView.findViewById(R.id.solve_and_next_step_layout_id);
             multipleChoiceResolutionStep = itemView.findViewById(R.id.multiple_choice_section_id);
-            multipleChoiceSolvedResolutionStep = itemView.findViewById(R.id.multiple_choice_solved_section_id);
-            multipleChoiceResolutionStep.setVisibility(View.GONE);
-            multipleChoiceSolvedResolutionStep.setVisibility(View.GONE);
-
-            correctOptionRadio = itemView.findViewById(R.id.option_correct_id);
-            incorrectOptionRadio = itemView.findViewById(R.id.option_incorrect_id);
-
-            if(!isSolved){
-                // When new card is added to RV. It indicates if has to be initialized as expanded or collapsed (default expanded)
-                expandCollapseIndicator.setScaleY(-1f);
-                multipleChoiceResolutionStep.setVisibility(View.VISIBLE);
-
-                layoutToUse = multipleChoiceResolutionStep;
-
-                solveStep = itemView.findViewById(R.id.solve_step_id);
-                solveStep.setEnabled(false);
-                nextStep = itemView.findViewById(R.id.next_step_id);
-
-                MultipleChoiceViewHolder viewHolder = this;
-
-                optionA = itemView.findViewById(R.id.option_a_id);
-                equationOptionA = itemView.findViewById(R.id.equation_option_a_id);
-                optionA.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        viewHolder.setUpSolveButton();
-                        chosenOption = 1;
-                    }
-                });
-
-                optionB = itemView.findViewById(R.id.option_b_id);
-                equationOptionB = itemView.findViewById(R.id.equation_option_b_id);
-                optionB.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        viewHolder.setUpSolveButton();
-                        chosenOption = 2;
-                    }
-                });
-
-                optionC = itemView.findViewById(R.id.option_c_id);
-                equationOptionC = itemView.findViewById(R.id.equation_option_c_id);
-                optionC.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        viewHolder.setUpSolveButton();
-                        chosenOption = 3;
-                    }
-                });
-            }else{
-                layoutToUse = multipleChoiceSolvedResolutionStep;
-            }
-            
-            expandCollapseIndicator.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    boolean shouldExpand = layoutToUse.getVisibility() == View.GONE;
-                    if(shouldExpand){
-                        expandCollapseIndicator.setScaleY(-1f);
-                        layoutToUse.setVisibility(View.VISIBLE);
-                    }else{
-                        layoutToUse.setVisibility(View.GONE);
-                        expandCollapseIndicator.setScaleY(1f);
-                    }
-                }
-            });
+            solveStep = itemView.findViewById(R.id.solve_step_id);
+            nextStep = itemView.findViewById(R.id.next_step_id);
+            optionA = itemView.findViewById(R.id.option_a_id);
+            equationOptionA = itemView.findViewById(R.id.equation_option_a_id);
+            optionB = itemView.findViewById(R.id.option_b_id);
+            equationOptionB = itemView.findViewById(R.id.equation_option_b_id);
+            optionC = itemView.findViewById(R.id.option_c_id);
+            equationOptionC = itemView.findViewById(R.id.equation_option_c_id);
         }
     }
 
@@ -175,21 +119,15 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
 
     @Override
     public void onBindViewHolder(MultipleChoiceViewHolder multipleChoiceViewHolder, int position) {
-        multipleChoiceViewHolder.equationBase.setEngine(MathView.Engine.MATHJAX);
-        multipleChoiceViewHolder.equationBase.config("MathJax.Hub.Config({\n"+
+        multipleChoiceViewHolder.equationBase = multipleChoiceSteps.get(position).getEquationBase();
+        multipleChoiceViewHolder.newEquationBase = multipleChoiceSteps.get(position).getNewEquationBase();
+        multipleChoiceViewHolder.equationBaseAsLatex.setEngine(MathView.Engine.MATHJAX);
+        multipleChoiceViewHolder.equationBaseAsLatex.config("MathJax.Hub.Config({\n"+
                 "  CommonHTML: { linebreaks: { automatic: true } },\n"+
                 "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
                 "         SVG: { linebreaks: { automatic: true } }\n"+
                 "});");
-        multipleChoiceViewHolder.equationBase.setText("\\(" + ExpressionsManager.mapToLatexAndReplaceComparator(multipleChoiceSteps.get(position).getEquationBase()) + "\\)");
-
-        multipleChoiceViewHolder.newEquationBase.setEngine(MathView.Engine.MATHJAX);
-        multipleChoiceViewHolder.newEquationBase.config("MathJax.Hub.Config({\n"+
-                "  CommonHTML: { linebreaks: { automatic: true } },\n"+
-                "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
-                "         SVG: { linebreaks: { automatic: true } }\n"+
-                "});");
-        multipleChoiceViewHolder.newEquationBase.setText("$$" + ExpressionsManager.mapToLatexAndReplaceComparator(multipleChoiceSteps.get(position).getNewEquationBase()) + "$$");
+        multipleChoiceViewHolder.equationBaseAsLatex.setText("\\(" + ExpressionsManager.mapToLatexAndReplaceComparator(multipleChoiceSteps.get(position).getEquationBase()) + "\\)");
 
         String equationAsLatexOption;
 
@@ -239,26 +177,36 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
         multipleChoiceViewHolder.multipleChoiceSteps = multipleChoiceSteps;
         multipleChoiceViewHolder.numberStep.setText((position+1) + ")");
 
-        if(multipleChoiceSteps.get(position).getSolved()){
-            multipleChoiceViewHolder.multipleChoiceSolvedResolutionStep.setVisibility(View.VISIBLE);
-            multipleChoiceViewHolder.multipleChoiceResolutionStep.setVisibility(View.INVISIBLE);
-            multipleChoiceViewHolder.layoutToUse = multipleChoiceViewHolder.multipleChoiceSolvedResolutionStep;
-        }else{
+        if(currentMultipleChoiceSteps.size() == 1){
             multipleChoiceViewHolder.multipleChoiceResolutionStep.setVisibility(View.VISIBLE);
-            multipleChoiceViewHolder.multipleChoiceSolvedResolutionStep.setVisibility(View.INVISIBLE);
-            multipleChoiceViewHolder.layoutToUse = multipleChoiceViewHolder.multipleChoiceResolutionStep;
+            multipleChoiceViewHolder.expandCollapseIndicator.setScaleY(-1f);
+        }else {
+            multipleChoiceViewHolder.multipleChoiceResolutionStep.setVisibility(View.GONE);
+            multipleChoiceViewHolder.expandCollapseIndicator.setScaleY(1f);
+        }
 
-            multipleChoiceViewHolder.expandCollapseIndicatorColor.setVisibility(View.INVISIBLE);
+        if(multipleChoiceSteps.get(position).getSolved()){
+            multipleChoiceViewHolder.explanationStepLayout.setVisibility(View.VISIBLE);
+        }else{
+            multipleChoiceViewHolder.explanationStepLayout.setVisibility(View.GONE);
+            multipleChoiceViewHolder.solveAndNextStepLayout.setVisibility(View.VISIBLE);
+            multipleChoiceViewHolder.solveStep.setVisibility(View.VISIBLE);
+            multipleChoiceViewHolder.solveStep.setEnabled(false);
+            multipleChoiceViewHolder.solveStep.setBackgroundResource(R.drawable.rounded_corners_disable_button);
+            multipleChoiceViewHolder.nextStep.setVisibility(View.GONE);
+
+            multipleChoiceViewHolder.expandCollapseIndicatorAColor.setVisibility(View.INVISIBLE);
+            multipleChoiceViewHolder.expandCollapseIndicatorBColor.setVisibility(View.INVISIBLE);
+            multipleChoiceViewHolder.expandCollapseIndicatorCColor.setVisibility(View.INVISIBLE);
 
             multipleChoiceViewHolder.isSolved = false;
 
             multipleChoiceViewHolder.summary.setText("Pendiente");
 
-            // When new card is added to RV. It indicates if has to be initialized as expanded or collapsed (default expanded)
-            multipleChoiceViewHolder.expandCollapseIndicator.setScaleY(-1f);
+            manager.setUpSolveButton(multipleChoiceViewHolder.solveStep, multipleChoiceViewHolder, multipleChoiceSteps, currentMultipleChoiceSteps);
 
-            multipleChoiceViewHolder.solveStep.setEnabled(false);
-            if(currentMultipleChoiceSteps.size() < multipleChoiceSteps.size()){
+            if(currentMultipleChoiceSteps.size() < multipleChoiceSteps.size()
+                    && multipleChoiceViewHolder.solveStep.getVisibility() == View.INVISIBLE){
                 multipleChoiceViewHolder.nextStep.setVisibility(View.VISIBLE);
             }
 
@@ -269,6 +217,8 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
             multipleChoiceViewHolder.optionA.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    multipleChoiceViewHolder.optionB.setChecked(false);
+                    multipleChoiceViewHolder.optionC.setChecked(false);
                     multipleChoiceViewHolder.setUpSolveButton();
                     multipleChoiceViewHolder.chosenOption = 1;
                 }
@@ -279,6 +229,8 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
             multipleChoiceViewHolder.optionB.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    multipleChoiceViewHolder.optionA.setChecked(false);
+                    multipleChoiceViewHolder.optionC.setChecked(false);
                     multipleChoiceViewHolder.setUpSolveButton();
                     multipleChoiceViewHolder.chosenOption = 2;
                 }
@@ -289,6 +241,8 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
             multipleChoiceViewHolder.optionC.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    multipleChoiceViewHolder.optionA.setChecked(false);
+                    multipleChoiceViewHolder.optionB.setChecked(false);
                     multipleChoiceViewHolder.setUpSolveButton();
                     multipleChoiceViewHolder.chosenOption = 3;
                 }
@@ -298,12 +252,12 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
         multipleChoiceViewHolder.expandCollapseIndicator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean shouldExpand = multipleChoiceViewHolder.layoutToUse.getVisibility() == View.GONE;
+                boolean shouldExpand = multipleChoiceViewHolder.multipleChoiceResolutionStep.getVisibility() == View.GONE;
                 if(shouldExpand){
                     multipleChoiceViewHolder.expandCollapseIndicator.setScaleY(-1f);
-                    multipleChoiceViewHolder.layoutToUse.setVisibility(View.VISIBLE);
+                    multipleChoiceViewHolder.multipleChoiceResolutionStep.setVisibility(View.VISIBLE);
                 }else{
-                    multipleChoiceViewHolder.layoutToUse.setVisibility(View.GONE);
+                    multipleChoiceViewHolder.multipleChoiceResolutionStep.setVisibility(View.GONE);
                     multipleChoiceViewHolder.expandCollapseIndicator.setScaleY(1f);
                 }
             }

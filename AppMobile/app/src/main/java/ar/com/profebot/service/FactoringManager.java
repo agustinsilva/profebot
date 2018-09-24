@@ -752,40 +752,29 @@ public class FactoringManager extends Manager{
         }
     }
 
-    @Override
     public void setUpSolveButton(Button button, RVMultipleChoiceAdapter.MultipleChoiceViewHolder holder, List<MultipleChoiceStep> multipleChoiceSteps, List<MultipleChoiceStep> currentMultipleChoiceSteps) {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SolvePolynomialActivity.recyclerView.scrollToPosition(0);
-                holder.isSolved = true;
-                holder.multipleChoiceResolutionStep.setVisibility(View.GONE);
-                holder.multipleChoiceSolvedResolutionStep.setVisibility(View.VISIBLE);
-                holder.layoutToUse = holder.multipleChoiceSolvedResolutionStep;
-
-                holder.correctOptionRadio.setText(holder.correctOptionJustification);
                 String summaryText;
                 if(holder.chosenOption.equals(holder.correctOption)){
-                    holder.incorrectOptionRadio.setVisibility(View.GONE);
-                    holder.expandCollapseIndicatorColor.setBackgroundResource(R.drawable.solved_right);
+                    showIconForOption(holder, holder.chosenOption, R.drawable.solved_right);
                     FactoringManager.factorizeBy(holder.chosenOption);
                     String correctText = FactoringManager.getMessageOfRightOption(holder.chosenOption);
                     String complementText = FactoringManager.getMessageOfRegularOptions(holder.regularOption1, holder.regularOption2);
-                    holder.correctOptionRadio.setText(correctText + " " + complementText);
+                    setUpMultipleChoiceExplanationsPopUp(holder.explanationStep, correctText + " " + complementText, null);
                     summaryText = FactoringManager.getCaseNameFrom(holder.chosenOption);
                 }else if(holder.chosenOption.equals(holder.regularOption1) || holder.chosenOption.equals(holder.regularOption2)){
-                    holder.incorrectOptionRadio.setVisibility(View.GONE);
-                    holder.expandCollapseIndicatorColor.setBackgroundResource(R.drawable.solved_right);
+                    showIconForOption(holder, holder.chosenOption, R.drawable.solved_right);
                     FactoringManager.factorizeBy(holder.chosenOption);
                     String regularText = FactoringManager.getMessageOfRegularOptionChosen(holder.chosenOption);
                     String complementText = holder.chosenOption.equals(holder.regularOption1)
                             ? (holder.regularOption2 == null ? "" : FactoringManager.getMessageOfRegularOptionNotChosen(holder.regularOption2))
                             : (holder.regularOption1 == null ? "" : FactoringManager.getMessageOfRegularOptionNotChosen(holder.regularOption1));
                     String correctText = FactoringManager.getMessageOfRightOptionNotChosen(holder.correctOption);
-                    holder.correctOptionRadio.setText(regularText + " " + complementText + " " + correctText);
+                    setUpMultipleChoiceExplanationsPopUp(holder.explanationStep, regularText + " " + complementText + " " + correctText, null);
                     summaryText = FactoringManager.getCaseNameFrom(holder.chosenOption);
                 }else{
-                    holder.expandCollapseIndicatorColor.setBackgroundResource(R.drawable.solved_wrong);
                     Map<Integer, String> incorrectOptions = new HashMap<>();
                     for(int i = 1 ; i <= 3 ; i++){
                         if(i != holder.correctOption){
@@ -796,21 +785,19 @@ public class FactoringManager extends Manager{
                             }
                         }
                     }
-                    holder.incorrectOptionRadio.setVisibility(View.VISIBLE);
-                    holder.incorrectOptionRadio.setText(FactoringManager.getMessageOfWrongOptionChosen(holder.chosenOption));
+                    showIconForOption(holder, holder.correctOption, R.drawable.solved_right);
+                    showIconForOption(holder, holder.chosenOption, R.drawable.solved_wrong);
 
                     FactoringManager.factorizeBy(holder.correctOption);
                     String regularText = (holder.regularOption1 == null ? "" : FactoringManager.getMessageOfRegularOptionNotChosen(holder.regularOption1));
                     regularText += (holder.regularOption2 == null ? "" : FactoringManager.getMessageOfRegularOptionNotChosen(holder.regularOption2));
                     String correctText = FactoringManager.getMessageOfRightOptionNotChosen(holder.correctOption);
-                    holder.correctOptionRadio.setText(correctText + " " + regularText);
+                    setUpMultipleChoiceExplanationsPopUp(holder.explanationStep,correctText + " " + regularText, FactoringManager.getMessageOfWrongOptionChosen(holder.chosenOption));
                     summaryText = FactoringManager.getCaseNameFrom(holder.correctOption);
                 }
-                holder.expandCollapseIndicatorColor.setVisibility(View.VISIBLE);
 
                 holder.summary.setText(summaryText);
                 FactoringManager.setFactors();
-                holder.newEquationBase.setText("$$" + FactoringManager.getEquationAsLatexAfterFactorizing() + "$$");
                 if(!FactoringManager.end){
                     multipleChoiceSteps.add(FactoringManager.nextStep());
                     MultipleChoiceStep currentMultipleChoiceStep = multipleChoiceSteps.get(currentMultipleChoiceSteps.size()-1);
@@ -821,9 +808,7 @@ public class FactoringManager extends Manager{
                     enableSummary(false);
                 }
 
-                multipleChoiceSteps.get(currentMultipleChoiceSteps.size()-1).setSolved(true);
-                // TODO: FIXEAR PARA QUE SCROLLEE A LA ULTIMA POSICION
-                getRecyclerView().scrollToPosition(0);
+                setUpSolveButtonGlobal(holder, multipleChoiceSteps.get(currentMultipleChoiceSteps.size()-1), multipleChoiceSteps, currentMultipleChoiceSteps);
             }
         });
     }

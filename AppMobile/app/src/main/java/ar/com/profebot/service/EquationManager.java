@@ -16,7 +16,6 @@ import java.util.Map;
 import ar.com.profebot.Models.MultipleChoiceStep;
 import ar.com.profebot.activities.EnterEquationOptionsActivity;
 import ar.com.profebot.activities.SolveEquationActivity;
-import io.github.kexanie.library.MathView;
 
 public class EquationManager extends Manager{
 
@@ -59,22 +58,19 @@ public class EquationManager extends Manager{
         EquationManager.context = context;
     }
 
-    @Override
     public void setUpSolveButton(Button button, RVMultipleChoiceAdapter.MultipleChoiceViewHolder holder, List<MultipleChoiceStep> multipleChoiceSteps, List<MultipleChoiceStep> currentMultipleChoiceSteps) {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 holder.isSolved = true;
-                holder.multipleChoiceResolutionStep.setVisibility(View.GONE);
-                holder.multipleChoiceSolvedResolutionStep.setVisibility(View.VISIBLE);
-                holder.layoutToUse = holder.multipleChoiceSolvedResolutionStep;
 
-                holder.correctOptionRadio.setText(holder.correctOptionJustification);
                 if(holder.chosenOption.equals(holder.correctOption)){
-                    holder.incorrectOptionRadio.setVisibility(View.GONE);
-                    holder.expandCollapseIndicatorColor.setBackgroundResource(R.drawable.solved_right);
+                    showIconForOption(holder, holder.chosenOption, R.drawable.solved_right);
+                    setUpMultipleChoiceExplanationsPopUp(holder.explanationStep, holder.correctOptionJustification, null);
                 }else{
-                    holder.expandCollapseIndicatorColor.setBackgroundResource(R.drawable.solved_wrong);
+                    showIconForOption(holder, holder.correctOption, R.drawable.solved_right);
+                    showIconForOption(holder, holder.chosenOption, R.drawable.solved_wrong);
+
                     Map<Integer, String> incorrectOptions = new HashMap<>();
                     for(int i = 1 ; i <= 3 ; i++){
                         if(i != holder.correctOption){
@@ -85,12 +81,10 @@ public class EquationManager extends Manager{
                             }
                         }
                     }
-                    holder.incorrectOptionRadio.setVisibility(View.VISIBLE);
-                    holder.incorrectOptionRadio.setText(incorrectOptions.get(holder.chosenOption));
+                    setUpMultipleChoiceExplanationsPopUp(holder.explanationStep, holder.correctOptionJustification, incorrectOptions.get(holder.chosenOption));
 
-                    ExpressionsManager.requestNewExercises(getAsInfix(holder.equationBase.getText()), getAsInfix(holder.newEquationBase.getText()), holder.equationBase.getContext());
+                    ExpressionsManager.requestNewExercises(getAsInfix(holder.equationBase), getAsInfix(holder.newEquationBase), holder.equationBaseAsLatex.getContext());
                 }
-                holder.expandCollapseIndicatorColor.setVisibility(View.VISIBLE);
 
                 MultipleChoiceStep currentMultipleChoiceStep = holder.multipleChoiceSteps.get(currentMultipleChoiceSteps.size()-1);
                 currentMultipleChoiceStep.setSolved(true);
@@ -102,9 +96,7 @@ public class EquationManager extends Manager{
                     enableSummary();
                 }
 
-                currentMultipleChoiceStep.setSolved(true);
-                // TODO: FIXEAR PARA QUE SCROLLEE A LA ULTIMA POSICION
-                getRecyclerView().scrollToPosition(0);
+                setUpSolveButtonGlobal(holder, currentMultipleChoiceStep, multipleChoiceSteps, currentMultipleChoiceSteps);
             }
         });
     }

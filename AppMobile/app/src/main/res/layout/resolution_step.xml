@@ -60,7 +60,7 @@
                 <TextView
                     android:id="@+id/summary_id"
                     android:layout_width="0dp"
-                    android:layout_weight="60"
+                    android:layout_weight="70"
                     android:layout_height="wrap_content"
                     android:text="Pendiente"
                     android:textSize="20dp"
@@ -70,54 +70,22 @@
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_weight="20"
+                    android:layout_weight="30"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="end"
-                    android:paddingTop="15dp"
-                    android:layout_marginStart="7dp">
+                    android:gravity="end|top"
+                    android:paddingTop="3dp">
 
                     <ImageView
-                        android:id="@+id/expand_collapse_indicator_color_id"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:background="@drawable/solved_right"
-                        android:visibility="gone"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="20"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="end"
-                    android:paddingTop="9dp">
-
-                    <RelativeLayout
+                        android:id="@+id/expand_collapse_indicator_id"
                         android:layout_width="40dp"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:id="@+id/expand_collapse_indicator_id"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@android:drawable/ic_menu_more" />
-
-                    </RelativeLayout>
-
+                        android:layout_height="40dp"
+                        android:src="@android:drawable/ic_menu_more" />
                 </LinearLayout>
 
             </LinearLayout>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <include layout="@layout/multiple_choice_resolution_step"></include>
-
-                <include layout="@layout/multiple_choice_solved_resolution_step"></include>
-            </RelativeLayout>
+            <include layout="@layout/multiple_choice_resolution_step"></include>
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
