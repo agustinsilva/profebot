@@ -102,6 +102,7 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
             steps.add(firstStep);
         }
         currentMultipleChoiceSteps = steps;
+        multipleChoiceViewHolders = new ArrayList<>();
     }
 
     @Override
@@ -182,7 +183,16 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
 
         if(multipleChoiceSteps.get(position).getSolved()){
             multipleChoiceViewHolder.explanationStepLayout.setVisibility(View.VISIBLE);
+            // TODO: Falta settear todo el estado de la card cuando está resuelta, y cuando está resuelta y con el botón nextStep ya apretado.
+            // TODO: settear en el DTO el estado de la card (si está minimizada o maximizada), y demás estados para saber qué info mostrar
         }else{
+            multipleChoiceViewHolder.card.setVisibility(View.GONE);
+            // La próxima card la hago visible solo si: es la primer card, o bien, ya se clickeó el botón de "next step" de la card anterior
+            if(position == 0
+                    || (currentMultipleChoiceSteps.get(position).getSolved() && currentMultipleChoiceSteps.get(position).getNextStepButtonWasPressed())){
+                multipleChoiceViewHolder.card.setVisibility(View.VISIBLE);
+            }
+
             multipleChoiceViewHolder.explanationStepLayout.setVisibility(View.GONE);
             multipleChoiceViewHolder.solveAndNextStepLayout.setVisibility(View.VISIBLE);
             multipleChoiceViewHolder.solveStep.setVisibility(View.VISIBLE);
@@ -198,7 +208,8 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
 
             multipleChoiceViewHolder.summary.setText("Pendiente");
 
-            manager.setUpSolveButton(multipleChoiceViewHolder.solveStep, multipleChoiceViewHolder, multipleChoiceSteps, currentMultipleChoiceSteps);
+            manager.setUpSolveButton(multipleChoiceViewHolder.solveStep, multipleChoiceViewHolder,
+                    multipleChoiceSteps, currentMultipleChoiceSteps, multipleChoiceViewHolders);
 
             if(currentMultipleChoiceSteps.size() < multipleChoiceSteps.size()
                     && multipleChoiceViewHolder.solveStep.getVisibility() == View.INVISIBLE){

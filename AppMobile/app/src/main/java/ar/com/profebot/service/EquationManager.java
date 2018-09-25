@@ -58,12 +58,13 @@ public class EquationManager extends Manager{
         EquationManager.context = context;
     }
 
-    public void setUpSolveButton(Button button, RVMultipleChoiceAdapter.MultipleChoiceViewHolder holder, List<MultipleChoiceStep> multipleChoiceSteps, List<MultipleChoiceStep> currentMultipleChoiceSteps) {
+    public void setUpSolveButton(Button button, RVMultipleChoiceAdapter.MultipleChoiceViewHolder holder,
+                                 List<MultipleChoiceStep> multipleChoiceSteps,
+                                 List<MultipleChoiceStep> currentMultipleChoiceSteps,
+                                 List<RVMultipleChoiceAdapter.MultipleChoiceViewHolder> multipleChoiceViewHolders) {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.isSolved = true;
-
                 if(holder.chosenOption.equals(holder.correctOption)){
                     showIconForOption(holder, holder.chosenOption, R.drawable.solved_right);
                     setUpMultipleChoiceExplanationsPopUp(holder.explanationStep, holder.correctOptionJustification, null);
@@ -90,7 +91,7 @@ public class EquationManager extends Manager{
                 currentMultipleChoiceStep.setSolved(true);
                 holder.summary.setText(currentMultipleChoiceStep.getSummary());
                 if(currentMultipleChoiceSteps.size() < holder.multipleChoiceSteps.size()){
-                    setUpNextStepButton(holder, currentMultipleChoiceSteps);
+                    setUpNextStepButton(holder, currentMultipleChoiceSteps, multipleChoiceViewHolders);
                 }else{
                     holder.nextStep.setVisibility(View.GONE);
                     enableSummary();

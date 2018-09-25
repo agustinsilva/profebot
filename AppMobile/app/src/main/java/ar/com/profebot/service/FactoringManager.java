@@ -752,7 +752,10 @@ public class FactoringManager extends Manager{
         }
     }
 
-    public void setUpSolveButton(Button button, RVMultipleChoiceAdapter.MultipleChoiceViewHolder holder, List<MultipleChoiceStep> multipleChoiceSteps, List<MultipleChoiceStep> currentMultipleChoiceSteps) {
+    public void setUpSolveButton(Button button, RVMultipleChoiceAdapter.MultipleChoiceViewHolder holder,
+                                 List<MultipleChoiceStep> multipleChoiceSteps,
+                                 List<MultipleChoiceStep> currentMultipleChoiceSteps,
+                                 List<RVMultipleChoiceAdapter.MultipleChoiceViewHolder> multipleChoiceViewHolders) {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -802,7 +805,7 @@ public class FactoringManager extends Manager{
                     multipleChoiceSteps.add(FactoringManager.nextStep());
                     MultipleChoiceStep currentMultipleChoiceStep = multipleChoiceSteps.get(currentMultipleChoiceSteps.size()-1);
                     currentMultipleChoiceStep.setSolved(true);
-                    setUpNextStepButton(holder, currentMultipleChoiceSteps);
+                    setUpNextStepButton(holder, currentMultipleChoiceSteps, multipleChoiceViewHolders);
                 }else{
                     holder.nextStep.setVisibility(View.GONE);
                     enableSummary(false);
