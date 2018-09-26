@@ -26,6 +26,7 @@ public abstract class Manager {
         // Marco como resuelto el paso
         holder.isSolved = true;
         currentMultipleChoiceStep.setSolved(true);
+        currentMultipleChoiceStep.setChosenOption(holder.chosenOption);
 
         // Oculto botón de resolver, y muestro el del próximo paso + el de ver la explicación
         holder.solveStep.setVisibility(View.GONE);
@@ -35,9 +36,10 @@ public abstract class Manager {
         // Si es el último paso, solo muestro el botón de explicación
         if(multipleChoiceSteps.size() == currentMultipleChoiceSteps.size()){
             holder.solveAndNextStepLayout.setVisibility(View.GONE);
+            currentMultipleChoiceStep.setNextStepButtonWasPressed(true);
         }else {
             holder.nextStep.setBackgroundResource(R.drawable.rounded_corners_multiple_choice_buttons);
-            currentMultipleChoiceSteps.add(multipleChoiceSteps.get(currentMultipleChoiceSteps.size() - 1));
+            currentMultipleChoiceSteps.add(multipleChoiceSteps.get(currentMultipleChoiceSteps.size()));
         }
         getRecyclerView().scrollToPosition(currentMultipleChoiceSteps.size() - 1);
     }
@@ -62,10 +64,13 @@ public abstract class Manager {
                 holder.expandCollapseIndicator.setScaleY(1f);
 
                 // Cuando se clickeó en "solve step", ya se agregó el próximo paso a la lista, por eso, cuando clickeo el next step, no lo hice sobre el último paso de la lista, sino el ante último
+                currentMultipleChoiceSteps.get(currentMultipleChoiceSteps.size() - 2).setExpanded(false);
+                currentMultipleChoiceSteps.get(currentMultipleChoiceSteps.size() - 1).setExpanded(true);
                 currentMultipleChoiceSteps.get(currentMultipleChoiceSteps.size() - 2).setNextStepButtonWasPressed(true);
                 for(RVMultipleChoiceAdapter.MultipleChoiceViewHolder viewHolder : multipleChoiceViewHolders){
                     viewHolder.card.setVisibility(View.VISIBLE);
                 }
+
                 getRecyclerView().scrollToPosition(currentMultipleChoiceSteps.size());
             }
         });
@@ -88,7 +93,48 @@ public abstract class Manager {
         }
     }
 
+    public void clearResolutionIcons(RVMultipleChoiceAdapter.MultipleChoiceViewHolder holder){
+        holder.expandCollapseIndicatorAColor.setVisibility(View.GONE);
+        holder.expandCollapseIndicatorBColor.setVisibility(View.GONE);
+        holder.expandCollapseIndicatorCColor.setVisibility(View.GONE);
+    }
+
     protected void setUpMultipleChoiceExplanationsPopUp(Button button, String correctJustification, String incorrectJustification){
         // TODO: setupear el pop up
+    }
+
+    public void markOptionChosen(RVMultipleChoiceAdapter.MultipleChoiceViewHolder multipleChoiceViewHolder, Integer chosenOption){
+        switch (chosenOption){
+            case 1:
+                multipleChoiceViewHolder.optionA.setChecked(true);
+                multipleChoiceViewHolder.optionB.setChecked(false);
+                multipleChoiceViewHolder.optionC.setChecked(false);
+                break;
+            case 2:
+                multipleChoiceViewHolder.optionA.setChecked(false);
+                multipleChoiceViewHolder.optionB.setChecked(true);
+                multipleChoiceViewHolder.optionC.setChecked(false);
+                break;
+            case 3:
+                multipleChoiceViewHolder.optionA.setChecked(false);
+                multipleChoiceViewHolder.optionB.setChecked(false);
+                multipleChoiceViewHolder.optionC.setChecked(true);
+                break;
+        }
+    }
+
+    public void expandCard(RVMultipleChoiceAdapter.MultipleChoiceViewHolder multipleChoiceViewHolder){
+        modifyCardStatus(multipleChoiceViewHolder, -1f, View.VISIBLE, true);
+    }
+
+    public void collapseCard(RVMultipleChoiceAdapter.MultipleChoiceViewHolder multipleChoiceViewHolder){
+        modifyCardStatus(multipleChoiceViewHolder, 1f, View.GONE, false);
+    }
+
+    private void modifyCardStatus(RVMultipleChoiceAdapter.MultipleChoiceViewHolder multipleChoiceViewHolder,
+                                  float scale, int visibility, boolean isExpanded){
+        multipleChoiceViewHolder.expandCollapseIndicator.setScaleY(scale);
+        multipleChoiceViewHolder.multipleChoiceResolutionStep.setVisibility(visibility);
+        multipleChoiceViewHolder.multipleChoiceStep.setExpanded(isExpanded);
     }
 }

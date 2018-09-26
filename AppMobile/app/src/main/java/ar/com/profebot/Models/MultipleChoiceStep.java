@@ -24,6 +24,7 @@ public class MultipleChoiceStep {
     private String equationOptionC;
 
     private Integer correctOption;
+    private Integer chosenOption;
     private Integer regularOption1;
     private Integer regularOption2;
     private String correctOptionJustification;
@@ -31,6 +32,7 @@ public class MultipleChoiceStep {
     private String incorrectOptionJustification2;
     private Boolean isSolved = false;
     private Boolean nextStepButtonWasPressed = false;
+    private Boolean isExpanded = false;
 
     public MultipleChoiceStep(String equationBase, String newEquationBase, String newRegularEquationBase1, String newRegularEquationBase2,
                               String summary, String optionA, String equationOptionA, String optionB, String equationOptionB,
@@ -64,6 +66,22 @@ public class MultipleChoiceStep {
         this(equationBase, newEquationBase,  null, null, summary,  optionA,  equationOptionA, optionB,  equationOptionB,  optionC,
                 equationOptionC, correctOption, null, null,
                 correctOptionJustification, incorrectOptionJustification1, incorrectOptionJustification2);
+    }
+
+    public Integer getChosenOption() {
+        return chosenOption;
+    }
+
+    public void setChosenOption(Integer chosenOption) {
+        this.chosenOption = chosenOption;
+    }
+
+    public Boolean getExpanded() {
+        return isExpanded;
+    }
+
+    public void setExpanded(Boolean expanded) {
+        isExpanded = expanded;
     }
 
     public Boolean getNextStepButtonWasPressed() {

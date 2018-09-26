@@ -29,6 +29,7 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
     private static Manager manager;
 
     public static class MultipleChoiceViewHolder extends RecyclerView.ViewHolder {
+        MultipleChoiceStep multipleChoiceStep;
         CardView card;
         MathView equationBaseAsLatex;
         String equationBase;
@@ -120,6 +121,7 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
 
     @Override
     public void onBindViewHolder(MultipleChoiceViewHolder multipleChoiceViewHolder, int position) {
+        multipleChoiceViewHolder.multipleChoiceStep = multipleChoiceSteps.get(position);
         multipleChoiceViewHolder.equationBase = multipleChoiceSteps.get(position).getEquationBase();
         multipleChoiceViewHolder.newEquationBase = multipleChoiceSteps.get(position).getNewEquationBase();
         multipleChoiceViewHolder.equationBaseAsLatex.setEngine(MathView.Engine.MATHJAX);
@@ -181,15 +183,39 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
         multipleChoiceViewHolder.multipleChoiceResolutionStep.setVisibility(View.VISIBLE);
         multipleChoiceViewHolder.expandCollapseIndicator.setScaleY(-1f);
 
-        if(multipleChoiceSteps.get(position).getSolved()){
+        MultipleChoiceStep currentMultipleChoiceStep = multipleChoiceSteps.get(position);
+        if(position == 0 && !currentMultipleChoiceStep.getSolved()){
+            currentMultipleChoiceStep.setExpanded(true);
+        }
+
+        if(currentMultipleChoiceStep.getSolved()){
+            if(currentMultipleChoiceStep.getExpanded()){
+                manager.expandCard(multipleChoiceViewHolder);
+            }else{
+                manager.collapseCard(multipleChoiceViewHolder);
+            }
+
             multipleChoiceViewHolder.explanationStepLayout.setVisibility(View.VISIBLE);
-            // TODO: Falta settear todo el estado de la card cuando está resuelta, y cuando está resuelta y con el botón nextStep ya apretado.
-            // TODO: settear en el DTO el estado de la card (si está minimizada o maximizada), y demás estados para saber qué info mostrar
+            multipleChoiceViewHolder.explanationStep.setVisibility(View.VISIBLE);
+            if(currentMultipleChoiceStep.getNextStepButtonWasPressed()){
+                multipleChoiceViewHolder.solveAndNextStepLayout.setVisibility(View.GONE);
+            }else {
+                multipleChoiceViewHolder.solveAndNextStepLayout.setVisibility(View.VISIBLE);
+            }
+
+            manager.markOptionChosen(multipleChoiceViewHolder, currentMultipleChoiceStep.getChosenOption());
+            manager.clearResolutionIcons(multipleChoiceViewHolder);
+            if(currentMultipleChoiceStep.getChosenOption().equals(currentMultipleChoiceStep.getCorrectOption())){
+                manager.showIconForOption(multipleChoiceViewHolder, currentMultipleChoiceStep.getChosenOption(), R.drawable.solved_right);
+            }else {
+                manager.showIconForOption(multipleChoiceViewHolder, currentMultipleChoiceStep.getCorrectOption(), R.drawable.solved_right);
+                manager.showIconForOption(multipleChoiceViewHolder, currentMultipleChoiceStep.getCorrectOption(), R.drawable.solved_wrong);
+            }
         }else{
             multipleChoiceViewHolder.card.setVisibility(View.GONE);
             // La próxima card la hago visible solo si: es la primer card, o bien, ya se clickeó el botón de "next step" de la card anterior
             if(position == 0
-                    || (currentMultipleChoiceSteps.get(position).getSolved() && currentMultipleChoiceSteps.get(position).getNextStepButtonWasPressed())){
+                    || (currentMultipleChoiceSteps.get(position - 1).getSolved() && currentMultipleChoiceSteps.get(position - 1).getNextStepButtonWasPressed())){
                 multipleChoiceViewHolder.card.setVisibility(View.VISIBLE);
             }
 
@@ -258,13 +284,10 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
         multipleChoiceViewHolder.expandCollapseIndicator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean shouldExpand = multipleChoiceViewHolder.multipleChoiceResolutionStep.getVisibility() == View.GONE;
-                if(shouldExpand){
-                    multipleChoiceViewHolder.expandCollapseIndicator.setScaleY(-1f);
-                    multipleChoiceViewHolder.multipleChoiceResolutionStep.setVisibility(View.VISIBLE);
+                if(!multipleChoiceViewHolder.multipleChoiceStep.getExpanded()){
+                    manager.expandCard(multipleChoiceViewHolder);
                 }else{
-                    multipleChoiceViewHolder.multipleChoiceResolutionStep.setVisibility(View.GONE);
-                    multipleChoiceViewHolder.expandCollapseIndicator.setScaleY(1f);
+                    manager.collapseCard(multipleChoiceViewHolder);
                 }
             }
         });
