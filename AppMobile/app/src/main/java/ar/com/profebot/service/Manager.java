@@ -42,6 +42,13 @@ public abstract class Manager {
             currentMultipleChoiceSteps.add(multipleChoiceSteps.get(currentMultipleChoiceSteps.size()));
         }
         getRecyclerView().scrollToPosition(currentMultipleChoiceSteps.size() - 1);
+        disableMultipleChoiceOptions(holder);
+    }
+
+    private void disableMultipleChoiceOptions(RVMultipleChoiceAdapter.MultipleChoiceViewHolder holder){
+        holder.optionA.setEnabled(false);
+        holder.optionB.setEnabled(false);
+        holder.optionC.setEnabled(false);
     }
 
     protected String getAsInfix(String equation){
