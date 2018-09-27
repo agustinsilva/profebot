@@ -51,8 +51,7 @@ public abstract class Manager {
     }
 
     protected void setUpNextStepButton(RVMultipleChoiceAdapter.MultipleChoiceViewHolder holder,
-                                       List<MultipleChoiceStep> currentMultipleChoiceSteps,
-                                       List<RVMultipleChoiceAdapter.MultipleChoiceViewHolder> multipleChoiceViewHolders){
+                                       List<MultipleChoiceStep> currentMultipleChoiceSteps){
         holder.nextStep.setEnabled(true);
         holder.nextStep.setBackgroundResource(R.color.colorGreen);
         holder.nextStep.setTextColor(Color.WHITE);
@@ -65,11 +64,10 @@ public abstract class Manager {
 
                 // Cuando se clickeó en "solve step", ya se agregó el próximo paso a la lista, por eso, cuando clickeo el next step, no lo hice sobre el último paso de la lista, sino el ante último
                 currentMultipleChoiceSteps.get(currentMultipleChoiceSteps.size() - 2).setExpanded(false);
-                currentMultipleChoiceSteps.get(currentMultipleChoiceSteps.size() - 1).setExpanded(true);
                 currentMultipleChoiceSteps.get(currentMultipleChoiceSteps.size() - 2).setNextStepButtonWasPressed(true);
-                for(RVMultipleChoiceAdapter.MultipleChoiceViewHolder viewHolder : multipleChoiceViewHolders){
-                    viewHolder.card.setVisibility(View.VISIBLE);
-                }
+
+                currentMultipleChoiceSteps.get(currentMultipleChoiceSteps.size() - 1).setExpanded(true);
+                currentMultipleChoiceSteps.get(currentMultipleChoiceSteps.size() - 1).getMultipleChoiceViewHolder().card.setVisibility(View.VISIBLE);
 
                 getRecyclerView().scrollToPosition(currentMultipleChoiceSteps.size());
             }
@@ -125,10 +123,64 @@ public abstract class Manager {
 
     public void expandCard(RVMultipleChoiceAdapter.MultipleChoiceViewHolder multipleChoiceViewHolder){
         modifyCardStatus(multipleChoiceViewHolder, -1f, View.VISIBLE, true);
+        showEquationOptions(multipleChoiceViewHolder);
     }
 
     public void collapseCard(RVMultipleChoiceAdapter.MultipleChoiceViewHolder multipleChoiceViewHolder){
         modifyCardStatus(multipleChoiceViewHolder, 1f, View.GONE, false);
+        hideEquationOptions(multipleChoiceViewHolder);
+    }
+
+    private void showEquationOptions(RVMultipleChoiceAdapter.MultipleChoiceViewHolder multipleChoiceViewHolder){
+        String holderEquation = multipleChoiceViewHolder.equationOptionA.getText();
+        String stepEquation = "$$" + ExpressionsManager.mapToLatexAndReplaceComparator(multipleChoiceViewHolder.multipleChoiceStep.getEquationOptionA()) + "$$";
+
+        if(!stepEquation.equals(holderEquation)){
+            String equationAsLatexOption;
+            multipleChoiceViewHolder.multipleChoiceResolutionStep.setVisibility(View.VISIBLE);
+            multipleChoiceViewHolder.optionA.setText(multipleChoiceViewHolder.multipleChoiceStep.getOptionA());
+            equationAsLatexOption = ExpressionsManager.mapToLatexAndReplaceComparator(multipleChoiceViewHolder.multipleChoiceStep.getEquationOptionA());
+            if(!equationAsLatexOption.isEmpty()){
+                multipleChoiceViewHolder.equationOptionA.config("MathJax.Hub.Config({\n"+
+                        "  CommonHTML: { linebreaks: { automatic: true } },\n"+
+                        "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
+                        "         SVG: { linebreaks: { automatic: true } }\n"+
+                        "});");
+                multipleChoiceViewHolder.equationOptionA.setText("$$" + equationAsLatexOption + "$$");
+            }else{
+                multipleChoiceViewHolder.equationOptionA.setVisibility(View.GONE);
+            }
+
+            multipleChoiceViewHolder.optionB.setText(multipleChoiceViewHolder.multipleChoiceStep.getOptionB());
+            equationAsLatexOption = ExpressionsManager.mapToLatexAndReplaceComparator(multipleChoiceViewHolder.multipleChoiceStep.getEquationOptionB());
+            if(!equationAsLatexOption.isEmpty()){
+                multipleChoiceViewHolder.equationOptionB.config("MathJax.Hub.Config({\n"+
+                        "  CommonHTML: { linebreaks: { automatic: true } },\n"+
+                        "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
+                        "         SVG: { linebreaks: { automatic: true } }\n"+
+                        "});");
+                multipleChoiceViewHolder.equationOptionB.setText("$$" + equationAsLatexOption + "$$");
+            }else{
+                multipleChoiceViewHolder.equationOptionB.setVisibility(View.GONE);
+            }
+
+            multipleChoiceViewHolder.optionC.setText(multipleChoiceViewHolder.multipleChoiceStep.getOptionC());
+            equationAsLatexOption = ExpressionsManager.mapToLatexAndReplaceComparator(multipleChoiceViewHolder.multipleChoiceStep.getEquationOptionC());
+            if(!equationAsLatexOption.isEmpty()){
+                multipleChoiceViewHolder.equationOptionC.config("MathJax.Hub.Config({\n"+
+                        "  CommonHTML: { linebreaks: { automatic: true } },\n"+
+                        "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
+                        "         SVG: { linebreaks: { automatic: true } }\n"+
+                        "});");
+                multipleChoiceViewHolder.equationOptionC.setText("$$" + equationAsLatexOption + "$$");
+            }else{
+                multipleChoiceViewHolder.equationOptionC.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void hideEquationOptions(RVMultipleChoiceAdapter.MultipleChoiceViewHolder multipleChoiceViewHolder){
+        multipleChoiceViewHolder.multipleChoiceResolutionStep.setVisibility(View.GONE);
     }
 
     private void modifyCardStatus(RVMultipleChoiceAdapter.MultipleChoiceViewHolder multipleChoiceViewHolder,

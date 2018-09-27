@@ -122,74 +122,33 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
     @Override
     public void onBindViewHolder(MultipleChoiceViewHolder multipleChoiceViewHolder, int position) {
         multipleChoiceViewHolder.multipleChoiceStep = multipleChoiceSteps.get(position);
-        multipleChoiceViewHolder.equationBase = multipleChoiceSteps.get(position).getEquationBase();
-        multipleChoiceViewHolder.newEquationBase = multipleChoiceSteps.get(position).getNewEquationBase();
+        multipleChoiceViewHolder.multipleChoiceStep.setMultipleChoiceViewHolder(multipleChoiceViewHolder);
+        multipleChoiceViewHolder.equationBase = multipleChoiceViewHolder.multipleChoiceStep.getEquationBase();
+        multipleChoiceViewHolder.newEquationBase = multipleChoiceViewHolder.multipleChoiceStep.getNewEquationBase();
         multipleChoiceViewHolder.equationBaseAsLatex.setEngine(MathView.Engine.MATHJAX);
         multipleChoiceViewHolder.equationBaseAsLatex.config("MathJax.Hub.Config({\n"+
                 "  CommonHTML: { linebreaks: { automatic: true } },\n"+
                 "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
                 "         SVG: { linebreaks: { automatic: true } }\n"+
                 "});");
-        multipleChoiceViewHolder.equationBaseAsLatex.setText("\\(" + ExpressionsManager.mapToLatexAndReplaceComparator(multipleChoiceSteps.get(position).getEquationBase()) + "\\)");
+        multipleChoiceViewHolder.equationBaseAsLatex.setText("\\(" + ExpressionsManager.mapToLatexAndReplaceComparator(multipleChoiceViewHolder.multipleChoiceStep.getEquationBase()) + "\\)");
 
-        String equationAsLatexOption;
-
-        multipleChoiceViewHolder.optionA.setText(multipleChoiceSteps.get(position).getOptionA());
-        equationAsLatexOption = ExpressionsManager.mapToLatexAndReplaceComparator(multipleChoiceSteps.get(position).getEquationOptionA());
-        if(!equationAsLatexOption.isEmpty()){
-            multipleChoiceViewHolder.equationOptionA.config("MathJax.Hub.Config({\n"+
-                    "  CommonHTML: { linebreaks: { automatic: true } },\n"+
-                    "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
-                    "         SVG: { linebreaks: { automatic: true } }\n"+
-                    "});");
-            multipleChoiceViewHolder.equationOptionA.setText("$$" + equationAsLatexOption + "$$");
-        }else{
-            multipleChoiceViewHolder.equationOptionA.setVisibility(View.GONE);
-        }
-
-        multipleChoiceViewHolder.optionB.setText(multipleChoiceSteps.get(position).getOptionB());
-        equationAsLatexOption = ExpressionsManager.mapToLatexAndReplaceComparator(multipleChoiceSteps.get(position).getEquationOptionB());
-        if(!equationAsLatexOption.isEmpty()){
-            multipleChoiceViewHolder.equationOptionB.config("MathJax.Hub.Config({\n"+
-                    "  CommonHTML: { linebreaks: { automatic: true } },\n"+
-                    "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
-                    "         SVG: { linebreaks: { automatic: true } }\n"+
-                    "});");
-            multipleChoiceViewHolder.equationOptionB.setText("$$" + equationAsLatexOption + "$$");
-        }else{
-            multipleChoiceViewHolder.equationOptionB.setVisibility(View.GONE);
-        }
-
-        multipleChoiceViewHolder.optionC.setText(multipleChoiceSteps.get(position).getOptionC());
-        equationAsLatexOption = ExpressionsManager.mapToLatexAndReplaceComparator(multipleChoiceSteps.get(position).getEquationOptionC());
-        if(!equationAsLatexOption.isEmpty()){
-            multipleChoiceViewHolder.equationOptionC.config("MathJax.Hub.Config({\n"+
-                    "  CommonHTML: { linebreaks: { automatic: true } },\n"+
-                    "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
-                    "         SVG: { linebreaks: { automatic: true } }\n"+
-                    "});");
-            multipleChoiceViewHolder.equationOptionC.setText("$$" + equationAsLatexOption + "$$");
-        }else{
-            multipleChoiceViewHolder.equationOptionC.setVisibility(View.GONE);
-        }
-
-        multipleChoiceViewHolder.correctOption = multipleChoiceSteps.get(position).getCorrectOption();
-        multipleChoiceViewHolder.correctOptionJustification = multipleChoiceSteps.get(position).getCorrectOptionJustification();
-        multipleChoiceViewHolder.incorrectOptionJustification1 = multipleChoiceSteps.get(position).getIncorrectOptionJustification1();
-        multipleChoiceViewHolder.incorrectOptionJustification2 = multipleChoiceSteps.get(position).getIncorrectOptionJustification2();
+        multipleChoiceViewHolder.correctOption = multipleChoiceViewHolder.multipleChoiceStep.getCorrectOption();
+        multipleChoiceViewHolder.correctOptionJustification = multipleChoiceViewHolder.multipleChoiceStep.getCorrectOptionJustification();
+        multipleChoiceViewHolder.incorrectOptionJustification1 = multipleChoiceViewHolder.multipleChoiceStep.getIncorrectOptionJustification1();
+        multipleChoiceViewHolder.incorrectOptionJustification2 = multipleChoiceViewHolder.multipleChoiceStep.getIncorrectOptionJustification2();
         multipleChoiceViewHolder.multipleChoiceSteps = multipleChoiceSteps;
         multipleChoiceViewHolder.numberStep.setText((position+1) + ")");
 
         multipleChoiceViewHolder.multipleChoiceResolutionStep.setVisibility(View.VISIBLE);
         multipleChoiceViewHolder.expandCollapseIndicator.setScaleY(-1f);
 
-        MultipleChoiceStep currentMultipleChoiceStep = multipleChoiceSteps.get(position);
-        if(position == 0 && !currentMultipleChoiceStep.getSolved()){
-            currentMultipleChoiceStep.setExpanded(true);
+        if(position == 0 && !multipleChoiceViewHolder.multipleChoiceStep.getSolved()){
+            multipleChoiceViewHolder.multipleChoiceStep.setExpanded(true);
         }
 
-        if(currentMultipleChoiceStep.getSolved()){
-            if(currentMultipleChoiceStep.getExpanded()){
+        if(multipleChoiceViewHolder.multipleChoiceStep.getSolved()){
+            if(multipleChoiceViewHolder.multipleChoiceStep.getExpanded()){
                 manager.expandCard(multipleChoiceViewHolder);
             }else{
                 manager.collapseCard(multipleChoiceViewHolder);
@@ -197,22 +156,23 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
 
             multipleChoiceViewHolder.explanationStepLayout.setVisibility(View.VISIBLE);
             multipleChoiceViewHolder.explanationStep.setVisibility(View.VISIBLE);
-            if(currentMultipleChoiceStep.getNextStepButtonWasPressed()){
+            if(multipleChoiceViewHolder.multipleChoiceStep.getNextStepButtonWasPressed()){
                 multipleChoiceViewHolder.solveAndNextStepLayout.setVisibility(View.GONE);
             }else {
                 multipleChoiceViewHolder.solveAndNextStepLayout.setVisibility(View.VISIBLE);
             }
 
-            manager.markOptionChosen(multipleChoiceViewHolder, currentMultipleChoiceStep.getChosenOption());
+            manager.markOptionChosen(multipleChoiceViewHolder, multipleChoiceViewHolder.multipleChoiceStep.getChosenOption());
             manager.clearResolutionIcons(multipleChoiceViewHolder);
-            if(currentMultipleChoiceStep.getChosenOption().equals(currentMultipleChoiceStep.getCorrectOption())){
-                manager.showIconForOption(multipleChoiceViewHolder, currentMultipleChoiceStep.getChosenOption(), R.drawable.solved_right);
+            if(multipleChoiceViewHolder.multipleChoiceStep.getChosenOption().equals(multipleChoiceViewHolder.multipleChoiceStep.getCorrectOption())){
+                manager.showIconForOption(multipleChoiceViewHolder, multipleChoiceViewHolder.multipleChoiceStep.getChosenOption(), R.drawable.solved_right);
             }else {
-                manager.showIconForOption(multipleChoiceViewHolder, currentMultipleChoiceStep.getCorrectOption(), R.drawable.solved_right);
-                manager.showIconForOption(multipleChoiceViewHolder, currentMultipleChoiceStep.getCorrectOption(), R.drawable.solved_wrong);
+                manager.showIconForOption(multipleChoiceViewHolder, multipleChoiceViewHolder.multipleChoiceStep.getCorrectOption(), R.drawable.solved_right);
+                manager.showIconForOption(multipleChoiceViewHolder, multipleChoiceViewHolder.multipleChoiceStep.getCorrectOption(), R.drawable.solved_wrong);
             }
         }else{
             multipleChoiceViewHolder.card.setVisibility(View.GONE);
+            manager.expandCard(multipleChoiceViewHolder);
             // La próxima card la hago visible solo si: es la primer card, o bien, ya se clickeó el botón de "next step" de la card anterior
             if(position == 0
                     || (currentMultipleChoiceSteps.get(position - 1).getSolved() && currentMultipleChoiceSteps.get(position - 1).getNextStepButtonWasPressed())){
