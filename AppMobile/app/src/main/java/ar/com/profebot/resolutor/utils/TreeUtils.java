@@ -80,10 +80,14 @@ public class TreeUtils {
      * @return
      */
     public static boolean isSymbolFraction(TreeNode node, Boolean allowUnaryMinus) {
+        return isSymbolFraction(node, allowUnaryMinus, null);
+
+    }
+    public static boolean isSymbolFraction(TreeNode node, Boolean allowUnaryMinus, Integer degree) {
         if (!node.esDivision()) {
             return false;
         }
-        if (!isSymbol(node.getLeftNode(), allowUnaryMinus)) {
+        if (!isSymbol(node.getLeftNode(), allowUnaryMinus, degree)) {
             return false;
         }
 
@@ -120,14 +124,22 @@ public class TreeUtils {
     }
 
     public static Boolean isSymbol(TreeNode treeNode) {
-        return isSymbol(treeNode, false);
+        return isSymbol(treeNode, false, null);
     }
 
     public static Boolean isSymbol(TreeNode treeNode, Boolean allowUnaryMinus) {
+        return isSymbol(treeNode, allowUnaryMinus, null);
+    }
+
+    public static Boolean isSymbol(TreeNode treeNode, Boolean allowUnaryMinus, Integer degree) {
         if (treeNode != null && treeNode.getValue().contains("X")) {
-            return true;
+            if (degree!= null){
+                return isPolynomialTermOfDegree(treeNode, degree);
+            }else{
+                return true;
+            }
         } else if (allowUnaryMinus && treeNode.isUnaryMinus()) {
-            return isSymbol(treeNode.getChild(0), false);
+            return isSymbol(treeNode.getChild(0), false, degree);
         }
         return false;
     }
@@ -951,7 +963,7 @@ public class TreeUtils {
 
     // Given a degree, returns a function that checks if a node
     // is a polynomial term of the given degree.
-    private static boolean isPolynomialTermOfDegree(TreeNode node, int degree) {
+    public static boolean isPolynomialTermOfDegree(TreeNode node, int degree) {
         if (isPolynomialTerm(node)) {
             Integer exponent = node.getExponent();
             return exponent != null && exponent.equals(degree);
