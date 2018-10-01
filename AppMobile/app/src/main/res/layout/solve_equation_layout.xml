@@ -21,7 +21,14 @@
             android:layout_height="0dp"
             android:layout_weight="90">
 
-            <include layout="@layout/rv_resolution"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <include layout="@layout/rv_resolution"/>
+                <include layout="@layout/equation_summary"/>
+                <include layout="@layout/polynomial_summary"/>
+            </RelativeLayout>
         </LinearLayout>
 
         <Button
@@ -37,7 +44,6 @@
             android:layout_marginEnd="30dp"
             android:textColor="@color/colorWhite"
             android:background="@drawable/rounded_corners_polynomial_summary"/>
-
     </LinearLayout>
 
 </LinearLayout>
