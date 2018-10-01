@@ -1,9 +1,14 @@
 package ar.com.profebot.service;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.profebot.activities.R;
 
@@ -13,6 +18,8 @@ import ar.com.profebot.Models.MultipleChoiceStep;
 
 public abstract class Manager {
     abstract RecyclerView getRecyclerView();
+    abstract Context getContext();
+    abstract LayoutInflater getLayoutInflater();
     abstract void setUpSolveButton(Button button, RVMultipleChoiceAdapter.MultipleChoiceViewHolder holder,
                                    List<MultipleChoiceStep> multipleChoiceSteps,
                                    List<MultipleChoiceStep> currentMultipleChoiceSteps,
@@ -104,8 +111,28 @@ public abstract class Manager {
         holder.expandCollapseIndicatorCColor.setVisibility(View.GONE);
     }
 
-    protected void setUpMultipleChoiceExplanationsPopUp(Button button, String correctJustification, String incorrectJustification){
-        // TODO: setupear el pop up
+    protected void setUpMultipleChoiceExplanationsPopUp(RVMultipleChoiceAdapter.MultipleChoiceViewHolder holder, String correctJustification, String incorrectJustification){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        View view = getLayoutInflater().inflate(R.layout.equation_step_summary, null);
+        ((TextView)view.findViewById(R.id.right_explanation_id)).setText(correctJustification);
+
+        if(incorrectJustification == null){
+            ((LinearLayout)view.findViewById(R.id.wrong_explanation_section_id)).setVisibility(View.GONE);
+        }else{
+            ((LinearLayout)view.findViewById(R.id.wrong_explanation_section_id)).setVisibility(View.VISIBLE);
+            ((TextView)view.findViewById(R.id.wrong_explanation_id)).setText(incorrectJustification);
+        }
+
+        view.setClipToOutline(true);
+        builder.setView(view);
+        holder.multipleChoiceStep.setDialog(builder.create());
+
+        ((Button) view.findViewById(R.id.back_to_multiplechoice_id)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.multipleChoiceStep.getDialog().hide();
+            }
+        });
     }
 
     public void markOptionChosen(RVMultipleChoiceAdapter.MultipleChoiceViewHolder multipleChoiceViewHolder, Integer chosenOption){

@@ -251,6 +251,13 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
                 }
             }
         });
+
+        multipleChoiceViewHolder.explanationStep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                multipleChoiceViewHolder.multipleChoiceStep.getDialog().show();
+            }
+        });
     }
 
     private String alignEquationCentered(String equationOption) {

@@ -54,7 +54,6 @@ public class SolveEquationActivity extends GlobalActivity {
 
         EquationManager.setContext(this);
         if(multipleChoiceSteps.isEmpty()){
-            EquationManager.setUpPopUp(true);
             EquationManager.showPopUp();
         }
 

@@ -1,8 +1,10 @@
 package ar.com.profebot.service;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -51,6 +53,14 @@ public class FactoringManager extends Manager{
 
     public static void setContext(SolvePolynomialActivity context) {
         FactoringManager.context = context;
+    }
+
+    protected Context getContext(){
+        return context;
+    }
+
+    protected LayoutInflater getLayoutInflater(){
+        return context.getLayoutInflater();
     }
 
     public static Map<Integer, Double> getPolynomialTerms() {
@@ -765,7 +775,7 @@ public class FactoringManager extends Manager{
                     FactoringManager.factorizeBy(holder.chosenOption);
                     String correctText = FactoringManager.getMessageOfRightOption(holder.chosenOption);
                     String complementText = FactoringManager.getMessageOfRegularOptions(holder.regularOption1, holder.regularOption2);
-                    setUpMultipleChoiceExplanationsPopUp(holder.explanationStep, correctText + " " + complementText, null);
+                    setUpMultipleChoiceExplanationsPopUp(holder, correctText + " " + complementText, null);
                     summaryText = FactoringManager.getCaseNameFrom(holder.chosenOption);
                 }else if(holder.chosenOption.equals(holder.regularOption1) || holder.chosenOption.equals(holder.regularOption2)){
                     showIconForOption(holder, holder.chosenOption, R.drawable.solved_right);
@@ -775,7 +785,7 @@ public class FactoringManager extends Manager{
                             ? (holder.regularOption2 == null ? "" : FactoringManager.getMessageOfRegularOptionNotChosen(holder.regularOption2))
                             : (holder.regularOption1 == null ? "" : FactoringManager.getMessageOfRegularOptionNotChosen(holder.regularOption1));
                     String correctText = FactoringManager.getMessageOfRightOptionNotChosen(holder.correctOption);
-                    setUpMultipleChoiceExplanationsPopUp(holder.explanationStep, regularText + " " + complementText + " " + correctText, null);
+                    setUpMultipleChoiceExplanationsPopUp(holder, regularText + " " + complementText + " " + correctText, null);
                     summaryText = FactoringManager.getCaseNameFrom(holder.chosenOption);
                 }else{
                     Map<Integer, String> incorrectOptions = new HashMap<>();
@@ -795,7 +805,7 @@ public class FactoringManager extends Manager{
                     String regularText = (holder.regularOption1 == null ? "" : FactoringManager.getMessageOfRegularOptionNotChosen(holder.regularOption1));
                     regularText += (holder.regularOption2 == null ? "" : FactoringManager.getMessageOfRegularOptionNotChosen(holder.regularOption2));
                     String correctText = FactoringManager.getMessageOfRightOptionNotChosen(holder.correctOption);
-                    setUpMultipleChoiceExplanationsPopUp(holder.explanationStep,correctText + " " + regularText, FactoringManager.getMessageOfWrongOptionChosen(holder.chosenOption));
+                    setUpMultipleChoiceExplanationsPopUp(holder,correctText + " " + regularText, FactoringManager.getMessageOfWrongOptionChosen(holder.chosenOption));
                     summaryText = FactoringManager.getCaseNameFrom(holder.correctOption);
                 }
 
