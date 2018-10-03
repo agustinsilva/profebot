@@ -25,37 +25,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_id);
+        Toolbar myToolbar = findViewById(R.id.toolbar_id);
         setSupportActionBar(myToolbar);
-
         spinner = findViewById(R.id.main_activity_progress_bar_id);
-
-        Button enterEquation = (Button)findViewById(R.id.enter_equation_id);
-        enterEquation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View button) {
-                Intent intent = new Intent(MainActivity.this, EnterEquationOptionsActivity.class);
-                startActivity(intent);
-            }
-        });
-        Button enterPolinomial = (Button)findViewById(R.id.enter_polynomial_id);
-        enterPolinomial.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View button) {
-                Intent intent = new Intent(MainActivity.this, EnterPolinomialEquationOptionsActivity.class);
-                startActivity(intent);
-            }
-        });
-        Button enterFunction = (Button)findViewById(R.id.enter_function_id);
-        enterFunction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View button) {
-                Intent intent = new Intent(MainActivity.this, EnterFunctionOptionsActivity.class);
-                startActivity(intent);
-            }
-        });
+        initiateActivityOnClick(R.id.enter_equation_id,EnterEquationOptionsActivity.class);
+        initiateActivityOnClick(R.id.enter_polynomial_id,EnterPolinomialEquationOptionsActivity.class);
+        initiateActivityOnClick(R.id.enter_function_id,EnterFunctionOptionsActivity.class);
         this.setMainMenuShortCut();
+    }
+
+    private void initiateActivityOnClick(int id, Class classActivity){
+        Button sectionButton = findViewById(id);
+        sectionButton.setOnClickListener(button -> {
+            Intent intent = new Intent(MainActivity.this,classActivity);
+            startActivity(intent);
+        });
     }
 
     private void setMainMenuShortCut(){
@@ -85,17 +69,14 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         new AlertDialog.Builder(this)
                 .setIcon(R.drawable.profebot_cara)
-                .setTitle("¿Queres salir?")
-                .setMessage("Te esperamos pronto para seguir practicando.")
+                .setTitle(R.string.salir)
+                .setMessage(R.string.esperamos)
                 .setNegativeButton(R.string.no, null)
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        Intent intent = new Intent(Intent.ACTION_MAIN);
-                        intent.addCategory(Intent.CATEGORY_HOME);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                    }
+                .setPositiveButton(R.string.yes, (arg0, arg1) -> {
+                    Intent intent = new Intent(Intent.ACTION_MAIN);
+                    intent.addCategory(Intent.CATEGORY_HOME);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                 }).create().show();
     }
 }
