@@ -41,7 +41,7 @@ public class EnterFunctionActivity extends AppCompatActivity {
 
         equation = this.getIntent().getExtras().getString("function");
         setFunctionView(equation);
-        equationType = FunctionParserService.getFunctionType(equation);
+        equationType = FunctionParserService.getFunctionType(equation+"=0");
     }
 
     public void imageBtn(View view) {
