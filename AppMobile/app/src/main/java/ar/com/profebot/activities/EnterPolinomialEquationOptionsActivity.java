@@ -50,8 +50,8 @@ public class EnterPolinomialEquationOptionsActivity extends GlobalActivity {
         polinomialEquationPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                polinomialEquationPicture.setImageResource(R.drawable.polinomial_equation_selected);
-                photoEquationPicture.setImageResource(R.drawable.photo_equation);
+                polinomialEquationPicture.setImageResource(R.drawable.polinomial_equation_selected1);
+                photoEquationPicture.setImageResource(R.drawable.photo_equation1);
                 polinomialEquationOption.setChecked(true);
                 photoEquationOption.setChecked(false);
                 activateStartResolutionButton();
@@ -61,8 +61,8 @@ public class EnterPolinomialEquationOptionsActivity extends GlobalActivity {
         photoEquationPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                photoEquationPicture.setImageResource(R.drawable.photo_equation_selected);
-                polinomialEquationPicture.setImageResource(R.drawable.polinomial_equation);
+                photoEquationPicture.setImageResource(R.drawable.photo_equation_selected1);
+                polinomialEquationPicture.setImageResource(R.drawable.polinomial_equation1);
                 photoEquationOption.setChecked(true);
                 polinomialEquationOption.setChecked(false);
                 activateStartResolutionButton();
@@ -74,8 +74,8 @@ public class EnterPolinomialEquationOptionsActivity extends GlobalActivity {
         polinomialEquationOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                polinomialEquationPicture.setImageResource(R.drawable.polinomial_equation_selected);
-                photoEquationPicture.setImageResource(R.drawable.photo_equation);
+                polinomialEquationPicture.setImageResource(R.drawable.polinomial_equation_selected1);
+                photoEquationPicture.setImageResource(R.drawable.photo_equation1);
                 activateStartResolutionButton();
             }
         });
@@ -83,8 +83,8 @@ public class EnterPolinomialEquationOptionsActivity extends GlobalActivity {
         photoEquationOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                photoEquationPicture.setImageResource(R.drawable.photo_equation_selected);
-                polinomialEquationPicture.setImageResource(R.drawable.polinomial_equation);
+                photoEquationPicture.setImageResource(R.drawable.photo_equation_selected1);
+                polinomialEquationPicture.setImageResource(R.drawable.polinomial_equation1);
                 activateStartResolutionButton();
             }
         });
@@ -108,8 +108,8 @@ public class EnterPolinomialEquationOptionsActivity extends GlobalActivity {
     }
 
     private void restartScreen(){
-        polinomialEquationPicture.setImageResource(R.drawable.polinomial_equation);
-        photoEquationPicture.setImageResource(R.drawable.photo_equation);
+        polinomialEquationPicture.setImageResource(R.drawable.polinomial_equation1);
+        photoEquationPicture.setImageResource(R.drawable.photo_equation1);
         polinomialEquationOption.setChecked(false);
         photoEquationOption.setChecked(false);
         startResolution.setEnabled(false);
