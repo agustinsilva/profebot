@@ -30,78 +30,62 @@ public class EnterFunctionOptionsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.enter_function_options_layout);
         photoReference = FUNCTION;
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_id);
+        Toolbar toolbar = findViewById(R.id.toolbar_id);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         super.onCreate(savedInstanceState);
 
-        handdrawEquationPicture = (ImageView) findViewById(R.id.handdraw_equation_picture_id);
-        photoEquationPicture = (ImageView) findViewById(R.id.photo_equation_picture_id);
-        handdrawEquationOption = (RadioButton) findViewById(R.id.handdraw_equation_id);
-        photoEquationOption = (RadioButton) findViewById(R.id.photo_equation_id);
-        startResolution = (Button) findViewById(R.id.start_resolution_id);
+        handdrawEquationPicture = findViewById(R.id.handdraw_equation_picture_id);
+        photoEquationPicture = findViewById(R.id.photo_equation_picture_id);
+        handdrawEquationOption = findViewById(R.id.handdraw_equation_id);
+        photoEquationOption = findViewById(R.id.photo_equation_id);
+        startResolution = findViewById(R.id.start_resolution_id);
         spinner = findViewById(R.id.options_progress_bar_id);
-
         restartScreen();
 
         // When i touch over images
 
-        handdrawEquationPicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handdrawEquationPicture.setImageResource(R.drawable.handdraw_equation_selected1);
-                photoEquationPicture.setImageResource(R.drawable.photo_equation1);
-                handdrawEquationOption.setChecked(true);
-                photoEquationOption.setChecked(false);
-                activateStartResolutionButton();
-            }
-        });
-
-        photoEquationPicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                photoEquationPicture.setImageResource(R.drawable.photo_equation_selected1);
-                handdrawEquationPicture.setImageResource(R.drawable.handdraw_equation1);
-                photoEquationOption.setChecked(true);
-                handdrawEquationOption.setChecked(false);
-                activateStartResolutionButton();
-            }
-        });
-
+        setImageView(handdrawEquationPicture,R.drawable.photo_equation1,R.drawable.handdraw_equation_selected1,false,true);
+        setImageView(photoEquationPicture,R.drawable.photo_equation_selected1,R.drawable.handdraw_equation1,true,false);
         // When i pick radio buttons
+        setRadioButton(handdrawEquationOption,R.drawable.photo_equation1,R.drawable.handdraw_equation_selected1);
+        setRadioButton(photoEquationOption,R.drawable.photo_equation_selected1,R.drawable.handdraw_equation1);
 
-        handdrawEquationOption.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handdrawEquationPicture.setImageResource(R.drawable.handdraw_equation_selected1);
-                photoEquationPicture.setImageResource(R.drawable.photo_equation1);
-                activateStartResolutionButton();
+        startResolution.setOnClickListener(v -> {
+            if(handdrawEquationOption.isChecked()){
+                spinner.setVisibility(View.VISIBLE);
+                Intent intent = new Intent(v.getContext(), EnterEquationHandDrawActivity.class);
+                startActivity(intent);
+            }else{
+                Intent intent = new Intent(v.getContext(), CarmeraActivity.class);
+                startActivity(intent);
             }
         });
+    }
 
-        photoEquationOption.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                photoEquationPicture.setImageResource(R.drawable.photo_equation_selected1);
-                handdrawEquationPicture.setImageResource(R.drawable.handdraw_equation1);
-                activateStartResolutionButton();
-            }
+    private void setImageView(ImageView imageView,int photoImage, int handdrawImage,boolean boolPhoto,boolean boolHanddraw){
+        imageView.setOnClickListener(v -> {
+            setImageOnClick(photoImage,handdrawImage);
+            activateStartResolutionButton(true,R.drawable.rounded_corners_main_buttons,Color.WHITE);
+            setCheckedOptions(boolPhoto,boolHanddraw);
         });
+    }
 
-        startResolution.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(handdrawEquationOption.isChecked()){
-                    spinner.setVisibility(View.VISIBLE);
-                    Intent intent = new Intent(v.getContext(), EnterEquationHandDrawActivity.class);
-                    startActivity(intent);
-                }else{
-                    Intent intent = new Intent(v.getContext(), CarmeraActivity.class);
-                    startActivity(intent);
-                }
-            }
+    private void setRadioButton(RadioButton radioButton,int photoImage, int handdrawImage){
+        radioButton.setOnClickListener(v -> {
+            setImageOnClick(photoImage,handdrawImage);
+            activateStartResolutionButton(true,R.drawable.rounded_corners_main_buttons,Color.WHITE);
         });
+    }
+
+    private void setImageOnClick(int idPhoto,int idHanddraw){
+        photoEquationPicture.setImageResource(idPhoto);
+        handdrawEquationPicture.setImageResource(idHanddraw);
+    }
+    private void setCheckedOptions(boolean checkedPhoto,boolean checkedHanddraw){
+        photoEquationOption.setChecked(checkedPhoto);
+        handdrawEquationOption.setChecked(checkedHanddraw);
     }
 
     private void restartScreen(){
@@ -109,15 +93,13 @@ public class EnterFunctionOptionsActivity extends AppCompatActivity {
         photoEquationPicture.setImageResource(R.drawable.photo_equation1);
         handdrawEquationOption.setChecked(false);
         photoEquationOption.setChecked(false);
-        startResolution.setEnabled(false);
-        startResolution.setBackgroundResource(R.drawable.rounded_corners_disable_button);
-        startResolution.setTextColor(Color.GRAY);
+        activateStartResolutionButton(false,R.drawable.rounded_corners_disable_button,Color.GRAY);
     }
 
-    private void activateStartResolutionButton(){
-        startResolution.setEnabled(true);
-        startResolution.setBackgroundResource(R.drawable.rounded_corners_main_buttons);
-        startResolution.setTextColor(Color.WHITE);
+    private void activateStartResolutionButton(boolean enable,int backgroundResource,int color){
+        startResolution.setEnabled(enable);
+        startResolution.setBackgroundResource(backgroundResource);
+        startResolution.setTextColor(color);
     }
 
     @Override
