@@ -25,9 +25,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <include layout="@layout/rv_resolution"/>
                 <include layout="@layout/equation_summary"/>
                 <include layout="@layout/polynomial_summary"/>
+                <include layout="@layout/rv_resolution"/>
             </RelativeLayout>
         </LinearLayout>
 
