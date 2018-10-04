@@ -35,7 +35,7 @@ public class EnterFunctionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_function);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_id);
+        Toolbar toolbar = findViewById(R.id.toolbar_id);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -45,24 +45,20 @@ public class EnterFunctionActivity extends AppCompatActivity {
     }
 
     public void imageBtn(View view) {
-        String title = "Imagen de una función";
-        String explanation = "la imagen, campo de valores o rango de una función {\\displaystyle f\\colon X\\to Y\\,} " +
-                "{\\displaystyle f\\colon X\\to Y\\,}, también llamada la imagen de {\\displaystyle X} X bajo {\\displayst" +
-                "yle f} f, es el conjunto contenido en {\\displaystyle Y} Y formado por todos los valores que puede llegar a tomar la función.";
+        String title = getString(R.string.tituloImagenFuncion);
+        String explanation = getString(R.string.explicacionImagenFuncion);
         setInformationalPopUp(title, explanation);
     }
 
     public void rootBtn(View view) {
-        String title = "Raices de la función";
-        String explanation = "En matemática, se conoce como raíz (o cero) de un polinomio o de una función (definida sobre un cierto cuerpo algebraico) " +
-                "f(x) a todo elemento x perteneciente al dominio de dicha función tal que se cumpla: . Se tiene que 2 y 4 " +
-                "son raíces (ver ecuación de segundo grado) ya que f(2) = 0 y f(4) = 0.";
+        String title = getString(R.string.tituloRaicesFuncion);
+        String explanation = getString(R.string.explicacionRaicesFuncion);
         setInformationalPopUp(title, explanation);
     }
 
     public void originBtn(View view) {
         //first show information pop-up if check is valid
-        setInformationalPopUp("Información de ordenada al origen", getString(R.string.ordenadaAlOrigenInformational));
+        setInformationalPopUp(getString(R.string.informacionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenInformational));
 
         //Seteo el boton "Adelante" para configurar el proximo pop-up
         ImageButton forwardBtn = popUpView1.findViewById(R.id.forward_pop_up_id);
@@ -75,7 +71,7 @@ public class EnterFunctionActivity extends AppCompatActivity {
                 //- si lo incluye, ir al resolutor con la ecuacion
                 //setPopUpToMultipleChoice(title, explanation);
                 //- si lo excluye, ir al trivialPopUp con su texto explicando.
-                setTrivialPopUp("Solución de ordenada al origen",getString(R.string.ordenadaAlOrigenTrivial));
+                setTrivialPopUp(getString(R.string.solucionOrdenadaOrigen),getString(R.string.ordenadaAlOrigenTrivial));
             }
         });
     }
@@ -85,10 +81,8 @@ public class EnterFunctionActivity extends AppCompatActivity {
 /*        if (isTrivialSolution(equation)) {
                 setTrivialPopUp(title, explanation);
         } else {*/
-            String title = "Dominio de la función";
-            String explanation = "En matemáticas, el dominio (conjunto de definición o conjunto de partida) " +
-                    "de una función es el conjunto de existencia de ella misma, es decir, los valores para los cuales la" +
-                    " función está definida. Es el conjunto de todos los objetos que puede transformar, se denota o bien .";
+            String title = getString(R.string.tituloDominio);
+            String explanation = getString(R.string.explicacionDominio);
         setInformationalPopUp(title, explanation);
         //}
     }
@@ -98,11 +92,11 @@ public class EnterFunctionActivity extends AppCompatActivity {
         popUpView3 = this.getLayoutInflater().inflate(R.layout.function_pop_up, null);
         popUpView3.setElevation(0f);
 
-        AutofitTextView titleATV = (AutofitTextView) popUpView1.findViewById(R.id.pop_up_title_id);
+        AutofitTextView titleATV = popUpView1.findViewById(R.id.pop_up_title_id);
         titleATV.setText(title);
-        TextView explanationTV = (TextView) popUpView1.findViewById(R.id.explanation_pop_up);
+        TextView explanationTV = popUpView1.findViewById(R.id.explanation_pop_up);
         explanationTV.setText(explanation);
-        Button resolveBtn = (Button) popUpView1.findViewById(R.id.resolve_pop_up_id);
+        Button resolveBtn = popUpView1.findViewById(R.id.resolve_pop_up_id);
         resolveBtn.setVisibility(View.GONE);
 
 
@@ -111,19 +105,9 @@ public class EnterFunctionActivity extends AppCompatActivity {
         dialog3 = builder3.create();
         dialog3.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         dialog3.show();
-        ((Button) popUpView1.findViewById(R.id.resolve_pop_up_id)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog3.hide();
-            }
-        });
-        ImageButton backBtn = (ImageButton) popUpView1.findViewById(R.id.back_pop_up_id);
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog1.hide();
-            }
-        });
+        popUpView1.findViewById(R.id.resolve_pop_up_id).setOnClickListener(v -> dialog3.hide());
+        ImageButton backBtn = popUpView1.findViewById(R.id.back_pop_up_id);
+        backBtn.setOnClickListener(v -> dialog1.hide());
     }
 
 
@@ -132,13 +116,13 @@ public class EnterFunctionActivity extends AppCompatActivity {
         popUpView2 = this.getLayoutInflater().inflate(R.layout.function_pop_up, null);
         popUpView2.setElevation(0f);
 
-        AutofitTextView titleATV = (AutofitTextView) popUpView2.findViewById(R.id.pop_up_title_id);
+        AutofitTextView titleATV = popUpView2.findViewById(R.id.pop_up_title_id);
         titleATV.setText(title);
-        TextView explanationTV = (TextView) popUpView2.findViewById(R.id.explanation_pop_up);
+        TextView explanationTV = popUpView2.findViewById(R.id.explanation_pop_up);
         explanationTV.setText(explanation);
         //Hide button resolve
         Button EntendidoBtn = popUpView2.findViewById(R.id.resolve_pop_up_id);
-        EntendidoBtn.setText("Entendido!!");
+        EntendidoBtn.setText(R.string.entendido);
         popUpView2.findViewById(R.id.forward_pop_up_id).setVisibility(View.GONE);
         popUpView2.findViewById(R.id.checkBox).setVisibility(View.GONE);
         popUpView2.setClipToOutline(true);
@@ -148,18 +132,10 @@ public class EnterFunctionActivity extends AppCompatActivity {
         dialog2.show();
 
         ImageButton backBtn = popUpView2.findViewById(R.id.back_pop_up_id);
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog2.hide();
-            }
-        });
-        EntendidoBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog2.hide();
-                dialog1.hide();
-            }
+        backBtn.setOnClickListener(v -> dialog2.hide());
+        EntendidoBtn.setOnClickListener(v -> {
+            dialog2.hide();
+            dialog1.hide();
         });
 
     }
@@ -169,12 +145,12 @@ public class EnterFunctionActivity extends AppCompatActivity {
         popUpView1 = this.getLayoutInflater().inflate(R.layout.function_pop_up, null);
         popUpView1.setElevation(0f);
 
-        AutofitTextView titleATV = (AutofitTextView) popUpView1.findViewById(R.id.pop_up_title_id);
+        AutofitTextView titleATV = popUpView1.findViewById(R.id.pop_up_title_id);
         titleATV.setText(title);
-        TextView explanationTV = (TextView) popUpView1.findViewById(R.id.explanation_pop_up);
+        TextView explanationTV = popUpView1.findViewById(R.id.explanation_pop_up);
         explanationTV.setText(explanation);
         //Hide button resolve
-        Button resolveBtn = (Button) popUpView1.findViewById(R.id.resolve_pop_up_id);
+        Button resolveBtn = popUpView1.findViewById(R.id.resolve_pop_up_id);
         resolveBtn.setVisibility(View.GONE);
 
         popUpView1.setClipToOutline(true);
@@ -184,12 +160,7 @@ public class EnterFunctionActivity extends AppCompatActivity {
         dialog1.show();
 
         ImageButton backBtn = popUpView1.findViewById(R.id.back_pop_up_id);
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog1.hide();
-            }
-        });
+        backBtn.setOnClickListener(v -> dialog1.hide());
 
     }
 

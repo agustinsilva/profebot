@@ -20,4 +20,13 @@
     <string name="ordenada_al_origen">Ordenada &#10;al origen</string>
     <string name="ordenadaAlOrigenInformational">La ordenada al origen nos indica cuando una función se intersecta con el eje Y, que es el eje de ordenadas. Para lograr esto lo que hacemos es reemplazar la incognita de la función por 0, osea hallamos el valor de la función F(x) cuando x = 0.</string>
     <string name="ordenadaAlOrigenTrivial">La función no tiene ordenada al origen, dado que el dominio de la función excluye al valor x = 0, por lo tanto la función no se intersecta con el eje Y.</string>
+    <string name="entendido">¡Entendido!</string>
+    <string name="tituloDominio">Dominio de la función</string>
+    <string name="explicacionDominio">En matemáticas, el dominio (conjunto de definición o conjunto de partida) de una función es el conjunto de existencia de ella misma, es decir, los valores para los cuales la función está definida. Es el conjunto de todos los objetos que puede transformar, se denota o bien .</string>
+    <string name="solucionOrdenadaOrigen">Solución de ordenada al origen</string>
+    <string name="informacionOrdenadaOrigen">Información de ordenada al origen</string>
+    <string name="tituloRaicesFuncion">Raices de la función</string>
+    <string name="explicacionRaicesFuncion">En matemática, se conoce como raíz (o cero) de un polinomio o de una función (definida sobre un cierto cuerpo algebraico) f(x) a todo elemento x perteneciente al dominio de dicha función tal que se cumpla: . Se tiene que 2 y 4 son raíces (ver ecuación de segundo grado) ya que f(2) = 0 y f(4) = 0.</string>
+    <string name="tituloImagenFuncion">Imagen de una función</string>
+    <string name="explicacionImagenFuncion">la imagen, campo de valores o rango de una función {\\displaystyle f\\colon X\\to Y\\,} {\\displaystyle f\\colon X\\to Y\\,}, también llamada la imagen de {\\displaystyle X} X bajo {\\displaystyle f} f, es el conjunto contenido en {\\displaystyle Y} Y formado por todos los valores que puede llegar a tomar la función.</string>
 </resources>
