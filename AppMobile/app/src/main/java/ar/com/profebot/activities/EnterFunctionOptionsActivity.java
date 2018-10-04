@@ -33,9 +33,7 @@ public class EnterFunctionOptionsActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar_id);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         super.onCreate(savedInstanceState);
-
         handdrawEquationPicture = findViewById(R.id.handdraw_equation_picture_id);
         photoEquationPicture = findViewById(R.id.photo_equation_picture_id);
         handdrawEquationOption = findViewById(R.id.handdraw_equation_id);

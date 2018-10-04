@@ -16,6 +16,7 @@
     //Main menu
     <string name="salir">¿Queres salir?</string>
     <string name="esperamos">Te esperamos pronto para seguir practicando.</string>
+    <string name="revisarEcuacion">¡Fijate si la ecuación está bien escrita!</string>
     <string name="ordenada_al_origen">Ordenada &#10;al origen</string>
     <string name="ordenadaAlOrigenInformational">La ordenada al origen nos indica cuando una función se intersecta con el eje Y, que es el eje de ordenadas. Para lograr esto lo que hacemos es reemplazar la incognita de la función por 0, osea hallamos el valor de la función F(x) cuando x = 0.</string>
     <string name="ordenadaAlOrigenTrivial">La función no tiene ordenada al origen, dado que el dominio de la función excluye al valor x = 0, por lo tanto la función no se intersecta con el eje Y.</string>

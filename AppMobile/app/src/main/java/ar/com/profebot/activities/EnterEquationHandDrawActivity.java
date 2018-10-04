@@ -43,7 +43,7 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.enter_equation_handdraw_layout);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_id);
+        Toolbar toolbar = findViewById(R.id.toolbar_id);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -51,61 +51,46 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
 
         this.setUpWidget();
 
-        spinner = (ProgressBar)findViewById(R.id.progress_bar_id);
+        spinner = findViewById(R.id.progress_bar_id);
         this.setUpButtons();
 
-        ((RelativeLayout)findViewById(R.id.blackboard_layout_id)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                spinner.setVisibility(View.VISIBLE);
-            }
-        });
+        findViewById(R.id.blackboard_layout_id).setOnClickListener(v -> spinner.setVisibility(View.VISIBLE));
     }
 
     private void setUpButtons(){
-        ((Button) findViewById(R.id.clear_blackboard_id)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View button) {
-                widget.clear(false);
-                spinner.postInvalidateOnAnimation();
-                disablePlayButton();
-                invalidateToast();
-            }
+        findViewById(R.id.clear_blackboard_id).setOnClickListener(button -> {
+            widget.clear(false);
+            spinner.postInvalidateOnAnimation();
+            setPlayButton(R.color.colorGreyText,false);
+            invalidateToast();
         });
 
-        playButton = (ImageButton) findViewById(R.id.solve_equation_id);
-        playButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View button) {
-                if(photoReference == FUNCTION) {
+        playButton = findViewById(R.id.solve_equation_id);
+        playButton.setOnClickListener(button -> {
+            if(photoReference == FUNCTION) {
+                spinner.setVisibility(View.VISIBLE);
+                Intent intent = new Intent(button.getContext(), EnterFunctionActivity.class);
+                intent.putExtra("function",ExpressionsManager.getEquationDrawn());
+                startActivity(intent);
+            }else {
+                if(ExpressionsManager.expressionDrawnIsValid()){
                     spinner.setVisibility(View.VISIBLE);
-                    Intent intent = new Intent(button.getContext(), EnterFunctionActivity.class);
-                    intent.putExtra("function",ExpressionsManager.getEquationDrawn());
+                    Intent intent = new Intent(button.getContext(), SolveEquationActivity.class);
                     startActivity(intent);
-                }else {
-                    if(ExpressionsManager.expressionDrawnIsValid()){
-                        spinner.setVisibility(View.VISIBLE);
-                        Intent intent = new Intent(button.getContext(), SolveEquationActivity.class);
-                        startActivity(intent);
-                    }
-                    else{
-                        invalidEquationMessage = Toast.makeText(button.getContext(),"¡Fijate si la ecuación está bien escrita!", Toast.LENGTH_LONG);
-                        invalidEquationMessage.setGravity(Gravity.CENTER, 0, 0);
-                        invalidEquationMessage.show();
-                    }
+                }
+                else{
+                    invalidEquationMessage = Toast.makeText(button.getContext(),R.string.revisarEcuacion, Toast.LENGTH_LONG);
+                    invalidEquationMessage.setGravity(Gravity.CENTER, 0, 0);
+                    invalidEquationMessage.show();
                 }
             }
         });
     }
 
-    private void disablePlayButton(){
-        playButton.setBackgroundResource(R.color.colorGreyText);
-        playButton.setEnabled(false);
-    }
-
-    private void enablePlayButton(){
-        playButton.setBackgroundResource(R.color.colorAccent);
-        playButton.setEnabled(true);
+    //Setea el valor del boton de play.
+    private void setPlayButton(int color,boolean enable){
+        playButton.setBackgroundResource(color);
+        playButton.setEnabled(enable);
     }
 
     private void invalidateToast(){
@@ -115,16 +100,14 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
     }
 
     private void setUpWidget(){
-        widget = (MathWidgetApi) findViewById(R.id.math_widget);
+        widget = findViewById(R.id.math_widget);
         if (!widget.registerCertificate(MyCertificate.getBytes())) {
             AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
             dlgAlert.setMessage("Please use a valid certificate.");
             dlgAlert.setTitle("Invalid certificate");
             dlgAlert.setCancelable(false);
-            dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    //dismiss the dialog
-                }
+            dlgAlert.setPositiveButton("OK", (dialog, which) -> {
+                //dismiss the dialog
             });
             dlgAlert.create().show();
             return;
@@ -139,24 +122,16 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
 
             @Override
             public void onRecognitionEnd(MathWidgetApi mathWidgetApi) {
-                disablePlayButton();
+                setPlayButton(R.color.colorGreyText,false);
                 if(!widget.isEmpty()){
                     spinner.setVisibility(View.VISIBLE);
-                    spinner.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            spinner.setVisibility(View.GONE);
-                        }
-                    }, 1200L);
+                    spinner.postDelayed(() -> spinner.setVisibility(View.GONE), 1200L);
                 }
 
-                playButton.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        ExpressionsManager.setEquationDrawn(widget.getResultAsText());
-                        if(!"".equals(ExpressionsManager.getEquationDrawn())){
-                            enablePlayButton();
-                        }
+                playButton.postDelayed(() -> {
+                    ExpressionsManager.setEquationDrawn(widget.getResultAsText());
+                    if(!"".equals(ExpressionsManager.getEquationDrawn())){
+                        setPlayButton(R.color.colorAccent,true);
                     }
                 }, 1200L);
             }
@@ -166,7 +141,7 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
             @Override
             public void onPenDown(MathWidgetApi mathWidgetApi, CaptureInfo captureInfo) {
                 spinner.setVisibility(View.GONE);
-                disablePlayButton();
+                setPlayButton(R.color.colorGreyText,false);
                 invalidateToast();
             }
 
@@ -201,7 +176,6 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
     protected void onDestroy() {
         widget.setOnRecognitionListener(null);
         widget.setOnConfigureListener(null);
-
         // release widget's resources
         widget.release();
         super.onDestroy();
@@ -229,15 +203,24 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
     public void onRecognitionEnd(MathWidgetApi widget) {
     }
 
+    private void initiateOptionsActivity() {
+        if(photoReference == FUNCTION) {
+            startActivity(new Intent(this, EnterFunctionOptionsActivity.class));
+        }
+        else{
+            startActivity(new Intent(this, EnterEquationOptionsActivity.class));
+        }
+    }
+
     @Override
     public boolean onSupportNavigateUp() {
-        startActivity(new Intent(this, EnterEquationOptionsActivity.class));
+        initiateOptionsActivity();
         return true;
     }
 
     @Override
     public void onBackPressed() {
         ExpressionsManager.setEquationDrawn(null);
-        startActivity(new Intent(this, EnterEquationOptionsActivity.class));
+        initiateOptionsActivity();
     }
 }
