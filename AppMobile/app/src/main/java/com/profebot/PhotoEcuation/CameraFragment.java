@@ -1,5 +1,6 @@
 package com.profebot.PhotoEcuation;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,7 +19,9 @@ import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -43,16 +46,19 @@ import ar.com.profebot.activities.EnterFunctionActivity;
 import ar.com.profebot.activities.EnterPolinomialActivity;
 import ar.com.profebot.activities.SolveEquationActivity;
 import ar.com.profebot.activities.SolvePolynomialActivity;
+import ar.com.profebot.parser.service.FunctionParserService;
 import ar.com.profebot.service.ExpressionsManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.github.kexanie.library.MathView;
+import me.grantland.widget.AutofitTextView;
 
 import static ar.com.profebot.activities.MainActivity.EQUATION;
 import static ar.com.profebot.activities.MainActivity.FUNCTION;
 import static ar.com.profebot.activities.MainActivity.POLINOMIAL;
 import static ar.com.profebot.activities.MainActivity.photoReference;
+import static ar.com.profebot.parser.service.FunctionParserService.FunctionType.INVALID;
 
 public class CameraFragment extends Fragment {
     private static final String TAG = CameraFragment.class.getSimpleName();
@@ -62,6 +68,10 @@ public class CameraFragment extends Fragment {
     ImageView mTakePhotoButton;
     @BindView(R.id.crop_status_text_view)
     TextView mCropStatusTextView;
+    @BindView(R.id.helpButton)
+    ImageButton helpButton;
+    @BindView(R.id.help2_text_view)
+    TextView Help2TextView;
     @BindView(R.id.help_text_view)
     TextView HelpTextView;
     @BindView(R.id.formula_one)
@@ -212,6 +222,30 @@ public class CameraFragment extends Fragment {
                 }
             }, 1500);
         }
+        else if(photoReference == FUNCTION){
+            HelpTextView.setText("Escaneá una función del tipo..");
+            Help2TextView.setText("Lineal - Cuadrática\n" +
+                    "Constante - Homográfica");
+            helpButton.setVisibility(View.VISIBLE);
+            helpButton.setOnClickListener(button -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                View popUpView = getActivity().getLayoutInflater().inflate(R.layout.help_function_pop_up, null);
+                popUpView.setElevation(0f);
+                popUpView.setClipToOutline(true);
+                builder.setView(popUpView);
+                AlertDialog dialog = builder.create();
+                dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+                dialog.show();
+
+                popUpView.findViewById(R.id.ok_pop_up_id).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.hide();
+                    }
+                });
+
+            } );
+        }
     }
 
     //region Camera Preview
@@ -322,9 +356,14 @@ public class CameraFragment extends Fragment {
                         }
                         break;
                     case FUNCTION :
-                        Intent intent = new Intent(getActivity(), EnterFunctionActivity.class);
-                        intent.putExtra("function",latex);
-                        startActivity(intent);
+                        if (FunctionParserService.getFunctionType(latex+"=0") != INVALID) {
+                            Intent intent = new Intent(getActivity(), EnterFunctionActivity.class);
+                            intent.putExtra("function", latex);
+                            startActivity(intent);
+                        }
+                        else{
+                            showErrorAndReset("Ingresaste una función invalida.");
+                        }
                     }
                 }
                 else{
@@ -454,6 +493,7 @@ public class CameraFragment extends Fragment {
                 mCropStatusTextView.setText(R.string.release_to_take_photo);
                 formula_one.setVisibility(View.GONE);
                 HelpTextView.setVisibility(View.GONE);
+                Help2TextView.setVisibility(View.GONE);
             }
 
             @Override

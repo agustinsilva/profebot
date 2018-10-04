@@ -20,10 +20,12 @@ import com.profebot.activities.BuildConfig;
 import com.profebot.activities.R;
 
 import ar.com.profebot.certificate.MyCertificate;
+import ar.com.profebot.parser.service.FunctionParserService;
 import ar.com.profebot.service.ExpressionsManager;
 
 import static ar.com.profebot.activities.MainActivity.FUNCTION;
 import static ar.com.profebot.activities.MainActivity.photoReference;
+import static ar.com.profebot.parser.service.FunctionParserService.FunctionType.INVALID;
 
 public class EnterEquationHandDrawActivity extends GlobalActivity implements
         MathWidgetApi.OnConfigureListener,
@@ -68,11 +70,19 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
         playButton = findViewById(R.id.solve_equation_id);
         playButton.setOnClickListener(button -> {
             if(photoReference == FUNCTION) {
-                spinner.setVisibility(View.VISIBLE);
-                Intent intent = new Intent(button.getContext(), EnterFunctionActivity.class);
-                intent.putExtra("function",ExpressionsManager.getEquationDrawn());
-                startActivity(intent);
-            }else {
+                if (FunctionParserService.getFunctionType(ExpressionsManager.getEquationDrawn()+"=0")!= INVALID) {
+                    spinner.setVisibility(View.VISIBLE);
+                    Intent intent = new Intent(button.getContext(), EnterFunctionActivity.class);
+                    intent.putExtra("function", ExpressionsManager.getEquationDrawn());
+                    startActivity(intent);
+                }
+                else {
+                    invalidEquationMessage = Toast.makeText(button.getContext(),"¡Fijate si la función está bien escrita!", Toast.LENGTH_LONG);
+                    invalidEquationMessage.setGravity(Gravity.CENTER, 0, 0);
+                    invalidEquationMessage.show();
+                }
+            }
+            else {
                 if(ExpressionsManager.expressionDrawnIsValid()){
                     spinner.setVisibility(View.VISIBLE);
                     Intent intent = new Intent(button.getContext(), SolveEquationActivity.class);

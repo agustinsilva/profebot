@@ -56,9 +56,36 @@
                 auto:text="\\begin{aligned}\\LARGE\\color{White}{\a.x^2 + b.x + c \}\\end{aligned}"
                 android:visibility="gone">
                 </io.github.kexanie.library.MathView>
-            >
+
+            <TextView
+                android:id="@+id/help2_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="false"
+                android:layout_margin="15dp"
+                android:gravity="top"
+                android:layout_marginTop="5dp"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="25sp" />
         </LinearLayout>
         <include layout="@layout/crop_control" />
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+        <ImageButton
+            android:id="@+id/helpButton"
+            android:layout_width="50dp"
+            android:scaleType="fitXY"
+            android:layout_height="50dp"
+            android:background="@null"
+            android:layout_margin="30sp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:src="@android:drawable/ic_menu_help"
+            android:tint="@color/white"
+            android:visibility="gone"/>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/crop_status_text_view"
