@@ -227,14 +227,25 @@ public class CameraFragment extends Fragment {
             Help2TextView.setText("Lineal - Cuadrática\n" +
                     "Constante - Homográfica");
             helpButton.setVisibility(View.VISIBLE);
+            //set help pop-up
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            View popUpView = getActivity().getLayoutInflater().inflate(R.layout.help_function_pop_up, null);
+            MathView linealMV = (MathView) popUpView.findViewById(R.id.funcion_lineal_math);
+            linealMV.setText("$$"  + "ax+b" +  "$$");
+            MathView cuadraticaMV = (MathView) popUpView.findViewById(R.id.cuadratica_function);
+            cuadraticaMV.setText("$$"  + "ax^2+bx+c" +  "$$");
+            MathView constanteMV = (MathView) popUpView.findViewById(R.id.constante_function);
+            constanteMV.setText("$$"  + "b" +  "$$");
+            MathView homograficaMV = (MathView) popUpView.findViewById(R.id.homografica_function);
+            homograficaMV.setText("$$"  + "\\frac{ ax+b } {ax+b } " + "$$");
+            popUpView.setElevation(0f);
+            popUpView.setClipToOutline(true);
+            builder.setView(popUpView);
+            AlertDialog dialog = builder.create();
+            dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+
             helpButton.setOnClickListener(button -> {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                View popUpView = getActivity().getLayoutInflater().inflate(R.layout.help_function_pop_up, null);
-                popUpView.setElevation(0f);
-                popUpView.setClipToOutline(true);
-                builder.setView(popUpView);
-                AlertDialog dialog = builder.create();
-                dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+                popUpView.findViewById(R.id.pop_up_id).setVisibility(View.VISIBLE);
                 dialog.show();
 
                 popUpView.findViewById(R.id.ok_pop_up_id).setOnClickListener(new View.OnClickListener() {

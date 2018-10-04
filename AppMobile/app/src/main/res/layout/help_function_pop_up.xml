@@ -4,8 +4,10 @@
     xmlns:auto="http://schemas.android.com/tools"
     android:id="@+id/pop_up_id"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layout_marginBottom="15sp"
+    android:visibility="gone"
     android:gravity="center"
     android:background="@drawable/borders_pop_up">
 
@@ -27,8 +29,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        style="@style/helpPopUp"
         android:weightSum="100"
+        style="@style/helpPopUp"
         android:orientation="horizontal">
 
         <TextView
@@ -36,25 +38,24 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="start"
+            android:layout_weight="50"
             android:text="Función lineal"
-            android:layout_weight="70"
             android:textColor="@color/colorBlack"
             android:textSize="16sp" />
 
         <io.github.kexanie.library.MathView
-            android:id="@+id/formula_one"
-            android:layout_width="match_parent"
+            android:id="@+id/funcion_lineal_math"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:textAlignment="center"
-            auto:engine="MathJax"
-            auto:text="\\begin{aligned}\\LARGE{\a.x^2 + b.x + c \}\\end{aligned}">
+            android:layout_weight="50"
+            auto:engine="KaTeX"
+            android:visibility="visible">
         </io.github.kexanie.library.MathView>
     </LinearLayout>
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:gravity="center"
         style="@style/helpPopUp"
         android:weightSum="100"
@@ -73,17 +74,14 @@
             android:id="@+id/cuadratica_function"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="10dp"
             android:layout_weight="50"
-            auto:text="\\(ax^2 + bx + c\\)"
-            app:engine="MathJax">
+            android:visibility="visible"
+            app:engine="KaTeX">
         </io.github.kexanie.library.MathView>
     </LinearLayout>
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:gravity="center"
         android:weightSum="100"
         style="@style/helpPopUp"
@@ -102,17 +100,15 @@
             android:id="@+id/constante_function"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="10dp"
             android:layout_weight="50"
+            android:visibility="visible"
             auto:text="b"
-            app:engine="MathJax">
+            app:engine="KaTeX">
         </io.github.kexanie.library.MathView>
     </LinearLayout>
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:weightSum="100"
         android:gravity="center"
         style="@style/helpPopUp"
@@ -132,19 +128,16 @@
             android:layout_width="fill_parent"
             android:layout_weight="50"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="10dp"
-            auto:text="\\\\frac { ax + b } { cx + d } \\)"
-            app:engine="MathJax">
+            android:visibility="visible"
+            app:engine="KaTeX">
         </io.github.kexanie.library.MathView>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:gravity="center"
-
+android:layout_marginBottom="20sp"
         android:orientation="horizontal">
 
         <Button
@@ -152,6 +145,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="15dp"
+
             android:background="@drawable/rounded_corners_pop_up_back"
             android:paddingEnd="20dp"
             android:paddingStart="20dp"
