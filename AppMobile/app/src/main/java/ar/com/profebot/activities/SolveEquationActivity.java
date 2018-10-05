@@ -32,7 +32,7 @@ public class SolveEquationActivity extends GlobalActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.solve_equation_layout);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar_id);
+        Toolbar myToolbar = findViewById(R.id.toolbar_id);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -40,7 +40,7 @@ public class SolveEquationActivity extends GlobalActivity {
 
         context = this;
         
-        recyclerView = (RecyclerView)findViewById(R.id.rv_resolution_id);
+        recyclerView = findViewById(R.id.rv_resolution_id);
         LinearLayoutManager llm = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(llm);
         multipleChoiceSteps = this.initializeMultipleChoiceSteps();
@@ -57,7 +57,7 @@ public class SolveEquationActivity extends GlobalActivity {
             EquationManager.showPopUp();
         }
 
-        seeSummary = (Button) findViewById(R.id.see_summary_id);
+        seeSummary = findViewById(R.id.see_summary_id);
         seeSummary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,25 +84,8 @@ public class SolveEquationActivity extends GlobalActivity {
     }
 
     private List<MultipleChoiceStep> initializeMultipleChoiceSteps(){
-        List<MultipleChoiceStep> steps = new ArrayList<>();
+        List<MultipleChoiceStep> steps;
         steps = (new ResolutorService()).resolveExpression(ExpressionsManager.getTreeOfExpression(), context);
-       /* steps.add(new MultipleChoiceStep(ExpressionsManager.getEquationAsLatex(), "x+6+3x=4", "Distribuir el 3",
-                "Multiplicar por 3 a cada término del binomio 2+x", "",
-                "Pasar el 3 dividiendo", "","Pasar el (2+x) dividiendo", "",
-                1, "Se puede aplicar distributiva",
-                "No se puede pasar el 3 dividiendo por separación de términos",
-                "No se puede pasar el (2+x) dividiendo por separación de términos"));
-        steps.add(new MultipleChoiceStep("x+6+3x=4", "x+3x=4-6", "Pasar el 6 restando",
-                "Pasar el 6 sumando", "","Pasar el 6 restando", "",
-                "Pasar el 3 dividiendo", "",2, "Separando en términos, se puede pasar el término del 6 con el signo contrario",
-                "No se puede pasar el 6 sumando porque se debe invertir la operación. Si esta sumando, debe pasar restando.",
-                "No se puede pasar el 3 dividiendo por separación de términos."));
-        steps.add(new MultipleChoiceStep("x+3x=4-6", "x+3x=-2", "Aplicar la resta",
-                "Pasar el 3 dividiendo", "",
-                "Aplicar la resta, dando -3 como resultado", "",
-                "Aplicar la resta, dando -2 como resultado", "",3, "La diferencia entre 4 y 6 es 2, con signo negativo, por ser el 4 menor que 6",
-                "No se puede pasar el 3 dividiendo por separación de términos.",
-                "La resta no da -3. Para calcularlo, se hacer la resta 6-4, y cambiar de signo al resultado."));*/
         return steps;
     }
 

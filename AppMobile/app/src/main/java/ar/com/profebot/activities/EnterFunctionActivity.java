@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import com.profebot.activities.R;
 
+import ar.com.profebot.parser.exception.InvalidExpressionException;
 import ar.com.profebot.parser.service.FunctionParserService;
+import ar.com.profebot.resolutor.service.ResolutorService;
 import io.github.kexanie.library.MathView;
 import me.grantland.widget.AutofitTextView;
 
@@ -50,10 +52,24 @@ public class EnterFunctionActivity extends AppCompatActivity {
         setInformationalPopUp(title, explanation);
     }
 
-    public void rootBtn(View view) {
+    public void rootBtn(View view) throws InvalidExpressionException {
         String title = getString(R.string.tituloRaicesFuncion);
         String explanation = getString(R.string.explicacionRaicesFuncion);
         setInformationalPopUp(title, explanation);
+        String rootExpression = equation + " = 0";
+        String status = (new ResolutorService()).resolveExpression(rootExpression);
+        ImageButton forwardBtn = popUpView1.findViewById(R.id.forward_pop_up_id);
+        String rootExplanation;
+        String rootSolution = "Solución de raíces";
+        if(status == "NO_STEPS"){
+            rootExplanation = "La función no tiene raíces reales.";
+        }
+        else{
+            rootExplanation = "La función posee las siguientes raices: " + status;
+        }
+        forwardBtn.setOnClickListener(v -> {
+            setTrivialPopUp(rootSolution,rootExplanation);
+        });
     }
 
     public void originBtn(View view) {

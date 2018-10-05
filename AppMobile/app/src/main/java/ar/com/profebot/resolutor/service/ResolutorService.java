@@ -207,6 +207,22 @@ public class ResolutorService {
         return result;
     }
 
+    public String resolveExpression(String expression) throws InvalidExpressionException {
+
+        Tree tree = (new ParserService()).parseExpression(expression);
+
+        List<EquationStatus> steps = stepThrough(tree, false);
+
+        String estado;
+        if(steps.size() == 0){
+            estado = "NO_STEPS";
+        }
+        else{
+            estado = steps.get(steps.size() - 1).getNewEquation().toExpression();
+        }
+        return estado;
+    }
+
     protected List<EquationStatus> stepThrough(Tree equation, Boolean debug){
 
         List<EquationStatus> steps = new ArrayList<>();
