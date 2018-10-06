@@ -30,6 +30,12 @@
     <string name="informacionOrdenadaOrigen">Información de ordenada al origen</string>
     <string name="tituloRaicesFuncion">Raices de la función</string>
     <string name="explicacionRaicesFuncion">En matemática, se conoce como raíz (o cero) de un polinomio o de una función (definida sobre un cierto cuerpo algebraico) f(x) a todo elemento x perteneciente al dominio de dicha función tal que se cumpla: . Se tiene que 2 y 4 son raíces (ver ecuación de segundo grado) ya que f(2) = 0 y f(4) = 0.</string>
+    <string name="SinRaicesConstante">La función no tiene raices, porque es constante.</string>
     <string name="tituloImagenFuncion">Imagen de una función</string>
     <string name="explicacionImagenFuncion">la imagen, campo de valores o rango de una función {\\displaystyle f\\colon X\\to Y\\,} {\\displaystyle f\\colon X\\to Y\\,}, también llamada la imagen de {\\displaystyle X} X bajo {\\displaystyle f} f, es el conjunto contenido en {\\displaystyle Y} Y formado por todos los valores que puede llegar a tomar la función.</string>
+    <string name="solucionRaices">Solución de raíces</string>
+    <string name="sin_pasos">NO_STEPS</string>
+    <string name="SinRaices">La función no tiene raíces reales.</string>
+    <string name="conRaices">La función posee las siguientes raices:</string>
+    <string name="funcionInvalida">La función es invalida.</string>
 </resources>

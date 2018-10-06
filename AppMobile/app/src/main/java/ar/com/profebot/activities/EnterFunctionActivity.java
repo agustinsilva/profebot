@@ -56,19 +56,29 @@ public class EnterFunctionActivity extends AppCompatActivity {
         String title = getString(R.string.tituloRaicesFuncion);
         String explanation = getString(R.string.explicacionRaicesFuncion);
         setInformationalPopUp(title, explanation);
-        String rootExpression = equation + " = 0";
-        String status = (new ResolutorService()).resolveExpression(rootExpression);
         ImageButton forwardBtn = popUpView1.findViewById(R.id.forward_pop_up_id);
-        String rootExplanation;
-        String rootSolution = "Solución de raíces";
-        if(status == "NO_STEPS"){
-            rootExplanation = "La función no tiene raíces reales.";
-        }
-        else{
-            rootExplanation = "La función posee las siguientes raices: " + status;
-        }
         forwardBtn.setOnClickListener(v -> {
-            setTrivialPopUp(rootSolution,rootExplanation);
+            switch(equationType){
+                case CONSTANT:{
+                    setTrivialPopUp(getString(R.string.solucionRaices),getString(R.string.SinRaicesConstante));
+                    break;
+                }
+                case HOMOGRAPHIC:
+                case LINEAR:
+                case QUADRATIC:{
+                    String rootExpression = equation + " = 0";
+                    try {
+                        String status = (new ResolutorService()).resolveExpression(rootExpression);
+                        final String rootExplanation = (status == getString(R.string.sin_pasos)) ? getString(R.string.SinRaices) : getString(R.string.conRaices) + status;
+                        setTrivialPopUp(getString(R.string.solucionRaices),rootExplanation);
+                    } catch (InvalidExpressionException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+                case INVALID: setTrivialPopUp(getString(R.string.solucionRaices),getString(R.string.funcionInvalida));
+                break;
+            }
         });
     }
 
@@ -94,9 +104,35 @@ public class EnterFunctionActivity extends AppCompatActivity {
         setInformationalPopUp(title, explanation);
         ImageButton forwardBtn = popUpView1.findViewById(R.id.forward_pop_up_id);
 
-        String domainExpression = equation;
         forwardBtn.setOnClickListener(v -> {
-            setTrivialPopUp(getString(R.string.solucionDominio),getString(R.string.dominioTrivial));
+            switch(equationType){
+                case HOMOGRAPHIC:{
+                    int divisionPosition = equation.lastIndexOf("/");
+                    String denominatorHomographic = equation.substring(divisionPosition + 1);
+                    System.out.println(denominatorHomographic);
+                    int beginParenthesisPosition = equation.indexOf("(");
+                    int lastParenthesisPosition = equation.indexOf(")");
+                    denominatorHomographic = denominatorHomographic.substring(beginParenthesisPosition + 1,lastParenthesisPosition - 1) + " = 0";
+                    System.out.println(denominatorHomographic);
+                    String status;
+                    try {
+                        status = (new ResolutorService()).resolveExpression(denominatorHomographic).substring(2);
+                        String domainExplanation = "El dominio de la función aplica a todos los reales excepto al valor: " + status;
+                        setTrivialPopUp(getString(R.string.solucionDominio),domainExplanation);
+                    } catch (InvalidExpressionException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+                case CONSTANT:
+                case LINEAR:
+                case QUADRATIC:{
+                    setTrivialPopUp(getString(R.string.solucionDominio),getString(R.string.dominioTrivial));
+                    break;
+                }
+                case INVALID: setTrivialPopUp(getString(R.string.solucionDominio),getString(R.string.funcionInvalida));
+                    break;
+            }
         });
     }
 
