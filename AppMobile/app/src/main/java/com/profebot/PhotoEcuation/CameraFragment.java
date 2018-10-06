@@ -367,9 +367,9 @@ public class CameraFragment extends Fragment {
                         }
                         break;
                     case FUNCTION :
-                        if (FunctionParserService.getFunctionType(latex+"=0") != INVALID) {
+                        if (FunctionParserService.getFunctionType(ExpressionsManager.mapPhotoToOurAlphabet(latex)+"=0") != INVALID) {
                             Intent intent = new Intent(getActivity(), EnterFunctionActivity.class);
-                            intent.putExtra("function", latex);
+                            intent.putExtra("function", ExpressionsManager.mapPhotoToOurAlphabet(latex));
                             startActivity(intent);
                         }
                         else{

@@ -13,9 +13,12 @@ import android.widget.TextView;
 
 import com.profebot.activities.R;
 
+import java.util.Map;
+
 import ar.com.profebot.parser.exception.InvalidExpressionException;
 import ar.com.profebot.parser.service.FunctionParserService;
 import ar.com.profebot.resolutor.service.ResolutorService;
+import ar.com.profebot.service.ExpressionsManager;
 import io.github.kexanie.library.MathView;
 import me.grantland.widget.AutofitTextView;
 
@@ -68,9 +71,24 @@ public class EnterFunctionActivity extends AppCompatActivity {
                         setTrivialPopUp("Funciones tipo Cuadratica Trivial", getString(R.string.explicacionInformativaImagenCuadraticaTrivial, equation));
                     }
                     else{
-                        setPopUpToMultipleChoice("Funciones tipo Cuadratica", getString(R.string.explicacionInformativaImagen, "lineal"));
-                    }
+                        //Analizo concavidad e intervalo
+                        String concavidad;
+                        String intervalo;
+                        ExpressionsManager.setEquationDrawn(equation+"=0");
+                        ExpressionsManager.expressionDrawnIsValid();
+                        Map<Integer, Double> equationMapped = ExpressionsManager.parsePolinomialToHashMap(equation);
+                        if (equationMapped.get(2) > 0 ){
+                            concavidad = "Concavidad positiva";
+                            intervalo = "["+equationMapped.get(1)+"/2"+ equationMapped.get(2) +", + infinito)";
+                            setTrivialPopUp("Funciones tipo Cuadratica", getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad, intervalo));
+                        }
+                        else{
+                            concavidad = "Concavidad negativa";
+                            intervalo = "[- infinito, " + equationMapped.get(1)+"/2"+ equationMapped.get(2) +"]"; //TODO Fijarse el signo de laecuacion es -b
+                            setTrivialPopUp("Funciones tipo Cuadratica", getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad, intervalo));
+                        }
 
+                    }
                     break;
                 case HOMOGRAPHIC:
                     //Special Cases in HOMOGRAPHIC
@@ -82,6 +100,11 @@ public class EnterFunctionActivity extends AppCompatActivity {
                     break;
             }
         });
+    }
+
+    private String revertEquationForMP(String equation) {
+        return "y=" + equation;
+
     }
 
     public void rootBtn(View view) throws InvalidExpressionException {
@@ -170,22 +193,32 @@ public class EnterFunctionActivity extends AppCompatActivity {
         popUpView3 = this.getLayoutInflater().inflate(R.layout.function_pop_up, null);
         popUpView3.setElevation(0f);
 
-        AutofitTextView titleATV = popUpView1.findViewById(R.id.pop_up_title_id);
+        AutofitTextView titleATV = popUpView3.findViewById(R.id.pop_up_title_id);
         titleATV.setText(title);
-        TextView explanationTV = popUpView1.findViewById(R.id.explanation_pop_up);
+        TextView explanationTV = popUpView3.findViewById(R.id.explanation_pop_up);
         explanationTV.setText(explanation);
-        Button resolveBtn = popUpView1.findViewById(R.id.resolve_pop_up_id);
-        resolveBtn.setVisibility(View.GONE);
+        popUpView3.findViewById(R.id.checkBox).setVisibility(View.GONE);
+        popUpView3.findViewById(R.id.forward_pop_up_id).setVisibility(View.GONE);
 
 
-        popUpView1.setClipToOutline(true);
-        builder3.setView(popUpView1);
+        popUpView3.setClipToOutline(true);
+        builder3.setView(popUpView3);
         dialog3 = builder3.create();
         dialog3.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         dialog3.show();
-        popUpView1.findViewById(R.id.resolve_pop_up_id).setOnClickListener(v -> dialog3.hide());
-        ImageButton backBtn = popUpView1.findViewById(R.id.back_pop_up_id);
-        backBtn.setOnClickListener(v -> dialog1.hide());
+        popUpView3.findViewById(R.id.resolve_pop_up_id).setOnClickListener(v ->{
+            if (dialog1!=null){dialog1.hide();}
+            if (dialog2!=null){dialog2.hide();}
+            if (dialog3!=null){dialog3.hide();}
+            Intent intent = new Intent(this.getApplicationContext(), SolveEquationActivity.class);
+            startActivity(intent);
+        });
+        ImageButton backBtn = popUpView3.findViewById(R.id.back_pop_up_id);
+        backBtn.setOnClickListener(v -> {
+            if (dialog3!=null){dialog3.hide();}
+            if (dialog2!=null){dialog2.hide();}
+            if (dialog1!=null){dialog1.hide();}
+        });
     }
 
 
