@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -47,9 +48,40 @@ public class EnterFunctionActivity extends AppCompatActivity {
     }
 
     public void imageBtn(View view) {
+        //Set informational pop-up
         String title = getString(R.string.tituloImagenFuncion);
         String explanation = getString(R.string.explicacionImagenFuncion);
         setInformationalPopUp(title, explanation);
+        //Set second Pop-up
+        ImageButton forwardBtn = popUpView1.findViewById(R.id.forward_pop_up_id);
+        forwardBtn.setOnClickListener(v -> {
+            switch (equationType) {
+                case CONSTANT:
+                    setTrivialPopUp("Funciones tipo Constante", getString(R.string.explicacionInformativaImagen, "constante"));
+                    break;
+                case LINEAR:
+                    setTrivialPopUp("Funciones tipo Lineal", getString(R.string.explicacionInformativaImagen, "lineal"));
+                    break;
+                case QUADRATIC:
+                    //Special Cases in Quadratic
+                    if (equation == "X^2"){
+                        setTrivialPopUp("Funciones tipo Cuadratica Trivial", getString(R.string.explicacionInformativaImagenCuadraticaTrivial, equation));
+                    }
+                    else{
+                        setPopUpToMultipleChoice("Funciones tipo Cuadratica", getString(R.string.explicacionInformativaImagen, "lineal"));
+                    }
+
+                    break;
+                case HOMOGRAPHIC:
+                    //Special Cases in HOMOGRAPHIC
+
+                    setTrivialPopUp("Funciones tipo Homografica", getString(R.string.explicacionInformativaImagen, "lineal"));
+                    break;
+                default:
+                    Log.d("Error Imagen Funcion", "NO encontro ningun tipo de funcion para analizar la imagen");
+                    break;
+            }
+        });
     }
 
     public void rootBtn(View view) throws InvalidExpressionException {
