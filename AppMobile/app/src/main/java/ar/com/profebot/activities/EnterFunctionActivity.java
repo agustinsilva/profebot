@@ -101,7 +101,7 @@ public class EnterFunctionActivity extends AppCompatActivity {
                     String rootExpression = equation + " = 0";
                     try {
                         String status = (new ResolutorService()).resolveExpression(rootExpression);
-                        final String rootExplanation = (status == getString(R.string.sin_pasos)) ? getString(R.string.SinRaices) : getString(R.string.conRaices) + status;
+                        final String rootExplanation = (status == getString(R.string.sin_pasos)) ? getString(R.string.SinRaices) : getString(R.string.conRaices,status);
                         setTrivialPopUp(getString(R.string.solucionRaices),rootExplanation);
                     } catch (InvalidExpressionException e) {
                         e.printStackTrace();
@@ -147,8 +147,7 @@ public class EnterFunctionActivity extends AppCompatActivity {
                     String status;
                     try {
                         status = (new ResolutorService()).resolveExpression(denominatorHomographic).substring(2);
-                        String domainExplanation = "El dominio de la función aplica a todos los reales excepto al valor: " + status;
-                        setTrivialPopUp(getString(R.string.solucionDominio),domainExplanation);
+                        setTrivialPopUp(getString(R.string.solucionDominio),getString(R.string.dominioTrivialHomografica,status));
                     } catch (InvalidExpressionException e) {
                         e.printStackTrace();
                     }
