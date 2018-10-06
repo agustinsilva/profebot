@@ -141,11 +141,9 @@ public class EnterFunctionActivity extends AppCompatActivity {
                 case HOMOGRAPHIC:{
                     int divisionPosition = equation.lastIndexOf("/");
                     String denominatorHomographic = equation.substring(divisionPosition + 1);
-                    System.out.println(denominatorHomographic);
                     int beginParenthesisPosition = equation.indexOf("(");
                     int lastParenthesisPosition = equation.indexOf(")");
                     denominatorHomographic = denominatorHomographic.substring(beginParenthesisPosition + 1,lastParenthesisPosition - 1) + " = 0";
-                    System.out.println(denominatorHomographic);
                     String status;
                     try {
                         status = (new ResolutorService()).resolveExpression(denominatorHomographic).substring(2);
