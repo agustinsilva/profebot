@@ -24,6 +24,9 @@
     <string name="tituloDominio">Dominio de la función</string>
     <string name="explicacionDominio">En matemáticas, el dominio (conjunto de definición o conjunto de partida) de una función es el conjunto de existencia de ella misma, es decir, los valores para los cuales la función está definida. Es el conjunto de todos los objetos que puede transformar, se denota o bien .</string>
     <string name="solucionOrdenadaOrigen">Solución de ordenada al origen</string>
+    <string name="solucionDominio">Solución del dominio</string>
+    <string name="dominioTrivial">El dominio son todos los reales, es decir cualquier valor.</string>
+    <string name="dominioTrivialHomografica">El dominio son todos los reales, es decir cualquier valor, excepto el siguiente valor:</string>
     <string name="informacionOrdenadaOrigen">Información de ordenada al origen</string>
     <string name="tituloRaicesFuncion">Raices de la función</string>
     <string name="explicacionRaicesFuncion">En matemática, se conoce como raíz (o cero) de un polinomio o de una función (definida sobre un cierto cuerpo algebraico) f(x) a todo elemento x perteneciente al dominio de dicha función tal que se cumpla: . Se tiene que 2 y 4 son raíces (ver ecuación de segundo grado) ya que f(2) = 0 y f(4) = 0.</string>

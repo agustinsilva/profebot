@@ -78,29 +78,26 @@ public class EnterFunctionActivity extends AppCompatActivity {
 
         //Seteo el boton "Adelante" para configurar el proximo pop-up
         ImageButton forwardBtn = popUpView1.findViewById(R.id.forward_pop_up_id);
-
-        forwardBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Set explanation
-                //Fijarse si el dominio de la funcion incluye al 0
-                //- si lo incluye, ir al resolutor con la ecuacion
-                //setPopUpToMultipleChoice(title, explanation);
-                //- si lo excluye, ir al trivialPopUp con su texto explicando.
-                setTrivialPopUp(getString(R.string.solucionOrdenadaOrigen),getString(R.string.ordenadaAlOrigenTrivial));
-            }
+        forwardBtn.setOnClickListener(v -> {
+            //Set explanation
+            //Fijarse si el dominio de la funcion incluye al 0
+            //- si lo incluye, ir al resolutor con la ecuacion
+            //setPopUpToMultipleChoice(title, explanation);
+            //- si lo excluye, ir al trivialPopUp con su texto explicando.
+            setTrivialPopUp(getString(R.string.solucionOrdenadaOrigen),getString(R.string.ordenadaAlOrigenTrivial));
         });
     }
 
     public void domainBtn(View view) {
-        //Analizar el dominio de la funcion, si requiere multiple choiceo se muestra una solucion en pop-up
-/*        if (isTrivialSolution(equation)) {
-                setTrivialPopUp(title, explanation);
-        } else {*/
             String title = getString(R.string.tituloDominio);
             String explanation = getString(R.string.explicacionDominio);
         setInformationalPopUp(title, explanation);
-        //}
+        ImageButton forwardBtn = popUpView1.findViewById(R.id.forward_pop_up_id);
+
+        String domainExpression = equation;
+        forwardBtn.setOnClickListener(v -> {
+            setTrivialPopUp(getString(R.string.solucionDominio),getString(R.string.dominioTrivial));
+        });
     }
 
     private void setPopUpToMultipleChoice(String title, String explanation) {
