@@ -22,7 +22,7 @@
     <string name="ordenadaAlOrigenTrivial">La función no tiene ordenada al origen, dado que el dominio de la función excluye al valor x = 0, por lo tanto la función no se intersecta con el eje Y.</string>
     <string name="entendido">¡Entendido!</string>
     <string name="tituloDominio">Dominio de la función</string>
-    <string name="explicacionDominio">En matemáticas, el dominio (conjunto de definición o conjunto de partida) de una función es el conjunto de existencia de ella misma, es decir, los valores para los cuales la función está definida. Es el conjunto de todos los objetos que puede transformar, se denota o bien .</string>
+    <string name="explicacionDominio">En matemáticas, el dominio (conjunto de definición o conjunto de partida) de una función es el conjunto de existencia de ella misma, es decir, los valores para los cuales la función está definida.</string>
     <string name="solucionOrdenadaOrigen">Solución de ordenada al origen</string>
     <string name="solucionDominio">Solución del dominio</string>
     <string name="dominioTrivial">El dominio son todos los reales, es decir cualquier valor.</string>
