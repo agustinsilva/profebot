@@ -1,13 +1,16 @@
 package ar.com.profebot.activities;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -49,120 +52,71 @@ public class EnterFunctionActivity extends AppCompatActivity {
 
     public void imageBtn(View view) {
         //Set informational pop-up
-        String title = getString(R.string.tituloImagenFuncion);
-        String explanation = getString(R.string.explicacionImagenFuncion);
-        setInformationalPopUp(title, explanation);
-        //Set second Pop-up
-        ImageButton forwardBtn = popUpView1.findViewById(R.id.forward_pop_up_id);
-        forwardBtn.setOnClickListener(v -> {
-            switch (equationType) {
-                case CONSTANT:
-                    setTrivialPopUp("Funciones tipo Constante", getString(R.string.explicacionInformativaImagen, "constante"));
-                    break;
-                case LINEAR:
-                    setTrivialPopUp("Funciones tipo Lineal", getString(R.string.explicacionInformativaImagen, "lineal"));
-                    break;
-                case QUADRATIC:
-                    //Special Cases in Quadratic
-                    if (equation == "X^2"){
-                        setTrivialPopUp("Funciones tipo Cuadratica Trivial", getString(R.string.explicacionInformativaImagenCuadraticaTrivial, equation));
-                    }
-                    else{
-                        setPopUpToMultipleChoice("Funciones tipo Cuadratica", getString(R.string.explicacionInformativaImagen, "lineal"));
-                    }
-
-                    break;
-                case HOMOGRAPHIC:
-                    //Special Cases in HOMOGRAPHIC
-
-                    setTrivialPopUp("Funciones tipo Homografica", getString(R.string.explicacionInformativaImagen, "lineal"));
-                    break;
-                default:
-                    Log.d("Error Imagen Funcion", "NO encontro ningun tipo de funcion para analizar la imagen");
-                    break;
-            }
-        });
+        Boolean check  = getPreferenceCheck("popUpImageExplanation");
+        if(!check) {
+            String title = getString(R.string.tituloImagenFuncion);
+            String explanation = getString(R.string.explicacionImagenFuncion);
+            setInformationalPopUp(title, explanation);
+            //Set second Pop-up
+            ImageButton forwardBtn = popUpView1.findViewById(R.id.forward_pop_up_id);
+            forwardBtn.setOnClickListener(v -> {
+                setCheckPreference("popUpImageExplanation");
+                setImageTrivialPopUp();
+            });
+        }else{
+            setImageTrivialPopUp();
+        }
     }
 
-    public void rootBtn(View view) throws InvalidExpressionException {
-        String title = getString(R.string.tituloRaicesFuncion);
-        String explanation = getString(R.string.explicacionRaicesFuncion);
-        setInformationalPopUp(title, explanation);
-        ImageButton forwardBtn = popUpView1.findViewById(R.id.forward_pop_up_id);
-        forwardBtn.setOnClickListener(v -> {
-            switch(equationType){
-                case CONSTANT:{
-                    setTrivialPopUp(getString(R.string.solucionRaices),getString(R.string.SinRaicesConstante));
-                    break;
-                }
-                case HOMOGRAPHIC:
-                case LINEAR:
-                case QUADRATIC:{
-                    String rootExpression = equation + " = 0";
-                    try {
-                        String status = (new ResolutorService()).resolveExpression(rootExpression);
-                        final String rootExplanation = (status == getString(R.string.sin_pasos)) ? getString(R.string.SinRaices) : getString(R.string.conRaices,status);
-                        setTrivialPopUp(getString(R.string.solucionRaices),rootExplanation);
-                    } catch (InvalidExpressionException e) {
-                        e.printStackTrace();
-                    }
-                    break;
-                }
-                case INVALID: setTrivialPopUp(getString(R.string.solucionRaices),getString(R.string.funcionInvalida));
-                break;
-            }
-        });
+    public void rootBtn(View view) {
+        Boolean check  = getPreferenceCheck("popUpRootExplanation");
+        if(!check) {
+            String title = getString(R.string.tituloRaicesFuncion);
+            String explanation = getString(R.string.explicacionRaicesFuncion);
+            setInformationalPopUp(title, explanation);
+            ImageButton forwardBtn = popUpView1.findViewById(R.id.forward_pop_up_id);
+            forwardBtn.setOnClickListener(v -> {
+                setCheckPreference("popUpRootExplanation");
+                setRootTrivialPopUp();
+            });
+        }else{
+            setRootTrivialPopUp();
+        }
     }
 
     public void originBtn(View view) {
         //first show information pop-up if check is valid
-        setInformationalPopUp(getString(R.string.informacionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenInformational));
+        Boolean check  = getPreferenceCheck("popUpOriginExplanation");
 
-        //Seteo el boton "Adelante" para configurar el proximo pop-up
-        ImageButton forwardBtn = popUpView1.findViewById(R.id.forward_pop_up_id);
-        forwardBtn.setOnClickListener(v -> {
-            //Set explanation
-            //Fijarse si el dominio de la funcion incluye al 0
-            //- si lo incluye, ir al resolutor con la ecuacion
-            //setPopUpToMultipleChoice(title, explanation);
-            //- si lo excluye, ir al trivialPopUp con su texto explicando.
-            setTrivialPopUp(getString(R.string.solucionOrdenadaOrigen),getString(R.string.ordenadaAlOrigenTrivial));
-        });
+        if(!check) {
+            setInformationalPopUp(getString(R.string.informacionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenInformational));
+
+            //Seteo el boton "Adelante" para configurar el proximo pop-up
+            ImageButton forwardBtn = popUpView1.findViewById(R.id.forward_pop_up_id);
+            forwardBtn.setOnClickListener(v -> {
+                setCheckPreference("popUpOriginExplanation");
+                setTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenTrivial));
+            });
+        }else{
+            setTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenTrivial));
+        }
     }
 
     public void domainBtn(View view) {
+        Boolean check  = getPreferenceCheck("popUpDomainExplanation");
+        if(!check) {
             String title = getString(R.string.tituloDominio);
             String explanation = getString(R.string.explicacionDominio);
-        setInformationalPopUp(title, explanation);
-        ImageButton forwardBtn = popUpView1.findViewById(R.id.forward_pop_up_id);
-
-        forwardBtn.setOnClickListener(v -> {
-            switch(equationType){
-                case HOMOGRAPHIC:{
-                    int divisionPosition = equation.lastIndexOf("/");
-                    String denominatorHomographic = equation.substring(divisionPosition + 1);
-                    int beginParenthesisPosition = equation.indexOf("(");
-                    int lastParenthesisPosition = equation.indexOf(")");
-                    denominatorHomographic = denominatorHomographic.substring(beginParenthesisPosition + 1,lastParenthesisPosition - 1) + " = 0";
-                    String status;
-                    try {
-                        status = (new ResolutorService()).resolveExpression(denominatorHomographic).substring(2);
-                        setTrivialPopUp(getString(R.string.solucionDominio),getString(R.string.dominioTrivialHomografica,status));
-                    } catch (InvalidExpressionException e) {
-                        e.printStackTrace();
-                    }
-                    break;
-                }
-                case CONSTANT:
-                case LINEAR:
-                case QUADRATIC:{
-                    setTrivialPopUp(getString(R.string.solucionDominio),getString(R.string.dominioTrivial));
-                    break;
-                }
-                case INVALID: setTrivialPopUp(getString(R.string.solucionDominio),getString(R.string.funcionInvalida));
-                    break;
-            }
-        });
+            setInformationalPopUp(title, explanation);
+            ImageButton forwardBtn = popUpView1.findViewById(R.id.forward_pop_up_id);
+            forwardBtn.setOnClickListener(v -> {
+                setCheckPreference("popUpDomainExplanation");
+                setDomainTrivialPopUp();
+            });
+        }
+        else{
+            setDomainTrivialPopUp();
+        }
     }
 
     private void setPopUpToMultipleChoice(String title, String explanation) {
@@ -188,6 +142,11 @@ public class EnterFunctionActivity extends AppCompatActivity {
         backBtn.setOnClickListener(v -> dialog1.hide());
     }
 
+    private Boolean getPreferenceCheck(String preferenceKey){
+        SharedPreferences prefs = this.getSharedPreferences(preferenceKey, Context.MODE_PRIVATE);
+        Boolean check  = prefs.getBoolean(preferenceKey,false);
+        return check;
+    }
 
     private void setTrivialPopUp(String title, String explanation) {
         builder2 = new AlertDialog.Builder(this);
@@ -218,6 +177,13 @@ public class EnterFunctionActivity extends AppCompatActivity {
 
     }
 
+    private void setCheckPreference(String preferenceKey){
+        SharedPreferences prefs = this.getSharedPreferences(preferenceKey, Context.MODE_PRIVATE);
+        CheckBox checkbox = popUpView1.findViewById(R.id.checkBox);
+        if(checkbox.isChecked()){
+            prefs.edit().putBoolean(preferenceKey, true).apply();
+        }
+    }
     private void setInformationalPopUp(String title, String explanation) {
         builder1 = new AlertDialog.Builder(this);
         popUpView1 = this.getLayoutInflater().inflate(R.layout.function_pop_up, null);
@@ -248,7 +214,85 @@ public class EnterFunctionActivity extends AppCompatActivity {
         return true;
     }
 
+    private void setRootTrivialPopUp(){
+        switch(equationType){
+            case CONSTANT:{
+                setTrivialPopUp(getString(R.string.solucionRaices),getString(R.string.SinRaicesConstante));
+                break;
+            }
+            case HOMOGRAPHIC:
+            case LINEAR:
+            case QUADRATIC:{
+                String rootExpression = equation + " = 0";
+                try {
+                    String status = (new ResolutorService()).resolveExpression(rootExpression);
+                    final String rootExplanation = (status == getString(R.string.sin_pasos)) ? getString(R.string.SinRaices) : getString(R.string.conRaices,status);
+                    setTrivialPopUp(getString(R.string.solucionRaices),rootExplanation);
+                } catch (InvalidExpressionException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+            case INVALID: setTrivialPopUp(getString(R.string.solucionRaices),getString(R.string.funcionInvalida));
+                break;
+        }
+    }
 
+    private void setImageTrivialPopUp(){
+        switch (equationType) {
+            case CONSTANT:
+                setTrivialPopUp("Funciones tipo Constante", getString(R.string.explicacionInformativaImagen, "constante"));
+                break;
+            case LINEAR:
+                setTrivialPopUp("Funciones tipo Lineal", getString(R.string.explicacionInformativaImagen, "lineal"));
+                break;
+            case QUADRATIC:
+                //Special Cases in Quadratic
+                if (equation == "X^2") {
+                    setTrivialPopUp("Funciones tipo Cuadratica Trivial", getString(R.string.explicacionInformativaImagenCuadraticaTrivial, equation));
+                } else {
+                    setPopUpToMultipleChoice("Funciones tipo Cuadratica", getString(R.string.explicacionInformativaImagen, "lineal"));
+                }
+
+                break;
+            case HOMOGRAPHIC:
+                //Special Cases in HOMOGRAPHIC
+
+                setTrivialPopUp("Funciones tipo Homografica", getString(R.string.explicacionInformativaImagen, "lineal"));
+                break;
+            default:
+                Log.d("Error Imagen Funcion", "NO encontro ningun tipo de funcion para analizar la imagen");
+                break;
+        }
+    }
+
+    private void setDomainTrivialPopUp(){
+        switch(equationType){
+            case HOMOGRAPHIC:{
+                int divisionPosition = equation.lastIndexOf("/");
+                String denominatorHomographic = equation.substring(divisionPosition + 1);
+                int beginParenthesisPosition = equation.indexOf("(");
+                int lastParenthesisPosition = equation.indexOf(")");
+                denominatorHomographic = denominatorHomographic.substring(beginParenthesisPosition + 1,lastParenthesisPosition - 1) + " = 0";
+                String status;
+                try {
+                    status = (new ResolutorService()).resolveExpression(denominatorHomographic).substring(2);
+                    setTrivialPopUp(getString(R.string.solucionDominio),getString(R.string.dominioTrivialHomografica,status));
+                } catch (InvalidExpressionException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+            case CONSTANT:
+            case LINEAR:
+            case QUADRATIC:{
+                setTrivialPopUp(getString(R.string.solucionDominio),getString(R.string.dominioTrivial));
+                break;
+            }
+            case INVALID: setTrivialPopUp(getString(R.string.solucionDominio),getString(R.string.funcionInvalida));
+                break;
+        }
+    }
     private void setFunctionView(String equation) {
         MathView mathComponent = findViewById(R.id.equation_to_solve_id);
         mathComponent.config(
