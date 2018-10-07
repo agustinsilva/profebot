@@ -244,6 +244,16 @@ public class TreeNode {
 
             return childExpression.replaceAll("\\+\\-", "-");
 
+            // Caso especial: * / o ^ de una constante negativa
+        }else if ((this.esDivision() || this.esProducto() || this.esPotencia())
+                && TreeUtils.isConstant(this.getRightNode()) &&  this.getRightNode().getIntegerValue() < 0){
+
+            // Evito que quede "+-"
+            String exp = getNodeExpression(leftNode, false)
+                    + this.getValue()
+                    + "(" + getNodeExpression(this.getRightNode(), true) + ")";
+
+            return exp.replaceAll("\\+\\-", "-");
         }else{
 
             // Evito que quede "+-"

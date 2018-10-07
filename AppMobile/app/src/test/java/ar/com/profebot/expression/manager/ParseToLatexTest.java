@@ -4,6 +4,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import ar.com.profebot.parser.container.Tree;
+import ar.com.profebot.parser.exception.InvalidExpressionException;
+import ar.com.profebot.parser.service.ParserService;
 import ar.com.profebot.service.ExpressionsManager;
 
 public class ParseToLatexTest {
@@ -68,4 +71,15 @@ public class ParseToLatexTest {
         Assert.assertEquals("\\left(\\left(\\left(\\left(x-1\\right)\\cdot 3\\right)\\right)\\cdot \\left(\\left(x+2\\right)\\right)\\right)=\\left(\\left(\\left(\\left(x-1\\right)\\cdot 3\\right)\\right)\\cdot \\left(\\left(x+2\\right)\\right)\\right)", ExpressionsManager.mapToLatexAndReplaceComparator("\\left(\\left(\\left(\\left(x-1\\right)\\cdot 3\\right)\\right)\\cdot \\left(\\left(x+2\\right)\\right)\\right)=\\left(\\left(\\left(\\left(x-1\\right)\\cdot 3\\right)\\right)\\cdot \\left(\\left(x+2\\right)\\right)\\right)"));
         Assert.assertEquals("\\left(\\left(\\left(\\left(x-1\\right)\\cdot 3\\right)\\right)\\cdot \\left(\\left(x+2\\right)\\right)\\right)=\\left(\\left(\\left(\\left(x-1\\right)\\cdot 3\\right)\\right)\\cdot \\left(\\left(x+2\\right)\\right)\\right)", ExpressionsManager.mapToLatexAndReplaceComparator("((((x-1)*3))*((x+2)))=((((x-1)*3))*((x+2)))"));
     }
+
+    @Test
+    public void parseEquationsToLatex_2() throws InvalidExpressionException {
+
+        String expression = "X=4/-1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        String exp =  tree.toExpression();
+        ExpressionsManager.mapToLatexAndReplaceComparator(exp);
+    }
+
+
 }
