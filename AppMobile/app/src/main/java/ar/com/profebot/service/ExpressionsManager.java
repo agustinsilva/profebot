@@ -191,7 +191,7 @@ public class ExpressionsManager {
         }
     }
 
-    private static String mapPhotoToOurAlphabet(String equationPhoto) {
+    public static String mapPhotoToOurAlphabet(String equationPhoto) {
         equationPhoto = equationPhoto.replaceAll("\\s+", "");
         equationPhoto = containsFrac(equationPhoto);
 
@@ -577,4 +577,93 @@ public class ExpressionsManager {
 
          return !equationWithTags.contains("(A") && !equationWithTags.contains(")C");
     }
+
+    public static Map<Integer, Double> parsePolinomialToHashMap(String equation) {
+        Map<Integer, Double> polynomialMap = new HashMap<>();
+        equation = equation.replaceAll("-", "+!").replaceAll("\\s+", "").replaceAll("X","x").replaceAll("\\*","");;
+        String[] terms = equation.split("\\+");
+
+        for (String term : terms) {
+            if (!term.isEmpty()) {
+                String potential, coefficient;
+                if (term.contains("x^")) {
+                    int position = term.indexOf("x^");
+                    switch (position) {
+                        case 1:
+                            if (term.substring(0, position).contains("!")) {
+                                coefficient = "-1";
+                            } else {
+                                coefficient = term.substring(0, position);
+                            }
+                            break;
+                        case 0:
+                            coefficient = "1";
+                            break;
+                        default:
+                            coefficient = term.substring(0, position).replace("!", "-");
+                            break;
+                    }
+                    potential = term.substring(position + 2, term.length());
+                    coefficient = coefficient.replaceAll("\\{", "").replaceAll("\\}", "").replaceAll("\\)", "").replaceAll("\\(", "");
+                    potential = potential.replaceAll("\\{", "").replaceAll("\\}", "").replaceAll("\\)", "").replaceAll("\\(", "");
+                    polynomialMap = AddTerm(potential, coefficient, polynomialMap);
+                } else if (term.contains("x")) {//es un coeficeinte lineal
+                    int positionLineal = term.indexOf("x");
+                    switch (positionLineal) {
+                        case 1:
+                            if (term.substring(0, positionLineal).contains("!")) {
+                                coefficient = "-1";
+                            } else {
+                                coefficient = term.substring(0, positionLineal);
+                            }
+                            break;
+                        case 0:
+                            coefficient = "1";
+                            break;
+                        default:
+                            coefficient = term.substring(0, positionLineal).replace("!", "-");
+                            break;
+                    }
+                    polynomialMap = AddTerm("1", coefficient, polynomialMap);
+                } else {//es un termino independiente
+                    polynomialMap = AddTerm("0", term, polynomialMap);
+                }
+            }
+        }
+        return polynomialMap;
+    }
+    private static Map<Integer, Double> AddTerm(String potential, String coefficient, Map<Integer, Double> polynomialMap) {
+        Double newCoefficient;
+        if(!polynomialMap.containsKey(Integer.parseInt(potential))){
+            newCoefficient = fractionToDouble(coefficient);
+        }else {
+            newCoefficient = polynomialMap.get(Integer.parseInt(potential)) + fractionToDouble(coefficient);
+            polynomialMap.remove(potential);
+        }
+        if(newCoefficient != 0){
+            polynomialMap.put(Integer.parseInt(potential), newCoefficient);
+        }
+        return polynomialMap;
+    }
+
+    public static Double fractionToDouble(String fraction) {
+        Double d = null;
+        if (fraction != null) {
+            if (fraction.contains("/")) {
+                String[] numbers = fraction.split("/");
+                if (numbers.length == 2) {
+                    Double d1 = Double.valueOf(numbers[0]);
+                    Double d2 = Double.valueOf(numbers[1]);
+                    d = Double.parseDouble(String.format("%.2f", d1/d2).replace(",","."));
+                }
+            }
+            else {
+                d = Double.parseDouble(fraction);
+            }
+        }
+        if (d == null) {
+        }
+        return d;
+    }
+
 }

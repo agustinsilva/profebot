@@ -14,12 +14,12 @@
     <string name="yes">Si</string>
     <string name="no">No</string>
     //Main menu
-    <string name="salir">¿Queres salir?</string>
+    <string name="salir">¿Querés salir?</string>
     <string name="esperamos">Te esperamos pronto para seguir practicando.</string>
     <string name="revisarEcuacion">¡Fijate si la ecuación está bien escrita!</string>
     <string name="ordenada_al_origen">Ordenada &#10;al origen</string>
-    <string name="ordenadaAlOrigenInformational">La ordenada al origen nos indica cuando una función se intersecta con el eje Y, que es el eje de ordenadas. Para lograr esto lo que hacemos es reemplazar la incognita de la función por 0, osea hallamos el valor de la función F(x) cuando x = 0.</string>
-    <string name="ordenadaAlOrigenTrivial">La función no tiene ordenada al origen, dado que el dominio de la función excluye al valor x = 0, por lo tanto la función no se intersecta con el eje Y.</string>
+    <string name="ordenadaAlOrigenInformational">La ordenada al origen nos indica cuándo una función se intersecta con el eje Y, que es el eje de ordenadas. Para lograr esto reemplazamos la incógnita de la función por 0, es decir, hallamos el valor de la función F(x) cuando x = 0.</string>
+    <string name="ordenadaAlOrigenTrivial">La función no tiene ordenada al origen, dado que el dominio de la función excluye al valor x = 0, por lo tanto, la función no se intersecta con el eje Y.</string>
     <string name="entendido">¡Entendido!</string>
     <string name="tituloDominio">Dominio de la función</string>
     <string name="explicacionDominio">En matemáticas, el dominio (conjunto de definición o conjunto de partida) de una función es el conjunto de existencia de ella misma, es decir, los valores para los cuales la función está definida.</string>
@@ -28,16 +28,18 @@
     <string name="dominioTrivial">El dominio son todos los reales, es decir cualquier valor.</string>
     <string name="dominioTrivialHomografica">El dominio de la función aplica a todos los reales excepto al valor: %1$s</string>
     <string name="informacionOrdenadaOrigen">Información de ordenada al origen</string>
-    <string name="tituloRaicesFuncion">Raices de la función</string>
-    <string name="explicacionRaicesFuncion">En matemática, se conoce como raíz (o cero) de un polinomio o de una función (definida sobre un cierto cuerpo algebraico) f(x) a todo elemento x perteneciente al dominio de dicha función tal que se cumpla: . Se tiene que 2 y 4 son raíces (ver ecuación de segundo grado) ya que f(2) = 0 y f(4) = 0.</string>
-    <string name="SinRaicesConstante">La función no tiene raices, porque es constante.</string>
+    <string name="tituloRaicesFuncion">Raíces de la función</string>
+    <string name="explicacionRaicesFuncion">En matemática, se conoce como raíz (o cero) de un polinomio o de una función f(x) a todo elemento x perteneciente al dominio de dicha función tal que se cumpla: . Se tiene que 2 y 4 son raíces (ver ecuación de segundo grado) ya que f(2) = 0 y f(4) = 0.</string>
+    <string name="SinRaicesConstante">La función no tiene raíces, porque es constante.</string>
     <string name="tituloImagenFuncion">Imagen de una función</string>
     <string name="explicacionImagenFuncion">La imagen es el rango de valores de la función f(x) para los que existe un valor de x. La forma de calcularlo dependerá del tipo de función que analizamos.</string>
-    <string name="explicacionInformativaImagen">En estas funciones del tipo %1$s, el dominio es todo R, por lo que la imagen también es todos los Reales. </string>
-    <string name="explicacionInformativaImagenCuadraticaTrivial">En el tipo de función %1$s, la imagen son los reales positivos, a pesar que el dominio acepta todos los Reales.</string>
+    <string name="explicacionInformativaImagen">En estas funciones del tipo %1$s, el dominio son todos los Reales, por lo que la imagen también lo es. </string>
+    <string name="explicacionInformativaImagenCuadraticaTrivial">En el tipo de función %1$s, la imagen son los reales positivos, a pesar de que el dominio acepta todos los Reales.</string>
     <string name="solucionRaices">Solución de raíces</string>
     <string name="sin_pasos">NO_STEPS</string>
     <string name="SinRaices">La función no tiene raíces reales.</string>
     <string name="conRaices">La función posee las siguientes raices: %1$s</string>
-    <string name="funcionInvalida">La función es invalida.</string>
+    <string name="funcionInvalida">La función es inválida.</string>
+    <string name="explicacionInformativaImagenCuadraticaResolucion">Esta función cuadrática tiene una %1$s, entonces la imagen es el conjunto %2$s, presentando un mínimo global. Surge de resolver la inecuación Y >= -b/2a.</string>
+
 </resources>
