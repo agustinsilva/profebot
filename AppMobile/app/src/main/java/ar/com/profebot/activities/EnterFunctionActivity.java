@@ -258,15 +258,15 @@ public class EnterFunctionActivity extends AppCompatActivity {
     private void setImageTrivialPopUp(){
         switch (equationType) {
             case CONSTANT:
-                setTrivialPopUp("Funciones tipo Constante", getString(R.string.explicacionInformativaImagen, "constante"));
+                setTrivialPopUp("Función Constante", getString(R.string.explicacionInformativaImagen, "constante"));
                 break;
             case LINEAR:
-                setTrivialPopUp("Funciones tipo Lineal", getString(R.string.explicacionInformativaImagen, "lineal"));
+                setTrivialPopUp("Función Lineal", getString(R.string.explicacionInformativaImagen, "lineal"));
                 break;
             case QUADRATIC:
                 //Special Cases in Quadratic
                 if (equation == "X^2"){
-                    setTrivialPopUp("Funciones tipo Cuadratica Trivial", getString(R.string.explicacionInformativaImagenCuadraticaTrivial, equation));
+                    setTrivialPopUp("Función Cuadrática Trivial", getString(R.string.explicacionInformativaImagenCuadraticaTrivial, equation));
                 }
                 else{
                     //Analizo concavidad e intervalo
@@ -276,14 +276,14 @@ public class EnterFunctionActivity extends AppCompatActivity {
                     ExpressionsManager.expressionDrawnIsValid();
                     Map<Integer, Double> equationMapped = ExpressionsManager.parsePolinomialToHashMap(equation);
                     if (equationMapped.get(2) > 0 ){
-                        concavidad = "Concavidad positiva";
+                        concavidad = "concavidad positiva";
                         intervalo = "["+equationMapped.get(1)+"/2"+ equationMapped.get(2) +", + infinito)";
-                        setTrivialPopUp("Funciones tipo Cuadratica", getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad, intervalo));
+                        setTrivialPopUp("Función Cuadrática", getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad, intervalo));
                     }
                     else{
-                        concavidad = "Concavidad negativa";
+                        concavidad = "concavidad negativa";
                         intervalo = "[- infinito, " + equationMapped.get(1)+"/2"+ equationMapped.get(2) +"]"; //TODO Fijarse el signo de laecuacion es -b
-                        setTrivialPopUp("Funciones tipo Cuadratica", getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad, intervalo));
+                        setTrivialPopUp("Función Cuadrática", getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad, intervalo));
                     }
 
                 }
@@ -297,7 +297,7 @@ public class EnterFunctionActivity extends AppCompatActivity {
                 Map<Integer, Double> numeratorMapped = ExpressionsManager.parsePolinomialToHashMap(numeratorHomographic);
                 String solucion = "R - { "+ numeratorMapped.get(1) +"/"+denominatorMapped.get(1) + " }";
 
-                setTrivialPopUp("Funciones tipo Homografica", getString(R.string.explicacionImagenHomografica, solucion));
+                setTrivialPopUp("Función Homográfica", getString(R.string.explicacionImagenHomografica, solucion));
                 break;
             default:
                 Log.d("Error Imagen Funcion", "NO encontro ningun tipo de funcion para analizar la imagen");
