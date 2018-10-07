@@ -20,7 +20,7 @@ public class GlobalActivity extends AppCompatActivity {
         this.setUpGlobalExceptionHandler();
         this.showErrorPopUpIfOccurredError();
     }
-
+s
     private void setUpGlobalExceptionHandler(){
         GlobalActivity activity = this;
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
