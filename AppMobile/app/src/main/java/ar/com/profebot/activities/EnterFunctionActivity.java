@@ -250,6 +250,8 @@ public class EnterFunctionActivity extends AppCompatActivity {
             }
             case INVALID: setTrivialPopUp(getString(R.string.solucionRaices),getString(R.string.funcionInvalida));
                 break;
+            default:
+                break;
         }
     }
 
@@ -320,13 +322,19 @@ public class EnterFunctionActivity extends AppCompatActivity {
                 }
                 break;
             }
-            case CONSTANT:
-            case LINEAR:
+            case CONSTANT:{
+                setTrivialPopUp(getString(R.string.solucionDominio),getString(R.string.dominioTrivial));
+                break;}
+            case LINEAR:{
+                setTrivialPopUp(getString(R.string.solucionDominio),getString(R.string.dominioTrivial));
+                break;}
             case QUADRATIC:{
                 setTrivialPopUp(getString(R.string.solucionDominio),getString(R.string.dominioTrivial));
                 break;
             }
             case INVALID: setTrivialPopUp(getString(R.string.solucionDominio),getString(R.string.funcionInvalida));
+                break;
+            default:
                 break;
         }
     }
