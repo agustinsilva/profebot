@@ -239,19 +239,36 @@ public class TreeNode {
             String childExpression = "";
             for(TreeNode child: this.getArgs()){
                 if (childExpression.length() != 0){childExpression+=this.getValue();}
-                childExpression+= getNodeExpression(child, false);
+
+                // Si es multiplicativo, encierro entre parentesis los ngeativos
+                if ((this.esProducto() || this.esDivision()) && TreeUtils.isNegative(child)){
+                    childExpression+= "(" + getNodeExpression(child, false) + ")";
+                }else{
+                    childExpression+= getNodeExpression(child, false);
+                }
+
             }
 
             return childExpression.replaceAll("\\+\\-", "-");
 
-            // Caso especial: * / o ^ de una constante negativa
-        }else if ((this.esDivision() || this.esProducto() || this.esPotencia())
-                && TreeUtils.isConstant(this.getRightNode()) &&  this.getRightNode().getIntegerValue() < 0){
+            // Caso especial: * / o ^ de una constante o X negativa
+        }else if (isMultiplicativeWithNegativeArgs(this)){
 
             // Evito que quede "+-"
-            String exp = getNodeExpression(leftNode, false)
-                    + this.getValue()
-                    + "(" + getNodeExpression(this.getRightNode(), true) + ")";
+            String exp = "";
+            if (TreeUtils.isNegative(this.getLeftNode())){
+                exp += "(" + getNodeExpression(leftNode, false) + ")";
+            }else{
+                exp += getNodeExpression(leftNode, false);
+            }
+
+            exp += this.getValue();
+
+            if (TreeUtils.isNegative(this.getRightNode())){
+                exp += "(" + getNodeExpression(this.getRightNode(), false) + ")";
+            }else{
+                exp += getNodeExpression(this.getRightNode(), false);
+            }
 
             return exp.replaceAll("\\+\\-", "-");
         }else{
@@ -263,6 +280,32 @@ public class TreeNode {
 
             return exp.replaceAll("\\+\\-", "-");
         }
+    }
+
+    /**
+     * Siempre va a tener 2 argumentos, caos contrario sale antes del if
+     * @param node
+     * @return
+     */
+    private boolean isMultiplicativeWithNegativeArgs(TreeNode node) {
+
+        // Signos multiplicativos
+        if (!this.esDivision() && !this.esProducto() && !this.esPotencia()){
+            return false;
+        }
+
+        // Al menos 1 de los dos debe ser negativo
+        if (!TreeUtils.isNegative(node.getLeftNode()) && !TreeUtils.isNegative(node.getRightNode())){
+            return false;
+        }
+
+        // Al menos 1 debe ser constante o X
+        if (!TreeUtils.isConstant(node.getLeftNode()) && !TreeUtils.isSymbol(node.getLeftNode())
+                && !TreeUtils.isConstant(node.getRightNode()) && !TreeUtils.isSymbol(node.getRightNode())){
+            return false;
+        }
+
+        return true;
     }
 
     private String getNodeExpression(TreeNode treeNode, Boolean eshijoDerecho){

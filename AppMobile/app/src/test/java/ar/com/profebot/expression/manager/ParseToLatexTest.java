@@ -4,9 +4,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
+import ar.com.profebot.Models.MultipleChoiceStep;
 import ar.com.profebot.parser.container.Tree;
 import ar.com.profebot.parser.exception.InvalidExpressionException;
 import ar.com.profebot.parser.service.ParserService;
+import ar.com.profebot.resolutor.container.EquationStatus;
+import ar.com.profebot.resolutor.service.ResolutorService;
 import ar.com.profebot.service.ExpressionsManager;
 
 public class ParseToLatexTest {
@@ -79,6 +84,21 @@ public class ParseToLatexTest {
         Tree tree = (new ParserService()).parseExpression(expression);
         String exp =  tree.toExpression();
         ExpressionsManager.mapToLatexAndReplaceComparator(exp);
+    }
+
+    @Test
+    public void parseEquationsToLatex_3() throws InvalidExpressionException {
+
+        String expression = "3X=-10";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        List<MultipleChoiceStep> listaNodos =  (new ResolutorService()).resolveExpressionTestWithoutContext(expression);
+
+        for (MultipleChoiceStep m:listaNodos){
+            ExpressionsManager.mapToLatexAndReplaceComparator(m.getEquationOptionA());
+            ExpressionsManager.mapToLatexAndReplaceComparator(m.getEquationOptionB());
+            ExpressionsManager.mapToLatexAndReplaceComparator(m.getEquationOptionC());
+        }
+
     }
 
 
