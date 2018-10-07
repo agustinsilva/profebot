@@ -39,7 +39,8 @@
     <string name="sin_pasos">NO_STEPS</string>
     <string name="SinRaices">La función no tiene raíces reales.</string>
     <string name="conRaices">La función posee las siguientes raices: %1$s</string>
-    <string name="funcionInvalida">La función es inválida.</string>
-    <string name="explicacionInformativaImagenCuadraticaResolucion">Esta función cuadrática tiene una %1$s, entonces la imagen es el conjunto %2$s, presentando un mínimo global. Surge de resolver la inecuación Y >= -b/2a.</string>
+    <string name="funcionInvalida">La función es invalida.</string>
+    <string name="explicacionInformativaImagenCuadraticaResolucion">Esta funcion cuadratica tiene una %1$s, entonces la imagen es el conjunto %2$s, presentando un minimo global. Surge de resolver la inecuacion Y >= -b/2a.</string>
+    <string name="explicacionImagenHomografica" >La única restricción que tiene la función homográfica, es la presencia de la asíntota horizontal, la cual se construye como a/c. El conjunto imagen será entonces: reales - { asíntota horizontal }, que equivale formalmente a decir: %1$s </string>
 
 </resources>

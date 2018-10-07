@@ -57,14 +57,60 @@ public class EnterFunctionActivity extends AppCompatActivity {
         //Set informational pop-up
         Boolean check  = getPreferenceCheck("popUpImageExplanation");
         if(!check) {
+            //Set informational pop-up
             String title = getString(R.string.tituloImagenFuncion);
             String explanation = getString(R.string.explicacionImagenFuncion);
             setInformationalPopUp(title, explanation);
             //Set second Pop-up
             ImageButton forwardBtn = popUpView1.findViewById(R.id.forward_pop_up_id);
             forwardBtn.setOnClickListener(v -> {
-                setCheckPreference("popUpImageExplanation");
-                setImageTrivialPopUp();
+                switch (equationType) {
+                    case CONSTANT:
+                        setTrivialPopUp("Funciones tipo Constante", getString(R.string.explicacionInformativaImagen, "constante"));
+                        break;
+                    case LINEAR:
+                        setTrivialPopUp("Funciones tipo Lineal", getString(R.string.explicacionInformativaImagen, "lineal"));
+                        break;
+                    case QUADRATIC:
+                        //Special Cases in Quadratic
+                        if (equation == "X^2"){
+                            setTrivialPopUp("Funciones tipo Cuadratica Trivial", getString(R.string.explicacionInformativaImagenCuadraticaTrivial, equation));
+                        }
+                        else{
+                            //Analizo concavidad e intervalo
+                            String concavidad;
+                            String intervalo;
+                            ExpressionsManager.setEquationDrawn(equation+"=0");
+                            ExpressionsManager.expressionDrawnIsValid();
+                            Map<Integer, Double> equationMapped = ExpressionsManager.parsePolinomialToHashMap(equation);
+                            if (equationMapped.get(2) > 0 ){
+                                concavidad = "Concavidad positiva";
+                                intervalo = "["+equationMapped.get(1)+"/2"+ equationMapped.get(2) +", + infinito)";
+                                setTrivialPopUp("Funciones tipo Cuadratica", getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad, intervalo));
+                            }
+                            else{
+                                concavidad = "Concavidad negativa";
+                                intervalo = "[- infinito, " + equationMapped.get(1)+"/2"+ equationMapped.get(2) +"]"; //TODO Fijarse el signo de laecuacion es -b
+                                setTrivialPopUp("Funciones tipo Cuadratica", getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad, intervalo));
+                            }
+
+                        }
+                        break;
+                    case HOMOGRAPHIC:
+                        //Special Cases in HOMOGRAPHIC
+                        int divisionPosition = equation.lastIndexOf("/");
+                        String denominatorHomographic = equation.substring(divisionPosition + 1).replaceAll("\\(","").replaceAll("\\)","");
+                        String numeratorHomographic = equation.substring(0,divisionPosition ).replaceAll("\\(","").replaceAll("\\)","");
+                        Map<Integer, Double> denominatorMapped = ExpressionsManager.parsePolinomialToHashMap(denominatorHomographic);
+                        Map<Integer, Double> numeratorMapped = ExpressionsManager.parsePolinomialToHashMap(numeratorHomographic);
+                        String solucion = "R - { "+ numeratorMapped.get(1) +"/"+denominatorMapped.get(1) + " }";
+
+                        setTrivialPopUp("Funciones tipo Homografica", getString(R.string.explicacionImagenHomografica, solucion));
+                        break;
+                    default:
+                        Log.d("Error Imagen Funcion", "NO encontro ningun tipo de funcion para analizar la imagen");
+                        break;
+                }
             });
         }else{
             setImageTrivialPopUp();

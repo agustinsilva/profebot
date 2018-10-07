@@ -98,6 +98,11 @@ public class FunctionParserServiceTest {
     }
 
     @Test
+    public void isQuadratic_x2plus2() {
+        String exp = "X^2+2=0";
+        testQuadraticFunction(exp);
+    }
+    @Test
     public void isNotQuadratic_1() {
         String exp = "(6X^2+16)/(X+9)=0";
         testNonQuadraticFunction(exp);
