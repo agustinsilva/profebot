@@ -1,7 +1,9 @@
 package ar.com.profebot.activities;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initializeSettings();
         Toolbar myToolbar = findViewById(R.id.toolbar_id);
         setSupportActionBar(myToolbar);
         spinner = findViewById(R.id.main_activity_progress_bar_id);
@@ -32,6 +35,13 @@ public class MainActivity extends AppCompatActivity {
         initiateActivityOnClick(R.id.enter_polynomial_id,EnterPolinomialEquationOptionsActivity.class);
         initiateActivityOnClick(R.id.enter_function_id,EnterFunctionOptionsActivity.class);
         this.setMainMenuShortCut();
+    }
+
+    private void initializeSettings() {
+        this.getSharedPreferences("popUpDomainExplanation", Context.MODE_PRIVATE).edit().putBoolean("popUpDomainExplanation", false).apply();
+        this.getSharedPreferences("popUpOriginExplanation", Context.MODE_PRIVATE).edit().putBoolean("popUpOriginExplanation", false).apply();
+        this.getSharedPreferences("popUpRootExplanation", Context.MODE_PRIVATE).edit().putBoolean("popUpRootExplanation", false).apply();
+        this.getSharedPreferences("popUpImageExplanation", Context.MODE_PRIVATE).edit().putBoolean("popUpImageExplanation", false).apply();
     }
 
     private void initiateActivityOnClick(int id, Class classActivity){

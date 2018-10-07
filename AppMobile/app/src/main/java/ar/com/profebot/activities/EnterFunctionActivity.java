@@ -64,53 +64,8 @@ public class EnterFunctionActivity extends AppCompatActivity {
             //Set second Pop-up
             ImageButton forwardBtn = popUpView1.findViewById(R.id.forward_pop_up_id);
             forwardBtn.setOnClickListener(v -> {
-                switch (equationType) {
-                    case CONSTANT:
-                        setTrivialPopUp("Funciones tipo Constante", getString(R.string.explicacionInformativaImagen, "constante"));
-                        break;
-                    case LINEAR:
-                        setTrivialPopUp("Funciones tipo Lineal", getString(R.string.explicacionInformativaImagen, "lineal"));
-                        break;
-                    case QUADRATIC:
-                        //Special Cases in Quadratic
-                        if (equation == "X^2"){
-                            setTrivialPopUp("Funciones tipo Cuadratica Trivial", getString(R.string.explicacionInformativaImagenCuadraticaTrivial, equation));
-                        }
-                        else{
-                            //Analizo concavidad e intervalo
-                            String concavidad;
-                            String intervalo;
-                            ExpressionsManager.setEquationDrawn(equation+"=0");
-                            ExpressionsManager.expressionDrawnIsValid();
-                            Map<Integer, Double> equationMapped = ExpressionsManager.parsePolinomialToHashMap(equation);
-                            if (equationMapped.get(2) > 0 ){
-                                concavidad = "Concavidad positiva";
-                                intervalo = "["+equationMapped.get(1)+"/2"+ equationMapped.get(2) +", + infinito)";
-                                setTrivialPopUp("Funciones tipo Cuadratica", getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad, intervalo));
-                            }
-                            else{
-                                concavidad = "Concavidad negativa";
-                                intervalo = "[- infinito, " + equationMapped.get(1)+"/2"+ equationMapped.get(2) +"]"; //TODO Fijarse el signo de laecuacion es -b
-                                setTrivialPopUp("Funciones tipo Cuadratica", getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad, intervalo));
-                            }
-
-                        }
-                        break;
-                    case HOMOGRAPHIC:
-                        //Special Cases in HOMOGRAPHIC
-                        int divisionPosition = equation.lastIndexOf("/");
-                        String denominatorHomographic = equation.substring(divisionPosition + 1).replaceAll("\\(","").replaceAll("\\)","");
-                        String numeratorHomographic = equation.substring(0,divisionPosition ).replaceAll("\\(","").replaceAll("\\)","");
-                        Map<Integer, Double> denominatorMapped = ExpressionsManager.parsePolinomialToHashMap(denominatorHomographic);
-                        Map<Integer, Double> numeratorMapped = ExpressionsManager.parsePolinomialToHashMap(numeratorHomographic);
-                        String solucion = "R - { "+ numeratorMapped.get(1) +"/"+denominatorMapped.get(1) + " }";
-
-                        setTrivialPopUp("Funciones tipo Homografica", getString(R.string.explicacionImagenHomografica, solucion));
-                        break;
-                    default:
-                        Log.d("Error Imagen Funcion", "NO encontro ningun tipo de funcion para analizar la imagen");
-                        break;
-                }
+                setCheckPreference("popUpImageExplanation");
+                setImageTrivialPopUp();
             });
         }else{
             setImageTrivialPopUp();
@@ -132,11 +87,6 @@ public class EnterFunctionActivity extends AppCompatActivity {
             setRootTrivialPopUp();
         }
     }
-
-    private String revertEquationForMP(String equation) {
-            return "y=" + equation;
-
-        }
 
     public void originBtn(View view) {
         //first show information pop-up if check is valid
@@ -235,8 +185,9 @@ public class EnterFunctionActivity extends AppCompatActivity {
         ImageButton backBtn = popUpView2.findViewById(R.id.back_pop_up_id);
         backBtn.setOnClickListener(v -> dialog2.hide());
         EntendidoBtn.setOnClickListener(v -> {
-            dialog2.hide();
-            dialog1.hide();
+            if (dialog3!=null){dialog3.hide();}
+            if (dialog2!=null){dialog2.hide();}
+            if (dialog1!=null){dialog1.hide();}
         });
 
     }
@@ -337,8 +288,14 @@ public class EnterFunctionActivity extends AppCompatActivity {
                 break;
             case HOMOGRAPHIC:
                 //Special Cases in HOMOGRAPHIC
+                int divisionPosition = equation.lastIndexOf("/");
+                String denominatorHomographic = equation.substring(divisionPosition + 1).replaceAll("\\(","").replaceAll("\\)","");
+                String numeratorHomographic = equation.substring(0,divisionPosition ).replaceAll("\\(","").replaceAll("\\)","");
+                Map<Integer, Double> denominatorMapped = ExpressionsManager.parsePolinomialToHashMap(denominatorHomographic);
+                Map<Integer, Double> numeratorMapped = ExpressionsManager.parsePolinomialToHashMap(numeratorHomographic);
+                String solucion = "R - { "+ numeratorMapped.get(1) +"/"+denominatorMapped.get(1) + " }";
 
-                setTrivialPopUp("Funciones tipo Homografica", getString(R.string.explicacionInformativaImagen, "lineal"));
+                setTrivialPopUp("Funciones tipo Homografica", getString(R.string.explicacionImagenHomografica, solucion));
                 break;
             default:
                 Log.d("Error Imagen Funcion", "NO encontro ningun tipo de funcion para analizar la imagen");
