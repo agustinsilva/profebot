@@ -242,11 +242,23 @@ public abstract class Manager {
         ((TextView)finalSummarySection.findViewById(R.id.title_id)).setText(title);
         ((TextView)finalSummarySection.findViewById(R.id.first_text_id)).setText(contextOfResolutionFirstText);
         ((TextView)finalSummarySection.findViewById(R.id.second_text_id)).setText(contextOfResolutionSecondText);
-        ((MathView)finalSummarySection.findViewById(R.id.first_equation_id)).setText("$$" + ExpressionsManager.mapToLatexAndReplaceComparator(firstEquation) + "$$");
+
+        MathView originalEquation = (MathView)finalSummarySection.findViewById(R.id.first_equation_id);
+        originalEquation.config("MathJax.Hub.Config({\n"+
+                "  CommonHTML: { linebreaks: { automatic: true } },\n"+
+                "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
+                "         SVG: { linebreaks: { automatic: true } }\n"+
+                "});");
+        originalEquation.setText("$$" + ExpressionsManager.mapToLatexAndReplaceComparator(firstEquation) + "$$");
 
         MathView secondEquation = (MathView)finalSummarySection.findViewById(R.id.second_equation_id);
         if(SolvePolynomialActivity.CONTEXT_OF_RESOLUTION_IS_POLYNOMIAL_FACTORIZED.equals(solutionType)){
             secondEquation.setVisibility(View.VISIBLE);
+            secondEquation.config("MathJax.Hub.Config({\n"+
+                    "  CommonHTML: { linebreaks: { automatic: true } },\n"+
+                    "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
+                    "         SVG: { linebreaks: { automatic: true } }\n"+
+                    "});");
             secondEquation.setText("$$" + lastEquation + "$$");
         }else{
             secondEquation.setVisibility(View.GONE);
