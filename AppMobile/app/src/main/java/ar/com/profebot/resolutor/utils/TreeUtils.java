@@ -961,6 +961,47 @@ public class TreeUtils {
         return true;
     }
 
+    public static boolean hasQuadraticNode(TreeNode node) {
+
+        // Simple termino cuadratico
+        if (TreeUtils.isSymbol(node)){
+            return node.getExponent() == 2;
+        }
+
+        // Suma de exponente cuadratico y otros simples o constantes
+        if (!node.esSuma()) {
+            return false;
+        }
+
+        List<TreeNode> secondDegreeTerms = new ArrayList<>();
+        List<TreeNode> firstDegreeTerms = new ArrayList<>();
+        List<TreeNode> constantTerms = new ArrayList<>();
+
+        for (TreeNode child : node.getArgs()) {
+            if (isPolynomialTermOfDegree(child, 2)) {
+                secondDegreeTerms.add(child);
+            } else if (isPolynomialTermOfDegree(child, 1)) {
+                firstDegreeTerms.add(child);
+            } else if (isConstant(child, true)) {
+                constantTerms.add(child);
+            }
+        }
+
+        // Check that there is one second degree term and at most one first degree
+        // term and at most one constant term
+        if (secondDegreeTerms.size() == 0 ) {
+            return false;
+        }
+
+        // check that there are no terms that don't fall into these groups
+        if ((secondDegreeTerms.size() + firstDegreeTerms.size() +
+                constantTerms.size()) != node.getArgs().size()) {
+            return false;
+        }
+
+        return true;
+    }
+
     // Given a degree, returns a function that checks if a node
     // is a polynomial term of the given degree.
     public static boolean isPolynomialTermOfDegree(TreeNode node, int degree) {

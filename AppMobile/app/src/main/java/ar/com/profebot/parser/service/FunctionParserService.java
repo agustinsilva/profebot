@@ -163,7 +163,7 @@ public class FunctionParserService {
         // Flatten
         TreeNode functionNodeFlattened = TreeUtils.flattenOperands(functionNode);
 
-        return TreeUtils.isQuadratic(functionNodeFlattened);
+        return TreeUtils.hasQuadraticNode(functionNodeFlattened);
     }
 
 }
