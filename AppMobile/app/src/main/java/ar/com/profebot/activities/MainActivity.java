@@ -31,9 +31,28 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.toolbar_id);
         setSupportActionBar(myToolbar);
         spinner = findViewById(R.id.main_activity_progress_bar_id);
-        initiateActivityOnClick(R.id.enter_equation_id,EnterEquationOptionsActivity.class);
-        initiateActivityOnClick(R.id.enter_polynomial_id,EnterPolinomialEquationOptionsActivity.class);
-        initiateActivityOnClick(R.id.enter_function_id,EnterFunctionOptionsActivity.class);
+
+        Button sectionButton;
+        sectionButton = findViewById(R.id.enter_equation_id);
+        sectionButton.setOnClickListener(button -> {
+            SolveEquationActivity.setTypeOfContextOfResolution(SolveEquationActivity.EQUATION_OR_INEQUATION);
+            Intent intent = new Intent(MainActivity.this, EnterEquationOptionsActivity.class);
+            startActivity(intent);
+        });
+
+        sectionButton = findViewById(R.id.enter_polynomial_id);
+        sectionButton.setOnClickListener(button -> {
+            Intent intent = new Intent(MainActivity.this, EnterPolinomialEquationOptionsActivity.class);
+            startActivity(intent);
+        });
+
+        sectionButton = findViewById(R.id.enter_function_id);
+        sectionButton.setOnClickListener(button -> {
+            SolveEquationActivity.setTypeOfContextOfResolution(SolveEquationActivity.FUNCTION);
+            Intent intent = new Intent(MainActivity.this, EnterFunctionOptionsActivity.class);
+            startActivity(intent);
+        });
+
         this.setMainMenuShortCut();
     }
 
@@ -42,14 +61,6 @@ public class MainActivity extends AppCompatActivity {
         this.getSharedPreferences("popUpOriginExplanation", Context.MODE_PRIVATE).edit().putBoolean("popUpOriginExplanation", false).apply();
         this.getSharedPreferences("popUpRootExplanation", Context.MODE_PRIVATE).edit().putBoolean("popUpRootExplanation", false).apply();
         this.getSharedPreferences("popUpImageExplanation", Context.MODE_PRIVATE).edit().putBoolean("popUpImageExplanation", false).apply();
-    }
-
-    private void initiateActivityOnClick(int id, Class classActivity){
-        Button sectionButton = findViewById(id);
-        sectionButton.setOnClickListener(button -> {
-            Intent intent = new Intent(MainActivity.this,classActivity);
-            startActivity(intent);
-        });
     }
 
     private void setMainMenuShortCut(){

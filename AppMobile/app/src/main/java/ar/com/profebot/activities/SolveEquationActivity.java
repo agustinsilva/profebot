@@ -37,12 +37,16 @@ public class SolveEquationActivity extends GlobalActivity {
     public static final String CONTEXT_OF_RESOLUTION_IS_ROOTS = "roots_of_function";
     public static final String CONTEXT_OF_RESOLUTION_IS_ORIGIN_ORD = "origin_ord_of_function";
 
+    public static final int EQUATION_OR_INEQUATION = 0;
+    public static final int FUNCTION = 1;
+
     private static List<MultipleChoiceStep> multipleChoiceSteps;
     private static RVMultipleChoiceAdapter adapter;
     public static RecyclerView recyclerView;
     public static SolveEquationActivity context;
     private static Button seeSummary;
     private static String contextOfResolution;
+    private static Integer typeOfContextOfResolution;
     private static String title;
     private static String lastEquation;
     private static Map<String, String> contextOfResolutionTexts;
@@ -69,6 +73,7 @@ public class SolveEquationActivity extends GlobalActivity {
             lastEquation = multipleChoiceSteps.get(multipleChoiceSteps.size() - 1).getNewEquationBase();
         }else{
             adapter = new RVMultipleChoiceAdapter(null, new ArrayList<>(), new EquationManager());
+            lastEquation = ExpressionsManager.getTreeOfExpression().toExpression();
         }
         recyclerView.setAdapter(adapter);
 
@@ -76,7 +81,6 @@ public class SolveEquationActivity extends GlobalActivity {
         LinearLayout equationSummarySection = findViewById(R.id.final_summary_section_id);
         LinearLayout recycleViewSection = findViewById(R.id.recycle_view_section_id);
         setContextOfResolution();
-        contextOfResolutionTexts = JustificationsService.getContextOfResolutionTexts(getContextOfResolution(), this);
         title = "Ecuación terminada";
 
         if(multipleChoiceSteps.isEmpty()){
@@ -100,13 +104,36 @@ public class SolveEquationActivity extends GlobalActivity {
         disableSummary();
     }
 
-    public static String getContextOfResolution() {
-        return contextOfResolution;
+    public static void setTypeOfContextOfResolution(Integer typeOfContextOfResolution) {
+        SolveEquationActivity.typeOfContextOfResolution = typeOfContextOfResolution;
     }
 
-    public static void setContextOfResolution() {
-        // TODO: identificar el tipo en función del lastEquation
-        SolveEquationActivity.contextOfResolution = "";
+    private void setContextOfResolution() {
+        if(typeOfContextOfResolution == EQUATION_OR_INEQUATION){
+            // Equation
+            if(lastEquation.contains("=")){
+                String[] members = lastEquation.split("=");
+                if(members[0].equals(members[1])){
+                    contextOfResolution = CONTEXT_OF_RESOLUTION_IS_EQUATION_WITH_INFINITE_SOLUTIONS;
+                }else if(members[0].toUpperCase().equals("X")){
+                    contextOfResolution = CONTEXT_OF_RESOLUTION_IS_EQUATION_WITH_FINITE_SOLUTIONS;
+                }
+
+                try{
+                    Double.parseDouble(members[0]);
+                    Double.parseDouble(members[1]);
+                    contextOfResolution = CONTEXT_OF_RESOLUTION_IS_EQUATION_WITHOUT_SOLUTIONS;
+                }catch (Exception e){
+                    contextOfResolution = "";
+                }
+            }else{ // Inequation
+                // TODO: ver en qué formato llega
+            }
+        }
+
+        contextOfResolutionTexts = JustificationsService.getContextOfResolutionTexts(contextOfResolution, this);
+
+        // TODO: completar los textos del mapa en función del contextOfResolution, para c/ constante, ya sea de ecuaciones, inecuaciones o funciones.
     }
 
     private void disableSummary(){
@@ -119,8 +146,6 @@ public class SolveEquationActivity extends GlobalActivity {
         seeSummary.setBackgroundResource(R.drawable.rounded_corners_polynomial_summary);
         seeSummary.setTextColor(Color.WHITE);
         seeSummary.setEnabled(true);
-
-        setContextOfResolution();
 
         LinearLayout finalSummarySection = findViewById(R.id.final_summary_section_id);
         LinearLayout recycleViewSection = findViewById(R.id.recycle_view_section_id);
