@@ -205,6 +205,9 @@ public class InvalidOptionService {
             tree.setLeftNode(randomNode);
         }
 
+        tree.setLeftNode(TreeUtils.flattenOperands(tree.getLeftNode()));
+        tree.setRightNode(TreeUtils.flattenOperands(tree.getRightNode()));
+
         return new InvalidStep(type, tree);
 
     }
@@ -375,6 +378,8 @@ public class InvalidOptionService {
 
     private InvalidStep getSecondInvalidOption(Reduction reduction){
         Tree reducedTree = resolveExpression(reduction);
+        reducedTree.setLeftNode(TreeUtils.flattenOperands(reducedTree.getLeftNode()));
+        reducedTree.setRightNode(TreeUtils.flattenOperands(reducedTree.getRightNode()));
         return new InvalidStep(getSecondInvalidOptionInvalidTypes(reduction), reducedTree);
     }
 
