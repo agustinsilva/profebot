@@ -26,6 +26,8 @@ public class ParseToLatexTest {
 
         Assert.assertEquals("(-1;-1)", ExpressionsManager.mapToLatexAndReplaceComparator("[-1,-1]"));
 
+        Assert.assertEquals("\\left(-\\frac{1}{3}\\right)\\cdot 8", ExpressionsManager.mapToLatexAndReplaceComparator("(-1/3)8"));
+
         Assert.assertEquals("x+1", ExpressionsManager.mapToLatexAndReplaceComparator("x+1"));
         Assert.assertEquals("-x+1", ExpressionsManager.mapToLatexAndReplaceComparator("-x+1"));
 
@@ -58,6 +60,8 @@ public class ParseToLatexTest {
         Assert.assertEquals("x+1=-\\left(x+1\\right)", ExpressionsManager.mapToLatexAndReplaceComparator("x+1=-(x+1)"));
         Assert.assertEquals("x+1=x+1", ExpressionsManager.mapToLatexAndReplaceComparator("x+1=x+1"));
         Assert.assertEquals("-x+1=-x+1", ExpressionsManager.mapToLatexAndReplaceComparator("-x+1=-x+1"));
+
+        Assert.assertEquals("\\left(9\\cdot x-7\\right)\\cdot \\frac{1}{8}=-\\frac{1}{3}\\cdot x", ExpressionsManager.mapToLatexAndReplaceComparator("(9x-7)1/8=-1/3x"));
 
         Assert.assertEquals("{x}^{4}+1={x}^{4}+1", ExpressionsManager.mapToLatexAndReplaceComparator("x^4+1=x^4+1"));
         Assert.assertEquals("\\left({x}^{4}+1\\right) \\lt \\left({x}^{4}+1\\right)", ExpressionsManager.mapToLatexAndReplaceComparator("(x^4+1)<(x^4+1)"));
