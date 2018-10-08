@@ -746,4 +746,11 @@ public class JustificationsService {
         texts.put("type", type);
         return texts;
     }
+
+    public static Map<String, String> replacePatterns(Map<String, String> contextOfResolutionTexts, String key, String pattern, String newVal){
+        String value = contextOfResolutionTexts.get(key);
+        contextOfResolutionTexts.remove(key);
+        contextOfResolutionTexts.put(key, ExpressionsManager.removeDecimals(value.replace(pattern, newVal)));
+        return contextOfResolutionTexts;
+    }
 }

@@ -117,23 +117,45 @@ public class SolveEquationActivity extends GlobalActivity {
                     contextOfResolution = CONTEXT_OF_RESOLUTION_IS_EQUATION_WITH_INFINITE_SOLUTIONS;
                 }else if(members[0].toUpperCase().equals("X")){
                     contextOfResolution = CONTEXT_OF_RESOLUTION_IS_EQUATION_WITH_FINITE_SOLUTIONS;
+                }else{
+                    try{
+                        Double.parseDouble(members[0]);
+                        Double.parseDouble(members[1]);
+                        contextOfResolution = CONTEXT_OF_RESOLUTION_IS_EQUATION_WITHOUT_SOLUTIONS;
+                    }catch (Exception e){
+                        contextOfResolution = "";
+                    }
                 }
 
-                try{
-                    Double.parseDouble(members[0]);
-                    Double.parseDouble(members[1]);
-                    contextOfResolution = CONTEXT_OF_RESOLUTION_IS_EQUATION_WITHOUT_SOLUTIONS;
-                }catch (Exception e){
-                    contextOfResolution = "";
-                }
             }else{ // Inequation
                 // TODO: ver en qué formato llega
+                contextOfResolution = "";
             }
         }
 
         contextOfResolutionTexts = JustificationsService.getContextOfResolutionTexts(contextOfResolution, this);
-
-        // TODO: completar los textos del mapa en función del contextOfResolution, para c/ constante, ya sea de ecuaciones, inecuaciones o funciones.
+        String[] members;
+        switch (contextOfResolution){
+            case CONTEXT_OF_RESOLUTION_IS_EQUATION_WITH_FINITE_SOLUTIONS:
+                contextOfResolutionTexts = EquationManager.fixResolutionTextsForRoots(contextOfResolutionTexts, lastEquation);
+                break;
+            case CONTEXT_OF_RESOLUTION_IS_DOMAIN:
+                contextOfResolutionTexts = EquationManager.fixResolutionTextsForFunctionIntervals(contextOfResolutionTexts, lastEquation);
+                break;
+            case CONTEXT_OF_RESOLUTION_IS_IMAGE:
+                contextOfResolutionTexts = EquationManager.fixResolutionTextsForFunctionIntervals(contextOfResolutionTexts, lastEquation);
+                break;
+            case CONTEXT_OF_RESOLUTION_IS_ROOTS:
+                contextOfResolutionTexts = EquationManager.fixResolutionTextsForRoots(contextOfResolutionTexts, lastEquation);
+                break;
+            case CONTEXT_OF_RESOLUTION_IS_ORIGIN_ORD:
+                members = lastEquation.split("=");
+                contextOfResolutionTexts = JustificationsService.replacePatterns(contextOfResolutionTexts, "second", "/valor/", members[1]);
+                break;
+            case CONTEXT_OF_RESOLUTION_IS_INEQUATION_WITH_INTERVAL_SOLUTIONS:
+                // TODO: falta ver como me llega la info del back
+                break;
+        }
     }
 
     private void disableSummary(){

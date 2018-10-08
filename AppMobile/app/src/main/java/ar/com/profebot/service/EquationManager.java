@@ -91,4 +91,38 @@ public class EquationManager extends Manager{
     public RecyclerView getRecyclerView() {
         return SolveEquationActivity.recyclerView;
     }
+
+    public static Map<String, String> fixResolutionTextsForRoots(Map<String, String> contextOfResolutionTexts, String lastEquation){
+        String[] members = lastEquation.split("=");
+        try{
+            Double solution = Double.parseDouble(members[1]);
+            contextOfResolutionTexts = JustificationsService.replacePatterns(contextOfResolutionTexts, "second", "/raices/", solution + "");
+        }catch (Exception e){
+            String roots = members[1]
+                    .replace("[", "")
+                    .replace("]", "")
+                    .replace(",", ", ");
+            contextOfResolutionTexts = JustificationsService.replacePatterns(contextOfResolutionTexts, "second", "/raices/", roots);
+        }
+        return contextOfResolutionTexts;
+    }
+
+    public static Map<String, String> fixResolutionTextsForFunctionIntervals(Map<String, String> contextOfResolutionTexts, String lastEquation){
+        if(lastEquation.contains("!=")){
+            String[] members = lastEquation.split("!=");
+            contextOfResolutionTexts = JustificationsService.replacePatterns(contextOfResolutionTexts, "second", "/intervalo/", "R - {" + members[1] + "}");
+        }else if(lastEquation.contains(">=")){
+            // TODO
+        }else if(lastEquation.contains("<=")){
+            // TODO
+        }else if(lastEquation.contains(">")){
+            // TODO
+        }else if(lastEquation.contains("<")){
+            // TODO
+        }
+
+        return contextOfResolutionTexts;
+    }
+
+
 }

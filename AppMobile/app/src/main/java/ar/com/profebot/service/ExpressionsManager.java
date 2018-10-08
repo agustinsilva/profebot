@@ -102,7 +102,7 @@ public class ExpressionsManager {
             return firstSign + parseToLatex(infixEquationCleaned);
         }
 
-        String[] expressions = infixEquationCleaned.split(getRootOfEquation(infixEquation));
+        String[] expressions = infixEquationCleaned.split(comparatorOperator);
 
         firstSign = "";
         if (expressions[0].substring(0,1).contains("-")){
@@ -124,9 +124,9 @@ public class ExpressionsManager {
                 + parseToLatex(expressions[1]);
     }
 
-    private static String replaceComparatorWithMathViewTag(String latex){
+    private static String replaceComparatorWithMathViewTag(String infixEquation){
         String newComparator;
-        String currentComparator = getRootOfEquation(latex);
+        String currentComparator = getRootOfEquation(infixEquation);
         switch (currentComparator){
             case "<=":
                 newComparator = " \\leqslant ";
@@ -151,7 +151,7 @@ public class ExpressionsManager {
                 break;
         }
 
-        return latex.replace(currentComparator, newComparator);
+        return infixEquation.replace(currentComparator, newComparator);
     }
 
     public static String getPolinomialEquationAsLatex() {
@@ -389,6 +389,23 @@ public class ExpressionsManager {
                     .replaceAll(i + "X", i + "*X");
         }
 
+        if(!equationDrawn.isEmpty()){
+            String comparator = getRootOfEquation(equationDrawn);
+            String posibleParOrdenado = equationDrawn;
+            if(!comparator.isEmpty()){
+                String[] members = equationDrawn.split(comparator);
+                if(members.length == 2){
+                    posibleParOrdenado = equationDrawn.split(comparator)[1];
+                }
+            }
+
+            if(posibleParOrdenado.charAt(0) == '['
+                    && posibleParOrdenado.charAt(posibleParOrdenado.length() - 1) == ']'
+                    && posibleParOrdenado.contains(",")){
+                equationDrawn = equationDrawn.replace(",", ";");
+            }
+        }
+
         return equationDrawn;
     }
 
@@ -503,6 +520,8 @@ public class ExpressionsManager {
                 .replaceAll("\\.0\\)", ")")
                 .replaceAll("\\.0x", "x")
                 .replaceAll("\\.0 ", " ")
+                .replaceAll("\\.0\\}", "}")
+                .replaceAll("\\.0\\,", ",")
                 .replaceAll("\\.0$", "");
     }
 
@@ -515,7 +534,10 @@ public class ExpressionsManager {
         // 2º: si el polinomio tiene variables X elevadas, reemplazar las X por (a_1)
         equationCleaned = equationCleaned
                 .replace("x^", "(a_1)^")
-                .replace("x", "a_1");
+                .replace("x", "a_1")
+                .replace(";-", "+b_1-")
+                .replace(";", "+b_1+")
+        ;
 
         // 3º: si el polinomio empieza con signo (-), removerlo
         String firstSign = "";
@@ -524,7 +546,8 @@ public class ExpressionsManager {
             equationCleaned = equationCleaned.substring(1);
         }
 
-        equationCleaned = equationCleaned.replace("(-(", "((-1)*(");
+        //equationCleaned = equationCleaned.replace("(-(", "((-1)*(");
+        equationCleaned = equationCleaned.replace("(-", "((-1)*");
         System.out.println("Expresión a parsear a latex: " + equationCleaned);
 
         String latex = FormulaParser.parseToLatex(equationCleaned);
@@ -532,8 +555,11 @@ public class ExpressionsManager {
 
         latex = firstSign + latex
                 .replace("{a}_{1}", "x")
+                .replace("+{b}_{1}-", ";-")
+                .replace("+{b}_{1}+", ";")
                 .replace("\\left(x\\right)", "x")
-                .replace("\\left(-1\\right)\\cdot", "-");
+                .replace("\\left(\\left(-1\\right)\\cdot ", "\\left(-")
+                .replace("\\left(-1\\right)\\cdot ", "-");
         System.out.println("Latex con variable X: " + latex);
 
         for(int i = 0; i < countOfGlobalBrackets; i++){
@@ -546,7 +572,8 @@ public class ExpressionsManager {
     private static Map<String, Integer> removeGlobalBrackets(String equation){
         String equationCleaned = equation;
         Integer count = 0;
-        while(hasGlobalBrackets(equationCleaned) && noInconsistentBracket(equationCleaned)){
+        // Si hay un ";" implica un par ordenado o un intervalo
+        while(hasGlobalBrackets(equationCleaned) && (noInconsistentBracket(equationCleaned) || equation.contains(";"))){
             equationCleaned = equationCleaned.substring(1, equationCleaned.length() - 1);
             count++;
         }

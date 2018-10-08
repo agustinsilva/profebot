@@ -210,6 +210,7 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
 
             multipleChoiceViewHolder.optionA = multipleChoiceViewHolder.itemView.findViewById(R.id.option_a_id);
             multipleChoiceViewHolder.optionA.setChecked(false);
+            multipleChoiceViewHolder.optionA.setEnabled(true);
             multipleChoiceViewHolder.optionA.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -221,7 +222,7 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
             });
 
             multipleChoiceViewHolder.optionB = multipleChoiceViewHolder.itemView.findViewById(R.id.option_b_id);
-            multipleChoiceViewHolder.optionB.setChecked(false);
+            multipleChoiceViewHolder.optionB.setEnabled(true);
             multipleChoiceViewHolder.optionB.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -234,6 +235,7 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
 
             multipleChoiceViewHolder.optionC = multipleChoiceViewHolder.itemView.findViewById(R.id.option_c_id);
             multipleChoiceViewHolder.optionC.setChecked(false);
+            multipleChoiceViewHolder.optionC.setEnabled(true);
             multipleChoiceViewHolder.optionC.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
