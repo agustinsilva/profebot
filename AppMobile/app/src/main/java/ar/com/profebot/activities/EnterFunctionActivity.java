@@ -99,9 +99,21 @@ public class EnterFunctionActivity extends AppCompatActivity {
             ImageButton forwardBtn = popUpView1.findViewById(R.id.forward_pop_up_id);
             forwardBtn.setOnClickListener(v -> {
                 setCheckPreference("popUpOriginExplanation");
-                setTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenTrivial));
+                setOriginTrivialPopUp();
             });
-        }else{
+        }
+        else {
+            setOriginTrivialPopUp();
+        }
+    }
+
+    private void setOriginTrivialPopUp() {
+        String equationModified, status;
+        try {
+            equationModified = equation.replaceAll("x", "0").replaceAll("X", "0") + "=x";
+            status = (new ResolutorService()).resolveExpression(equationModified).substring(2);
+            setTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenEspecial, status));
+        } catch (InvalidExpressionException e) {
             setTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenTrivial));
         }
     }
@@ -338,6 +350,7 @@ public class EnterFunctionActivity extends AppCompatActivity {
                 break;
         }
     }
+
     private void setFunctionView(String equation) {
         MathView mathComponent = findViewById(R.id.equation_to_solve_id);
         mathComponent.config(

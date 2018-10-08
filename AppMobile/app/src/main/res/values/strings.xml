@@ -20,6 +20,7 @@
     <string name="ordenada_al_origen">Ordenada &#10;al origen</string>
     <string name="ordenadaAlOrigenInformational">La ordenada al origen nos indica cuándo una función se intersecta con el eje Y, que es el eje de ordenadas. Para lograr esto reemplazamos la incógnita de la función por 0, es decir, hallamos el valor de la función F(x) cuando x = 0.</string>
     <string name="ordenadaAlOrigenTrivial">La función no tiene ordenada al origen, dado que el dominio de la función excluye al valor x = 0, por lo tanto, la función no se intersecta con el eje Y.</string>
+    <string name="ordenadaAlOrigenEspecial">La función tiene ordenada al origen,en el valor de y = %1$s.</string>
     <string name="entendido">¡Entendido!</string>
     <string name="tituloDominio">¿Qué es el Dominio?</string>
     <string name="explicacionDominio">En matemáticas, el dominio (conjunto de definición o conjunto de partida) de una función es el conjunto de existencia de ella misma, es decir, los valores para los cuales la función está definida.</string>
@@ -42,5 +43,6 @@
     <string name="funcionInvalida">La función es inválida.</string>
     <string name="explicacionInformativaImagenCuadraticaResolucion">Esta función cuadrática tiene una %1$s, entonces la imagen es el conjunto %2$s, presentando un mínimo global. Surge de resolver la inecuación Y >= -b/2a.</string>
     <string name="explicacionImagenHomografica" >La restricción que tienen las funciones homográficas, es la presencia de una Asíntota Horizontal. Esta asíntota (o recta) se expresa como y=a/c. La imagen de la función equivale a: reales - { asíntota horizontal }, en este ejercicio: %1$s </string>
+
 
 </resources>
