@@ -1713,6 +1713,12 @@ public class ResolutorServiceTest extends ResolutorService {
         Assert.assertEquals("X=[1,5,-5]",estado);
     }
 
+    @Test
+    public void stepThrough_ok65()  throws InvalidExpressionException {
+        String expression = "(X-2)*(X-3)=1";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
+    }
     /*@Test
     public void stepThrough_ok65()  throws InvalidExpressionException {
         String expression = "X^2+5-1=X";

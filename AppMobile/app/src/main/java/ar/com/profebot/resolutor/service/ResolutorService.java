@@ -454,7 +454,12 @@ public class ResolutorService {
 
         simplifiedLeftNode = TreeUtils.removeUnnecessaryParens(simplifiedLeftNode, true);
 
-        List<NodeStatus> leftFactorSteps = factorStepThrough(simplifiedLeftNode, false);
+        List<NodeStatus> leftFactorSteps = new ArrayList<>();
+
+        // Solamente va a factorizar si a la derecha ya no quedan terminos
+        if ("0".equals(equation.getRightNode().toExpression())){
+            leftFactorSteps = factorStepThrough(simplifiedLeftNode, false);
+        }
 
         List<EquationStatus> leftSubSteps = new ArrayList<>();
 
@@ -475,7 +480,7 @@ public class ResolutorService {
             steps.add(step);
 
         }  else if (leftSubSteps.size() > 1) {
-            EquationStatus lastStep = leftSubSteps.get(leftSubSteps.size()-1);
+          /*  EquationStatus lastStep = leftSubSteps.get(leftSubSteps.size()-1);
             Tree finalEquation = EquationStatus.resetChangeGroups(lastStep.getNewEquation());
                     // no change groups are set here - too much is changing for it to be useful
             EquationStatus simplifyStatus = new EquationStatus(
@@ -485,6 +490,8 @@ public class ResolutorService {
                 logSteps(simplifyStatus);
             }
             steps.add(simplifyStatus);
+            */
+            steps.addAll(leftSubSteps);
         }
 
         // update `equation` to have the new simplified left node
@@ -512,7 +519,7 @@ public class ResolutorService {
             steps.add(step);
         }
         else if (rightSubSteps.size() > 1) {
-            EquationStatus lastStep = rightSubSteps.get(rightSubSteps.size() - 1);
+            /*EquationStatus lastStep = rightSubSteps.get(rightSubSteps.size() - 1);
             Tree finalEquation = EquationStatus.resetChangeGroups(lastStep.getNewEquation());
             // no change groups are set here - too much is changing for it to be useful
             EquationStatus simplifyStatus = new EquationStatus(
@@ -521,7 +528,8 @@ public class ResolutorService {
             if (debug) {
                 logSteps(simplifyStatus);
             }
-            steps.add(simplifyStatus);
+            steps.add(simplifyStatus);*/
+            steps.addAll(rightSubSteps);
         }
 
         return steps;
