@@ -626,6 +626,9 @@ public class ExpressionsManager {
                     }
                     polynomialMap = AddTerm("1", coefficient, polynomialMap);
                 } else {//es un termino independiente
+                    if (term.contains("!")) {
+                        term = term.replaceAll("!","-");
+                    }
                     polynomialMap = AddTerm("0", term, polynomialMap);
                 }
             }
