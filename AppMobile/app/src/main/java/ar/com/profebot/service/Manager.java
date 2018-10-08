@@ -2,7 +2,9 @@ package ar.com.profebot.service;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,12 @@ import com.profebot.activities.R;
 import java.util.List;
 
 import ar.com.profebot.Models.MultipleChoiceStep;
+import ar.com.profebot.activities.EnterEquationOptionsActivity;
+import ar.com.profebot.activities.EnterPolinomialEquationOptionsActivity;
+import ar.com.profebot.activities.PendingExercisesActivity;
+import ar.com.profebot.activities.SolveEquationActivity;
+import ar.com.profebot.activities.SolvePolynomialActivity;
+import io.github.kexanie.library.MathView;
 
 public abstract class Manager {
     abstract RecyclerView getRecyclerView();
@@ -222,5 +230,62 @@ public abstract class Manager {
         multipleChoiceViewHolder.expandCollapseIndicator.setScaleY(scale);
         multipleChoiceViewHolder.multipleChoiceResolutionStep.setVisibility(visibility);
         multipleChoiceViewHolder.multipleChoiceStep.setExpanded(isExpanded);
+    }
+
+    public void showFinalSummary(LinearLayout recycleViewSection, LinearLayout finalSummarySection,
+                                 String contextOfResolutionFirstText, String firstEquation,
+                                 String contextOfResolutionSecondText, String lastEquation,
+                                 String title, String solutionType){
+        recycleViewSection.setVisibility(View.GONE);
+        finalSummarySection.setVisibility(View.VISIBLE);
+
+        ((TextView)finalSummarySection.findViewById(R.id.title_id)).setText(title);
+        ((TextView)finalSummarySection.findViewById(R.id.first_text_id)).setText(contextOfResolutionFirstText);
+        ((TextView)finalSummarySection.findViewById(R.id.second_text_id)).setText(contextOfResolutionFirstText);
+        ((MathView)finalSummarySection.findViewById(R.id.first_equation_id)).setText("$$" + ExpressionsManager.mapToLatexAndReplaceComparator(firstEquation) + "$$");
+        ((MathView)finalSummarySection.findViewById(R.id.second_equation_id)).setVisibility(View.GONE);
+
+        Button goToOptions = (Button)finalSummarySection.findViewById(R.id.return_to_options_id);
+        goToOptions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(SolvePolynomialActivity.CONTEXT_OF_RESOLUTION_IS_POLYNOMIAL_FACTORIZED.equals(solutionType)){
+                    getContext().startActivity(new Intent(v.getContext(), EnterPolinomialEquationOptionsActivity.class));
+                }else{
+                    getContext().startActivity(new Intent(v.getContext(), EnterEquationOptionsActivity.class));
+                }
+            }
+        });
+
+        setUpGoToMultipleChoiceButton(recycleViewSection, finalSummarySection);
+        showExtraButtonToGoToPendingExercisesIfCorresponds(finalSummarySection);
+    }
+
+    public void showExtraButtonToGoToPendingExercisesIfCorresponds(LinearLayout equationSummarySection){
+        Button goToPendingExercises = (Button)equationSummarySection.findViewById(R.id.see_pending_exercises_id);
+        String pendingExercisesJson = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("pendingExercises","");
+        if("".equals(pendingExercisesJson)){
+            goToPendingExercises.setVisibility(View.GONE);
+        }else{
+            goToPendingExercises.setVisibility(View.VISIBLE);
+            goToPendingExercises.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getContext().startActivity(new Intent(v.getContext(), PendingExercisesActivity.class));
+                }
+            });
+        }
+    }
+
+    public void setUpGoToMultipleChoiceButton(LinearLayout recycleViewSection, LinearLayout finalSummarySection){
+        Button goToMultipleChoice = (Button)finalSummarySection.findViewById(R.id.return_to_resolution_id);
+        goToMultipleChoice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recycleViewSection.setVisibility(View.VISIBLE);
+                finalSummarySection.setVisibility(View.GONE);
+
+            }
+        });
     }
 }

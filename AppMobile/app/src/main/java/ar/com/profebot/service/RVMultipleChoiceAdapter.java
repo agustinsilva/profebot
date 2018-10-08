@@ -26,7 +26,11 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
     private List<MultipleChoiceStep> multipleChoiceSteps;
     private static List<MultipleChoiceStep> currentMultipleChoiceSteps;
     private static List<MultipleChoiceViewHolder> multipleChoiceViewHolders = new ArrayList<>();
-    private static Manager manager;
+    private Manager manager;
+
+    public Manager getManager() {
+        return manager;
+    }
 
     public static class MultipleChoiceViewHolder extends RecyclerView.ViewHolder {
         MultipleChoiceStep multipleChoiceStep;

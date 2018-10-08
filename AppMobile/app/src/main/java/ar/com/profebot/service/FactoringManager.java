@@ -47,7 +47,7 @@ public class FactoringManager extends Manager{
     public static Boolean end;
     private static SolvePolynomialActivity context;
 
-    private static String originalPolynomial;
+    public static String originalPolynomial;
 
     private static AlertDialog dialog;
 
@@ -69,7 +69,7 @@ public class FactoringManager extends Manager{
 
     public static void setPolynomialTerms(Map<Integer, Double> polynomialTerms) {
         FactoringManager.polynomialTerms = polynomialTerms;
-        originalPolynomial = getOriginalPolynomial(polynomialTerms);
+        originalPolynomial = getPolynomialGeneralForm(polynomialTerms);
         roots = new ArrayList<>();
         rootsMultiplicity = new HashMap<>();
         end = false;
@@ -77,64 +77,6 @@ public class FactoringManager extends Manager{
 
         // Checkear si el polinomio ingresado es factorizable
         tryToFinishingExercise();
-    }
-
-    private static String getOriginalPolynomial(Map<Integer, Double> polynomialTerms){
-        return "\\mathbf{" + ExpressionsManager.mapToLatexAndReplaceComparator(getPolynomialGeneralForm(polynomialTerms)) + "}";
-    }
-
-    public static void showPopUp(){
-        dialog.show();
-    }
-
-    public static void setUpPopUp(Boolean isFirstStep){
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        View view = context.getLayoutInflater().inflate(R.layout.polynomial_results_pop_up, null);
-
-        MathView firstEquation = ((MathView) view.findViewById(R.id.first_polynomial_id));
-        firstEquation.setEngine(MathView.Engine.MATHJAX);
-        firstEquation.config("MathJax.Hub.Config({\n"+
-                "  CommonHTML: { linebreaks: { automatic: true } },\n"+
-                "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
-                "         SVG: { linebreaks: { automatic: true } }\n"+
-                "});");
-        firstEquation.setText("$$" + originalPolynomial + "$$");
-
-        MathView lastEquation = ((MathView) view.findViewById(R.id.last_polynomial_id));
-        lastEquation.setEngine(MathView.Engine.MATHJAX);
-        lastEquation.config("MathJax.Hub.Config({\n"+
-                "  CommonHTML: { linebreaks: { automatic: true } },\n"+
-                "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
-                "         SVG: { linebreaks: { automatic: true } }\n"+
-                "});");
-        lastEquation.setText("$$" + getEquationAsLatexAfterFactorizing() + "$$");
-
-        String rootsCommaSeparated = ExpressionsManager.removeDecimals(android.text.TextUtils.join(" ; ", roots));
-        TextView rootsLabel = (TextView) view.findViewById(R.id.roots_label_id);
-        if(roots.size() > 1){
-            String rootsAsText = "" + context.getText(R.string.RAICES_ENCONTRADAS);
-            rootsLabel.setText(rootsAsText.replace("/raices/", rootsCommaSeparated));
-        }else if(roots.size() == 1){
-            String rootsAsText = "" + context.getText(R.string.RAIZ_ENCONTRADA);
-            rootsLabel.setText(rootsAsText.replace("/raiz/", rootsCommaSeparated));
-        }else{
-            rootsLabel.setVisibility(View.INVISIBLE);
-        }
-
-        view.setClipToOutline(true);
-        builder.setView(view);
-        dialog = builder.create();
-
-        ((Button) view.findViewById(R.id.close_pop_up_id)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(isFirstStep){
-                    v.getContext().startActivity(new Intent(v.getContext(), EnterPolinomialEquationOptionsActivity.class));
-                    dialog.cancel();
-                }
-                dialog.hide();
-            }
-        });
     }
 
     public static MultipleChoiceStep nextStep(){
@@ -622,8 +564,7 @@ public class FactoringManager extends Manager{
         return polynomialTerms.containsKey(0);
     }
 
-    public static void enableSummary(Boolean isFirstStep){
-        setUpPopUp(isFirstStep);
+    public static void enableSummary(){
         context.enableSummary();
     }
 
@@ -818,7 +759,7 @@ public class FactoringManager extends Manager{
                     setUpNextStepButton(holder, currentMultipleChoiceSteps);
                 }else{
                     holder.nextStep.setVisibility(View.GONE);
-                    enableSummary(false);
+                    enableSummary();
                 }
 
                 setUpSolveButtonGlobal(holder, multipleChoiceSteps.get(currentMultipleChoiceSteps.size()-1), multipleChoiceSteps, currentMultipleChoiceSteps);

@@ -1,12 +1,13 @@
 package ar.com.profebot.service;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.profebot.activities.R;
@@ -17,17 +18,14 @@ import java.util.Map;
 
 import ar.com.profebot.Models.MultipleChoiceStep;
 import ar.com.profebot.activities.EnterEquationOptionsActivity;
+import ar.com.profebot.activities.PendingExercisesActivity;
 import ar.com.profebot.activities.SolveEquationActivity;
+import ar.com.profebot.activities.SolvePolynomialActivity;
+import io.github.kexanie.library.MathView;
 
 public class EquationManager extends Manager{
 
     private static SolveEquationActivity context;
-    private static TextView rootsSummary;
-    private static AlertDialog dialog;
-
-    public static void showPopUp(){
-        dialog.show();
-    }
 
     protected Context getContext(){
         return context;

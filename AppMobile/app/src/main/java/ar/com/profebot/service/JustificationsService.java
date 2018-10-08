@@ -7,6 +7,8 @@ import com.profebot.activities.R;
 import java.util.HashMap;
 import java.util.Map;
 
+import ar.com.profebot.activities.SolveEquationActivity;
+import ar.com.profebot.activities.SolvePolynomialActivity;
 import ar.com.profebot.resolutor.container.InvalidStep;
 
 import static ar.com.profebot.resolutor.container.NodeStatus.ChangeTypes;
@@ -686,10 +688,62 @@ public class JustificationsService {
                 R.string.FACTOR_SUM_PRODUCT_RULE_JUSTIFICATION);
     }
 
+    public static Map<String, String> getContextOfResolutionTexts(String contextOfResolution, Context context){
+        if(SolvePolynomialActivity.CONTEXT_OF_RESOLUTION_IS_POLYNOMIAL_FACTORIZED.equals(contextOfResolution)){
+            return createContextOfResolutionTextsFrom(context, R.string.POLYNOMIAL_FACTORIZED_FIRST_TEXT, R.string.POLYNOMIAL_FACTORIZED_SECOND_TEXT, SolvePolynomialActivity.CONTEXT_OF_RESOLUTION_IS_POLYNOMIAL_FACTORIZED);
+        }
+
+        if(SolveEquationActivity.CONTEXT_OF_RESOLUTION_IS_DOMAIN.equals(contextOfResolution)){
+            return createContextOfResolutionTextsFrom(context, R.string.DOMAIN_FIRST_TEXT, R.string.DOMAIN_SECOND_TEXT, SolveEquationActivity.CONTEXT_OF_RESOLUTION_IS_DOMAIN);
+        }
+
+        if(SolveEquationActivity.CONTEXT_OF_RESOLUTION_IS_IMAGE.equals(contextOfResolution)){
+            return createContextOfResolutionTextsFrom(context, R.string.IMAGE_FIRST_TEXT, R.string.IMAGE_SECOND_TEXT, SolveEquationActivity.CONTEXT_OF_RESOLUTION_IS_IMAGE);
+        }
+
+        if(SolveEquationActivity.CONTEXT_OF_RESOLUTION_IS_ORIGIN_ORD.equals(contextOfResolution)){
+            return createContextOfResolutionTextsFrom(context, R.string.ORIGIN_ORD_FIRST_TEXT, R.string.ORIGIN_ORD_SECOND_TEXT, SolveEquationActivity.CONTEXT_OF_RESOLUTION_IS_ORIGIN_ORD);
+        }
+
+        if(SolveEquationActivity.CONTEXT_OF_RESOLUTION_IS_ROOTS.equals(contextOfResolution)){
+            return createContextOfResolutionTextsFrom(context, R.string.ROOTS_FIRST_TEXT, R.string.ROOTS_SECOND_TEXT, SolveEquationActivity.CONTEXT_OF_RESOLUTION_IS_ROOTS);
+        }
+
+        if(SolveEquationActivity.CONTEXT_OF_RESOLUTION_IS_EQUATION_WITH_FINITE_SOLUTIONS.equals(contextOfResolution)){
+            return createContextOfResolutionTextsFrom(context, R.string.EQUATION_WITH_FINITE_SOLUTIONS_FIRST_TEXT, R.string.EQUATION_WITH_FINITE_SOLUTIONS_SECOND_TEXT, SolveEquationActivity.CONTEXT_OF_RESOLUTION_IS_EQUATION_WITH_FINITE_SOLUTIONS);
+        }
+
+        if(SolveEquationActivity.CONTEXT_OF_RESOLUTION_IS_EQUATION_WITH_INFINITE_SOLUTIONS.equals(contextOfResolution)){
+            return createContextOfResolutionTextsFrom(context, R.string.EQUATION_WITH_INFINITE_SOLUTIONS_FIRST_TEXT, R.string.EQUATION_WITH_INFINITE_SOLUTIONS_SECOND_TEXT, SolveEquationActivity.CONTEXT_OF_RESOLUTION_IS_EQUATION_WITH_INFINITE_SOLUTIONS);
+        }
+
+        if(SolveEquationActivity.CONTEXT_OF_RESOLUTION_IS_EQUATION_WITHOUT_SOLUTIONS.equals(contextOfResolution)){
+            return createContextOfResolutionTextsFrom(context, R.string.EQUATION_WITHOUT_SOLUTIONS_FIRST_TEXT, R.string.EQUATION_WITHOUT_SOLUTIONS_SECOND_TEXT, SolveEquationActivity.CONTEXT_OF_RESOLUTION_IS_EQUATION_WITHOUT_SOLUTIONS);
+        }
+
+        if(SolveEquationActivity.CONTEXT_OF_RESOLUTION_IS_INEQUATION_WITH_INTERVAL_SOLUTIONS.equals(contextOfResolution)){
+            return createContextOfResolutionTextsFrom(context, R.string.INEQUATION_WITH_INTERVAL_SOLUTIONS_FIRST_TEXT, R.string.INEQUATION_WITH_INTERVAL_SOLUTIONS_SECOND_TEXT, SolveEquationActivity.CONTEXT_OF_RESOLUTION_IS_INEQUATION_WITH_INTERVAL_SOLUTIONS);
+        }
+
+        if(SolveEquationActivity.CONTEXT_OF_RESOLUTION_IS_INEQUATION_WITHOUT_SOLUTIONS.equals(contextOfResolution)){
+            return createContextOfResolutionTextsFrom(context, R.string.INEQUATION_WITHOUT_SOLUTIONS_FIRST_TEXT, R.string.INEQUATION_WITHOUT_SOLUTIONS_SECOND_TEXT, SolveEquationActivity.CONTEXT_OF_RESOLUTION_IS_INEQUATION_WITH_INTERVAL_SOLUTIONS);
+        }
+
+        return createContextOfResolutionTextsFrom(context, R.string.COMPLEX_SOLUTIONS_FIRST_TEXT, R.string.COMPLEX_SOLUTIONS_SECOND_TEXT, "complex_solutions");
+    }
+
     private static Map<String, String> createIncorrectTextsFrom(Context context, int optionId, int justificationId){
         Map<String, String> justifications = new HashMap<>();
         justifications.put("option", context.getString(optionId));
         justifications.put("incorrectOptionJustification", context.getString(justificationId));
         return justifications;
+    }
+
+    private static Map<String, String> createContextOfResolutionTextsFrom(Context context, int firstTextId, int secondTextId, String type){
+        Map<String, String> texts = new HashMap<>();
+        texts.put("first", context.getString(firstTextId));
+        texts.put("second", context.getString(secondTextId));
+        texts.put("type", type);
+        return texts;
     }
 }
