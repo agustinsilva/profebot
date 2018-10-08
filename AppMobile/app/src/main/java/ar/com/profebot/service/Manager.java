@@ -241,11 +241,23 @@ public abstract class Manager {
 
         ((TextView)finalSummarySection.findViewById(R.id.title_id)).setText(title);
         ((TextView)finalSummarySection.findViewById(R.id.first_text_id)).setText(contextOfResolutionFirstText);
-        ((TextView)finalSummarySection.findViewById(R.id.second_text_id)).setText(contextOfResolutionFirstText);
+        ((TextView)finalSummarySection.findViewById(R.id.second_text_id)).setText(contextOfResolutionSecondText);
         ((MathView)finalSummarySection.findViewById(R.id.first_equation_id)).setText("$$" + ExpressionsManager.mapToLatexAndReplaceComparator(firstEquation) + "$$");
-        ((MathView)finalSummarySection.findViewById(R.id.second_equation_id)).setVisibility(View.GONE);
+
+        MathView secondEquation = (MathView)finalSummarySection.findViewById(R.id.second_equation_id);
+        if(SolvePolynomialActivity.CONTEXT_OF_RESOLUTION_IS_POLYNOMIAL_FACTORIZED.equals(solutionType)){
+            secondEquation.setVisibility(View.VISIBLE);
+            secondEquation.setText("$$" + lastEquation + "$$");
+        }else{
+            secondEquation.setVisibility(View.GONE);
+        }
 
         Button goToOptions = (Button)finalSummarySection.findViewById(R.id.return_to_options_id);
+        if(SolvePolynomialActivity.CONTEXT_OF_RESOLUTION_IS_POLYNOMIAL_FACTORIZED.equals(solutionType)){
+            goToOptions.setText("Practicar otro polinomio");
+        }else{
+            goToOptions.setText("Practicar otra ecuación");
+        }
         goToOptions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
