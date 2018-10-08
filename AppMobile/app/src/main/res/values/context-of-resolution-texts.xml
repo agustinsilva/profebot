@@ -13,10 +13,10 @@
     <string name="ORIGIN_ORD_SECOND_TEXT">es y = /valor/. También se la puede expresar como par ordenado: (x, y) = (0, /valor/).</string>
 
     <string name="ROOTS_FIRST_TEXT">El conjunto de raíces o ceros de la función:</string>
-    <string name="ROOTS_SECOND_TEXT">se lo puede escribir como: X = {/raices/}.</string>
+    <string name="ROOTS_SECOND_TEXT">se lo puede escribir como: X = { /raices/ }.</string>
 
     <string name="EQUATION_WITH_FINITE_SOLUTIONS_FIRST_TEXT">El conjunto de soluciones de la ecuación:</string>
-    <string name="EQUATION_WITH_FINITE_SOLUTIONS_SECOND_TEXT">se lo puede escribir como: X = {/raices/}.</string>
+    <string name="EQUATION_WITH_FINITE_SOLUTIONS_SECOND_TEXT">se lo puede escribir como: X = { /raices/ }.</string>
 
     <string name="EQUATION_WITH_INFINITE_SOLUTIONS_FIRST_TEXT">El conjunto de soluciones de la ecuación:</string>
     <string name="EQUATION_WITH_INFINITE_SOLUTIONS_SECOND_TEXT">es infinito, dado que cualquier valor reemplazado en X, verifica la igualdad.</string>
