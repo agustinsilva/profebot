@@ -63,9 +63,14 @@ public class EnterFunctionActivity extends AppCompatActivity {
             setInformationalPopUp(title, explanation);
             //Set second Pop-up
             ImageButton forwardBtn = popUpView1.findViewById(R.id.forward_pop_up_id);
+            ImageButton backBtn = popUpView1.findViewById(R.id.back_pop_up_id);
             forwardBtn.setOnClickListener(v -> {
                 setCheckPreference("popUpImageExplanation");
                 setImageTrivialPopUp();
+            });
+            backBtn.setOnClickListener(v -> {
+                setCheckPreference("popUpImageExplanation");
+                dialog1.hide();
             });
         }else{
             setImageTrivialPopUp();
@@ -79,9 +84,14 @@ public class EnterFunctionActivity extends AppCompatActivity {
             String explanation = getString(R.string.explicacionRaicesFuncion);
             setInformationalPopUp(title, explanation);
             ImageButton forwardBtn = popUpView1.findViewById(R.id.forward_pop_up_id);
+            ImageButton backBtn = popUpView1.findViewById(R.id.back_pop_up_id);
             forwardBtn.setOnClickListener(v -> {
                 setCheckPreference("popUpRootExplanation");
                 setRootTrivialPopUp();
+            });
+            backBtn.setOnClickListener(v -> {
+                setCheckPreference("popUpRootExplanation");
+                dialog1.hide();
             });
         } else {
             setRootTrivialPopUp();
@@ -97,9 +107,14 @@ public class EnterFunctionActivity extends AppCompatActivity {
 
             //Seteo el boton "Adelante" para configurar el proximo pop-up
             ImageButton forwardBtn = popUpView1.findViewById(R.id.forward_pop_up_id);
+            ImageButton backBtn = popUpView1.findViewById(R.id.back_pop_up_id);
             forwardBtn.setOnClickListener(v -> {
                 setCheckPreference("popUpOriginExplanation");
                 setOriginTrivialPopUp();
+            });
+            backBtn.setOnClickListener(v -> {
+                setCheckPreference("popUpOriginExplanation");
+                dialog1.hide();
             });
         }
         else {
@@ -125,9 +140,14 @@ public class EnterFunctionActivity extends AppCompatActivity {
             String explanation = getString(R.string.explicacionDominio);
             setInformationalPopUp(title, explanation);
             ImageButton forwardBtn = popUpView1.findViewById(R.id.forward_pop_up_id);
+            ImageButton backBtn = popUpView1.findViewById(R.id.back_pop_up_id);
             forwardBtn.setOnClickListener(v -> {
                 setCheckPreference("popUpDomainExplanation");
                 setDomainTrivialPopUp();
+            });
+            backBtn.setOnClickListener(v -> {
+                setCheckPreference("popUpDomainExplanation");
+                dialog1.hide();
             });
         }
         else{
@@ -253,7 +273,7 @@ public class EnterFunctionActivity extends AppCompatActivity {
                 String rootExpression = equation + " = 0";
                 try {
                     String status = (new ResolutorService()).resolveExpression(rootExpression);
-                    final String rootExplanation = (status == getString(R.string.sin_pasos) || startsWithResolvingRoot(status) ) ? getString(R.string.SinRaices) : getString(R.string.conRaices,status);
+                    final String rootExplanation = ((status == getString(R.string.sin_pasos)) || startsWithResolvingRoot(status) ) ? getString(R.string.SinRaices) : getString(R.string.conRaices,status);
                     setTrivialPopUp(getString(R.string.solucionRaices),rootExplanation);
                 } catch (InvalidExpressionException e) {
                     e.printStackTrace();
@@ -268,7 +288,8 @@ public class EnterFunctionActivity extends AppCompatActivity {
     }
 
     private boolean startsWithResolvingRoot(String status){
-        return status.substring(0,1).toLowerCase() != "x=" ;
+        String startWith = status.substring(0,2).toLowerCase();
+        return !startWith.equals("x=");
     }
 
     private void setImageTrivialPopUp(){
