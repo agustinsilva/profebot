@@ -174,7 +174,7 @@
                 android:id="@+id/next_step_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Descubrí el próximo paso"
+                android:text="¡Ir al próximo paso!"
                 android:background="@drawable/rounded_corners_main_buttons"
                 android:textColor="@color/colorWhite"
                 android:padding="7dp"
@@ -195,7 +195,7 @@
                 android:id="@+id/explanation_step_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="¡Mirá la explicación de este paso!"
+                android:text="¡Quiero saber más!"
                 android:padding="5dp"
                 android:textColor="@color/colorWhite"
                 android:background="@drawable/rounded_corners_polynomial_summary" />
