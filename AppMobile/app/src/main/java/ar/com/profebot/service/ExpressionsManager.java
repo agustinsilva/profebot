@@ -523,6 +523,7 @@ public class ExpressionsManager {
                 .replaceAll("\\.0 ", " ")
                 .replaceAll("\\.0\\}", "}")
                 .replaceAll("\\.0\\,", ",")
+                .replaceAll("\\.0\\.", ".")
                 .replaceAll("\\.0$", "");
     }
 

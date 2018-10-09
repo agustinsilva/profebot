@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -122,13 +123,18 @@ public abstract class Manager {
     protected void setUpMultipleChoiceExplanationsPopUp(RVMultipleChoiceAdapter.MultipleChoiceViewHolder holder, String correctJustification, String incorrectJustification){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         View view = getLayoutInflater().inflate(R.layout.equation_step_summary, null);
-        ((TextView)view.findViewById(R.id.right_explanation_id)).setText(correctJustification);
+
+        TextView rightExplanation = (TextView)view.findViewById(R.id.right_explanation_id);
+        rightExplanation.setText(ExpressionsManager.removeDecimals(correctJustification));
+        rightExplanation.setMovementMethod(ScrollingMovementMethod.getInstance());
 
         if(incorrectJustification == null){
             ((LinearLayout)view.findViewById(R.id.wrong_explanation_section_id)).setVisibility(View.GONE);
         }else{
             ((LinearLayout)view.findViewById(R.id.wrong_explanation_section_id)).setVisibility(View.VISIBLE);
-            ((TextView)view.findViewById(R.id.wrong_explanation_id)).setText(incorrectJustification);
+            TextView wrongExplanation = (TextView)view.findViewById(R.id.wrong_explanation_id);
+            wrongExplanation.setText(ExpressionsManager.removeDecimals(incorrectJustification));
+            wrongExplanation.setMovementMethod(ScrollingMovementMethod.getInstance());
         }
 
         view.setClipToOutline(true);

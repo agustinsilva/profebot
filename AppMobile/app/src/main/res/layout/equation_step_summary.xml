@@ -16,7 +16,7 @@
         android:textColor="@color/colorAccent"
         android:textStyle="bold"
         android:gravity="center"
-        android:text="Podés leer más información sobre tu respuesta:"
+        android:text="Sobre tu respuesta:"
         android:layout_margin="5dp"/>
 
     <LinearLayout
@@ -41,7 +41,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:maxLines="6"
+            android:scrollbars="vertical"/>
     </LinearLayout>
 
     <LinearLayout
@@ -68,7 +70,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:maxLines="6"
+            android:scrollbars="vertical"/>
     </LinearLayout>
 
     <Button
