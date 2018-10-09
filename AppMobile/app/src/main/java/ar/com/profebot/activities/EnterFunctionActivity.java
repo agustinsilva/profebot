@@ -346,10 +346,8 @@ public class EnterFunctionActivity extends AppCompatActivity {
         switch(equationType){
             case HOMOGRAPHIC:{
                 int divisionPosition = equation.lastIndexOf("/");
-                String denominatorHomographic = equation.substring(divisionPosition + 1);
-                int beginParenthesisPosition = equation.indexOf("(");
-                int lastParenthesisPosition = equation.indexOf(")");
-                denominatorHomographic = denominatorHomographic.substring(beginParenthesisPosition + 1,lastParenthesisPosition - 1) + " = 0";
+                String denominatorHomographic = equation.substring(divisionPosition + 1).replaceAll("\\(","").replaceAll("\\)","");
+                denominatorHomographic = denominatorHomographic + " = 0";
                 String status;
                 try {
                     status = (new ResolutorService()).resolveExpression(denominatorHomographic).substring(2);
