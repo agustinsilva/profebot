@@ -138,6 +138,8 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
         multipleChoiceViewHolder.equationBaseAsLatex.setText("\\(" + ExpressionsManager.mapToLatexAndReplaceComparator(multipleChoiceViewHolder.multipleChoiceStep.getEquationBase()) + "\\)");
 
         multipleChoiceViewHolder.correctOption = multipleChoiceViewHolder.multipleChoiceStep.getCorrectOption();
+        multipleChoiceViewHolder.regularOption1 = multipleChoiceViewHolder.multipleChoiceStep.getRegularOption1();
+        multipleChoiceViewHolder.regularOption2 = multipleChoiceViewHolder.multipleChoiceStep.getRegularOption2();
         multipleChoiceViewHolder.correctOptionJustification = multipleChoiceViewHolder.multipleChoiceStep.getCorrectOptionJustification();
         multipleChoiceViewHolder.incorrectOptionJustification1 = multipleChoiceViewHolder.multipleChoiceStep.getIncorrectOptionJustification1();
         multipleChoiceViewHolder.incorrectOptionJustification2 = multipleChoiceViewHolder.multipleChoiceStep.getIncorrectOptionJustification2();

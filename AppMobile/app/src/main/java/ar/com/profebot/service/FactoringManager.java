@@ -593,11 +593,11 @@ public class FactoringManager extends Manager{
                             .replace("/raiz/", "" + currentRoot1)
                             .replace("/tipo/", currentRootType);
                     if(currentRoot2 == null){
-                        return answer;
+                        return ExpressionsManager.removeDecimals(answer);
                     }
 
                     answer += " " + context.getText(R.string.RAIZ_EXTRA);
-                    return answer.replace("/raiz/", "" + currentRoot2);
+                    return ExpressionsManager.removeDecimals(answer.replace("/raiz/", "" + currentRoot2));
 
                 }
 
@@ -606,15 +606,15 @@ public class FactoringManager extends Manager{
             case 2:
                 if(currentRoot2 == null){
                     answer = "" + context.getText(R.string.CUADRATICA_RAIZ_DOBLE_ES_EL_CORRECTO);
-                    return answer.replace("/raiz/", "" + currentRoot1);
+                    return ExpressionsManager.removeDecimals(answer.replace("/raiz/", "" + currentRoot1));
                 }
                 answer = "" + context.getText(R.string.CUADRATICA_RAICES_SIMPLES_ES_EL_CORRECTO);
-                return answer
+                return ExpressionsManager.removeDecimals(answer
                         .replace("/raiz1/", "" + currentRoot1)
-                        .replace("/raiz2/", "" + currentRoot2);
+                        .replace("/raiz2/", "" + currentRoot2));
             case 3:
                 answer = "" + context.getText(R.string.GAUSS_ES_EL_CORRECTO);
-                return answer.replace("/raiz/", "" + currentRoot1);
+                return ExpressionsManager.removeDecimals(answer.replace("/raiz/", "" + currentRoot1));
             default:
                 return "";
         }
@@ -658,7 +658,7 @@ public class FactoringManager extends Manager{
                 return "" + context.getText(R.string.CUADRATICA_ES_POSIBLE_PERO_NO_LO_MEJOR);
             case 3:
                 String answer = "" + context.getText(R.string.GAUSS_ES_POSIBLE_PERO_NO_LO_MEJOR);
-                return answer.replace("/raiz/", "" + currentRoot1);
+                return ExpressionsManager.removeDecimals(answer.replace("/raiz/", "" + currentRoot1));
             default:
                 return "";
         }
