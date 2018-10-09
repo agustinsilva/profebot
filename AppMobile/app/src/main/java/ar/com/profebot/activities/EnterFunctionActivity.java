@@ -253,7 +253,7 @@ public class EnterFunctionActivity extends AppCompatActivity {
                 String rootExpression = equation + " = 0";
                 try {
                     String status = (new ResolutorService()).resolveExpression(rootExpression);
-                    final String rootExplanation = (status == getString(R.string.sin_pasos)) ? getString(R.string.SinRaices) : getString(R.string.conRaices,status);
+                    final String rootExplanation = (status == getString(R.string.sin_pasos) || startsWithResolvingRoot(status) ) ? getString(R.string.SinRaices) : getString(R.string.conRaices,status);
                     setTrivialPopUp(getString(R.string.solucionRaices),rootExplanation);
                 } catch (InvalidExpressionException e) {
                     e.printStackTrace();
@@ -265,6 +265,10 @@ public class EnterFunctionActivity extends AppCompatActivity {
             default:
                 break;
         }
+    }
+
+    private boolean startsWithResolvingRoot(String status){
+        return status.substring(0,1).toLowerCase() != "x=" ;
     }
 
     private void setImageTrivialPopUp(){
