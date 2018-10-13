@@ -318,4 +318,8 @@ public abstract class Manager {
             }
         });
     }
+
+    public void scrollRecycleToTheBottom(){
+        getRecyclerView().scrollBy(0, 1000000);
+    }
 }

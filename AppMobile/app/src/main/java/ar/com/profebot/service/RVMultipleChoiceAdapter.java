@@ -220,6 +220,7 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
                     multipleChoiceViewHolder.optionC.setChecked(false);
                     multipleChoiceViewHolder.setUpSolveButton();
                     multipleChoiceViewHolder.chosenOption = 1;
+                    getManager().scrollRecycleToTheBottom();
                 }
             });
 
@@ -232,6 +233,7 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
                     multipleChoiceViewHolder.optionC.setChecked(false);
                     multipleChoiceViewHolder.setUpSolveButton();
                     multipleChoiceViewHolder.chosenOption = 2;
+                    getManager().scrollRecycleToTheBottom();
                 }
             });
 
@@ -245,6 +247,7 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
                     multipleChoiceViewHolder.optionB.setChecked(false);
                     multipleChoiceViewHolder.setUpSolveButton();
                     multipleChoiceViewHolder.chosenOption = 3;
+                    getManager().scrollRecycleToTheBottom();
                 }
             });
         }
