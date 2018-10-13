@@ -29,5 +29,6 @@
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
         android:textColor="@color/colorWhite"
-        android:background="@drawable/rounded_corners_polynomial_summary"/>
+        android:background="@drawable/rounded_corners_polynomial_summary"
+        android:visibility="gone"/>
 </LinearLayout>

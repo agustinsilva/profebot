@@ -21,6 +21,7 @@ import ar.com.profebot.resolutor.service.ResolutorService;
 import ar.com.profebot.service.EquationManager;
 import ar.com.profebot.service.ExpressionsManager;
 import ar.com.profebot.service.JustificationsService;
+import ar.com.profebot.service.Manager;
 import ar.com.profebot.service.RVMultipleChoiceAdapter;
 
 public class SolveEquationActivity extends GlobalActivity {
@@ -50,6 +51,7 @@ public class SolveEquationActivity extends GlobalActivity {
     private static String title;
     private static String lastEquation;
     private static Map<String, String> contextOfResolutionTexts;
+    private Manager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,12 +69,12 @@ public class SolveEquationActivity extends GlobalActivity {
         LinearLayoutManager llm = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(llm);
         multipleChoiceSteps = this.initializeMultipleChoiceSteps();
-
+        manager = new EquationManager();
         if(!multipleChoiceSteps.isEmpty()){
-            adapter = new RVMultipleChoiceAdapter(multipleChoiceSteps.get(0), multipleChoiceSteps, new EquationManager());
+            adapter = new RVMultipleChoiceAdapter(multipleChoiceSteps.get(0), multipleChoiceSteps, manager);
             lastEquation = multipleChoiceSteps.get(multipleChoiceSteps.size() - 1).getNewEquationBase();
         }else{
-            adapter = new RVMultipleChoiceAdapter(null, new ArrayList<>(), new EquationManager());
+            adapter = new RVMultipleChoiceAdapter(null, new ArrayList<>(), manager);
             lastEquation = ExpressionsManager.getTreeOfExpression().toExpression();
         }
         recyclerView.setAdapter(adapter);
@@ -100,8 +102,7 @@ public class SolveEquationActivity extends GlobalActivity {
                         contextOfResolutionTexts.get("second"), lastEquationToButton, title, contextOfResolutionTexts.get("type"));
             }
         });
-
-        disableSummary();
+        manager.disableSummary(seeSummary);
     }
 
     public static void setTypeOfContextOfResolution(Integer typeOfContextOfResolution) {
@@ -158,16 +159,8 @@ public class SolveEquationActivity extends GlobalActivity {
         }
     }
 
-    private void disableSummary(){
-        seeSummary.setBackgroundResource(R.drawable.rounded_corners_disable_button);
-        seeSummary.setTextColor(Color.GRAY);
-        seeSummary.setEnabled(false);
-    }
-
     public void enableSummary(){
-        seeSummary.setBackgroundResource(R.drawable.rounded_corners_polynomial_summary);
-        seeSummary.setTextColor(Color.WHITE);
-        seeSummary.setEnabled(true);
+        manager.enableSummary(seeSummary);
 
         LinearLayout finalSummarySection = findViewById(R.id.final_summary_section_id);
         LinearLayout recycleViewSection = findViewById(R.id.recycle_view_section_id);

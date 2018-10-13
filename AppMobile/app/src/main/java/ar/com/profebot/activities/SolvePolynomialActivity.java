@@ -21,6 +21,7 @@ import ar.com.profebot.service.EquationManager;
 import ar.com.profebot.service.ExpressionsManager;
 import ar.com.profebot.service.FactoringManager;
 import ar.com.profebot.service.JustificationsService;
+import ar.com.profebot.service.Manager;
 import ar.com.profebot.service.RVMultipleChoiceAdapter;
 
 public class SolvePolynomialActivity extends GlobalActivity {
@@ -34,6 +35,7 @@ public class SolvePolynomialActivity extends GlobalActivity {
     public static SolvePolynomialActivity context;
     private static String title;
     private static Map<String, String> contextOfResolutionTexts;
+    private Manager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +53,11 @@ public class SolvePolynomialActivity extends GlobalActivity {
         LinearLayoutManager llm = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(llm);
         multipleChoiceSteps = this.initializeMultipleChoiceSteps();
+        manager = new FactoringManager();
         if(!FactoringManager.end){
-            adapter = new RVMultipleChoiceAdapter(multipleChoiceSteps.get(0), multipleChoiceSteps, new FactoringManager());
+            adapter = new RVMultipleChoiceAdapter(multipleChoiceSteps.get(0), multipleChoiceSteps, manager);
         }else {
-            adapter = new RVMultipleChoiceAdapter(null, new ArrayList<>(), new FactoringManager());
+            adapter = new RVMultipleChoiceAdapter(null, new ArrayList<>(), manager);
         }
         recyclerView.setAdapter(adapter);
 
@@ -71,19 +74,13 @@ public class SolvePolynomialActivity extends GlobalActivity {
         }
 
         seeSummary = findViewById(R.id.see_summary_id);
-        disableSummary();
+        manager.disableSummary(seeSummary);
     }
 
-    private void disableSummary(){
-        seeSummary.setBackgroundResource(R.drawable.rounded_corners_disable_button);
-        seeSummary.setTextColor(Color.GRAY);
-        seeSummary.setEnabled(false);
-    }
+
 
     public void enableSummary(){
-        seeSummary.setBackgroundResource(R.drawable.rounded_corners_polynomial_summary);
-        seeSummary.setTextColor(Color.WHITE);
-        seeSummary.setEnabled(true);
+        manager.enableSummary(seeSummary);
 
         LinearLayout finalSummarySection = findViewById(R.id.final_summary_section_id);
         LinearLayout recycleViewSection = findViewById(R.id.recycle_view_section_id);

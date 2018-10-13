@@ -322,4 +322,17 @@ public abstract class Manager {
     public void scrollRecycleToTheBottom(){
         getRecyclerView().scrollBy(0, 1000000);
     }
+
+    public void disableSummary(Button seeSummary){
+        seeSummary.setBackgroundResource(R.drawable.rounded_corners_disable_button);
+        seeSummary.setTextColor(Color.GRAY);
+        seeSummary.setEnabled(false);
+    }
+
+    public void enableSummary(Button seeSummary){
+        seeSummary.setBackgroundResource(R.drawable.rounded_corners_polynomial_summary);
+        seeSummary.setTextColor(Color.WHITE);
+        seeSummary.setEnabled(true);
+        seeSummary.setVisibility(View.VISIBLE);
+    }
 }
