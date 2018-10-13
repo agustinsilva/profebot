@@ -24,13 +24,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:weightSum="100"
+                android:layout_margin="10dp">
 
                 <ImageView
-                    android:layout_width="250dp"
-                    android:layout_height="250dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="55"
                     android:src="@drawable/main_logo"
-                    android:layout_marginBottom="10dp"/>
+                    android:layout_marginBottom="10dp"
+                    android:scaleType="centerInside"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="15"
+                    android:text="¿Qué tipo de ejercicio querés practicar?"
+                    android:textSize="25dp"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:layout_marginBottom="15dp"/>
 
                 <Button
                     android:id="@+id/enter_equation_id"
