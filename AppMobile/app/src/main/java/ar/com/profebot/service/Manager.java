@@ -293,8 +293,7 @@ public abstract class Manager {
 
     public void showExtraButtonToGoToPendingExercisesIfCorresponds(LinearLayout equationSummarySection){
         Button goToPendingExercises = (Button)equationSummarySection.findViewById(R.id.see_pending_exercises_id);
-        String pendingExercisesJson = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("pendingExercises","");
-        if("".equals(pendingExercisesJson)){
+        if(hasPendingExercises(getContext())){
             goToPendingExercises.setVisibility(View.GONE);
         }else{
             goToPendingExercises.setVisibility(View.VISIBLE);
@@ -305,6 +304,11 @@ public abstract class Manager {
                 }
             });
         }
+    }
+
+    public static Boolean hasPendingExercises(Context context){
+        String pendingExercisesJson = PreferenceManager.getDefaultSharedPreferences(context).getString("pendingExercises","");
+        return !"".equals(pendingExercisesJson) && !pendingExercisesJson.contains("[]");
     }
 
     public void setUpGoToMultipleChoiceButton(LinearLayout recycleViewSection, LinearLayout finalSummarySection){

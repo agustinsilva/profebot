@@ -13,8 +13,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.profebot.activities.R;
+
+import ar.com.profebot.service.Manager;
 
 public class MainActivity extends AppCompatActivity {
     public static final String EQUATION = "EQUATION";
@@ -70,6 +73,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu_dropdown,menu);
+        MenuItem item = menu.getItem(0);
+        if(Manager.hasPendingExercises(this)){
+            item.setIcon(R.drawable.more_exercises_notification);
+        }else{
+            item.setIcon(R.drawable.more_exercises);
+        }
         return true;
     }
 
@@ -78,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.see_exercises_pending_id:
+                item.setIcon(R.drawable.more_exercises);
                 Intent intent = new Intent(MainActivity.this, PendingExercisesActivity.class);
                 startActivity(intent);
                 return true;
