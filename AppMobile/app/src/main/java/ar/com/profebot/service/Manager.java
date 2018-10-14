@@ -293,7 +293,7 @@ public abstract class Manager {
 
     public void showExtraButtonToGoToPendingExercisesIfCorresponds(LinearLayout equationSummarySection){
         Button goToPendingExercises = (Button)equationSummarySection.findViewById(R.id.see_pending_exercises_id);
-        if(hasPendingExercises(getContext())){
+        if(!hasPendingExercises(getContext())){
             goToPendingExercises.setVisibility(View.GONE);
         }else{
             goToPendingExercises.setVisibility(View.VISIBLE);
