@@ -1,119 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorBackground">
 
     <include layout="@layout/enter_equation_handdraw_toolbar"/>
+    <include layout="@layout/enter_polynomial_term_by_term"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="top|center_horizontal"
-        android:text="Paso 1: ingresá cada término de tu polinomio"
-        android:textColor="@color/colorWhite"
-        android:layout_margin="20dp"
-        android:textSize="50dp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:weightSum="100">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="65">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="bottom"
-                android:visibility="invisible">
-
-                <EditText
-                    android:id="@+id/edit_term_id"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberPassword"
-                    android:textColor="@color/colorBlack"/>
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/equation_to_solve_id"
-                android:background="@drawable/rounded_corners_polynomial_text"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="top|start"
-                android:textColor="@color/colorBlack"
-                android:padding="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="20dp"
-                android:text="P(x)="
-                android:scrollbars="vertical"
-                android:textSize="40dp" />
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="20"
-            android:weightSum="100"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="30dp">
-
-            <ImageView
-                android:id="@+id/plus_term_id"
-                android:layout_width="0dp"
-                android:layout_weight="25"
-                android:layout_height="wrap_content"
-                android:background="@drawable/positive_sign"
-                android:layout_marginEnd="10dp" />
-
-            <ImageView
-                android:id="@+id/minus_term_id"
-                android:layout_width="0dp"
-                android:layout_weight="25"
-                android:layout_height="match_parent"
-                android:background="@drawable/negative_sign"
-                android:layout_marginEnd="10dp"/>
-
-            <ImageView
-                android:id="@+id/back_id"
-                android:layout_width="0dp"
-                android:layout_weight="25"
-                android:layout_height="match_parent"
-                android:background="@drawable/back_button"
-                android:layout_marginEnd="10dp"/>
-
-            <ImageView
-                android:id="@+id/delete_polynomial_id"
-                android:layout_width="0dp"
-                android:layout_weight="25"
-                android:layout_height="match_parent"
-                android:background="@drawable/erase_polynomial" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/go_to_next_step_id"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="15"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="10dp"
-            android:text="¡Ir al paso 2!"
-            android:textSize="30dp"
-            android:textColor="@color/colorWhite"
-            android:background="@drawable/rounded_corners_polynomial_summary"/>
-    </LinearLayout>
 </LinearLayout>

@@ -176,6 +176,30 @@ public class PolynomialWriterTest {
     }
 
     @Test
+    public void polinomioConUnSoloTerminoConExponenteIgualACero() {
+        list.add(new HashMap<Integer, Double>(){{
+            put(0, -4.0);
+        }});
+        Assert.assertEquals("P(x) = -4", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, false));
+    }
+
+    @Test
+    public void polinomioConUnSoloTerminoConExponenteIgualACeroYCoeficienteUnitario() {
+        list.add(new HashMap<Integer, Double>(){{
+            put(0, 1.0);
+        }});
+        Assert.assertEquals("P(x) = 1", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, false));
+    }
+
+    @Test
+    public void polinomioConUnSoloTerminoConExponenteIgualACeroYCoeficienteUnitarioIngresandoCoeficiente() {
+        list.add(new HashMap<Integer, Double>(){{
+            put(0, 1.0);
+        }});
+        Assert.assertEquals("P(x) = 1", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, true));
+    }
+
+    @Test
     public void polinomioConDosTerminosYConCoeficienteNuloYPositivoDefault() {
         list.add(new HashMap<Integer, Double>(){{
             put(1, -4.0);

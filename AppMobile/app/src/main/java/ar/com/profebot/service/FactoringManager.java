@@ -818,11 +818,18 @@ public class FactoringManager extends Manager{
                 .replace("x<sup>1</sup>", "x")
                 .replace("+x<sup>0</sup>", "+1")
                 .replace("-x<sup>0</sup>", "-1")
+                .replace("+x<sup><b>0</b></sup>", "+1")
+                .replace("-x<sup><b>0</b></sup>", "-1")
                 .replace("null", "");
         for(int i = 1 ; i <= 9 ; i++){
             expression = expression
-                    .replace(i + "x<sup>0</sup>", i + "");
+                    .replace(i + "x<sup>0</sup>", i + "")
+                    .replace(i + "x<sup><b>0</b></sup>", i + "");
         }
+        expression = expression
+                .replace("x<sup><b>0</b></sup>", "1")
+                .replace("x<sup>0</sup>", "1");
+
         return expression;
     }
 
