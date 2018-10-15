@@ -105,31 +105,33 @@ public class EnterPolinomialActivity extends GlobalActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                Map<Integer, Double> term = getLastTerm();
-                Integer exponent = FactoringManager.getExponentFrom(term);
-                Double coefficient = term.get(exponent);
-                if(!"".equals(editPolynomial.getText().toString())){
-                    if(enteringCoefficient){
-                        int factor = 1;
-                        if("-".equals(nextSign)){
-                            factor = -1;
-                        }
-                        term.put(exponent, factor * Math.abs(Double.parseDouble(editPolynomial.getText().toString())));
-                    }else{
-                        term.clear();
-                        term.put(Integer.parseInt(editPolynomial.getText().toString()), coefficient);
-                    }
-                }else{
-                    if(!enterWasPressed){
-                        if(enteringCoefficient){
+                if(!polynomialTermsEntered.isEmpty()) {
+                    Map<Integer, Double> term = getLastTerm();
+                    Integer exponent = FactoringManager.getExponentFrom(term);
+                    Double coefficient = term.get(exponent);
+                    if (!"".equals(editPolynomial.getText().toString())) {
+                        if (enteringCoefficient) {
+                            int factor = 1;
+                            if ("-".equals(nextSign)) {
+                                factor = -1;
+                            }
+                            term.put(exponent, factor * Math.abs(Double.parseDouble(editPolynomial.getText().toString())));
+                        } else {
                             term.clear();
-                            term.put(null, null);
-                        }else{
-                            term.put(null, coefficient);
+                            term.put(Integer.parseInt(editPolynomial.getText().toString()), coefficient);
+                        }
+                    } else {
+                        if (!enterWasPressed) {
+                            if (enteringCoefficient) {
+                                term.clear();
+                                term.put(null, null);
+                            } else {
+                                term.put(null, coefficient);
+                            }
                         }
                     }
+                    updatePolynomialTextVisor();
                 }
-                updatePolynomialTextVisor();
             }
         });
 
@@ -168,6 +170,9 @@ public class EnterPolinomialActivity extends GlobalActivity {
                 if(polynomialTermsEntered.isEmpty()){
                     enableAndDisableButtonsAfterDeletition();
                 }
+
+                InputMethodManager keyboard = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                keyboard.hideSoftInputFromWindow(editPolynomial.getWindowToken(), 0);
             }
         });
 
@@ -233,7 +238,10 @@ public class EnterPolinomialActivity extends GlobalActivity {
         disableGoToNextStepButton();
         disableMinusTermButton();
         disablePlusTermButton();
-        disableBackButton();
+
+        enableBackButton();
+
+        editPolynomial.setText("");
 
         enteringCoefficient = true;
         enterWasPressed = false;

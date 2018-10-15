@@ -164,7 +164,7 @@ public class PolynomialWriterTest {
         list.add(new HashMap<Integer, Double>(){{
             put(null, null);
         }});
-        Assert.assertEquals("P(x) = <b>?</b>x<sup>?</sup>", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, true));
+        Assert.assertEquals("P(x) = <b>?</b>x", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, true));
     }
 
     @Test
@@ -172,7 +172,7 @@ public class PolynomialWriterTest {
         list.add(new HashMap<Integer, Double>(){{
             put(null, -4.0);
         }});
-        Assert.assertEquals("P(x) = <b>-4</b>x<sup>?</sup>", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, true));
+        Assert.assertEquals("P(x) = <b>-4</b>x", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, true));
     }
 
     @Test
@@ -216,7 +216,7 @@ public class PolynomialWriterTest {
             put(null, null);
         }});
 
-        Assert.assertEquals("P(x) = -4x+<b>?</b>x<sup>?</sup>", FactoringManager.getCurrentPolynomialEnteredAsText(list, "+", true));
+        Assert.assertEquals("P(x) = -4x+<b>?</b>x", FactoringManager.getCurrentPolynomialEnteredAsText(list, "+", true));
     }
 
     @Test
@@ -228,7 +228,7 @@ public class PolynomialWriterTest {
             put(null, 2.0);
         }});
 
-        Assert.assertEquals("P(x) = -4x<b>+2</b>x<sup>?</sup>", FactoringManager.getCurrentPolynomialEnteredAsText(list, "+", true));
+        Assert.assertEquals("P(x) = -4x<b>+2</b>x", FactoringManager.getCurrentPolynomialEnteredAsText(list, "+", true));
     }
 
     @Test
@@ -252,7 +252,7 @@ public class PolynomialWriterTest {
             put(null, 1.0);
         }});
 
-        Assert.assertEquals("P(x) = -4x+x<sup>?</sup>", FactoringManager.getCurrentPolynomialEnteredAsText(list, "+", true));
+        Assert.assertEquals("P(x) = -4x+x", FactoringManager.getCurrentPolynomialEnteredAsText(list, "+", true));
     }
 
     @Test
@@ -279,6 +279,6 @@ public class PolynomialWriterTest {
             put(null, null);
         }});
 
-        Assert.assertEquals("P(x) = -4x-<b>?</b>x<sup>?</sup>", FactoringManager.getCurrentPolynomialEnteredAsText(list, "-", true));
+        Assert.assertEquals("P(x) = -4x-<b>?</b>x", FactoringManager.getCurrentPolynomialEnteredAsText(list, "-", true));
     }
 }

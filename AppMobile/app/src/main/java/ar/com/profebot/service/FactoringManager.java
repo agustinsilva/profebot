@@ -777,12 +777,12 @@ public class FactoringManager extends Manager{
             Double coefficient = term.get(exponent);
             if(coefficient == null){
                 polynomial.append(firstSign);
-                polynomial.append("<b>?</b>x<sup>?</sup>");
+                polynomial.append("<b>?</b>x");
             }else if(exponent == null){
                 String text;
                 String sign = signOf(coefficient);
                 if(enteringCoefficient){
-                    text = "<b>" + sign + coefficient + "</b>x<sup>?</sup>";
+                    text = "<b>" + sign + coefficient + "</b>x";
                 }else{
                     text = sign + coefficient + "x<sup><b>?</b></sup>";
                 }
