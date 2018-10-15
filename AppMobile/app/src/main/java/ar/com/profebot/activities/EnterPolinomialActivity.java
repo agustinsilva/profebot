@@ -104,7 +104,11 @@ public class EnterPolinomialActivity extends GlobalActivity {
                 Double coefficient = term.get(exponent);
                 if(!"".equals(editPolynomial.getText().toString())){
                     if(enteringCoefficient){
-                        term.put(exponent, Double.parseDouble(editPolynomial.getText().toString()));
+                        int factor = 1;
+                        if("-".equals(nextSign)){
+                            factor = -1;
+                        }
+                        term.put(exponent, factor * Math.abs(Double.parseDouble(editPolynomial.getText().toString())));
                     }else{
                         term.clear();
                         term.put(Integer.parseInt(editPolynomial.getText().toString()), coefficient);
@@ -119,7 +123,7 @@ public class EnterPolinomialActivity extends GlobalActivity {
                         }
                     }
                 }
-                polynomialText.setText(Html.fromHtml(FactoringManager.getCurrentPolynomialEnteredAsText(polynomialTermsEntered, "+", enteringCoefficient)));
+                polynomialText.setText(Html.fromHtml(FactoringManager.getCurrentPolynomialEnteredAsText(polynomialTermsEntered, nextSign, enteringCoefficient)));
             }
         });
 
@@ -135,30 +139,40 @@ public class EnterPolinomialActivity extends GlobalActivity {
         plusTerm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                nextSign = "+";
-
-                disableDeletePlynomial();
-                disableGoToNextStepButton();
-                disableMinusTermButton();
-                disablePlusTermButton();
-                disableBackButton();
-
-                enteringCoefficient = true;
-                enterWasPressed = false;
-
-                polynomialTermsEntered.add(new HashMap<Integer, Double>(){{
-                    put(null, null);
-                }});
-                polynomialText.setText(Html.fromHtml(FactoringManager.getCurrentPolynomialEnteredAsText(polynomialTermsEntered, "+", enteringCoefficient)));
-
-                editPolynomial.requestFocus();
-                InputMethodManager keyboard = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                keyboard.showSoftInput(editPolynomial, 0);
+                plusAndMinusLogic("+");
             }
         });
 
+        minusTerm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                plusAndMinusLogic("-");
+            }
+        });
 
         // TODO: OnClick del goToNextStep
+    }
+
+    private void plusAndMinusLogic(String sign){
+        nextSign = sign;
+
+        disableDeletePlynomial();
+        disableGoToNextStepButton();
+        disableMinusTermButton();
+        disablePlusTermButton();
+        disableBackButton();
+
+        enteringCoefficient = true;
+        enterWasPressed = false;
+
+        polynomialTermsEntered.add(new HashMap<Integer, Double>(){{
+            put(null, null);
+        }});
+        polynomialText.setText(Html.fromHtml(FactoringManager.getCurrentPolynomialEnteredAsText(polynomialTermsEntered, sign, enteringCoefficient)));
+
+        editPolynomial.requestFocus();
+        InputMethodManager keyboard = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        keyboard.showSoftInput(editPolynomial, 0);
     }
 
     class CustomKeyboard implements TextView.OnEditorActionListener{
@@ -189,7 +203,7 @@ public class EnterPolinomialActivity extends GlobalActivity {
                     enableGoToNextStepButton();
                 }
 
-                polynomialText.setText(Html.fromHtml(FactoringManager.getCurrentPolynomialEnteredAsText(polynomialTermsEntered, "+", enteringCoefficient)));
+                polynomialText.setText(Html.fromHtml(FactoringManager.getCurrentPolynomialEnteredAsText(polynomialTermsEntered, nextSign, enteringCoefficient)));
                 editPolynomial.requestFocus();
                 return keepKeyboardAlive;
             }
