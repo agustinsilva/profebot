@@ -123,14 +123,14 @@ public class EnterPolinomialActivity extends GlobalActivity {
                         }
                     }
                 }
-                polynomialText.setText(Html.fromHtml(FactoringManager.getCurrentPolynomialEnteredAsText(polynomialTermsEntered, nextSign, enteringCoefficient)));
+                updatePolynomialTextVisor();
             }
         });
 
         ((Button)findViewById(R.id.clear_blackboard_id)).setVisibility(View.INVISIBLE);
         ((ImageButton)findViewById(R.id.solve_equation_id)).setVisibility(View.INVISIBLE);
 
-        polynomialText.setText(Html.fromHtml(FactoringManager.getCurrentPolynomialEnteredAsText(polynomialTermsEntered, nextSign, enteringCoefficient)));
+        updatePolynomialTextVisor();
 
         disableGoToNextStepButton();
         disableBackButton();
@@ -150,7 +150,44 @@ public class EnterPolinomialActivity extends GlobalActivity {
             }
         });
 
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!polynomialTermsEntered.isEmpty()){
+                    polynomialTermsEntered.remove(polynomialTermsEntered.size() - 1);
+                    updatePolynomialTextVisor();
+                }
+
+                // Me fijo si después de borrar el último, quedan términos
+                if(polynomialTermsEntered.isEmpty()){
+                    enableAndDisableButtonsAfterDeletition();
+                }
+            }
+        });
+
+        deletePlynomial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                polynomialTermsEntered.clear();
+                updatePolynomialTextVisor();
+                enableAndDisableButtonsAfterDeletition();
+            }
+        });
+
         // TODO: OnClick del goToNextStep
+    }
+
+    private void enableAndDisableButtonsAfterDeletition(){
+        disableBackButton();
+        disableGoToNextStepButton();
+        disableDeletePlynomial();
+
+        enablePlusTermButton();
+        enableMinusTermButton();
+    }
+
+    private void updatePolynomialTextVisor(){
+        polynomialText.setText(Html.fromHtml(FactoringManager.getCurrentPolynomialEnteredAsText(polynomialTermsEntered, nextSign, enteringCoefficient)));
     }
 
     private void plusAndMinusLogic(String sign){
@@ -168,7 +205,7 @@ public class EnterPolinomialActivity extends GlobalActivity {
         polynomialTermsEntered.add(new HashMap<Integer, Double>(){{
             put(null, null);
         }});
-        polynomialText.setText(Html.fromHtml(FactoringManager.getCurrentPolynomialEnteredAsText(polynomialTermsEntered, sign, enteringCoefficient)));
+        updatePolynomialTextVisor();
 
         editPolynomial.requestFocus();
         InputMethodManager keyboard = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -203,7 +240,7 @@ public class EnterPolinomialActivity extends GlobalActivity {
                     enableGoToNextStepButton();
                 }
 
-                polynomialText.setText(Html.fromHtml(FactoringManager.getCurrentPolynomialEnteredAsText(polynomialTermsEntered, nextSign, enteringCoefficient)));
+                updatePolynomialTextVisor();
                 editPolynomial.requestFocus();
                 return keepKeyboardAlive;
             }
