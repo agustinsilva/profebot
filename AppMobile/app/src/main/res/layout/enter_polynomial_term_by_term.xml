@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorBackground">
+    android:background="@color/colorBackground"
+    android:id="@+id/enter_polynomial_section_id">
 
     <TextView
         android:layout_width="match_parent"
@@ -41,7 +42,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/equation_to_solve_id"
+                android:id="@+id/polynomial_to_solve_id"
                 android:background="@drawable/rounded_corners_polynomial_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

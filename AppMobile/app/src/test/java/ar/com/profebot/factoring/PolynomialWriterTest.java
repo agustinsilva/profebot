@@ -200,6 +200,14 @@ public class PolynomialWriterTest {
     }
 
     @Test
+    public void polinomioConUnSoloTerminoConExponenteUnitarioIngresandoExponente() {
+        list.add(new HashMap<Integer, Double>(){{
+            put(1, 2.0);
+        }});
+        Assert.assertEquals("P(x) = 2x", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, false));
+    }
+
+    @Test
     public void polinomioConDosTerminosYConCoeficienteNuloYPositivoDefault() {
         list.add(new HashMap<Integer, Double>(){{
             put(1, -4.0);

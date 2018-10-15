@@ -816,6 +816,7 @@ public class FactoringManager extends Manager{
                 .replace("<b>+1</b>x", "+x")
                 .replace("<b>-1</b>x", "-x")
                 .replace("x<sup>1</sup>", "x")
+                .replace("x<sup><b>1</b></sup>", "x")
                 .replace("+x<sup>0</sup>", "+1")
                 .replace("-x<sup>0</sup>", "-1")
                 .replace("+x<sup><b>0</b></sup>", "+1")
@@ -831,6 +832,42 @@ public class FactoringManager extends Manager{
                 .replace("x<sup>0</sup>", "1");
 
         return expression;
+    }
+
+    public static Map<Integer, Double> getCurrentPolynomialEnteredSortedAndSimplified(List<Map<Integer, Double>> polynomialTermsEntered){
+        Map<Integer, Double> polynomial = new HashMap<>();
+        for(Map<Integer, Double> term : polynomialTermsEntered){
+            Integer exponent = getExponentFrom(term);
+            if(polynomial.containsKey(exponent)){
+                Double newCoefficient = polynomial.get(exponent) + term.get(exponent);
+                polynomial.put(exponent, newCoefficient);
+            }else{
+                polynomial.put(exponent, term.get(exponent));
+            }
+        }
+        return polynomial;
+    }
+
+    public static String getCurrentPolynomialEnteredSortedAndSimplifiedAsText(Map<Integer, Double> polynomial){
+        List<Map<Integer, Double>> polynomialSorted = new ArrayList<>();
+        List<Integer> exponents = new ArrayList<>(polynomial.keySet());
+        Collections.sort(exponents, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2 >= o1 ? 1 : -1;
+            }
+        });
+
+        for(Integer exponent : exponents){
+            polynomialSorted.add(new HashMap<Integer, Double>(){{
+                put(exponent, polynomial.get(exponent));
+            }});
+        }
+
+        String result = getCurrentPolynomialEnteredAsText(polynomialSorted, null, false);
+        return result
+                .replace("<b>", "")
+                .replace("</b>", "");
     }
 
     private static String signOf(Double number){

@@ -77,8 +77,6 @@ public class SolvePolynomialActivity extends GlobalActivity {
         manager.disableSummary(seeSummary);
     }
 
-
-
     public void enableSummary(){
         manager.enableSummary(seeSummary);
 

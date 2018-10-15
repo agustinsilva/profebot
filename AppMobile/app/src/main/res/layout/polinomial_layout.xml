@@ -8,5 +8,6 @@
 
     <include layout="@layout/enter_equation_handdraw_toolbar"/>
     <include layout="@layout/enter_polynomial_term_by_term"/>
+    <include layout="@layout/sort_and_simplify_polynomial"/>
 
 </LinearLayout>

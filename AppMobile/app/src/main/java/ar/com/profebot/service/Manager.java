@@ -242,7 +242,7 @@ public abstract class Manager {
                                  String contextOfResolutionFirstText, String firstEquation,
                                  String contextOfResolutionSecondText, String lastEquation,
                                  String title, String solutionType){
-        recycleViewSection.setVisibility(View.GONE);
+        recycleViewSection.setVisibility(View.INVISIBLE);
         finalSummarySection.setVisibility(View.VISIBLE);
 
         ((TextView)finalSummarySection.findViewById(R.id.title_id)).setText(title);
@@ -317,7 +317,7 @@ public abstract class Manager {
             @Override
             public void onClick(View v) {
                 recycleViewSection.setVisibility(View.VISIBLE);
-                finalSummarySection.setVisibility(View.GONE);
+                finalSummarySection.setVisibility(View.INVISIBLE);
 
             }
         });

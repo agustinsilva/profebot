@@ -28,4 +28,6 @@
 
     <string name="RAIZ_ENCONTRADA">La raíz del polinomio es: /raiz/ .</string>
     <string name="RAICES_ENCONTRADAS">Las raíces del polinomio son: /raices/ .</string>
+
+    <string name="ORDENAR_Y_SIMPLIFICAR_POLINOMIO">Antes de factorizar un polinomio, primero se lo debe ordenar según los exponentes de las Xs de cada término (yendo de mayor a menor), y luego simplificarlo: simplificar un polinomio implica "acumular" los términos que tengan Xs con el mismo exponente; por ejemplo: dos términos cuadráticos pueden simplificarse en uno solo.</string>
 </resources>
