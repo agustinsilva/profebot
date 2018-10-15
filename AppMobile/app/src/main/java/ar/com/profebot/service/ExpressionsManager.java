@@ -520,6 +520,7 @@ public class ExpressionsManager {
                 .replaceAll("\\.0\\(", "(")
                 .replaceAll("\\.0\\)", ")")
                 .replaceAll("\\.0x", "x")
+                .replaceAll("\\.0</b>x", "</b>x")
                 .replaceAll("\\.0 ", " ")
                 .replaceAll("\\.0\\}", "}")
                 .replaceAll("\\.0\\,", ",")

@@ -50,7 +50,7 @@
             android:id="@+id/delete_pending_exercise_id"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/delete_exercise"
+            android:background="@drawable/erase_polynomial"
             android:layout_marginStart="20dp"
             android:layout_marginBottom="10dp"/>
 

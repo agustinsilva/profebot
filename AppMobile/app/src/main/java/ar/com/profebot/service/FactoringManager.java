@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -765,6 +767,71 @@ public class FactoringManager extends Manager{
                 setUpSolveButtonGlobal(holder, multipleChoiceSteps.get(currentMultipleChoiceSteps.size()-1), multipleChoiceSteps, currentMultipleChoiceSteps);
             }
         });
+    }
+
+    public static String getCurrentPolynomialEnteredAsText(List<Map<Integer, Double>> terms, String firstSign, Boolean enteringCoefficient){
+        StringBuilder polynomial = new StringBuilder();
+        polynomial.append("P(x) = ");
+        for(Map<Integer, Double> term : terms){
+            Integer exponent = getExponentFrom(term);
+            Double coefficient = term.get(exponent);
+            if(coefficient == null){
+                polynomial.append(firstSign);
+                polynomial.append("<b>?</b>x<sup>?</sup>");
+            }else if(exponent == null){
+                String text;
+                String sign = signOf(coefficient);
+                if(enteringCoefficient){
+                    text = "<b>" + sign + coefficient + "</b>x<sup>?</sup>";
+                }else{
+                    text = sign + coefficient + "x<sup><b>?</b></sup>";
+                }
+                polynomial.append(text);
+            }else{
+                polynomial.append(signOf(coefficient));
+                polynomial.append(coefficient);
+                polynomial.append("x<sup>");
+                int index = terms.indexOf(term);
+                if(index == terms.size() - 1){
+                    if(!enteringCoefficient){
+                        polynomial.append("<b>" + exponent + "</b>");
+                    }else{
+                        polynomial.append(exponent);
+                    }
+                }else{
+                    polynomial.append(exponent);
+                }
+                polynomial.append("</sup>");
+            }
+        }
+
+        String expression = ExpressionsManager.removeDecimals(polynomial.toString());
+        expression = expression
+                .replace("= +", "= ")
+                .replace("= <b>+", "= <b>")
+                .replace(" 1x", " x")
+                .replace("+1x", "+x")
+                .replace("-1x", "-x")
+                .replace("<b>1</b>x", "x")
+                .replace("<b>+1</b>x", "+x")
+                .replace("<b>-1</b>x", "-x")
+                .replace("x<sup>1</sup>", "x")
+                .replace("+x<sup>0</sup>", "+1")
+                .replace("-x<sup>0</sup>", "-1")
+                .replace("null", "");
+        for(int i = 1 ; i <= 9 ; i++){
+            expression = expression
+                    .replace(i + "x<sup>0</sup>", i + "");
+        }
+        return expression;
+    }
+
+    private static String signOf(Double number){
+        return number > 0 ? "+" : "";
+    }
+
+    public static Integer getExponentFrom(Map<Integer, Double> term){
+        return (new ArrayList<>(term.keySet())).get(0);
     }
 
     @Override

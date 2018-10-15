@@ -46,7 +46,7 @@
         <activity
             android:name="ar.com.profebot.activities.EnterPolinomialActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysVisible" />
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name="ar.com.profebot.activities.EnterPolinomialEquationOptionsActivity" />
         <activity
             android:name="ar.com.profebot.activities.SolvePolynomialActivity"
