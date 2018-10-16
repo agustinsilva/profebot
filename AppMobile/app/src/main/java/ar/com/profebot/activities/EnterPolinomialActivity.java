@@ -318,14 +318,14 @@ public class EnterPolinomialActivity extends GlobalActivity {
 
         enableBackButton();
 
-        editPolynomial.setText("");
-
         enteringCoefficient = true;
         enterWasPressed = false;
 
         polynomialTermsEntered.add(new HashMap<Integer, Double>(){{
             put(null, null);
         }});
+
+        editPolynomial.setText("");
         updatePolynomialTextVisor();
 
         editPolynomial.requestFocus();
