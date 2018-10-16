@@ -148,13 +148,16 @@ public class EnterPolinomialActivity extends GlobalActivity {
                     Double coefficient = term.get(exponent);
                     if (!"".equals(editPolynomial.getText().toString())) {
                         if (enteringCoefficient) {
-                            int factor = 1;
-                            if ("-".equals(nextSign)) {
-                                factor = -1;
+                            Double newCoefficient = Double.parseDouble(editPolynomial.getText().toString());
+                            if(newCoefficient != 0){
+                                int factor = 1;
+                                if ("-".equals(nextSign)) {
+                                    factor = -1;
+                                }
+                                term.put(exponent, factor * Math.abs(newCoefficient));
+                                enableExtraButtonsSection();
+                                enableEnterExponent();
                             }
-                            term.put(exponent, factor * Math.abs(Double.parseDouble(editPolynomial.getText().toString())));
-                            enableExtraButtonsSection();
-                            enableEnterExponent();
                         } else {
                             disableEnterExponent();
                             enableSaveTerm();
