@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -51,12 +52,15 @@ public class EnterPolinomialActivity extends GlobalActivity {
     private ImageView minusTerm;
     private ImageView back;
     private ImageView deletePlynomial;
+    private ImageView enterExponent;
+    private ImageView saveTerm;
     private Button goToNextStep;
     private EditText editPolynomial;
     private TextView polynomialText;
     private String nextSign = "+";
     private Boolean enteringCoefficient = true;
     private Boolean enterWasPressed = false;
+    private RelativeLayout extraButtonsSection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +78,40 @@ public class EnterPolinomialActivity extends GlobalActivity {
         back = (ImageView) findViewById(R.id.back_id);
         goToNextStep = (Button) findViewById(R.id.go_to_next_step_id);
         deletePlynomial = (ImageView) findViewById(R.id.delete_polynomial_id);
+
+        extraButtonsSection = (RelativeLayout) findViewById(R.id.extra_buttons_section_id);
+        disableExtraButtonsSection();
+
+        enterExponent = (ImageView) findViewById(R.id.enter_exponent_id);
+        disableEnterExponent();
+        enterExponent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                manageImeActionDone();
+                disableExtraButtonsSection();
+                showKeyboard();
+            }
+        });
+
+        saveTerm = (ImageView) findViewById(R.id.save_term_id);
+        disableSaveTerm();
+        saveTerm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                manageImeActionDone();
+
+                hideKeyboard();
+
+                disableEnterExponent();
+                disableSaveTerm();
+                if(!polynomialTermsEntered.isEmpty()){
+                    enableBackButton();
+                    enableDeletePlynomial();
+                    enableExtraButtonsSection();
+                }
+            }
+        });
+
         editPolynomial = (EditText) findViewById(R.id.edit_term_id);
         polynomialText = (TextView) findViewById(R.id.polynomial_to_solve_id);
         polynomialText.setMovementMethod(ScrollingMovementMethod.getInstance());
@@ -82,8 +120,7 @@ public class EnterPolinomialActivity extends GlobalActivity {
             public void onClick(View v) {
                 if(plusTerm.getVisibility() != View.VISIBLE){
                     editPolynomial.requestFocus();
-                    InputMethodManager keyboard = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                    keyboard.showSoftInput(editPolynomial, 0);
+                    showKeyboard();
                 }
             }
         });
@@ -116,7 +153,12 @@ public class EnterPolinomialActivity extends GlobalActivity {
                                 factor = -1;
                             }
                             term.put(exponent, factor * Math.abs(Double.parseDouble(editPolynomial.getText().toString())));
+                            enableExtraButtonsSection();
+                            enableEnterExponent();
                         } else {
+                            disableEnterExponent();
+                            enableSaveTerm();
+                            enableExtraButtonsSection();
                             term.clear();
                             term.put(Integer.parseInt(editPolynomial.getText().toString()), coefficient);
                         }
@@ -128,6 +170,9 @@ public class EnterPolinomialActivity extends GlobalActivity {
                             } else {
                                 term.put(null, coefficient);
                             }
+                            disableEnterExponent();
+                            disableSaveTerm();
+                            disableExtraButtonsSection();
                         }
                     }
                     updatePolynomialTextVisor();
@@ -166,13 +211,28 @@ public class EnterPolinomialActivity extends GlobalActivity {
                     updatePolynomialTextVisor();
                 }
 
-                // Me fijo si después de borrar el último, quedan términos
-                if(polynomialTermsEntered.isEmpty()){
-                    enableAndDisableButtonsAfterDeletition();
-                }
+                hideKeyboard();
 
-                InputMethodManager keyboard = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                keyboard.hideSoftInputFromWindow(editPolynomial.getWindowToken(), 0);
+                enablePlusTermButton();
+                enableMinusTermButton();
+
+                disableEnterExponent();
+                disableSaveTerm();
+
+                if(!polynomialTermsEntered.isEmpty()){
+                    enableBackButton();
+                    enableDeletePlynomial();
+                    enableExtraButtonsSection();
+                    enableGoToNextStepButton();
+
+                    disableEnterExponent();
+                    disableSaveTerm();
+                }else{
+                    disableGoToNextStepButton();
+                    disableBackButton();
+                    disableDeletePlynomial();
+                    disableExtraButtonsSection();
+                }
             }
         });
 
@@ -218,10 +278,21 @@ public class EnterPolinomialActivity extends GlobalActivity {
         });
     }
 
+    private void hideKeyboard(){
+        InputMethodManager keyboard = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        keyboard.hideSoftInputFromWindow(editPolynomial.getWindowToken(), 0);
+    }
+
+    private void showKeyboard(){
+        InputMethodManager keyboard = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        keyboard.showSoftInput(editPolynomial, 0);
+    }
+
     private void enableAndDisableButtonsAfterDeletition(){
         disableBackButton();
         disableGoToNextStepButton();
         disableDeletePlynomial();
+        disableExtraButtonsSection();
 
         enablePlusTermButton();
         enableMinusTermButton();
@@ -236,6 +307,9 @@ public class EnterPolinomialActivity extends GlobalActivity {
 
         disableDeletePlynomial();
         disableGoToNextStepButton();
+        disableSaveTerm();
+        disableEnterExponent();
+        disableExtraButtonsSection();
         disableMinusTermButton();
         disablePlusTermButton();
 
@@ -252,44 +326,61 @@ public class EnterPolinomialActivity extends GlobalActivity {
         updatePolynomialTextVisor();
 
         editPolynomial.requestFocus();
-        InputMethodManager keyboard = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        keyboard.showSoftInput(editPolynomial, 0);
+        showKeyboard();
     }
 
     class CustomKeyboard implements TextView.OnEditorActionListener{
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event){
             if(actionId == EditorInfo.IME_ACTION_DONE){
-                Boolean keepKeyboardAlive = true;
-                enterWasPressed = true;
-
-                if(enterShouldDoNothing()){
-                    enterWasPressed = false;
-                    keepKeyboardAlive = true;
-                }else if(isSwitchingToExponent()){
-                    enteringCoefficient = !enteringCoefficient;
-                    editPolynomial.setText("");
-                    enterWasPressed = false;
-                    keepKeyboardAlive = true;
-                }else if(isCreatingANewTerm()){
-                    enteringCoefficient = !enteringCoefficient;
-                    editPolynomial.setText("");
-                    enterWasPressed = true;
-                    keepKeyboardAlive = false;
-
-                    enablePlusTermButton();
-                    enableMinusTermButton();
-                    enableBackButton();
-                    enableDeletePlynomial();
-                    enableGoToNextStepButton();
-                }
-
-                updatePolynomialTextVisor();
-                editPolynomial.requestFocus();
-                return keepKeyboardAlive;
+                return manageImeActionDone();
             }
             return true;
         }
+    }
+
+    private Boolean manageImeActionDone(){
+        Boolean keepKeyboardAlive = true;
+        enterWasPressed = true;
+
+        if(enterShouldDoNothing()){
+            enterWasPressed = false;
+            keepKeyboardAlive = true;
+        }else if(isSwitchingToExponent()){
+            keepKeyboardAlive = switchToExponent();
+        }else if(isCreatingANewTerm()){
+            keepKeyboardAlive = saveNewTerm();
+        }
+
+        updatePolynomialTextVisor();
+        editPolynomial.requestFocus();
+        return keepKeyboardAlive;
+    }
+
+    private Boolean saveNewTerm(){
+        enteringCoefficient = !enteringCoefficient;
+        editPolynomial.setText("");
+        enterWasPressed = true;
+
+        disableSaveTerm();
+        enablePlusTermButton();
+        enableMinusTermButton();
+        enableBackButton();
+        enableDeletePlynomial();
+        enableGoToNextStepButton();
+
+        return false;
+    }
+
+    private Boolean switchToExponent(){
+        enteringCoefficient = !enteringCoefficient;
+        editPolynomial.setText("");
+        enterWasPressed = false;
+
+        disableEnterExponent();
+        enableSaveTerm();
+
+        return true;
     }
 
     private Boolean isCreatingANewTerm(){
@@ -343,12 +434,24 @@ public class EnterPolinomialActivity extends GlobalActivity {
         deletePlynomial.setVisibility(View.GONE);
     }
 
+    private void disableEnterExponent(){
+        enterExponent.setVisibility(View.GONE);
+    }
+
+    private void disableSaveTerm(){
+        saveTerm.setVisibility(View.GONE);
+    }
+
     private void disablePlusTermButton(){
         plusTerm.setVisibility(View.GONE);
     }
 
     private void disableMinusTermButton(){
         minusTerm.setVisibility(View.GONE);
+    }
+
+    private void disableExtraButtonsSection(){
+        extraButtonsSection.setVisibility(View.GONE);
     }
 
     private void enableGoToNextStepButton(){
@@ -363,12 +466,24 @@ public class EnterPolinomialActivity extends GlobalActivity {
         deletePlynomial.setVisibility(View.VISIBLE);
     }
 
+    private void enableEnterExponent(){
+        enterExponent.setVisibility(View.VISIBLE);
+    }
+
+    private void enableSaveTerm(){
+        saveTerm.setVisibility(View.VISIBLE);
+    }
+
     private void enablePlusTermButton(){
         plusTerm.setVisibility(View.VISIBLE);
     }
 
     private void enableMinusTermButton(){
         minusTerm.setVisibility(View.VISIBLE);
+    }
+
+    private void enableExtraButtonsSection(){
+        extraButtonsSection.setVisibility(View.VISIBLE);
     }
 }
 

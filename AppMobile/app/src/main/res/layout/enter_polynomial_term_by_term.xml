@@ -58,12 +58,30 @@
                 android:background="@drawable/back_button"
                 android:layout_marginEnd="10dp"/>
 
-            <ImageView
-                android:id="@+id/delete_polynomial_id"
+            <RelativeLayout
+                android:id="@+id/extra_buttons_section_id"
                 android:layout_width="0dp"
                 android:layout_weight="25"
-                android:layout_height="match_parent"
-                android:background="@drawable/erase_polynomial" />
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/delete_polynomial_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/erase_polynomial" />
+
+                <ImageView
+                    android:id="@+id/enter_exponent_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/enter_exponent" />
+
+                <ImageView
+                    android:id="@+id/save_term_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/save_term" />
+            </RelativeLayout>
         </LinearLayout>
 
         <RelativeLayout
