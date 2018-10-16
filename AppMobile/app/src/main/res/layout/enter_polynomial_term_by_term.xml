@@ -13,8 +13,8 @@
         android:gravity="top|center_horizontal"
         android:text="Paso 1: ingresá cada término de tu polinomio"
         android:textColor="@color/colorWhite"
-        android:layout_margin="20dp"
-        android:textSize="50dp" />
+        android:layout_margin="15dp"
+        android:textSize="40dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
