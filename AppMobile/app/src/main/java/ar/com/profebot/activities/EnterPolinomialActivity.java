@@ -381,7 +381,8 @@ public class EnterPolinomialActivity extends GlobalActivity {
         enterWasPressed = false;
 
         disableEnterExponent();
-        enableSaveTerm();
+        disableSaveTerm();
+        disableExtraButtonsSection();
 
         return true;
     }
