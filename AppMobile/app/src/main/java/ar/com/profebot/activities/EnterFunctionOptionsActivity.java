@@ -28,7 +28,7 @@ public class EnterFunctionOptionsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.enter_function_options_layout);
+        setContentView(R.layout.enter_exercise_options_layout);
         photoReference = FUNCTION;
         Toolbar toolbar = findViewById(R.id.toolbar_id);
         setSupportActionBar(toolbar);

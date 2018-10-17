@@ -28,7 +28,7 @@ public class EnterEquationOptionsActivity extends GlobalActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.enter_equation_options_layout);
+        setContentView(R.layout.enter_exercise_options_layout);
         photoReference = EQUATION;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_id);
         setSupportActionBar(toolbar);

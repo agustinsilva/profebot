@@ -28,7 +28,7 @@ public class EnterPolinomialEquationOptionsActivity extends GlobalActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.enter_polinomial_options_layout);
+        setContentView(R.layout.enter_exercise_options_layout);
         photoReference = POLINOMIAL;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_id);
         setSupportActionBar(toolbar);
@@ -36,9 +36,9 @@ public class EnterPolinomialEquationOptionsActivity extends GlobalActivity {
 
         super.onCreate(savedInstanceState);
 
-        polinomialEquationPicture = (ImageView) findViewById(R.id.polinomial_equation_id);
+        polinomialEquationPicture = (ImageView) findViewById(R.id.handdraw_equation_picture_id);
         photoEquationPicture = (ImageView) findViewById(R.id.photo_equation_picture_id);
-        polinomialEquationOption = (RadioButton) findViewById(R.id.polinomial_rb_equation_id);
+        polinomialEquationOption = (RadioButton) findViewById(R.id.handdraw_equation_id);
         photoEquationOption = (RadioButton) findViewById(R.id.photo_equation_id);
         startResolution = (Button) findViewById(R.id.start_resolution_id);
         spinner = findViewById(R.id.options_progress_bar_id);
