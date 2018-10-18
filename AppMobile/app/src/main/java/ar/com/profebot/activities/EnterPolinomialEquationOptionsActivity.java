@@ -7,8 +7,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
 import com.profebot.activities.R;
 
@@ -19,11 +21,6 @@ import static ar.com.profebot.activities.MainActivity.photoReference;
 
 public class EnterPolinomialEquationOptionsActivity extends GlobalActivity {
 
-    private ImageView polinomialEquationPicture;
-    private ImageView photoEquationPicture;
-    private RadioButton polinomialEquationOption;
-    private RadioButton photoEquationOption;
-    private Button startResolution;
     private ProgressBar spinner;
 
     @Override
@@ -36,91 +33,37 @@ public class EnterPolinomialEquationOptionsActivity extends GlobalActivity {
 
         super.onCreate(savedInstanceState);
 
-        polinomialEquationPicture = (ImageView) findViewById(R.id.handdraw_equation_picture_id);
-        photoEquationPicture = (ImageView) findViewById(R.id.photo_equation_picture_id);
-        polinomialEquationOption = (RadioButton) findViewById(R.id.handdraw_equation_id);
-        photoEquationOption = (RadioButton) findViewById(R.id.photo_equation_id);
-        startResolution = (Button) findViewById(R.id.start_resolution_id);
         spinner = findViewById(R.id.options_progress_bar_id);
 
         restartScreen();
 
-        // When i touch over images
+        restartScreen();
 
-        polinomialEquationPicture.setOnClickListener(new View.OnClickListener() {
+        ((LinearLayout) findViewById(R.id.option_1_section_id)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                polinomialEquationPicture.setImageResource(R.drawable.polinomial_equation_selected1);
-                photoEquationPicture.setImageResource(R.drawable.photo_equation1);
-                polinomialEquationOption.setChecked(true);
-                photoEquationOption.setChecked(false);
-                activateStartResolutionButton();
+                spinner.setVisibility(View.VISIBLE);
+                Intent intent = new Intent(v.getContext(), EnterPolinomialActivity.class);
+                startActivity(intent);
             }
         });
 
-        photoEquationPicture.setOnClickListener(new View.OnClickListener() {
+        ((LinearLayout) findViewById(R.id.option_2_section_id)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                photoEquationPicture.setImageResource(R.drawable.photo_equation_selected1);
-                polinomialEquationPicture.setImageResource(R.drawable.polinomial_equation1);
-                photoEquationOption.setChecked(true);
-                polinomialEquationOption.setChecked(false);
-                activateStartResolutionButton();
-            }
-        });
-
-        // When i pick radio buttons
-
-        polinomialEquationOption.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                polinomialEquationPicture.setImageResource(R.drawable.polinomial_equation_selected1);
-                photoEquationPicture.setImageResource(R.drawable.photo_equation1);
-                activateStartResolutionButton();
-            }
-        });
-
-        photoEquationOption.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                photoEquationPicture.setImageResource(R.drawable.photo_equation_selected1);
-                polinomialEquationPicture.setImageResource(R.drawable.polinomial_equation1);
-                activateStartResolutionButton();
-            }
-        });
-
-        startResolution.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(polinomialEquationOption.isChecked()){
-                    spinner.setVisibility(View.VISIBLE);
-                    Intent intent = new Intent(v.getContext(), EnterPolinomialActivity.class);
-                    startActivity(intent);
-                }else{
-                    Intent intent = new Intent(v.getContext(), CarmeraActivity.class);
-                    //String latex = "\\frac { 3 + 2 ^ { 4 } } { 3 x } = 5";
-                    //ExpressionsManager.setEquationPhoto(latex);
-                    //Intent intent = new Intent(button.getContext(), SolveEquationActivity.class);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(v.getContext(), CarmeraActivity.class);
+                //String latex = "\\frac { 3 + 2 ^ { 4 } } { 3 x } = 5";
+                //ExpressionsManager.setEquationPhoto(latex);
+                //Intent intent = new Intent(button.getContext(), SolveEquationActivity.class);
+                startActivity(intent);
             }
         });
     }
 
     private void restartScreen(){
-        polinomialEquationPicture.setImageResource(R.drawable.polinomial_equation1);
-        photoEquationPicture.setImageResource(R.drawable.photo_equation1);
-        polinomialEquationOption.setChecked(false);
-        photoEquationOption.setChecked(false);
-        startResolution.setEnabled(false);
-        startResolution.setBackgroundResource(R.drawable.rounded_corners_disable_button);
-        startResolution.setTextColor(Color.GRAY);
-    }
-
-    private void activateStartResolutionButton(){
-        startResolution.setEnabled(true);
-        startResolution.setBackgroundResource(R.drawable.rounded_corners_main_buttons);
-        startResolution.setTextColor(Color.WHITE);
+        ((TextView)findViewById(R.id.options_title_id)).setText("¡Elegí cómo ingresar tu polinomio!");
+        ((TextView)findViewById(R.id.enter_manually_option_id)).setText("¡Escribilo!");
+        ((ImageView)findViewById(R.id.enter_manually_image_option_id)).setBackgroundResource(R.drawable.polinomial_equation1);
     }
 
     @Override

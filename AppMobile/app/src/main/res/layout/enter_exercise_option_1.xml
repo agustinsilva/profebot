@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/option_1_section_id"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="50"
+    android:orientation="horizontal"
+    android:gravity="start"
+    android:weightSum="100"
+    android:layout_margin="5dp"
+    android:background="@drawable/rounded_corners_polynomial_text">
+
+
+    <TextView
+        android:id="@+id/enter_manually_option_id"
+        android:layout_width="0dp"
+        android:layout_weight="60"
+        android:layout_height="match_parent"
+        android:text="¡Dibujala!"
+        android:textSize="45dp"
+        android:gravity="center"
+        android:textColor="@color/colorAccent"/>
+
+    <View
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@color/colorGreyText" />
+
+    <ImageView
+        android:id="@+id/enter_manually_image_option_id"
+        android:layout_width="0dp"
+        android:layout_weight="40"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/handdraw_equation1"
+        />
+
+
+</LinearLayout>

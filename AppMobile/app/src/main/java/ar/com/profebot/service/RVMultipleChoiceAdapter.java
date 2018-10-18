@@ -225,6 +225,7 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
             });
 
             multipleChoiceViewHolder.optionB = multipleChoiceViewHolder.itemView.findViewById(R.id.option_b_id);
+            multipleChoiceViewHolder.optionB.setChecked(false);
             multipleChoiceViewHolder.optionB.setEnabled(true);
             multipleChoiceViewHolder.optionB.setOnClickListener(new View.OnClickListener() {
                 @Override

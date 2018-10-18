@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/option_2_section_id"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="50"
+    android:orientation="horizontal"
+    android:gravity="start"
+    android:weightSum="100"
+    android:layout_margin="5dp"
+    android:background="@drawable/rounded_corners_polynomial_text">
+
+    <ImageView
+        android:id="@+id/photo_equation_picture_id"
+        android:layout_width="0dp"
+        android:layout_weight="40"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/photo_equation1"
+        />
+
+    <View
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@color/colorGreyText" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="60"
+        android:layout_height="match_parent"
+        android:text="¡Sacale una foto!"
+        android:textSize="45dp"
+        android:gravity="center"
+        android:textColor="@color/colorBlueBack"/>
+
+</LinearLayout>
