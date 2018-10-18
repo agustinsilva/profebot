@@ -15,7 +15,7 @@
     <TextView
         android:id="@+id/enter_manually_option_id"
         android:layout_width="0dp"
-        android:layout_weight="60"
+        android:layout_weight="70"
         android:layout_height="match_parent"
         android:text="¡Dibujala!"
         android:textSize="45dp"
@@ -33,7 +33,7 @@
     <ImageView
         android:id="@+id/enter_manually_image_option_id"
         android:layout_width="0dp"
-        android:layout_weight="40"
+        android:layout_weight="30"
         android:layout_height="match_parent"
         android:padding="10dp"
         android:layout_margin="10dp"

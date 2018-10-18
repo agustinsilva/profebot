@@ -14,7 +14,7 @@
     <ImageView
         android:id="@+id/photo_equation_picture_id"
         android:layout_width="0dp"
-        android:layout_weight="40"
+        android:layout_weight="30"
         android:layout_height="match_parent"
         android:padding="10dp"
         android:layout_margin="10dp"
@@ -31,7 +31,7 @@
 
     <TextView
         android:layout_width="0dp"
-        android:layout_weight="60"
+        android:layout_weight="70"
         android:layout_height="match_parent"
         android:text="¡Sacale una foto!"
         android:textSize="45dp"
