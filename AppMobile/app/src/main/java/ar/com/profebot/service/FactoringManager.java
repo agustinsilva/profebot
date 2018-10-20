@@ -809,26 +809,18 @@ public class FactoringManager extends Manager{
         expression = expression
                 .replace("= +", "= ")
                 .replace("= <b>+", "= <b>")
-                .replace(" 1x", " x")
-                .replace("+1x", "+x")
-                .replace("-1x", "-x")
-                .replace("<b>1</b>x", "x")
-                .replace("<b>+1</b>x", "+x")
-                .replace("<b>-1</b>x", "-x")
-                .replace("x<sup>1</sup>", "x")
-                .replace("x<sup><b>1</b></sup>", "x")
-                .replace("+x<sup>0</sup>", "+1")
-                .replace("-x<sup>0</sup>", "-1")
-                .replace("+x<sup><b>0</b></sup>", "+1")
-                .replace("-x<sup><b>0</b></sup>", "-1")
                 .replace("null", "");
         for(int i = 1 ; i <= 9 ; i++){
             expression = expression
                     .replace(i + "x<sup>0</sup>", i + "")
-                    .replace(i + "x<sup><b>0</b></sup>", i + "");
+                    .replace(" 1x<sup>" + i, " x<sup>" + i)
+                    .replace("+1x<sup>" + i, "+x<sup>" + i)
+                    .replace("-1x<sup>" + i, "-x<sup>" + i);
         }
         expression = expression
-                .replace("x<sup><b>0</b></sup>", "1")
+                .replace("x<sup>1</sup>", "x")
+                .replace("+x<sup>0</sup>", "+1")
+                .replace("-x<sup>0</sup>", "-1")
                 .replace("x<sup>0</sup>", "1");
 
         return expression;

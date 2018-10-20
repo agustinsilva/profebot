@@ -180,7 +180,7 @@ public class PolynomialWriterTest {
         list.add(new HashMap<Integer, Double>(){{
             put(0, -4.0);
         }});
-        Assert.assertEquals("P(x) = -4", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, false));
+        Assert.assertEquals("P(x) = -4x<sup><b>0</b></sup>", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, false));
     }
 
     @Test
@@ -188,7 +188,7 @@ public class PolynomialWriterTest {
         list.add(new HashMap<Integer, Double>(){{
             put(0, 1.0);
         }});
-        Assert.assertEquals("P(x) = 1", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, false));
+        Assert.assertEquals("P(x) = 1x<sup><b>0</b></sup>", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, false));
     }
 
     @Test
@@ -204,7 +204,7 @@ public class PolynomialWriterTest {
         list.add(new HashMap<Integer, Double>(){{
             put(1, 2.0);
         }});
-        Assert.assertEquals("P(x) = 2x", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, false));
+        Assert.assertEquals("P(x) = 2x<sup><b>1</b></sup>", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, false));
     }
 
     @Test
@@ -252,7 +252,7 @@ public class PolynomialWriterTest {
             put(null, 1.0);
         }});
 
-        Assert.assertEquals("P(x) = -4x+x", FactoringManager.getCurrentPolynomialEnteredAsText(list, "+", true));
+        Assert.assertEquals("P(x) = -4x<b>+1</b>x", FactoringManager.getCurrentPolynomialEnteredAsText(list, "+", true));
     }
 
     @Test
@@ -280,5 +280,87 @@ public class PolynomialWriterTest {
         }});
 
         Assert.assertEquals("P(x) = -4x-<b>?</b>x", FactoringManager.getCurrentPolynomialEnteredAsText(list, "-", true));
+    }
+
+    // Pruebas con coeficientes y exponentes nulos o unitarios
+
+    @Test
+    public void coeficienteNuloYExponenteNulo() {
+        list.add(new HashMap<Integer, Double>(){{
+            put(null, null);
+        }});
+        Assert.assertEquals("P(x) = <b>?</b>x", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, true));
+    }
+
+    @Test
+    public void coeficienteUnitarioYExponenteNulo() {
+        list.add(new HashMap<Integer, Double>(){{
+            put(null, 1.0);
+        }});
+        Assert.assertEquals("P(x) = <b>1</b>x", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, true));
+        Assert.assertEquals("P(x) = 1x<sup><b>?</b></sup>", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, false));
+    }
+
+    @Test
+    public void coeficienteUnitarioYExponenteIgualA0() {
+        list.add(new HashMap<Integer, Double>(){{
+            put(0, 1.0);
+        }});
+        Assert.assertEquals("P(x) = 1", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, true));
+        Assert.assertEquals("P(x) = 1x<sup><b>0</b></sup>", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, false));
+    }
+
+    @Test
+    public void coeficienteUnitarioYExponenteUnitario() {
+        list.add(new HashMap<Integer, Double>(){{
+            put(1, 1.0);
+        }});
+        Assert.assertEquals("P(x) = x", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, true));
+        Assert.assertEquals("P(x) = 1x<sup><b>1</b></sup>", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, false));
+    }
+
+    @Test
+    public void coeficienteUnitarioYExponenteNumerico() {
+        list.add(new HashMap<Integer, Double>(){{
+            put(2, 1.0);
+        }});
+        Assert.assertEquals("P(x) = x<sup>2</sup>", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, true));
+        Assert.assertEquals("P(x) = 1x<sup><b>2</b></sup>", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, false));
+    }
+
+    @Test
+    public void coeficienteNumericoYExponenteNulo() {
+        list.add(new HashMap<Integer, Double>(){{
+            put(null, 3.0);
+        }});
+        Assert.assertEquals("P(x) = <b>3</b>x", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, true));
+        Assert.assertEquals("P(x) = 3x<sup><b>?</b></sup>", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, false));
+    }
+
+    @Test
+    public void coeficienteNumericoYExponenteIgualA0() {
+        list.add(new HashMap<Integer, Double>(){{
+            put(0, 3.0);
+        }});
+        Assert.assertEquals("P(x) = 3", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, true));
+        Assert.assertEquals("P(x) = 3x<sup><b>0</b></sup>", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, false));
+    }
+
+    @Test
+    public void coeficienteNumericoYExponenteUnitario() {
+        list.add(new HashMap<Integer, Double>(){{
+            put(1, 3.0);
+        }});
+        Assert.assertEquals("P(x) = 3x", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, true));
+        Assert.assertEquals("P(x) = 3x<sup><b>1</b></sup>", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, false));
+    }
+
+    @Test
+    public void coeficienteNumericoYExponenteNumerico() {
+        list.add(new HashMap<Integer, Double>(){{
+            put(2, 3.0);
+        }});
+        Assert.assertEquals("P(x) = 3x<sup>2</sup>", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, true));
+        Assert.assertEquals("P(x) = 3x<sup><b>2</b></sup>", FactoringManager.getCurrentPolynomialEnteredAsText(list, null, false));
     }
 }
