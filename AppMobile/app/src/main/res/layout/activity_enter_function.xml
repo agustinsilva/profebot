@@ -88,41 +88,50 @@
 
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center">
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:weightSum="10">
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal">
+            android:layout_weight="3"
+            android:gravity="center_horizontal"
+            android:weightSum="9">
 
             <Button
                 android:id="@+id/domainBtn"
                 style="@style/OperationOptionButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="65dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:maxHeight="50px"
+                android:adjustViewBounds="true"
                 android:onClick="domainBtn"
                 android:text="Dominio" />
 
             <Button
                 android:id="@+id/imageBtn"
                 style="@style/OperationOptionButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="65dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:layout_weight="4"
                 android:onClick="imageBtn"
                 android:text="Imagen" />
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="fill_vertical|center_horizontal">
+            android:layout_weight="3"
+            android:gravity="center_horizontal"
+            android:weightSum="9">
 
             <Button
                 android:id="@+id/originBtn"
                 style="@style/OperationOptionButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="65dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
                 android:maxLines="2"
                 android:onClick="originBtn"
                 android:text="@string/ordenada_al_origen" />
@@ -130,8 +139,9 @@
             <Button
                 android:id="@+id/rootBtn"
                 style="@style/OperationOptionButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="65dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
                 android:maxLines="2"
                 android:onClick="rootBtn"
                 android:text="Raices" />

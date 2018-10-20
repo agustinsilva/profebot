@@ -35,8 +35,9 @@
     </style>
 
     <style name="OperationOptionButtonStyle">
-        <item name = "android:width">125dp</item>
+        <!--<item name = "android:width">125dp</item>-->
         <item name = "android:layout_margin">20dp</item>
+        <item name = "android:textSize">20dp</item>
         <item name = "android:layout_marginBottom">20dp</item>
         <item name = "android:background">@drawable/rounded_corners_main_buttons</item>
         <item name = "android:textColor">@color/colorWhite</item>
