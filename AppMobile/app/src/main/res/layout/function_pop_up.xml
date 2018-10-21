@@ -31,8 +31,43 @@
         android:layout_marginTop="10dp"
         android:gravity="start"
         android:textColor="@color/colorBlack"
-        android:textSize="14sp" />
+        android:textSize="16sp" />
 
+    <io.github.kexanie.library.MathView
+        android:id="@+id/first_equation_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        android:layout_marginBottom="10dp"
+        app:engine="MathJax">
+    </io.github.kexanie.library.MathView>
+
+    <TextView
+        android:id="@+id/explanation_pop_up_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:gravity="start"
+        android:visibility="gone"
+        android:textColor="@color/colorBlack"
+        android:textSize="16sp" />
+
+    <io.github.kexanie.library.MathView
+        android:id="@+id/second_equation_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:visibility="gone"
+        app:engine="MathJax">
+    </io.github.kexanie.library.MathView>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

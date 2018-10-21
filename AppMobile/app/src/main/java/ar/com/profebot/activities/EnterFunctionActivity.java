@@ -309,6 +309,7 @@ public class EnterFunctionActivity extends AppCompatActivity {
                     //Analizo concavidad e intervalo
                     String concavidad;
                     String intervalo;
+                    String second_equation = "y = \\frac{-b}{2*a}";
                     ExpressionsManager.setEquationDrawn(equation+"=0");
                     ExpressionsManager.expressionDrawnIsValid();
                     Map<Integer, Double> equationMapped = ExpressionsManager.parsePolinomialToHashMap(equation);
@@ -316,24 +317,24 @@ public class EnterFunctionActivity extends AppCompatActivity {
                         concavidad = "concavidad positiva";
                         if(equationMapped.get(1) == null)
                         {
-                            intervalo = "[0, + infinito)";
+                            intervalo = "[ 0, + \\infty )";
                         }
                         else{
-                            intervalo = "["+equationMapped.get(1)+"/2*"+ equationMapped.get(2) +", + infinito)";
+                            intervalo = "[ \\frac{" + equationMapped.get(1) + "}{2*" + equationMapped.get(2) +"}, + \\infty)";
                         }
-
-                        setTrivialPopUp("Función Cuadrática", getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad, intervalo));
+                        setTrivialPopUp("Imagen - Función Cuadrática", getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad), intervalo, getString(R.string.explicacionInformativaImagenCuadraticaResolucionParte2 ), second_equation);
                     }
                     else{
                         if(equationMapped.get(1) == 0)
                         {
-                            intervalo = "[- infinito, 0)";
+                            intervalo = "( - \\infty , 0 ]";
                         }
                         else{
-                            intervalo = "[- infinito, " + equationMapped.get(1)+"/2"+ equationMapped.get(2) +"]";
+                            intervalo = "[- \\infty , " + equationMapped.get(1)+"/2"+ equationMapped.get(2) +"]";
                         }
                         concavidad = "concavidad negativa";
-                        setTrivialPopUp("Función Cuadrática", getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad, intervalo));
+
+                        setTrivialPopUp("Imagen - Función Cuadrátic", getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad), intervalo, getString(R.string.explicacionInformativaImagenCuadraticaResolucionParte2 ), second_equation);
                     }
 
                 }
@@ -353,6 +354,45 @@ public class EnterFunctionActivity extends AppCompatActivity {
                 Log.d("Error Imagen Funcion", "NO encontro ningun tipo de funcion para analizar la imagen");
                 break;
         }
+    }
+
+    private void setTrivialPopUp(String title, String explanation1, String intervalo, String explanation2, String second_equation) {
+        builder2 = new AlertDialog.Builder(this);
+        popUpView2 = this.getLayoutInflater().inflate(R.layout.function_pop_up, null);
+        popUpView2.setElevation(0f);
+
+        AutofitTextView titleATV = popUpView2.findViewById(R.id.pop_up_title_id);
+        titleATV.setText(title);
+        TextView explanationTV = popUpView2.findViewById(R.id.explanation_pop_up);
+        explanationTV.setText(explanation1);
+        MathView first_equation = popUpView2.findViewById(R.id.first_equation_id);
+        first_equation.setVisibility(View.VISIBLE);
+        first_equation.setText("\\begin{aligned}{" + intervalo + "}\\end{aligned}");
+        TextView explanationTV2 = popUpView2.findViewById(R.id.explanation_pop_up_2);
+        explanationTV2.setVisibility(View.VISIBLE);
+        explanationTV2.setText(explanation2);
+        MathView second_equationMV = popUpView2.findViewById(R.id.second_equation_id);
+        second_equationMV.setVisibility(View.VISIBLE);
+        second_equationMV.setText("\\begin{aligned}{" + second_equation + "}\\end{aligned}");
+        //Hide button resolve
+        Button EntendidoBtn = popUpView2.findViewById(R.id.resolve_pop_up_id);
+        EntendidoBtn.setText(R.string.entendido);
+        popUpView2.findViewById(R.id.forward_pop_up_id).setVisibility(View.GONE);
+        popUpView2.findViewById(R.id.checkBox).setVisibility(View.GONE);
+        popUpView2.setClipToOutline(true);
+        builder2.setView(popUpView2);
+        dialog2 = builder2.create();
+        dialog2.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        dialog2.show();
+
+        ImageButton backBtn = popUpView2.findViewById(R.id.back_pop_up_id);
+        backBtn.setOnClickListener(v -> dialog2.hide());
+        EntendidoBtn.setOnClickListener(v -> {
+            if (dialog3!=null){dialog3.hide();}
+            if (dialog2!=null){dialog2.hide();}
+            if (dialog1!=null){dialog1.hide();}
+        });
+
     }
 
     private void setDomainTrivialPopUp(){
