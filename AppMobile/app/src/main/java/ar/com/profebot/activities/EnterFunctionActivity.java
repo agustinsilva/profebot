@@ -314,12 +314,25 @@ public class EnterFunctionActivity extends AppCompatActivity {
                     Map<Integer, Double> equationMapped = ExpressionsManager.parsePolinomialToHashMap(equation);
                     if (equationMapped.get(2) > 0 ){
                         concavidad = "concavidad positiva";
-                        intervalo = "["+equationMapped.get(1)+"/2"+ equationMapped.get(2) +", + infinito)";
+                        if(equationMapped.get(1) == null)
+                        {
+                            intervalo = "[0, + infinito)";
+                        }
+                        else{
+                            intervalo = "["+equationMapped.get(1)+"/2*"+ equationMapped.get(2) +", + infinito)";
+                        }
+
                         setTrivialPopUp("Función Cuadrática", getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad, intervalo));
                     }
                     else{
+                        if(equationMapped.get(1) == 0)
+                        {
+                            intervalo = "[- infinito, 0)";
+                        }
+                        else{
+                            intervalo = "[- infinito, " + equationMapped.get(1)+"/2"+ equationMapped.get(2) +"]";
+                        }
                         concavidad = "concavidad negativa";
-                        intervalo = "[- infinito, " + equationMapped.get(1)+"/2"+ equationMapped.get(2) +"]"; //TODO Fijarse el signo de laecuacion es -b
                         setTrivialPopUp("Función Cuadrática", getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad, intervalo));
                     }
 
