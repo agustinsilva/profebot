@@ -95,12 +95,12 @@ public class InvalidOptionService {
             // Selecciona un nodo al azar y lo remueve de la lista
             candidateNode1 = popRandomElement(nonTerminalNodeList);
             candidateNode2 = popRandomElement(nonTerminalNodeList);
-            chooseRightBranch1 = chooseRightNode();
-            chooseRightBranch2 = chooseRightNode();
+            chooseRightBranch1 = candidateNode1.esPotencia() || chooseRightNode();
+            chooseRightBranch2 = candidateNode2.esPotencia() || chooseRightNode();
         }
 
-        invalidSteps.add(getInvalidOptionFromNode(candidateNode1, chooseRightBranch1, tree));
-        invalidSteps.add(getInvalidOptionFromNode(candidateNode2, chooseRightBranch2, tree));
+        invalidSteps.add(getInvalidOptionFromNode(candidateNode1, chooseRightBranch1));
+        invalidSteps.add(getInvalidOptionFromNode(candidateNode2, chooseRightBranch2));
 
         return invalidSteps;
     }
@@ -119,10 +119,11 @@ public class InvalidOptionService {
         return element;
     }
 
-    private InvalidStep getInvalidOptionFromNode(TreeNode candidateNode, Boolean chooseRightBranch, Tree tree) {
+    private InvalidStep getInvalidOptionFromNode(TreeNode candidateNode, Boolean chooseRightBranch) {
 
         InvalidStep.InvalidTypes type;
         TreeNode randomNode = candidateNode.cloneDeep();
+        Tree tree = getTreeFromTreeNode(randomNode);
 
         // En el caso de que sea una X, voy a dividir el nodo para que pueda seguir la lógica normal
         if (TreeUtils.isSymbol(randomNode)){
@@ -147,7 +148,7 @@ public class InvalidOptionService {
         }
 
         int nodeLevel = Tree.getNodeDepth(randomNode);
-        boolean equalsLeftBranch = nodeBelongsToLeftBranch(candidateNode);
+        boolean equalsLeftBranch = TreeUtils.nodeBelongsToLeftBranch(candidateNode);
 
         //3. Si el nodo elegido es hijo del signo Igual, pasar este nodo y su decendencia al otro miembro
         //4. Si el nodo elegido NO es hijo del signo Igual, validar niveles de sus ancestros
@@ -212,16 +213,6 @@ public class InvalidOptionService {
 
     }
 
-    private boolean nodeBelongsToLeftBranch(TreeNode node) {
-        if (node == null){return false;}
-
-        while(node.getParentNode() != null && !TreeUtils.isRootNode(node.getParentNode())){
-            node = node.getParentNode(); // Busca el nodo anterior a la raiz
-        }
-        if (node.getParentNode() == null){return false;}
-
-        return node.getChildIndex().equals(0);
-    }
 
     private boolean isLeftChild(TreeNode node) {
         return node.getChildIndex() == 0;
@@ -245,13 +236,24 @@ public class InvalidOptionService {
     private List<TreeNode> getNonTerminalNodeList(TreeNode node) {
         List<TreeNode> list = new ArrayList<>();
 
+        Integer searchId = 0;
+
         if (node != null){
             // No terminal
             if (!TreeUtils.isConstant(node) && !TreeUtils.isSingleSymbol(node)){
 
                 // El = es no temrinal pero se ignora
                 if (!TreeUtils.isRootNode(node)) {
-                    list.add(node);
+
+                    // Seteo una propiedad para poder buscar el nodo cuando el arbol este clonado
+                    searchId++;
+                    node.setSearchId(searchId);
+                    Tree newTree = getTreeFromTreeNode(node);
+                    newTree = newTree.clone();
+                    newTree.generateTwoWayLinkedTree();
+                    TreeNode newNode = TreeUtils.getNodeFromTree(newTree, searchId);
+                    list.add(newNode);
+                    node.setSearchId(null); // Reseteo
                 }
 
                 if (node.getArgs()!=null){

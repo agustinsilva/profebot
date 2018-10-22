@@ -21,6 +21,7 @@ public class TreeNode {
     // Para generar los temrinos invalidos
     TreeNode parentNode = null;
     Integer childIndex = null;
+    Integer searchId = null;
 
     //Constructor de nodo.
     public TreeNode(String value) {
@@ -44,6 +45,7 @@ public class TreeNode {
         node.setChangeGroup(this.changeGroup);
         node.setExplicitCoeff(this.explicitCoeff);
         node.setChildIndex(this.getChildIndex());
+        node.setSearchId(this.getSearchId());
         node.setParentNode(this.getParentNode()); // No se clona por como se usa
 
         if(this.getLeftNode() != null) {
@@ -638,5 +640,13 @@ public class TreeNode {
 
     public void setMarked(Boolean marked) {
         this.marked = marked;
+    }
+
+    public Integer getSearchId() {
+        return searchId;
+    }
+
+    public void setSearchId(Integer searchId) {
+        this.searchId = searchId;
     }
 }

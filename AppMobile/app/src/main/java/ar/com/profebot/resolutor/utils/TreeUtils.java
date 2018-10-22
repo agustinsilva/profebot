@@ -1422,4 +1422,39 @@ public class TreeUtils {
         if (rootNode == null){return false;}
         return new ArrayList<>(Arrays.asList("=", "<", "<=", ">", ">=")).contains(rootNode.getValue());
     }
+
+    public static Boolean nodeBelongsToLeftBranch(TreeNode node) {
+        if (node == null){return false;}
+
+        while(node.getParentNode() != null && !TreeUtils.isRootNode(node.getParentNode())){
+            node = node.getParentNode(); // Busca el nodo anterior a la raiz
+        }
+        if (node.getParentNode() == null){return false;}
+
+        return node.getChildIndex().equals(0);
+    }
+
+    public static TreeNode getNodeFromTree(Tree tree, Integer searchId) {
+        return getNodeFromTreeNode(tree.getRootNode(), searchId);
+    }
+
+    private static TreeNode getNodeFromTreeNode(TreeNode node, Integer searchId) {
+
+        if (node != null){
+            if (searchId.equals(node.getSearchId())){
+                return node;
+            }
+
+            if (node.getArgs() != null){
+                for(TreeNode n: node.getArgs()){
+                    TreeNode child = getNodeFromTreeNode(n, searchId);
+                    if (child!=null){return child;}
+                }
+            }
+        }
+
+        return null;
+
+    }
+
 }

@@ -78,6 +78,12 @@ public class InvalidOptionServiceTest extends InvalidOptionService {
         steps=steps;
     }
 
+    @Test
+    public void general_test_10()  throws InvalidExpressionException {
+        String expression = "X^2+5=20";
+        List<MultipleChoiceStep> steps = resolutorService.resolveExpressionTestWithoutContext(expression);
+        steps=steps;
+    }
 
     @Test
     public void getTipoPasajeTerminoPrimerAncestro() {
