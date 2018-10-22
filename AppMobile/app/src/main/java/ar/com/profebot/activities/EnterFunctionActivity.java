@@ -336,7 +336,7 @@ public class EnterFunctionActivity extends AppCompatActivity {
                             public void run() {
                                 setTrivialPopUp(popUp2);
                             }
-                        }, 4500);
+                        }, 800);
                     }
                     else{
                         if(equationMapped.get(1) == 0)
@@ -362,7 +362,7 @@ public class EnterFunctionActivity extends AppCompatActivity {
                             public void run() {
                                 setTrivialPopUp(popUp2);
                             }
-                        }, 4500);
+                        }, 800);
                     }
 
                 }
