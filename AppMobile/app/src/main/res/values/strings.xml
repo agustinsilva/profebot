@@ -20,12 +20,12 @@
     <string name="ordenada_al_origen">Ordenada &#10;al origen</string>
     <string name="ordenadaAlOrigenInformational">La ordenada al origen nos indica cuándo una función se intersecta con el eje Y, que es el eje de ordenadas. Para lograr esto reemplazamos la incógnita de la función por 0, es decir, hallamos el valor de la función F(x) cuando x = 0.</string>
     <string name="ordenadaAlOrigenTrivial">La función no tiene ordenada al origen, dado que el dominio de la función excluye al valor x = 0, por lo tanto, la función no se intersecta con el eje Y.</string>
-    <string name="ordenadaAlOrigenEspecial">La función cuando la x toma el valor 0, la ordenada al origen es: </string>
+    <string name="ordenadaAlOrigenEspecial">En la función, cuando la X toma el valor 0, la ordenada al origen vale: </string>
     <string name="entendido">¡Entendido!</string>
     <string name="tituloDominio">¿Qué es el Dominio?</string>
     <string name="explicacionDominio">En matemáticas, el dominio (conjunto de definición o conjunto de partida) de una función es el conjunto de existencia de ella misma, es decir, los valores para los cuales la función está definida.</string>
-    <string name="solucionOrdenadaOrigen">Solución de ordenada al origen</string>
-    <string name="solucionDominio">Solución del dominio</string>
+    <string name="solucionOrdenadaOrigen">Ordenada al origen</string>
+    <string name="solucionDominio">Dominio</string>
     <string name="dominioTrivial">El dominio son todos los reales, es decir cualquier valor.</string>
     <string name="dominioTrivialHomografica">El dominio de la función aplica a todos los reales excepto al valor: %1$s</string>
     <string name="informacionOrdenadaOrigen">¿Qué es Ordenada al Origen?</string>
