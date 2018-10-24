@@ -68,14 +68,14 @@ public class EnterFunctionActivity extends AppCompatActivity {
             ImageButton backBtn = popUpView1.findViewById(R.id.back_pop_up_id);
             forwardBtn.setOnClickListener(v -> {
                 setCheckPreference("popUpImageExplanation");
-                setImageTrivialPopUp();
+                setTrivialPopUp();
             });
             backBtn.setOnClickListener(v -> {
                 setCheckPreference("popUpImageExplanation");
                 dialog1.hide();
             });
         }else{
-            setImageTrivialPopUp();
+            setTrivialPopUp();
         }
     }
 
@@ -125,11 +125,29 @@ public class EnterFunctionActivity extends AppCompatActivity {
     }
 
     private void setOriginTrivialPopUp() {
-        String equationModified, status;
+        String equationModified, function;
         try {
             equationModified = equation.replaceAll("x", "0").replaceAll("X", "0") + "=x";
-            status = (new ResolutorService()).resolveExpression(equationModified).substring(2);
-            setTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenEspecial, status));
+            String solution = (new ResolutorService()).resolveExpression(equationModified).substring(2);
+            function = "\\operatorname{F}(0) = "+ solution +"\\implies y = " + solution;
+
+            View OriginPopUp = setOriginTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenEspecial), function);
+
+            spinner = findViewById(R.id.main_activity_progress_bar_id);
+            builder2.setView(OriginPopUp);
+            dialog2 = builder2.create();
+            dialog2.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+            if (dialog1!=null){dialog1.hide();}
+            spinner.postInvalidateOnAnimation();
+            spinner.setVisibility(View.VISIBLE);
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    setTrivialPopUp(OriginPopUp);
+                }
+            }, 800);
+
         } catch (InvalidExpressionException e) {
             setTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenTrivial));
         }
@@ -157,37 +175,24 @@ public class EnterFunctionActivity extends AppCompatActivity {
         }
     }
 
-    private void setPopUpToMultipleChoice(String title, String explanation) {
-        builder3 = new AlertDialog.Builder(this);
-        popUpView3 = this.getLayoutInflater().inflate(R.layout.function_pop_up, null);
-        popUpView3.setElevation(0f);
+    private View setOriginTrivialPopUp(String title, String explanation1, String function) {
+        builder2 = new AlertDialog.Builder(this);
+        popUpView2 = this.getLayoutInflater().inflate(R.layout.function_pop_up, null);
+        popUpView2.setElevation(0f);
 
-        AutofitTextView titleATV = popUpView3.findViewById(R.id.pop_up_title_id);
+        AutofitTextView titleATV = popUpView2.findViewById(R.id.pop_up_title_id);
         titleATV.setText(title);
-        TextView explanationTV = popUpView3.findViewById(R.id.explanation_pop_up);
-        explanationTV.setText(explanation);
-        popUpView3.findViewById(R.id.checkBox).setVisibility(View.GONE);
-        popUpView3.findViewById(R.id.forward_pop_up_id).setVisibility(View.GONE);
+        TextView explanationTV = popUpView2.findViewById(R.id.explanation_pop_up);
+        explanationTV.setText(explanation1);
+        MathView first_equation = popUpView2.findViewById(R.id.first_equation_id);
+        first_equation.setVisibility(View.VISIBLE);
+        first_equation.setText("\\begin{aligned}{" + function + "}\\end{aligned}");
+        TextView explanationTV2 = popUpView2.findViewById(R.id.explanation_pop_up_2);
 
-
-        popUpView3.setClipToOutline(true);
-        builder3.setView(popUpView3);
-        dialog3 = builder3.create();
-        dialog3.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-        dialog3.show();
-        popUpView3.findViewById(R.id.resolve_pop_up_id).setOnClickListener(v ->{
-            if (dialog1!=null){dialog1.hide();}
-            if (dialog2!=null){dialog2.hide();}
-            if (dialog3!=null){dialog3.hide();}
-            Intent intent = new Intent(this.getApplicationContext(), SolveEquationActivity.class);
-            startActivity(intent);
-        });
-        ImageButton backBtn = popUpView3.findViewById(R.id.back_pop_up_id);
-        backBtn.setOnClickListener(v -> {
-            if (dialog3!=null){dialog3.hide();}
-            if (dialog2!=null){dialog2.hide();}
-            if (dialog1!=null){dialog1.hide();}
-        });
+        popUpView2.findViewById(R.id.forward_pop_up_id).setVisibility(View.GONE);
+        popUpView2.findViewById(R.id.checkBox).setVisibility(View.GONE);
+        popUpView2.setClipToOutline(true);
+        return popUpView2;
     }
 
     private Boolean getPreferenceCheck(String preferenceKey){
@@ -294,7 +299,7 @@ public class EnterFunctionActivity extends AppCompatActivity {
         return !startWith.equals("x=");
     }
 
-    private void setImageTrivialPopUp(){
+    private void setTrivialPopUp(){
         switch (equationType) {
             case CONSTANT:
                 setTrivialPopUp("Función Constante", getString(R.string.explicacionInformativaImagen, "constante"));
@@ -322,7 +327,7 @@ public class EnterFunctionActivity extends AppCompatActivity {
                         } else {
                             intervalo = "[ \\frac{" + equationMapped.get(1) + "}{2*" + equationMapped.get(2) + "}, + \\infty)";
                         }
-                        View popUp2 = SetTrivialPopUpView("Imagen - Función Cuadrática", getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad), intervalo, getString(R.string.explicacionInformativaImagenCuadraticaResolucionParte2), second_equation);
+                        View popUp2 = SetImageTrivialPopUpView("Imagen - Función Cuadrática", getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad), intervalo, getString(R.string.explicacionInformativaImagenCuadraticaResolucionParte2), second_equation);
                         spinner = findViewById(R.id.main_activity_progress_bar_id);
                         builder2.setView(popUp2);
                         dialog2 = builder2.create();
@@ -348,7 +353,7 @@ public class EnterFunctionActivity extends AppCompatActivity {
                         }
                         concavidad = "concavidad negativa";
 
-                        View popUp2 = SetTrivialPopUpView("Imagen - Función Cuadrátic", getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad), intervalo, getString(R.string.explicacionInformativaImagenCuadraticaResolucionParte2 ), second_equation);
+                        View popUp2 = SetImageTrivialPopUpView("Imagen - Función Cuadrátic", getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad), intervalo, getString(R.string.explicacionInformativaImagenCuadraticaResolucionParte2 ), second_equation);
                         builder2.setView(popUp2);
                         dialog2 = builder2.create();
                         dialog2.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
@@ -403,7 +408,7 @@ public class EnterFunctionActivity extends AppCompatActivity {
 
     }
 
-    private View SetTrivialPopUpView(String title, String explanation1, String intervalo, String explanation2, String second_equation) {
+    private View SetImageTrivialPopUpView(String title, String explanation1, String intervalo, String explanation2, String second_equation) {
         builder2 = new AlertDialog.Builder(this);
         popUpView2 = this.getLayoutInflater().inflate(R.layout.function_pop_up, null);
         popUpView2.setElevation(0f);
