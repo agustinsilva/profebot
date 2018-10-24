@@ -280,8 +280,27 @@ public class EnterFunctionActivity extends AppCompatActivity {
                 String rootExpression = equation + " = 0";
                 try {
                     String status = (new ResolutorService()).resolveExpression(rootExpression);
-                    final String rootExplanation = ((status == getString(R.string.sin_pasos)) || startsWithResolvingRoot(status) ) ? getString(R.string.SinRaices) : getString(R.string.conRaices,status);
-                    setTrivialPopUp(getString(R.string.solucionRaices),rootExplanation);
+                    if((status == getString(R.string.sin_pasos)) || startsWithResolvingRoot(status)){
+                        setTrivialPopUp(getString(R.string.solucionRaices),getString(R.string.SinRaices));
+                    }
+                    else {
+                        View rootPopUp = setRootTrivialPopUp(getString(R.string.solucionRaices),getString(R.string.conRaices), status);
+                        spinner = findViewById(R.id.main_activity_progress_bar_id);
+                        builder2.setView(rootPopUp);
+                        dialog2 = builder2.create();
+                        dialog2.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+                        if (dialog1!=null){dialog1.hide();}
+                        spinner.postInvalidateOnAnimation();
+                        spinner.setVisibility(View.VISIBLE);
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                setTrivialPopUp(rootPopUp);
+                            }
+                        }, 800);
+                    }
+
                 } catch (InvalidExpressionException e) {
                     e.printStackTrace();
                 }
@@ -292,6 +311,25 @@ public class EnterFunctionActivity extends AppCompatActivity {
             default:
                 break;
         }
+    }
+
+    private View setRootTrivialPopUp(String title, String explanation1, String status) {
+        builder2 = new AlertDialog.Builder(this);
+        popUpView2 = this.getLayoutInflater().inflate(R.layout.function_pop_up, null);
+        popUpView2.setElevation(0f);
+
+        AutofitTextView titleATV = popUpView2.findViewById(R.id.pop_up_title_id);
+        titleATV.setText(title);
+        TextView explanationTV = popUpView2.findViewById(R.id.explanation_pop_up);
+        explanationTV.setText(explanation1);
+        MathView first_equation = popUpView2.findViewById(R.id.first_equation_id);
+        first_equation.setVisibility(View.VISIBLE);
+        first_equation.setText("\\begin{aligned}{" + status + "}\\end{aligned}");
+
+        popUpView2.findViewById(R.id.forward_pop_up_id).setVisibility(View.GONE);
+        popUpView2.findViewById(R.id.checkBox).setVisibility(View.GONE);
+        popUpView2.setClipToOutline(true);
+        return popUpView2;
     }
 
     private boolean startsWithResolvingRoot(String status){

@@ -39,7 +39,7 @@
     <string name="solucionRaices">Solución de raíces</string>
     <string name="sin_pasos">NO_STEPS</string>
     <string name="SinRaices">La función no tiene raíces enteras.</string>
-    <string name="conRaices">La función posee las siguientes raices: %1$s</string>
+    <string name="conRaices">La función posee las siguientes raices: </string>
     <string name="funcionInvalida">La función es inválida.</string>
     <string name="explicacionInformativaImagenCuadraticaResolucion">Esta función cuadrática tiene una %1$s, presentando un mínimo global, el conjunto que representa la imagen es : </string>
     <string name="explicacionInformativaImagenCuadraticaResolucionParte2">Surge de resolver la inecuación : </string>
