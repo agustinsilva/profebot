@@ -1,16 +1,12 @@
 package ar.com.profebot.activities;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.profebot.activities.R;
@@ -50,7 +46,7 @@ public class EnterEquationOptionsActivity extends GlobalActivity {
         ((LinearLayout) findViewById(R.id.option_2_section_id)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), CarmeraActivity.class);
+                Intent intent = new Intent(v.getContext(), CameraActivity.class);
                 //String latex = "\\frac { 3 + 2 ^ { 4 } } { 3 x } = 5";
                 //ExpressionsManager.setEquationPhoto(latex);
                 //Intent intent = new Intent(button.getContext(), SolveEquationActivity.class);

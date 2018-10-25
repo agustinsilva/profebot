@@ -132,21 +132,7 @@ public class EnterFunctionActivity extends AppCompatActivity {
             function = "\\operatorname{F}(0) = "+ solution +"\\implies y = " + solution;
 
             View OriginPopUp = setOriginTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenEspecial), function);
-
-            spinner = findViewById(R.id.main_activity_progress_bar_id);
-            builder2.setView(OriginPopUp);
-            dialog2 = builder2.create();
-            dialog2.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-            if (dialog1!=null){dialog1.hide();}
-            spinner.postInvalidateOnAnimation();
-            spinner.setVisibility(View.VISIBLE);
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    setTrivialPopUp(OriginPopUp);
-                }
-            }, 800);
+            waitForView(OriginPopUp);
 
         } catch (InvalidExpressionException e) {
             setTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenTrivial));
@@ -285,20 +271,7 @@ public class EnterFunctionActivity extends AppCompatActivity {
                     }
                     else {
                         View rootPopUp = setRootTrivialPopUp(getString(R.string.solucionRaices),getString(R.string.conRaices), status);
-                        spinner = findViewById(R.id.main_activity_progress_bar_id);
-                        builder2.setView(rootPopUp);
-                        dialog2 = builder2.create();
-                        dialog2.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-                        if (dialog1!=null){dialog1.hide();}
-                        spinner.postInvalidateOnAnimation();
-                        spinner.setVisibility(View.VISIBLE);
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                setTrivialPopUp(rootPopUp);
-                            }
-                        }, 800);
+                        waitForView(rootPopUp);
                     }
 
                 } catch (InvalidExpressionException e) {
@@ -311,6 +284,25 @@ public class EnterFunctionActivity extends AppCompatActivity {
             default:
                 break;
         }
+    }
+
+    private View setDomainTrivialPopUp(String title, String explanation1, String status) {
+        builder2 = new AlertDialog.Builder(this);
+        popUpView2 = this.getLayoutInflater().inflate(R.layout.function_pop_up, null);
+        popUpView2.setElevation(0f);
+
+        AutofitTextView titleATV = popUpView2.findViewById(R.id.pop_up_title_id);
+        titleATV.setText(title);
+        TextView explanationTV = popUpView2.findViewById(R.id.explanation_pop_up);
+        explanationTV.setText(explanation1);
+        MathView first_equation = popUpView2.findViewById(R.id.first_equation_id);
+        first_equation.setVisibility(View.VISIBLE);
+        first_equation.setText("\\begin{aligned}{" + status + "}\\end{aligned}");
+
+        popUpView2.findViewById(R.id.forward_pop_up_id).setVisibility(View.GONE);
+        popUpView2.findViewById(R.id.checkBox).setVisibility(View.GONE);
+        popUpView2.setClipToOutline(true);
+        return popUpView2;
     }
 
     private View setRootTrivialPopUp(String title, String explanation1, String status) {
@@ -340,15 +332,15 @@ public class EnterFunctionActivity extends AppCompatActivity {
     private void setTrivialPopUp(){
         switch (equationType) {
             case CONSTANT:
-                setTrivialPopUp("Función Constante", getString(R.string.explicacionInformativaImagen, "constante"));
+                setTrivialPopUp(getString(R.string.solucionImagen), getString(R.string.explicacionInformativaImagen, "constante"));
                 break;
             case LINEAR:
-                setTrivialPopUp("Función Lineal", getString(R.string.explicacionInformativaImagen, "lineal"));
+                setTrivialPopUp(getString(R.string.solucionImagen), getString(R.string.explicacionInformativaImagen, "lineal"));
                 break;
             case QUADRATIC:
                 //Special Cases in Quadratic
                 if (equation == "X^2"){
-                    setTrivialPopUp("Función Cuadrática Trivial", getString(R.string.explicacionInformativaImagenCuadraticaTrivial, equation));
+                    setTrivialPopUp(getString(R.string.solucionImagen), getString(R.string.explicacionInformativaImagenCuadraticaTrivial, equation));
                 }
                 else{
                     //Analizo concavidad e intervalo
@@ -360,52 +352,15 @@ public class EnterFunctionActivity extends AppCompatActivity {
                     Map<Integer, Double> equationMapped = ExpressionsManager.parsePolinomialToHashMap(equation);
                     if (equationMapped.get(2) > 0 ) {
                         concavidad = "concavidad positiva";
-                        if (equationMapped.get(1) == null) {
-                            intervalo = "[ 0, + \\infty )";
-                        } else {
-                            intervalo = "[ \\frac{" + equationMapped.get(1) + "}{2*" + equationMapped.get(2) + "}, + \\infty)";
-                        }
-                        View popUp2 = SetImageTrivialPopUpView("Imagen - Función Cuadrática", getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad), intervalo, getString(R.string.explicacionInformativaImagenCuadraticaResolucionParte2), second_equation);
-                        spinner = findViewById(R.id.main_activity_progress_bar_id);
-                        builder2.setView(popUp2);
-                        dialog2 = builder2.create();
-                        dialog2.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-                        if (dialog1!=null){dialog1.hide();}
-                        spinner.postInvalidateOnAnimation();
-                        spinner.setVisibility(View.VISIBLE);
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                setTrivialPopUp(popUp2);
-                            }
-                        }, 800);
+                        intervalo = (equationMapped.get(1) == null) ? "[ 0, + \\infty )" : "[ \\frac{" + equationMapped.get(1) + "}{2*" + equationMapped.get(2) + "}, + \\infty)";
+                        View popUp2 = SetImageTrivialPopUpView(getString(R.string.solucionImagen), getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad), intervalo, getString(R.string.explicacionInformativaImagenCuadraticaResolucionParte2), second_equation);
+                        waitForView(popUp2);
                     }
                     else{
-                        if(equationMapped.get(1) == 0)
-                        {
-                            intervalo = "( - \\infty , 0 ]";
-                        }
-                        else{
-                            intervalo = "[- \\infty , " + equationMapped.get(1)+"/2"+ equationMapped.get(2) +"]";
-                        }
+                        intervalo =  (equationMapped.get(1) == 0) ?  "( - \\infty , 0 ]" : "[- \\infty , " + equationMapped.get(1)+"/2"+ equationMapped.get(2) +"]";
                         concavidad = "concavidad negativa";
-
-                        View popUp2 = SetImageTrivialPopUpView("Imagen - Función Cuadrátic", getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad), intervalo, getString(R.string.explicacionInformativaImagenCuadraticaResolucionParte2 ), second_equation);
-                        builder2.setView(popUp2);
-                        dialog2 = builder2.create();
-                        dialog2.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-                        if (dialog1!=null){dialog1.hide();}
-                        spinner = findViewById(R.id.main_activity_progress_bar_id);
-                        spinner.postInvalidateOnAnimation();
-                        spinner.setVisibility(View.VISIBLE);
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                setTrivialPopUp(popUp2);
-                            }
-                        }, 800);
+                        View popUp2 = SetImageTrivialPopUpView(getString(R.string.solucionImagen), getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad), intervalo, getString(R.string.explicacionInformativaImagenCuadraticaResolucionParte2 ), second_equation);
+                        waitForView(popUp2);
                     }
 
                 }
@@ -427,8 +382,19 @@ public class EnterFunctionActivity extends AppCompatActivity {
         }
     }
 
-    private void setTrivialPopUp(View popUpView2) {
+    private void waitForView(View waitingView){
+        builder2.setView(waitingView);
+        dialog2 = builder2.create();
+        dialog2.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        if (dialog1!=null){dialog1.hide();}
+        spinner = findViewById(R.id.main_activity_progress_bar_id);
+        spinner.postInvalidateOnAnimation();
+        spinner.setVisibility(View.VISIBLE);
+        Handler handler = new Handler();
+        handler.postDelayed(() -> setTrivialPopUp(waitingView), 800);
+    }
 
+    private void setTrivialPopUp(View popUpView2) {
 
         spinner.setVisibility(View.GONE);
         dialog2.show();
@@ -474,13 +440,14 @@ public class EnterFunctionActivity extends AppCompatActivity {
     private void setDomainTrivialPopUp(){
         switch(equationType){
             case HOMOGRAPHIC:{
-                int divisionPosition = equation.lastIndexOf("/");
-                String denominatorHomographic = equation.substring(divisionPosition + 1).replaceAll("\\(","").replaceAll("\\)","");
-                denominatorHomographic = denominatorHomographic + " = 0";
-                String status;
                 try {
-                    status = (new ResolutorService()).resolveExpression(denominatorHomographic).substring(2);
-                    setTrivialPopUp(getString(R.string.solucionDominio),getString(R.string.dominioTrivialHomografica,status));
+                    int divisionPosition = equation.lastIndexOf("/");
+                    String denominatorHomographic = equation.substring(divisionPosition + 1).replaceAll("\\(","").replaceAll("\\)","");
+                    denominatorHomographic = denominatorHomographic + " = 0";
+                    String status = (new ResolutorService()).resolveExpression(denominatorHomographic).substring(2);
+                    status = "X = " + status;
+                    View domainPopUp = setDomainTrivialPopUp(getString(R.string.solucionDominio),getString(R.string.dominioTrivialHomografica),status);
+                    waitForView(domainPopUp);
                 } catch (InvalidExpressionException e) {
                     e.printStackTrace();
                 }

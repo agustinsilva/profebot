@@ -38,7 +38,7 @@
             android:name="ar.com.profebot.activities.SolveEquationActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="ar.com.profebot.activities.CarmeraActivity"
+            android:name="ar.com.profebot.activities.CameraActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />

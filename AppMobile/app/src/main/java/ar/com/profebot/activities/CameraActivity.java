@@ -7,7 +7,7 @@ import android.view.View;
 import com.profebot.PhotoEcuation.MarshmallowPermissions;
 import com.profebot.activities.R;
 
-public class CarmeraActivity extends FragmentActivity {
+public class CameraActivity extends FragmentActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
