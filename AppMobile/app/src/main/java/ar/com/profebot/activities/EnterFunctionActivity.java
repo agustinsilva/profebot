@@ -352,7 +352,9 @@ public class EnterFunctionActivity extends AppCompatActivity {
                     Map<Integer, Double> equationMapped = ExpressionsManager.parsePolinomialToHashMap(equation);
                     if (equationMapped.get(2) > 0 ) {
                         concavidad = "concavidad positiva";
-                        intervalo = (equationMapped.get(1) == null) ? "[ 0, + \\infty )" : "[ \\frac{" + equationMapped.get(1) + "}{2*" + equationMapped.get(2) + "}, + \\infty)";
+                        int intervalBegin = (equationMapped.get(1) == null) ? 0 : ( equationMapped.get(1).intValue() / (2 * equationMapped.get(2).intValue()) );
+                        intervalo = "[" + Integer.toString(intervalBegin) + ", + \\infty )";
+                        //intervalo = (equationMapped.get(1) == null) ? "[ 0, + \\infty )" : "[ \\frac{" + equationMapped.get(1) + "}{2*" + equationMapped.get(2) + "}, + \\infty)";
                         View popUp2 = SetImageTrivialPopUpView(getString(R.string.solucionImagen), getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad), intervalo, getString(R.string.explicacionInformativaImagenCuadraticaResolucionParte2), second_equation);
                         waitForView(popUp2);
                     }
