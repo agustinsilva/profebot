@@ -44,7 +44,9 @@
     <string name="funcionInvalida">La función es inválida.</string>
     <string name="explicacionInformativaImagenCuadraticaResolucion">Esta función cuadrática tiene una %1$s, presentando un mínimo global, el conjunto que representa la imagen es : </string>
     <string name="explicacionInformativaImagenCuadraticaResolucionParte2">Surge de resolver la inecuación : </string>
-    <string name="explicacionImagenHomografica" >La restricción que tienen las funciones homográficas, es la presencia de una Asíntota Horizontal. Esta asíntota (o recta) se expresa como y=a/c. La imagen de la función equivale a: reales - { asíntota horizontal }, en este ejercicio: %1$s </string>
+    <string name="explicacionImagenHomografica1" >La imagen en las funciones homográficas se define por la presencia de una Asíntota Horizontal. Esta asíntota o recta se expresa como: </string>
+    <string name="explicacionImagenHomografica2" >La imagen de la función equivale a:</string>
+
 
 
 </resources>

@@ -374,9 +374,13 @@ public class EnterFunctionActivity extends AppCompatActivity {
                 String numeratorHomographic = equation.substring(0,divisionPosition ).replaceAll("\\(","").replaceAll("\\)","");
                 Map<Integer, Double> denominatorMapped = ExpressionsManager.parsePolinomialToHashMap(denominatorHomographic);
                 Map<Integer, Double> numeratorMapped = ExpressionsManager.parsePolinomialToHashMap(numeratorHomographic);
-                String solucion = "R - { "+ numeratorMapped.get(1) +"/"+denominatorMapped.get(1) + " }";
+                String solution = "\\Re - ( Asintota ) \\implies \\Re - \\frac{"+ numeratorMapped.get(1) +"}{"+denominatorMapped.get(1) + "}";
+                String firstEquation = "y = \\frac{a}{c}";
 
-                setTrivialPopUp("Función Homográfica", getString(R.string.explicacionImagenHomografica, solucion));
+
+                View popUp2 = SetImageTrivialPopUpView(getString(R.string.solucionImagen), getString(R.string.explicacionImagenHomografica1), firstEquation, getString(R.string.explicacionImagenHomografica2 ), solution);
+                waitForView(popUp2);
+                //setTrivialPopUp("Función Homográfica", getString(R.string.explicacionImagenHomografica, solucion));
                 break;
             default:
                 Log.d("Error Imagen Funcion", "NO encontro ningun tipo de funcion para analizar la imagen");
