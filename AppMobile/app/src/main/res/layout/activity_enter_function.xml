@@ -48,6 +48,8 @@
         android:layout_height="wrap_content"
         android:gravity="left|start"
         android:textColor="@color/colorWhite"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"
         android:text="F(x) = "
         android:textSize="25dp" />
 
@@ -58,6 +60,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginBottom="25dp"
         android:layout_marginTop="30dp"
+        android:visibility="invisible"
         android:textColor="@color/colorWhite"
         app:engine="MathJax"/>
 

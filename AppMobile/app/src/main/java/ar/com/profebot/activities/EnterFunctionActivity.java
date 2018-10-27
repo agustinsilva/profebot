@@ -129,7 +129,12 @@ public class EnterFunctionActivity extends AppCompatActivity {
         try {
             equationModified = equation.replaceAll("x", "0").replaceAll("X", "0") + "=x";
             String solution = (new ResolutorService()).resolveExpression(equationModified).substring(2);
-            function = "\\operatorname{F}(0) = "+ solution +"\\implies y = " + solution;
+            if (solution.contains("/")){
+                function = "\\operatorname{F}(0) = \\frac{ "+ cleanEquation(solution) +"} \\implies y = \\frac{" + cleanEquation(solution) +"}";
+            }else{
+                function = "\\operatorname{F}(0) = " + solution + "\\implies  y = " + solution;
+            }
+
 
             View OriginPopUp = setOriginTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenEspecial), function);
             waitForView(OriginPopUp);
@@ -137,6 +142,15 @@ public class EnterFunctionActivity extends AppCompatActivity {
         } catch (InvalidExpressionException e) {
             setTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenTrivial));
         }
+    }
+
+    private String cleanEquation(String solution) {
+        return solution
+                .replaceAll("/","}{")
+                .replaceAll("\\(","")
+                .replaceAll("\\)","")
+                .replaceAll("\\*",".")
+                .replaceAll("X","x");
     }
 
     public void domainBtn(View view) {
@@ -374,7 +388,7 @@ public class EnterFunctionActivity extends AppCompatActivity {
                 String numeratorHomographic = equation.substring(0,divisionPosition ).replaceAll("\\(","").replaceAll("\\)","");
                 Map<Integer, Double> denominatorMapped = ExpressionsManager.parsePolinomialToHashMap(denominatorHomographic);
                 Map<Integer, Double> numeratorMapped = ExpressionsManager.parsePolinomialToHashMap(numeratorHomographic);
-                String solution = "\\Re - ( Asintota ) \\implies \\Re - \\frac{"+ numeratorMapped.get(1) +"}{"+denominatorMapped.get(1) + "}";
+                String solution = "\\Re - ( Asintota ) \\implies \\Re - \\frac{"+ numeratorMapped.get(1).intValue() +"}{"+denominatorMapped.get(1).intValue() + "}";
                 String firstEquation = "y = \\frac{a}{c}";
 
 
@@ -490,7 +504,17 @@ public class EnterFunctionActivity extends AppCompatActivity {
         } else {
             firstSign = "";
         }
-
-        mathComponent.setText("\\(\\color{White}{" + firstSign + equation + "}\\)" );
+        if (equation.contains("/")){
+            mathComponent.setText("\\(\\LARGE\\color{White} {\\frac{" + firstSign + cleanEquation(equation)+ "}}\\)" );
+        }
+        else{
+            mathComponent.setText("\\(\\Large\\color{White}{" + firstSign + equation.replaceAll("\\*",".").replaceAll("X","x") + "}\\)" );
+        }
+        mathComponent.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mathComponent.setVisibility(View.VISIBLE);
+            }
+        }, 1500);
     }
 }
