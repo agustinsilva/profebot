@@ -141,7 +141,6 @@ public abstract class Manager {
 
         view.setClipToOutline(true);
         builder.setView(view);
-        holder.multipleChoiceStep.setDialog(builder.create());
 
         ((Button) view.findViewById(R.id.back_to_multiplechoice_id)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,6 +148,8 @@ public abstract class Manager {
                 holder.multipleChoiceStep.getDialog().hide();
             }
         });
+
+        holder.multipleChoiceStep.setDialog(builder.create());
     }
 
     public void markOptionChosen(RVMultipleChoiceAdapter.MultipleChoiceViewHolder multipleChoiceViewHolder, Integer chosenOption){
