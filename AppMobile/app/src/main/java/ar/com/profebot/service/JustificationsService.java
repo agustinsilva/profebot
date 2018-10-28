@@ -500,10 +500,8 @@ public class JustificationsService {
                 return "mayor o igual";
             case "<=":
                 return "menor o igual";
-            case "=":
-                return "igual";
             default:
-                return "error";
+                return "igual";
         }
     }
 

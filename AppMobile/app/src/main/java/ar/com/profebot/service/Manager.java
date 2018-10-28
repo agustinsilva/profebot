@@ -91,7 +91,12 @@ public abstract class Manager {
 
                 currentMultipleChoiceSteps.get(currentMultipleChoiceSteps.size() - 1).setExpanded(true);
                 RVMultipleChoiceAdapter.MultipleChoiceViewHolder newHolder = currentMultipleChoiceSteps.get(currentMultipleChoiceSteps.size() - 1).getMultipleChoiceViewHolder();
+
                 newHolder.equationBaseAsLatex.setText("\\(" + newHolder.multipleChoiceStep.getEquationBase() + "\\)");
+                newHolder.equationOptionA.setText("\\(" + newHolder.multipleChoiceStep.getOptionA() + "\\)");
+                newHolder.equationOptionB.setText("\\(" + newHolder.multipleChoiceStep.getOptionB() + "\\)");
+                newHolder.equationOptionC.setText("\\(" + newHolder.multipleChoiceStep.getOptionC() + "\\)");
+
                 newHolder.card.setVisibility(View.VISIBLE);
 
                 getRecyclerView().scrollToPosition(currentMultipleChoiceSteps.size());
