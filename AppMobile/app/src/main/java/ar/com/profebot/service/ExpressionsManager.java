@@ -85,7 +85,7 @@ public class ExpressionsManager {
             return "";
         }
 
-        if(infixEquation.contains("\\")){
+        if(infixEquation.contains("\\") || infixEquation.contains("{")){
             System.out.println("La ecuación ya está en latex: " + infixEquation);
             return infixEquation;
         }

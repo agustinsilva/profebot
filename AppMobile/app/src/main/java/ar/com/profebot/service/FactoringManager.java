@@ -2,14 +2,10 @@ package ar.com.profebot.service;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.profebot.activities.R;
 
@@ -21,9 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import ar.com.profebot.Models.MultipleChoiceStep;
-import ar.com.profebot.activities.EnterPolinomialEquationOptionsActivity;
 import ar.com.profebot.activities.SolvePolynomialActivity;
-import io.github.kexanie.library.MathView;
 
 public class FactoringManager extends Manager{
 
@@ -85,7 +79,7 @@ public class FactoringManager extends Manager{
         Map<String, Integer> cases = getNextPossibleCases();
         setFactors();
 
-        return new MultipleChoiceStep(getEquationAsLatex(), "", "", "", "",
+        return new MultipleChoiceStep(getPolynomialToFactorize(), "", "", "", "",
                 context.getString(R.string.FACTOR_COMUN), "",
                 context.getString(R.string.CUADRATICA), "",
                 context.getString(R.string.GAUSS), "",
@@ -174,21 +168,15 @@ public class FactoringManager extends Manager{
         return existsAtLeastOneRoot && (getDegree() > 2 || (getDegree() == 2 && quadraticIsPossible()));
     }
 
-    public static String getEquationAsLatex(){
-        String rootsFactorizedAux = "";
-        if(!rootsFactorized.isEmpty()){
-            rootsFactorizedAux = rootsFactorized;
-            rootsFactorizedAux = ExpressionsManager.mapToLatexAndReplaceComparator(rootsFactorizedAux);
-            rootsFactorizedAux += !pendingPolynomial.isEmpty() ? "*" : "";
-        }
-
+    public static String getPolynomialToFactorize(){
         String pendingPolynomialAux = "";
         if(!pendingPolynomial.isEmpty()){
-            pendingPolynomialAux = ExpressionsManager.mapToLatexAndReplaceComparator(pendingPolynomial);
-            pendingPolynomialAux = "\\mathbf{" + pendingPolynomialAux + "}";
+            pendingPolynomialAux = ExpressionsManager.removeDecimals(pendingPolynomial);
+            pendingPolynomialAux = ExpressionsManager.mapToLatexAndReplaceComparator(pendingPolynomialAux
+                    .replace("(", "")
+                    .replace(")", ""));
         }
-
-        return addMultiplier(rootsFactorizedAux, pendingPolynomialAux);
+        return pendingPolynomialAux;
     }
 
     public static String getEquationAsLatexAfterFactorizing(){
