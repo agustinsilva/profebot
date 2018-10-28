@@ -378,10 +378,11 @@ public class FactoringManager extends Manager{
             Integer minExponent = Collections.min(polynomialTerms.keySet());
 
             List<Integer> exponents = new ArrayList<>(polynomialTerms.keySet());
+            Map<Integer, Double> newPolynomial = new HashMap<>();
             for(Integer exponent : exponents){
-                polynomialTerms.put(exponent - minExponent, polynomialTerms.get(exponent));
-                polynomialTerms.remove(exponent);
+                newPolynomial.put(exponent - minExponent, polynomialTerms.get(exponent));
             }
+            polynomialTerms = newPolynomial;
 
             for(int i = 0 ; i < minExponent ; i++){
                 addRoot(0.0);
