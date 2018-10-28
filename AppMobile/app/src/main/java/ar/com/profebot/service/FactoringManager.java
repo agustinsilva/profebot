@@ -169,14 +169,20 @@ public class FactoringManager extends Manager{
     }
 
     public static String getPolynomialToFactorize(){
+        String rootsFactorizedAux = "";
+        if(!rootsFactorized.isEmpty()){
+            rootsFactorizedAux = rootsFactorized;
+            rootsFactorizedAux = ExpressionsManager.mapToLatexAndReplaceComparator(rootsFactorizedAux);
+            rootsFactorizedAux += !pendingPolynomial.isEmpty() ? "*" : "";
+        }
+
         String pendingPolynomialAux = "";
         if(!pendingPolynomial.isEmpty()){
-            pendingPolynomialAux = ExpressionsManager.removeDecimals(pendingPolynomial);
-            pendingPolynomialAux = ExpressionsManager.mapToLatexAndReplaceComparator(pendingPolynomialAux
-                    .replace("(", "")
-                    .replace(")", ""));
+            pendingPolynomialAux = ExpressionsManager.mapToLatexAndReplaceComparator(pendingPolynomial);
+            pendingPolynomialAux = "\\mathbf{" + pendingPolynomialAux + "}";
         }
-        return pendingPolynomialAux;
+
+        return addMultiplier(rootsFactorizedAux, pendingPolynomialAux);
     }
 
     public static String getEquationAsLatexAfterFactorizing(){
