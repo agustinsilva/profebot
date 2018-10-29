@@ -26,6 +26,8 @@ import ar.com.profebot.service.ExpressionsManager;
 import io.github.kexanie.library.MathView;
 import me.grantland.widget.AutofitTextView;
 
+import static ar.com.profebot.parser.service.FunctionParserService.FunctionType.HOMOGRAPHIC;
+
 public class EnterFunctionActivity extends AppCompatActivity {
     private String firstSign = "";
     private String equation;
@@ -126,21 +128,31 @@ public class EnterFunctionActivity extends AppCompatActivity {
 
     private void setOriginTrivialPopUp() {
         String equationModified, function;
-        try {
-            equationModified = equation.replaceAll("x", "0").replaceAll("X", "0") + "=x";
-            String solution = (new ResolutorService()).resolveExpression(equationModified).substring(2);
-            if (solution.contains("/")){
-                function = "\\operatorname{F}(0) = \\frac{ "+ cleanEquation(solution) +"} \\implies y = \\frac{" + cleanEquation(solution) +"}";
-            }else{
-                function = "\\operatorname{F}(0) = " + solution + "\\implies  y = " + solution;
+        if(equationType == HOMOGRAPHIC){
+            int divisionPosition = equation.lastIndexOf("/");
+            String denominatorHomographic = equation.substring(divisionPosition + 1).replaceAll("\\(","").replaceAll("\\)","");
+            Map<Integer, Double> denominatorMapped = ExpressionsManager.parsePolinomialToHashMap(denominatorHomographic);
+            if (denominatorMapped.get(0) == null){
+                setTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenTrivial));
             }
+        }
+        else {
+            try {
+                equationModified = equation.replaceAll("x", "0").replaceAll("X", "0") + "=x";
+                String solution = (new ResolutorService()).resolveExpression(equationModified).substring(2);
+                if (solution.contains("/")) {
+                    function = "\\operatorname{F}(0) = \\frac{ " + cleanEquation(solution) + "} \\implies y = \\frac{" + cleanEquation(solution) + "}";
+                } else {
+                    function = "\\operatorname{F}(0) = " + solution + "\\implies  y = " + solution;
+                }
 
 
-            View OriginPopUp = setOriginTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenEspecial), function);
-            waitForView(OriginPopUp);
+                View OriginPopUp = setOriginTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenEspecial), function);
+                waitForView(OriginPopUp);
 
-        } catch (InvalidExpressionException e) {
-            setTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenTrivial));
+            } catch (InvalidExpressionException e) {
+                setTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenTrivial));
+            }
         }
     }
 
@@ -384,11 +396,17 @@ public class EnterFunctionActivity extends AppCompatActivity {
             case HOMOGRAPHIC:
                 //Special Cases in HOMOGRAPHIC
                 int divisionPosition = equation.lastIndexOf("/");
+                String solution;
                 String denominatorHomographic = equation.substring(divisionPosition + 1).replaceAll("\\(","").replaceAll("\\)","");
                 String numeratorHomographic = equation.substring(0,divisionPosition ).replaceAll("\\(","").replaceAll("\\)","");
                 Map<Integer, Double> denominatorMapped = ExpressionsManager.parsePolinomialToHashMap(denominatorHomographic);
                 Map<Integer, Double> numeratorMapped = ExpressionsManager.parsePolinomialToHashMap(numeratorHomographic);
-                String solution = "\\Re - ( Asintota ) \\implies \\Re - \\frac{"+ numeratorMapped.get(1).intValue() +"}{"+denominatorMapped.get(1).intValue() + "}";
+                if (numeratorMapped.get(1) == null){
+                    solution = "\\Re - ( Asintota ) \\implies \\Re - {0}";
+                } else{
+                    solution = "\\Re - ( Asintota ) \\implies \\Re - \\frac{"+ numeratorMapped.get(1).intValue() +"}{"+denominatorMapped.get(1).intValue() + "}";
+                }
+
                 String firstEquation = "y = \\frac{a}{c}";
 
 
@@ -461,11 +479,19 @@ public class EnterFunctionActivity extends AppCompatActivity {
         switch(equationType){
             case HOMOGRAPHIC:{
                 try {
+                    String status;
                     int divisionPosition = equation.lastIndexOf("/");
                     String denominatorHomographic = equation.substring(divisionPosition + 1).replaceAll("\\(","").replaceAll("\\)","");
+                    Map<Integer, Double> denominatorMapped = ExpressionsManager.parsePolinomialToHashMap(denominatorHomographic);
                     denominatorHomographic = denominatorHomographic + " = 0";
-                    String status = (new ResolutorService()).resolveExpression(denominatorHomographic).substring(2);
-                    status = "X = " + status;
+                    if (denominatorMapped.get(0) == null ){
+                        status = "X \\neq 0";
+                    }
+                    else{
+                        status = (new ResolutorService()).resolveExpression(denominatorHomographic).substring(2);
+                        status = "X = " + status;
+                    }
+
                     View domainPopUp = setDomainTrivialPopUp(getString(R.string.solucionDominio),getString(R.string.dominioTrivialHomografica),status);
                     waitForView(domainPopUp);
                 } catch (InvalidExpressionException e) {
