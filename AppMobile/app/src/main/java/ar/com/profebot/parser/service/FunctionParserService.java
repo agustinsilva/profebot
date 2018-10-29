@@ -97,6 +97,10 @@ public class FunctionParserService {
         // Root node must be adition
         if (!functionNodeFlattened.esSuma()){return false;}
 
+        if(functionNodeFlattened.getArgs().size() > 2){
+            return false;
+        }
+
         // All args must be symbols, constants, symboil fractions or constant fractions
         for(TreeNode node: functionNodeFlattened.getArgs()){
 
@@ -142,6 +146,9 @@ public class FunctionParserService {
         // Root node must be adition
         if (!functionNodeFlattened.esSuma()){return false;}
 
+        if(functionNodeFlattened.getArgs().size() > 2){
+            return false;
+        }
         // All args must be symbols, constants, symboil fractions or constant fractions
         for(TreeNode node: functionNodeFlattened.getArgs()){
 
