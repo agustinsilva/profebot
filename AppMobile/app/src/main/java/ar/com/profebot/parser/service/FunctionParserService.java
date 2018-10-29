@@ -101,25 +101,38 @@ public class FunctionParserService {
             return false;
         }
 
+        int constantsCount = 0;
+        int symbolCount = 0;
         // All args must be symbols, constants, symboil fractions or constant fractions
         for(TreeNode node: functionNodeFlattened.getArgs()){
 
             // Constant fraction?
-            if (TreeUtils.isConstantFraction(node)){continue;}
+            if (TreeUtils.isConstantFraction(node)){
+                constantsCount = constantsCount + 1;
+                continue;}
 
             // Symbol / Constant?
-            if (TreeUtils.isSymbolFraction(node, false, 1)){continue;}
+            if (TreeUtils.isSymbolFraction(node, false, 1)){
+                symbolCount = symbolCount + 1;
+                continue;}
 
             // Constant?
-            if (TreeUtils.isConstant(node)){continue;}
+            if (TreeUtils.isConstant(node)){
+                constantsCount = constantsCount + 1;
+                continue;}
 
             // Symbol?
-            if (TreeUtils.isSymbol(node, false, 1)){continue;}
+            if (TreeUtils.isSymbol(node, false, 1)){
+                symbolCount = symbolCount + 1;
+                continue;}
 
             // No valid term found, not linear
             return false;
         }
 
+        if((symbolCount >= 2) || (constantsCount >= 2)){
+            return false;
+        }
         // is linear
         return true;
     }
@@ -150,24 +163,37 @@ public class FunctionParserService {
             return false;
         }
         // All args must be symbols, constants, symboil fractions or constant fractions
+        int constantsCount = 0;
+        int symbolCount = 0;
         for(TreeNode node: functionNodeFlattened.getArgs()){
 
             // Constant fraction?
-            if (TreeUtils.isConstantFraction(node)){continue;}
+            if (TreeUtils.isConstantFraction(node)){
+                constantsCount = constantsCount + 1;
+                continue;}
 
             // Symbol / Constant?
-            if (TreeUtils.isSymbolFraction(node, false, 1)){continue;}
+            if (TreeUtils.isSymbolFraction(node, false, 1)){
+                symbolCount = symbolCount + 1;
+                continue;}
 
             // Constant?
-            if (TreeUtils.isConstant(node)){continue;}
+            if (TreeUtils.isConstant(node)){
+                constantsCount = constantsCount + 1;
+                continue;}
 
             // Symbol?
-            if (TreeUtils.isSymbol(node, false, 1)){continue;}
+            if (TreeUtils.isSymbol(node, false, 1)){
+                symbolCount = symbolCount + 1;
+                continue;}
 
             // No valid term found, not linear
             return false;
         }
 
+        if((symbolCount >= 2) || (constantsCount >= 2)){
+            return false;
+        }
         // is linear
         return true;
     }
