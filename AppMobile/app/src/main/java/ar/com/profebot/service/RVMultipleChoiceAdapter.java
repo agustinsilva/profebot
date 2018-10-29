@@ -174,7 +174,7 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
                 manager.showIconForOption(multipleChoiceViewHolder, multipleChoiceViewHolder.multipleChoiceStep.getChosenOption(), R.drawable.solved_right);
             }else {
                 manager.showIconForOption(multipleChoiceViewHolder, multipleChoiceViewHolder.multipleChoiceStep.getCorrectOption(), R.drawable.solved_right);
-                manager.showIconForOption(multipleChoiceViewHolder, multipleChoiceViewHolder.multipleChoiceStep.getCorrectOption(), R.drawable.solved_wrong);
+                manager.showIconForOption(multipleChoiceViewHolder, multipleChoiceViewHolder.multipleChoiceStep.getChosenOption(), R.drawable.solved_wrong);
             }
 
             multipleChoiceViewHolder.optionA.setEnabled(false);
