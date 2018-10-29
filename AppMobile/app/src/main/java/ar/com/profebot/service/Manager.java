@@ -92,11 +92,13 @@ public abstract class Manager {
                 currentMultipleChoiceSteps.get(currentMultipleChoiceSteps.size() - 1).setExpanded(true);
                 RVMultipleChoiceAdapter.MultipleChoiceViewHolder newHolder = currentMultipleChoiceSteps.get(currentMultipleChoiceSteps.size() - 1).getMultipleChoiceViewHolder();
 
-                newHolder.equationBaseAsLatex.setText("\\(" + newHolder.multipleChoiceStep.getEquationBase() + "\\)");
-                newHolder.equationOptionA.setText("$$" + newHolder.multipleChoiceStep.getEquationOptionA() + "$$");
-                newHolder.equationOptionB.setText("$$" + newHolder.multipleChoiceStep.getEquationOptionB() + "$$");
-                newHolder.equationOptionC.setText("$$" + newHolder.multipleChoiceStep.getEquationOptionC() + "$$");
-
+                newHolder.equationBaseAsLatex.config("MathJax.Hub.Config({\n"+
+                        "  CommonHTML: { linebreaks: { automatic: true } },\n"+
+                        "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
+                        "         SVG: { linebreaks: { automatic: true } }\n"+
+                        "});");
+                newHolder.equationOptionA.setText("\\(" + newHolder.multipleChoiceStep.getEquationBase() + "\\)");
+                expandCard(newHolder);
                 newHolder.card.setVisibility(View.VISIBLE);
 
                 getRecyclerView().scrollToPosition(currentMultipleChoiceSteps.size());
@@ -147,7 +149,8 @@ public abstract class Manager {
         view.setClipToOutline(true);
         builder.setView(view);
 
-        ((Button) view.findViewById(R.id.back_to_multiplechoice_id)).setOnClickListener(new View.OnClickListener() {
+        Button closeDialog = (Button) view.findViewById(R.id.back_to_multiplechoice_id);
+        closeDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 holder.multipleChoiceStep.getDialog().hide();
@@ -155,6 +158,7 @@ public abstract class Manager {
         });
 
         holder.multipleChoiceStep.setDialog(builder.create());
+        holder.multipleChoiceStep.setCloseDialog(closeDialog);
     }
 
     public void markOptionChosen(RVMultipleChoiceAdapter.MultipleChoiceViewHolder multipleChoiceViewHolder, Integer chosenOption){

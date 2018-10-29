@@ -1,6 +1,7 @@
 package ar.com.profebot.Models;
 
 import android.app.AlertDialog;
+import android.widget.Button;
 
 import ar.com.profebot.service.RVMultipleChoiceAdapter;
 
@@ -39,6 +40,7 @@ public class MultipleChoiceStep {
     private Boolean isExpanded = false;
     private RVMultipleChoiceAdapter.MultipleChoiceViewHolder multipleChoiceViewHolder;
     private AlertDialog dialog;
+    private Button closeDialog;
 
     public MultipleChoiceStep(String equationBase, String newEquationBase, String newRegularEquationBase1, String newRegularEquationBase2,
                               String summary, String optionA, String equationOptionA, String optionB, String equationOptionB,
@@ -72,6 +74,14 @@ public class MultipleChoiceStep {
         this(equationBase, newEquationBase,  null, null, summary,  optionA,  equationOptionA, optionB,  equationOptionB,  optionC,
                 equationOptionC, correctOption, null, null,
                 correctOptionJustification, incorrectOptionJustification1, incorrectOptionJustification2);
+    }
+
+    public Button getCloseDialog() {
+        return closeDialog;
+    }
+
+    public void setCloseDialog(Button closeDialog) {
+        this.closeDialog = closeDialog;
     }
 
     public AlertDialog getDialog() {

@@ -181,6 +181,13 @@ public class RVMultipleChoiceAdapter extends RecyclerView.Adapter<RVMultipleChoi
             multipleChoiceViewHolder.optionB.setEnabled(false);
             multipleChoiceViewHolder.optionC.setEnabled(false);
 
+            multipleChoiceViewHolder.multipleChoiceStep.getCloseDialog().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    multipleChoiceViewHolder.multipleChoiceStep.getDialog().hide();
+                }
+            });
+
         }else{
             multipleChoiceViewHolder.card.setVisibility(View.GONE);
             manager.expandCard(multipleChoiceViewHolder);
