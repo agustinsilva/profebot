@@ -90,7 +90,14 @@ public abstract class Manager {
                 currentMultipleChoiceSteps.get(currentMultipleChoiceSteps.size() - 2).setNextStepButtonWasPressed(true);
 
                 currentMultipleChoiceSteps.get(currentMultipleChoiceSteps.size() - 1).setExpanded(true);
-                currentMultipleChoiceSteps.get(currentMultipleChoiceSteps.size() - 1).getMultipleChoiceViewHolder().card.setVisibility(View.VISIBLE);
+                RVMultipleChoiceAdapter.MultipleChoiceViewHolder newHolder = currentMultipleChoiceSteps.get(currentMultipleChoiceSteps.size() - 1).getMultipleChoiceViewHolder();
+
+                newHolder.equationBaseAsLatex.setText("\\(" + newHolder.multipleChoiceStep.getEquationBase() + "\\)");
+                newHolder.equationOptionA.setText("\\(" + newHolder.multipleChoiceStep.getOptionA() + "\\)");
+                newHolder.equationOptionB.setText("\\(" + newHolder.multipleChoiceStep.getOptionB() + "\\)");
+                newHolder.equationOptionC.setText("\\(" + newHolder.multipleChoiceStep.getOptionC() + "\\)");
+
+                newHolder.card.setVisibility(View.VISIBLE);
 
                 getRecyclerView().scrollToPosition(currentMultipleChoiceSteps.size());
             }
@@ -139,7 +146,6 @@ public abstract class Manager {
 
         view.setClipToOutline(true);
         builder.setView(view);
-        holder.multipleChoiceStep.setDialog(builder.create());
 
         ((Button) view.findViewById(R.id.back_to_multiplechoice_id)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,6 +153,8 @@ public abstract class Manager {
                 holder.multipleChoiceStep.getDialog().hide();
             }
         });
+
+        holder.multipleChoiceStep.setDialog(builder.create());
     }
 
     public void markOptionChosen(RVMultipleChoiceAdapter.MultipleChoiceViewHolder multipleChoiceViewHolder, Integer chosenOption){

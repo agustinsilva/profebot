@@ -483,7 +483,7 @@ public class ExpressionsManager {
             }
         }
         String term = builder.toString().replace("+!", "-");
-        if(term.substring(term.length() - 1).equals("+")){
+        if(!term.isEmpty() && term.substring(term.length() - 1).equals("+")){
             term = term.substring(0, term.length() - 1);
         }
 
