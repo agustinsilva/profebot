@@ -83,10 +83,22 @@ public class FunctionParserService {
         // Flatten
         TreeNode functionNodeFlattened = TreeUtils.flattenOperands(functionNode);
 
+        if(functionNodeFlattened.getArgs().get(0) == null){
+            if (TreeUtils.isConstantFraction(functionNodeFlattened)){return true;}
+
+            // Symbol / Constant?
+            if (TreeUtils.isSymbolFraction(functionNodeFlattened, false, 1)){return true;}
+
+            // Constant?
+            if (TreeUtils.isConstant(functionNodeFlattened)){return true;}
+
+            // Symbol?
+            if (TreeUtils.isSymbol(functionNodeFlattened, false, 1)){return true;}
+        }
         // Root node must be adition
         if (!functionNodeFlattened.esSuma()){return false;}
 
-        // All args must be symbols, constants, symboil fractiosn or constant fractions
+        // All args must be symbols, constants, symboil fractions or constant fractions
         for(TreeNode node: functionNodeFlattened.getArgs()){
 
             // Constant fraction?
@@ -134,6 +146,9 @@ public class FunctionParserService {
         if (!functionNode.esDivision()){return false;}
 
         // Left node and right node must be linear
+        //if (!isLinear(functionNode.getLeftNode())){return false;}
+        //return isLinear(functionNode.getRightNode());
+
         if (!isLinear(functionNode.getLeftNode())){return false;}
         return isLinear(functionNode.getRightNode());
     }
