@@ -1,7 +1,7 @@
 package ar.com.profebot.service;
 
 public class LocalServer {
-    private static String localServerIP = "192.168.1.3";
+    private static String localServerIP;
 
     public static String getLocalUrl() {
         return localServerIP != null ? "http://" + localServerIP + ":8080/more/practice" : "";

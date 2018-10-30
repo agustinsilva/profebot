@@ -52,6 +52,7 @@
             android:name="ar.com.profebot.activities.SolvePolynomialActivity"
             android:screenOrientation="portrait" />
         <activity android:name="ar.com.profebot.activities.EnterFunctionOptionsActivity" />
+        <activity android:name="ar.com.profebot.activities.AuxActivity" />
         <activity android:name="ar.com.profebot.activities.EnterFunctionActivity"></activity>
     </application>
 
