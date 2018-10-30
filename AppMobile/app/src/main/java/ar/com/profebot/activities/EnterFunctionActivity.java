@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -128,23 +129,16 @@ public class EnterFunctionActivity extends AppCompatActivity {
 
     private void setOriginTrivialPopUp() {
         String equationModified, function;
-        if(equationType == HOMOGRAPHIC){
+        if(equationType == HOMOGRAPHIC) {
             int divisionPosition = equation.lastIndexOf("/");
-            String denominatorHomographic = equation.substring(divisionPosition + 1).replaceAll("\\(","").replaceAll("\\)","");
+            String denominatorHomographic = equation.substring(divisionPosition + 1).replaceAll("\\(", "").replaceAll("\\)", "");
             Map<Integer, Double> denominatorMapped = ExpressionsManager.parsePolinomialToHashMap(denominatorHomographic);
-            if (denominatorMapped.get(0) == null){
+            if (denominatorMapped.get(0) == null) {
                 setTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenTrivial));
-            }else{
+            }
+            else {
                 try {
-                    equationModified = equation.replaceAll("x", "0").replaceAll("X", "0") + "=x";
-                    String solution = (new ResolutorService()).resolveExpression(equationModified).substring(2);
-                    if (solution.contains("/")) {
-                        function = "\\operatorname{F}(0) = \\frac{ " + cleanEquation(solution) + "} \\implies y = \\frac{" + cleanEquation(solution) + "}";
-                    } else {
-                        function = "\\operatorname{F}(0) = " + solution + "\\implies  y = " + solution;
-                    }
-
-
+                    function = solveOrigin();
                     View OriginPopUp = setOriginTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenEspecial), function);
                     waitForView(OriginPopUp);
 
@@ -152,7 +146,30 @@ public class EnterFunctionActivity extends AppCompatActivity {
                     setTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenTrivial));
                 }
             }
+        } else {
+            try {
+                function = solveOrigin();
+                View OriginPopUp = setOriginTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenEspecial), function);
+                waitForView(OriginPopUp);
+
+            } catch (InvalidExpressionException e) {
+                setTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenTrivial));
+            }
         }
+    }
+
+    @NonNull
+    private String solveOrigin() throws InvalidExpressionException {
+        String equationModified;
+        String function;
+        equationModified = equation.replaceAll("x", "0").replaceAll("X", "0") + "=x";
+        String solution = (new ResolutorService()).resolveExpression(equationModified).substring(2);
+        if (solution.contains("/")) {
+            function = "\\operatorname{F}(0) = \\frac{ " + cleanEquation(solution) + "} \\implies y = \\frac{" + cleanEquation(solution) + "}";
+        } else {
+            function = "\\operatorname{F}(0) = " + solution + "\\implies  y = " + solution;
+        }
+        return function;
     }
 
     private String cleanEquation(String solution) {
