@@ -161,11 +161,11 @@
     <string name="ADD_TO_BOTH_SIDES_SUMMARY">Sumar miembro a miembro</string>
 
     <string name="DIVIDE_FROM_BOTH_SIDES_OPTION">Dividir a ambos miembros para cancelar términos.</string>
-    <string name="DIVIDE_FROM_BOTH_SIDES_JUSTIFICATION">Para cancelar un término que está multiplicando de un lado del /comparador/, se puede dividir miembro a miembro dicho término; de esta forma, se logrará "pasar" dicho término de un lado del /comparador/ al otro, con el objetivo de despejar la X.</string>
+    <string name="DIVIDE_FROM_BOTH_SIDES_JUSTIFICATION">Para cancelar un término que está multiplicando de un lado del /comparador/, se puede dividir miembro a miembro por dicho término; de esta forma, se logrará "pasar" dicho término de un lado del /comparador/ al otro, con el objetivo de despejar la X.</string>
     <string name="DIVIDE_FROM_BOTH_SIDES_SUMMARY">Dividir miembro a miembro</string>
 
     <string name="MULTIPLY_BOTH_SIDES_BY_INVERSE_FRACTION_OPTION">Multiplicar a ambos miembros para cancelar términos.</string>
-    <string name="MULTIPLY_BOTH_SIDES_BY_INVERSE_FRACTION_JUSTIFICATION">Para cancelar un término que está dividiendo de un lado del /comparador/, se puede multiplicar miembro a miembro dicho término; de esta forma, se logrará "pasar" dicho término de un lado del /comparador/ al otro, con el objetivo de despejar la X.</string>
+    <string name="MULTIPLY_BOTH_SIDES_BY_INVERSE_FRACTION_JUSTIFICATION">Para cancelar un término que está dividiendo de un lado del /comparador/, se puede multiplicar miembro a miembro por dicho término; de esta forma, se logrará "pasar" dicho término de un lado del /comparador/ al otro, con el objetivo de despejar la X.</string>
     <string name="MULTIPLY_BOTH_SIDES_BY_INVERSE_FRACTION_SUMMARY">Multiplicar miembro a miembro</string>
 
     <string name="SIMPLIFY_LEFT_SIDE_OPTION">Simplificar el lado izquierdo del /comparador/.</string>

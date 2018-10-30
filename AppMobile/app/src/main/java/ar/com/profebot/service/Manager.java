@@ -97,7 +97,8 @@ public abstract class Manager {
                         "  \"HTML-CSS\": { linebreaks: { automatic: true } },\n"+
                         "         SVG: { linebreaks: { automatic: true } }\n"+
                         "});");
-                newHolder.equationOptionA.setText("\\(" + newHolder.multipleChoiceStep.getEquationBase() + "\\)");
+
+                newHolder.equationBaseAsLatex.setText("\\(" + ExpressionsManager.mapToLatexAndReplaceComparator(newHolder.multipleChoiceStep.getEquationBase()) + "\\)");
                 expandCard(newHolder);
                 newHolder.card.setVisibility(View.VISIBLE);
 
