@@ -388,23 +388,38 @@ public class EnterFunctionActivity extends AppCompatActivity {
                     //Analizo concavidad e intervalo
                     String concavidad;
                     String intervalo;
-                    String second_equation = "y = \\frac{-b}{2*a}";
+                    String second_equation = "y = \\operatorname{F}\\bigg(\\frac{-b}{2*a}\\bigg)";
                     ExpressionsManager.setEquationDrawn(equation+"=0");
                     ExpressionsManager.expressionDrawnIsValid();
                     Map<Integer, Double> equationMapped = ExpressionsManager.parsePolinomialToHashMap(equation);
                     if (equationMapped.get(2) > 0 ) {
                         concavidad = "concavidad positiva";
-                        int intervalBegin = (equationMapped.get(1) == null) ? 0 : ( equationMapped.get(1).intValue() / (2 * equationMapped.get(2).intValue()) );
-                        intervalo = "[" + Integer.toString(intervalBegin) + ", + \\infty )";
-                        //intervalo = (equationMapped.get(1) == null) ? "[ 0, + \\infty )" : "[ \\frac{" + equationMapped.get(1) + "}{2*" + equationMapped.get(2) + "}, + \\infty)";
-                        View popUp2 = SetImageTrivialPopUpView(getString(R.string.solucionImagen), getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad), intervalo, getString(R.string.explicacionInformativaImagenCuadraticaResolucionParte2), second_equation);
-                        waitForView(popUp2);
+                        int numToGetBeginInterval = (equationMapped.get(1) == null) ? 0 : ( invert(equationMapped.get(1).intValue())  / (2 * equationMapped.get(2).intValue()) );
+                        String equationToSolve = equation.replaceAll("x",String.valueOf(numToGetBeginInterval)).replaceAll("X",String.valueOf(numToGetBeginInterval));;
+                        try {
+                            String intervalBegin = (new ResolutorService()).resolveExpression(equationToSolve + "=x");
+                            intervalo = "[" + cleanInterval(intervalBegin) + ", + \\infty )";
+                            //intervalo = (equationMapped.get(1) == null) ? "[ 0, + \\infty )" : "[ \\frac{" + equationMapped.get(1) + "}{2*" + equationMapped.get(2) + "}, + \\infty)";
+                            View popUp2 = SetImageTrivialPopUpView(getString(R.string.solucionImagen), getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad), intervalo, getString(R.string.explicacionInformativaImagenCuadraticaResolucionParte2), second_equation);
+                            waitForView(popUp2);
+                        }catch (InvalidExpressionException e) {
+                            e.printStackTrace();
+                        }
                     }
                     else{
-                        intervalo =  (equationMapped.get(1) == 0) ?  "( - \\infty , 0 ]" : "[- \\infty , " + equationMapped.get(1)+"/2"+ equationMapped.get(2) +"]";
+                        //intervalo =  (equationMapped.get(1) == 0) ?  "( - \\infty , 0 ]" : "[- \\infty , " + equationMapped.get(1)+"/2"+ equationMapped.get(2) +"]";
                         concavidad = "concavidad negativa";
-                        View popUp2 = SetImageTrivialPopUpView(getString(R.string.solucionImagen), getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad), intervalo, getString(R.string.explicacionInformativaImagenCuadraticaResolucionParte2 ), second_equation);
-                        waitForView(popUp2);
+                        int numToGetBeginInterval = (equationMapped.get(1) == null) ? 0 : ( invert(equationMapped.get(1).intValue())  / (2 * equationMapped.get(2).intValue()) );
+                        String equationToSolve = equation.replaceAll("x",String.valueOf(numToGetBeginInterval)).replaceAll("X",String.valueOf(numToGetBeginInterval));;
+                        try {
+                            String intervalBegin = (new ResolutorService()).resolveExpression(equationToSolve + "=x");
+                            intervalo = "(- \\infty , " + cleanInterval(intervalBegin) +" ]";
+                            //intervalo = (equationMapped.get(1) == null) ? "[ 0, + \\infty )" : "[ \\frac{" + equationMapped.get(1) + "}{2*" + equationMapped.get(2) + "}, + \\infty)";
+                            View popUp2 = SetImageTrivialPopUpView(getString(R.string.solucionImagen), getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad), intervalo, getString(R.string.explicacionInformativaImagenCuadraticaResolucionParte2), second_equation);
+                            waitForView(popUp2);
+                        }catch (InvalidExpressionException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                 }
@@ -433,6 +448,19 @@ public class EnterFunctionActivity extends AppCompatActivity {
             default:
                 Log.d("Error Imagen Funcion", "NO encontro ningun tipo de funcion para analizar la imagen");
                 break;
+        }
+    }
+
+    private String cleanInterval(String intervalBegin) {
+        return intervalBegin.replaceAll("x","").replaceAll("X","").replaceAll("=","");
+    }
+
+    private int invert(int numToInvert) {
+        if (numToInvert < 0){
+            return Math.abs(numToInvert);
+        }
+        else{
+            return numToInvert * -1;
         }
     }
 
