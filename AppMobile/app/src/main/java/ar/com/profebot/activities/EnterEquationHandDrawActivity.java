@@ -70,10 +70,15 @@ public class EnterEquationHandDrawActivity extends GlobalActivity implements
         playButton = findViewById(R.id.solve_equation_id);
         playButton.setOnClickListener(button -> {
             if(photoReference == FUNCTION) {
-                if (FunctionParserService.getFunctionType(ExpressionsManager.getEquationDrawn()+"=0")!= INVALID) {
+                String equation = ExpressionsManager.getEquationDrawn();
+                if(equation.indexOf("=") > -1){
+                    int indexOfEqual = equation.indexOf("=");
+                    equation = equation.substring(0,indexOfEqual);
+                }
+                if (FunctionParserService.getFunctionType(equation+"=0")!= INVALID) {
                     spinner.setVisibility(View.VISIBLE);
                     Intent intent = new Intent(button.getContext(), EnterFunctionActivity.class);
-                    intent.putExtra("function", ExpressionsManager.getEquationDrawn());
+                    intent.putExtra("function", equation);
                     startActivity(intent);
                 }
                 else {
