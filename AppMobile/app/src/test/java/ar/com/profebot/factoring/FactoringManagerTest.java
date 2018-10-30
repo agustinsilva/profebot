@@ -784,6 +784,50 @@ public class FactoringManagerTest {
     }
 
     @Test
+    public void gaussSucesivoConFactorComunYCuadraticaYNoSePuedeSeguirFactorizando2() {
+        Map<Integer, Double> terms;
+
+        SolvePolynomialActivity context = new SolvePolynomialActivity();
+        FactoringManager.setContext(context);
+
+        // x^3+2x^2+1.4x+0.4
+        terms = new HashMap<>();
+        terms.put(0, 0.4);
+        terms.put(1, 1.4);
+        terms.put(2, 2.0);
+        terms.put(3, 1.0);
+
+        FactoringManager.setPolynomialTerms(terms);
+
+        // Checkeo los casos posibles a aplicar
+        Map<String, Integer> nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertEquals(FactoringManager.GAUSS, nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
+        // Factorizo por gauss
+        FactoringManager.factorizeBy(FactoringManager.GAUSS);
+
+        // Checkeo los casos posibles a aplicar
+        nextCases = FactoringManager.getNextPossibleCases();
+        Assert.assertNull(nextCases.get(FactoringManager.CORRECT_OPTION));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_1));
+        Assert.assertNull(nextCases.get(FactoringManager.REGULAR_OPTION_2));
+
+        // Raiz: -1 simple
+        Assert.assertEquals(1, FactoringManager.roots.size());
+        Assert.assertTrue(FactoringManager.roots.contains(-1.0));
+        Assert.assertEquals(1, FactoringManager.rootsMultiplicity.get(-1.0).intValue());
+
+        // Polinomio pendiente:
+        Assert.assertEquals(3, FactoringManager.polynomialTerms.size());
+        Assert.assertEquals("x^2+x+0.4", FactoringManager.getPolynomialGeneralForm(FactoringManager.polynomialTerms));
+
+        // Se puede seguir factoreando
+        Assert.assertTrue(FactoringManager.end);
+    }
+
+    @Test
     public void gaussSucesivoConDobleFactorComunYCuadraticaYNoSePuedeSeguirFactorizando() {
         Map<Integer, Double> terms;
 

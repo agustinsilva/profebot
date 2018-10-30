@@ -491,7 +491,7 @@ public class FactoringManager extends Manager{
 
         for(int i = 1 ; i < coefficientsSortedAndCompleted.size() ; i++){
             Double newCoefficient =  (quotient.get(i - 1) * possibleRoot) + coefficientsSortedAndCompleted.get(i);
-            quotient.add(newCoefficient);
+            quotient.add((double)Math.round(newCoefficient * 1000d) / 1000d);
         }
 
         // Valido el resto
