@@ -2,6 +2,8 @@ package ar.com.profebot.service;
 
 import android.content.Context;
 
+import com.profebot.activities.R;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -412,8 +414,16 @@ public class ExpressionsManager {
 
     public static void requestNewExercises(String equationBase, String newEquationBase, Context context){
         List<String> paramsToSend = getTermAndContextFromReduction(equationBase, newEquationBase);
-        IAModuleClient client = new IAModuleClient(paramsToSend.get(0), paramsToSend.get(1), paramsToSend.get(2), context);
-        client.execute();
+
+        // Local client
+        if(!LocalServer.getLocalUrl().isEmpty()){
+            IAModuleClient localClient = new IAModuleClient(paramsToSend.get(0), paramsToSend.get(1), paramsToSend.get(2), context, LocalServer.getLocalUrl());
+            localClient.execute();
+        }else{
+            // Remote client
+            IAModuleClient remoteClient = new IAModuleClient(paramsToSend.get(0), paramsToSend.get(1), paramsToSend.get(2), context, context.getString(R.string.url));
+            remoteClient.execute();
+        }
     }
 
     public static String getRootOfEquation(String infixEquation){

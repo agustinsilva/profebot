@@ -27,8 +27,9 @@ public class IAModuleClient extends AsyncTask<String, Void, Void> {
     private String json;
     private Integer timeout;
     private Context context;
+    private String url;
 
-    public IAModuleClient(String root, String term, String termContext, Context context) {
+    public IAModuleClient(String root, String term, String termContext, Context context, String url) {
         String termToUse = term;
         String contextToUse = termContext;
         if(!this.containsVariable(term) && !this.containsVariable(termContext)){
@@ -40,9 +41,10 @@ public class IAModuleClient extends AsyncTask<String, Void, Void> {
             contextToUse = termToUse;
         }
 
-        this.json = "{\"root\": \"" + root + "\",\"term\":\"" + termToUse + "\",\"context\":\"" + contextToUse + "\"}";
+        this.json = "{\"root\": \"" + root + "\",\"term\":\"" + termToUse.replace("X", "x") + "\",\"context\":\"" + contextToUse.replace("X", "x") + "\"}";
         this.timeout = 3600000;
         this.context = context;
+        this.url = url;
     }
 
     private Boolean containsVariable(String expression){
@@ -54,7 +56,7 @@ public class IAModuleClient extends AsyncTask<String, Void, Void> {
         if(!this.json.contains("no-variable")){
             HttpURLConnection connection = null;
             try {
-                URL u = new URL(context.getString(R.string.url));
+                URL u = new URL(url);
                 connection = (HttpURLConnection) u.openConnection();
                 connection.setRequestMethod(context.getString(R.string.method));
 

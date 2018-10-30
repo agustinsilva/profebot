@@ -25,7 +25,7 @@ public class ModuloInteligenteTestActivity extends GlobalActivity{
             String root = "="; // TODO: parametrizar el root
             // TODO: cambiar a la lógica real que toma el término y el contexto
             String[] expressions = ExpressionsManager.getEquationAsInfix().split(root);
-            IAModuleClient client = new IAModuleClient(root, expressions[0], expressions[1], this);
+            IAModuleClient client = new IAModuleClient(root, expressions[0], expressions[1], this, getString(R.string.url));
             client.execute();
         }
     }
