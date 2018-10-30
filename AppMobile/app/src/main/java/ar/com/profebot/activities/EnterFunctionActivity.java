@@ -134,24 +134,23 @@ public class EnterFunctionActivity extends AppCompatActivity {
             Map<Integer, Double> denominatorMapped = ExpressionsManager.parsePolinomialToHashMap(denominatorHomographic);
             if (denominatorMapped.get(0) == null){
                 setTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenTrivial));
-            }
-        }
-        else {
-            try {
-                equationModified = equation.replaceAll("x", "0").replaceAll("X", "0") + "=x";
-                String solution = (new ResolutorService()).resolveExpression(equationModified).substring(2);
-                if (solution.contains("/")) {
-                    function = "\\operatorname{F}(0) = \\frac{ " + cleanEquation(solution) + "} \\implies y = \\frac{" + cleanEquation(solution) + "}";
-                } else {
-                    function = "\\operatorname{F}(0) = " + solution + "\\implies  y = " + solution;
+            }else{
+                try {
+                    equationModified = equation.replaceAll("x", "0").replaceAll("X", "0") + "=x";
+                    String solution = (new ResolutorService()).resolveExpression(equationModified).substring(2);
+                    if (solution.contains("/")) {
+                        function = "\\operatorname{F}(0) = \\frac{ " + cleanEquation(solution) + "} \\implies y = \\frac{" + cleanEquation(solution) + "}";
+                    } else {
+                        function = "\\operatorname{F}(0) = " + solution + "\\implies  y = " + solution;
+                    }
+
+
+                    View OriginPopUp = setOriginTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenEspecial), function);
+                    waitForView(OriginPopUp);
+
+                } catch (InvalidExpressionException e) {
+                    setTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenTrivial));
                 }
-
-
-                View OriginPopUp = setOriginTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenEspecial), function);
-                waitForView(OriginPopUp);
-
-            } catch (InvalidExpressionException e) {
-                setTrivialPopUp(getString(R.string.solucionOrdenadaOrigen), getString(R.string.ordenadaAlOrigenTrivial));
             }
         }
     }
