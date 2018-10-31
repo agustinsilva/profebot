@@ -149,7 +149,7 @@ android:layout_marginBottom="20sp"
             android:background="@drawable/rounded_corners_pop_up_back"
             android:paddingEnd="20dp"
             android:paddingStart="20dp"
-            android:text="Entendido!!"
+            android:text="¡Entendido!"
             android:textColor="@color/colorWhite"
             android:textSize="15sp" />
 
