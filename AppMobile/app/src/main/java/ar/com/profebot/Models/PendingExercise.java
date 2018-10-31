@@ -11,7 +11,7 @@ public class PendingExercise {
 
     public PendingExercise(String infixEquation) {
         this.infixEquation = infixEquation;
-        String[] equation = infixEquation.split("=");
+        String[] equation = infixEquation.split(ExpressionsManager.getRootOfEquation(infixEquation));
         this.description = ExpressionsManager.isQuadraticExpression(equation[0]) || ExpressionsManager.isQuadraticExpression(equation[1])
                 ? "Ecuación cuadrática"
                 : "Ecuación lineal";

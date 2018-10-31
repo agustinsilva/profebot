@@ -437,15 +437,14 @@ public class ExpressionsManager {
              return ">";
          }else if(infixEquation.contains("!=")){
              return "!=";
-         }else if(infixEquation.contains("=")){
-             return "=";
          }
 
-         return "";
+         return "=";
     }
 
     public static List<String> getTermAndContextFromReduction(String equationBase, String newEquationBase){
-        List<String> equationBaseMembers = Arrays.asList(equationBase.split(comparatorOperator));
+        String comparatorOperator = getRootOfEquation(equationBase);
+        List<String> equationBaseMembers = Arrays.asList(equationBase.split(getRootOfEquation(equationBase)));
         List<String> newEquationBaseMembers = Arrays.asList(newEquationBase.split(comparatorOperator));
         List<String> result = new ArrayList<>();
         result.add(comparatorOperator);
