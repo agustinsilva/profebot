@@ -412,8 +412,10 @@ public class EnterFunctionActivity extends AppCompatActivity {
                         int numToGetBeginInterval = (equationMapped.get(1) == null) ? 0 : ( invert(equationMapped.get(1).intValue())  / (2 * equationMapped.get(2).intValue()) );
                         String equationToSolve = equation.replaceAll("x",String.valueOf(numToGetBeginInterval)).replaceAll("X",String.valueOf(numToGetBeginInterval));;
                         try {
-                            String intervalBegin = (new ResolutorService()).resolveExpression(equationToSolve + "=x");
-                            intervalo = "(- \\infty , " + cleanInterval(intervalBegin) +" ]";
+                            String intervalBegin = (new ResolutorService()).resolveExpression(equationToSolve  + "=x");
+                            Integer intervalBeginInt = Integer.parseInt(cleanInterval(intervalBegin));
+                            intervalBeginInt -= (( equationMapped.get(2).intValue() * numToGetBeginInterval)*( equationMapped.get(2).intValue() * numToGetBeginInterval ) * 2);
+                                    intervalo = "(- \\infty , " + intervalBeginInt +" ]";
                             //intervalo = (equationMapped.get(1) == null) ? "[ 0, + \\infty )" : "[ \\frac{" + equationMapped.get(1) + "}{2*" + equationMapped.get(2) + "}, + \\infty)";
                             View popUp2 = SetImageTrivialPopUpView(getString(R.string.solucionImagen), getString(R.string.explicacionInformativaImagenCuadraticaResolucion, concavidad), intervalo, getString(R.string.explicacionInformativaImagenCuadraticaResolucionParte2), second_equation);
                             waitForView(popUp2);
@@ -561,6 +563,10 @@ public class EnterFunctionActivity extends AppCompatActivity {
     }
 
     private void setFunctionView(String equation) {
+        if(equation.startsWith("0")){
+            equation = equation.substring(1);
+            this.equation = equation;
+        }
         MathView mathComponent = findViewById(R.id.equation_to_solve_id);
         mathComponent.config(
                 "MathJax.Hub.Config({\n"+
