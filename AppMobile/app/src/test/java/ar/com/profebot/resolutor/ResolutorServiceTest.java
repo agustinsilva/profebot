@@ -1732,4 +1732,20 @@ public class ResolutorServiceTest extends ResolutorService {
         Tree tree = (new ParserService()).parseExpression(expression);
     }*/
 
+    @Test
+    public void stepThrough_ok66()  throws InvalidExpressionException {
+        String expression = "X=-1*(4^2)+8*4-2";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
+        listaNodos = listaNodos;
+        Assert.assertEquals("X=14", listaNodos.get(listaNodos.size()-1).getNewEquation().toExpression());
+    }
+
+    @Test
+    public void stepThrough_ok67()  throws InvalidExpressionException {
+        String expression = "X=-(4^2)+8*4-2";
+        Tree tree = (new ParserService()).parseExpression(expression);
+        List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
+        Assert.assertEquals("X=14", listaNodos.get(listaNodos.size()-1).getNewEquation().toExpression());
+    }
 }

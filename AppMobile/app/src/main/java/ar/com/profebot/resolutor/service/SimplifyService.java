@@ -1647,7 +1647,7 @@ public class SimplifyService {
 
         TreeNode nodeToCombine = treeNode.getChild(nodeToCombineIndex);
         // If it's a constant, the combining of those terms is handled elsewhere.
-        if (TreeUtils.isConstant(nodeToCombine)) {
+        if (TreeUtils.isConstant(nodeToCombine) || nodeToCombine.esPotencia()) {
             return NodeStatus.noChange(treeNode);
         }
 
