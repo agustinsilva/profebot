@@ -237,7 +237,7 @@ public class CameraFragment extends Fragment {
             MathView constanteMV = (MathView) popUpView.findViewById(R.id.constante_function);
             constanteMV.setText("$$"  + "b" +  "$$");
             MathView homograficaMV = (MathView) popUpView.findViewById(R.id.homografica_function);
-            homograficaMV.setText("$$"  + "\\frac{ ax+b } {ax+b } " + "$$");
+            homograficaMV.setText("$$"  + "\\frac{ ax+b } {cx+d } " + "$$");
             popUpView.setElevation(0f);
             popUpView.setClipToOutline(true);
             builder.setView(popUpView);
