@@ -107,23 +107,31 @@ public class ExpressionsManager {
         String[] expressions = infixEquationCleaned.split(comparatorOperator);
 
         firstSign = "";
+        String firstExpression = expressions[0];
         if (expressions[0].substring(0,1).contains("-")){
             firstSign = "-";
-            expressions[0] = expressions[0].substring(1);
+            firstExpression = expressions[0].substring(1);
         }
         secondSign = "";
-        if (expressions[1].substring(0,1).contains("-")){
-            secondSign = "-";
-            expressions[1] = expressions[1].substring(1);
+        String secondExpression = "";
+        try{
+            if (expressions[1].substring(0,1).contains("-")){
+                secondSign = "-";
+                secondExpression = expressions[1].substring(1);
+            }else{
+                secondExpression = expressions[1];
+            }
+        }catch (Exception e){
+            System.out.println("No hay expresión 2");
         }
 
-        System.out.println("Ecuación 1: " + expressions[0]);
-        System.out.println("Ecuación 2: " + expressions[1]);
+        System.out.println("Ecuación 1: " + firstExpression);
+        System.out.println("Ecuación 2: " + secondExpression);
         return firstSign
-                + parseToLatex(expressions[0])
-                + comparatorOperator
+                + parseToLatex(firstExpression)
+                + (!secondExpression.isEmpty() ? comparatorOperator : "")
                 + secondSign
-                + parseToLatex(expressions[1]);
+                + (!secondExpression.isEmpty() ? parseToLatex(secondExpression) : "");
     }
 
     private static String replaceComparatorWithMathViewTag(String infixEquation){
@@ -553,7 +561,7 @@ public class ExpressionsManager {
 
         // 3º: si el polinomio empieza con signo (-), removerlo
         String firstSign = "";
-        if(equationCleaned.substring(0, 1).contains("-")){
+        if(!equationCleaned.isEmpty() && equationCleaned.substring(0, 1).contains("-")){
             firstSign = "-";
             equationCleaned = equationCleaned.substring(1);
         }
