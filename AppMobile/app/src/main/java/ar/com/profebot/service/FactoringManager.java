@@ -858,7 +858,7 @@ public class FactoringManager extends Manager{
     }
 
     private static String signOf(Double number){
-        return number > 0 ? "+" : "";
+        return number >= 0 ? "+" : "";
     }
 
     public static Integer getExponentFrom(Map<Integer, Double> term){
