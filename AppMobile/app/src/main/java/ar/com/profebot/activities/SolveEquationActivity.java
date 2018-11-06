@@ -110,10 +110,12 @@ public class SolveEquationActivity extends GlobalActivity {
     }
 
     private void setContextOfResolution() {
+        contextOfResolution = "";
         if(typeOfContextOfResolution == EQUATION_OR_INEQUATION){
+            String comparatorOperator = ExpressionsManager.getRootOfEquation(lastEquation);
             // Equation
-            if(lastEquation.contains("=")){
-                String[] members = lastEquation.split("=");
+            String[] members = lastEquation.split(comparatorOperator);
+            if(comparatorOperator.equals("=")){
                 if(members[0].equals(members[1])){
                     contextOfResolution = CONTEXT_OF_RESOLUTION_IS_EQUATION_WITH_INFINITE_SOLUTIONS;
                 }else if(members[0].toUpperCase().equals("X")){
@@ -129,13 +131,26 @@ public class SolveEquationActivity extends GlobalActivity {
                 }
 
             }else{ // Inequation
-                // TODO: ver en qué formato llega
-                contextOfResolution = "";
+                if(members[0].equals(members[1])){
+                    if(lastEquation.contains("=")){
+                        // Ejemplo: 2 >= 2. En este caso, no hay inecuación (el > nunca se cumple)
+                        contextOfResolution = CONTEXT_OF_RESOLUTION_IS_EQUATION_WITH_INFINITE_SOLUTIONS;
+                    }else{
+                        // Ejemplo: 2 > 2. En este caso, no hay inecuación (el > nunca se cumple). Se podría decir que es una ecuación con 0 soluciones
+                        contextOfResolution = CONTEXT_OF_RESOLUTION_IS_EQUATION_WITHOUT_SOLUTIONS;
+                    }
+                }else if(members[1].equals("[]")){
+                    contextOfResolution = CONTEXT_OF_RESOLUTION_IS_INEQUATION_WITHOUT_SOLUTIONS;
+                }else{
+                    contextOfResolution = CONTEXT_OF_RESOLUTION_IS_INEQUATION_WITH_INTERVAL_SOLUTIONS;
+                }
+
             }
         }
 
         contextOfResolutionTexts = JustificationsService.getContextOfResolutionTexts(contextOfResolution, this);
         String[] members;
+        String comparatorOperator = ExpressionsManager.getRootOfEquation(lastEquation);
         switch (contextOfResolution){
             case CONTEXT_OF_RESOLUTION_IS_EQUATION_WITH_FINITE_SOLUTIONS:
                 contextOfResolutionTexts = EquationManager.fixResolutionTextsForRoots(contextOfResolutionTexts, lastEquation);
@@ -150,11 +165,33 @@ public class SolveEquationActivity extends GlobalActivity {
                 contextOfResolutionTexts = EquationManager.fixResolutionTextsForRoots(contextOfResolutionTexts, lastEquation);
                 break;
             case CONTEXT_OF_RESOLUTION_IS_ORIGIN_ORD:
-                members = lastEquation.split("=");
+                members = lastEquation.split(comparatorOperator);
                 contextOfResolutionTexts = JustificationsService.replacePatterns(contextOfResolutionTexts, "second", "/valor/", members[1]);
                 break;
             case CONTEXT_OF_RESOLUTION_IS_INEQUATION_WITH_INTERVAL_SOLUTIONS:
-                // TODO: falta ver como me llega la info del back
+                members = lastEquation.split(comparatorOperator);
+                try{
+                    Double val = Double.parseDouble(members[1]);
+                    StringBuilder interval = new StringBuilder("");
+                    switch (comparatorOperator){
+                        case ">":
+                            interval.append("(" + val + ", +∞ )");
+                            break;
+                        case ">=":
+                            interval.append("[" + val + ", +∞ )");
+                            break;
+                        case "<":
+                            interval.append("(-∞ , " + val + ")");
+                            break;
+                        case "<=":
+                            interval.append("(-∞ , " + val + "]");
+                            break;
+                    }
+                    contextOfResolutionTexts = JustificationsService.replacePatterns(contextOfResolutionTexts, "second", "/intervalos/", interval.toString());
+                    break;
+                }catch (Exception e){
+                    // TODO: falta cuando la rta es un intervalo que surge de la intersección o unión
+                }
                 break;
         }
     }
