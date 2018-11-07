@@ -126,6 +126,8 @@ public class ResolutorService {
 
     public List<MultipleChoiceStep> resolveExpressionTestWithoutContext(String expression) throws InvalidExpressionException {
 
+        return resolveExpression(expression, null);
+        /*
         Tree tree = (new ParserService()).parseExpression(expression);
 
         List<EquationStatus> steps = stepThrough(tree, false);
@@ -204,7 +206,7 @@ public class ResolutorService {
             result.get(result.size()-1).setSolved(true);
         }
 
-        return result;
+        return result;*/
     }
 
     public String resolveExpression(String expression) throws InvalidExpressionException {
@@ -569,9 +571,14 @@ public class ResolutorService {
             allSolutions = TreeNode.createList(new ArrayList<TreeNode>());
         }
 
-        Tree roots = new Tree(symbol, allSolutions, "=");
-
-        return new EquationStatus(NodeStatus.ChangeTypes.FIND_ROOTS, equation, roots);
+        if(!"=".equals(equation.getRootNode().getValue()) && solutions.size() == 2){
+            // Calculo los intervalos de la inecuacion cuadratica
+            return findQuadraticInecuationInterval(equation, equation.getRootNode().getValue(), solutions);
+        }else{
+            // Raices normales
+            Tree roots = new Tree(symbol, allSolutions, equation.getRootNode().getValue());
+            return new EquationStatus(NodeStatus.ChangeTypes.FIND_ROOTS, equation, roots);
+        }
     }
 
     /*
@@ -1310,5 +1317,82 @@ public class ResolutorService {
         }
 
         return factors;
+    }
+
+    private EquationStatus findQuadraticInecuationInterval(Tree oldEquation, String operator, List<TreeNode> solutions) {
+
+        // Las soluciones son las raices, luego voy a tener algo de la forma:
+        // (X - R1)*(X - R2) Operador(>, >=, <, <=) 0
+        Integer R1 = solutions.get(0).getIntegerValue();
+        Integer R2 = solutions.get(1).getIntegerValue();
+
+        Integer max = Math.max(R1, R2);
+        Integer min = Math.min(R1, R2);
+
+        String interval;
+
+        // Dependiendo si es mayor o menor a 0, el producto debe dar positivo o negativo
+        if (operator.contains(">")){
+            // el producto es mayor a 0 (salvo que las raices sean iguales)
+
+            // Si es la misma raiz, la solucion es unica
+            if (R1.equals(R2)){
+                // Si es por >=, son todos los reales
+                if (operator.contains("=")){
+                    interval = "(-INF,INF)";
+                }else{
+                    // Si es estrictamente mayor, serán todos los reales menos ese numero:
+                    // I=(-INF, R)U(R, INF)
+                    interval = "(-INF," + R1 + ")U(" + R1 + ",INF)";
+                }
+            }else{
+                // a) Los dos tienen que ser mayor a 0
+                // (X-R1)*(X-R2) => X > R1 y X > R2.
+                // Ej: Con R1=-5 y R2=3 => (X+5)*(X-3) => X>-5 y X>3 => I=(MAX(R1,R2),INF)
+
+
+                // b) Los dos tienen que ser menor a 0
+                // (X-R1)*(X-R2) => X < R1 y X < R2.
+                // Ej: Con R1=-5 y R2=3 => (X+5)*(X-3) => X<-5 y X<3 => I=(-INF,MIN(R1,R2))
+
+                // Son raices distintas, el intervalo sera:
+                if (operator.contains("=")) {
+                    // I=(-INF, MIN)U(MAX, INF)
+                    interval = "(-INF," + min + "]U[" + max + ",INF)";
+                }else{
+                    // I=(-INF, MIN)U(MAX, INF)
+                    interval = "(-INF," + min + ")U(" + max + ",INF)";
+                }
+            }
+
+        }else{
+            // el producto es menor a 0
+            // Uno es mayor a 0 y el otro menor a 0 (salvo que la raiz sea unica)
+
+            // Si la raiz es unica
+            if (R1.equals(R2)){
+                // Por el <=, la solucióm es unica, X = R
+                if (operator.contains("=")) {
+                    interval = R1.toString();
+                }else{
+                    interval = "VACIO";
+                }
+            }else{
+                // Son raices distintas, el intervalo sera:
+                if (operator.contains("=")) {
+                    // I=[MIN,MAX]
+                    interval = "[" + min + "," + max + "]";
+                }else{
+                    // I=(MIN,MAX)
+                    interval = "(" + min + "," + max + ")";
+                }
+            }
+        }
+
+        Tree intervalSolution = new Tree(new TreeNode("I"),
+                new TreeNode(interval),
+                "=");
+
+        return new EquationStatus(NodeStatus.ChangeTypes.FIND_ROOTS, oldEquation, intervalSolution);
     }
 }

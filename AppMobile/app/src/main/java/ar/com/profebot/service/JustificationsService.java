@@ -88,6 +88,15 @@ public class JustificationsService {
     public static Map<String, String> getCorrectJustificationsFrom(ChangeTypes source, Context context){
         Map<String, String> justifications = new HashMap<>();
 
+        // Para debug
+        if (context == null){
+            justifications.put("option", "");
+            justifications.put("correctOptionJustification", "");
+            justifications.put("summary", "");
+            return justifications;
+        }
+
+
         if(source.getDescrip().equals(SIMPLIFY_ARITHMETIC.getDescrip())){
             return createTextsFrom(context,
                     R.string.SIMPLIFY_ARITHMETIC_OPTION,
@@ -513,6 +522,15 @@ public class JustificationsService {
     }
 
     public static Map<String, String> getIncorrectJustificationsFrom(InvalidStep.InvalidTypes source, Context context) {
+
+        // Para debug
+        if (context == null){
+            Map<String, String> justifications = new HashMap<>();
+            justifications.put("option", "");
+            justifications.put("incorrectOptionJustification", "");
+            return justifications;
+        }
+
         switch(source){
             // Tipo 1 - bullet 1
             case PASAJE_DE_TERMINO_DE_PRIMER_ANCESTRO_SUMA_COMO_SUMA:
