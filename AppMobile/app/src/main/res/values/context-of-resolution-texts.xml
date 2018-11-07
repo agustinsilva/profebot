@@ -22,7 +22,7 @@
     <string name="EQUATION_WITH_INFINITE_SOLUTIONS_SECOND_TEXT">es infinito, dado que cualquier valor reemplazado en X, verifica la igualdad.</string>
 
     <string name="EQUATION_WITHOUT_SOLUTIONS_FIRST_TEXT">El conjunto de soluciones de la ecuación:</string>
-    <string name="EQUATION_WITHOUT_SOLUTIONS_SECOND_TEXT">es infinito, dado que cualquier valor reemplazado en X, verifica la igualdad.</string>
+    <string name="EQUATION_WITHOUT_SOLUTIONS_SECOND_TEXT">es vacio, dado que ningún valor reemplazado en X, verifica la igualdad.</string>
 
     <string name="INEQUATION_WITH_INTERVAL_SOLUTIONS_FIRST_TEXT">El conjunto de soluciones de la inecuación:</string>
     <string name="INEQUATION_WITH_INTERVAL_SOLUTIONS_SECOND_TEXT">se lo puede expresar como: /intervalos/</string>
