@@ -242,6 +242,9 @@ public class TreeUtils {
      */
     public static TreeNode flattenOperands(TreeNode node) {
 
+        if (node == null){
+            node = node;
+        }
         if (TreeUtils.isConstant(node, true)) {
             // the evaluate() changes unary minuses around constant nodes to constant nodes
             // with negative values.

@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.com.profebot.Models.MultipleChoiceStep;
 import ar.com.profebot.parser.container.Tree;
 import ar.com.profebot.parser.container.TreeNode;
 import ar.com.profebot.parser.exception.InvalidExpressionException;
@@ -1760,104 +1761,102 @@ public class ResolutorServiceTest extends ResolutorService {
     @Test
     public void inecuacion_cuadratica_1()  throws InvalidExpressionException {
         String expression = "X^2+2X+1>0"; // (X+1)*(X+1)
-        Tree tree = (new ParserService()).parseExpression(expression);
-        List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
-        Assert.assertEquals("I=(-INF,-1)U(-1,INF)",  listaNodos.get(listaNodos.size()-1).getNewEquation().toExpression());
+        inecuacion_cuadratica_test(expression,"I=(-INF,-1)U(-1,INF)");
     }
 
     @Test
     public void inecuacion_cuadratica_2()  throws InvalidExpressionException {
         String expression = "X^2+2X+1>=0"; // (X+1)*(X+1)
-        Tree tree = (new ParserService()).parseExpression(expression);
-        List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
-        Assert.assertEquals("I=(-INF,INF)",  listaNodos.get(listaNodos.size()-1).getNewEquation().toExpression());
+        inecuacion_cuadratica_test(expression,"I=(-INF,INF)");
     }
 
     @Test
     public void inecuacion_cuadratica_3()  throws InvalidExpressionException {
         String expression = "(X+3)*(X-5)>0";
-        Tree tree = (new ParserService()).parseExpression(expression);
-        List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
-        Assert.assertEquals("I=(-INF,-3)U(5,INF)",  listaNodos.get(listaNodos.size()-1).getNewEquation().toExpression());
+        inecuacion_cuadratica_test(expression,"I=(-INF,-3)U(5,INF)");
     }
 
     @Test
     public void inecuacion_cuadratica_4()  throws InvalidExpressionException {
         String expression = "(X+3)*(X-5)>=0";
-        Tree tree = (new ParserService()).parseExpression(expression);
-        List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
-        Assert.assertEquals("I=(-INF,-3]U[5,INF)",  listaNodos.get(listaNodos.size()-1).getNewEquation().toExpression());
+        inecuacion_cuadratica_test(expression,"I=(-INF,-3]U[5,INF)");
     }
 
     @Test
     public void inecuacion_cuadratica_5()  throws InvalidExpressionException {
         String expression = "(X+1)*(X+1)<0";
-        Tree tree = (new ParserService()).parseExpression(expression);
-        List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
-        Assert.assertEquals("I=VACIO",  listaNodos.get(listaNodos.size()-1).getNewEquation().toExpression());
+        inecuacion_cuadratica_test(expression,"I=VACIO");
     }
 
     @Test
     public void inecuacion_cuadratica_6()  throws InvalidExpressionException {
         String expression = "(X+1)*(X+1)<=0";
-        Tree tree = (new ParserService()).parseExpression(expression);
-        List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
-        Assert.assertEquals("I=-1",  listaNodos.get(listaNodos.size()-1).getNewEquation().toExpression());
+        inecuacion_cuadratica_test(expression,"I=-1");
     }
 
     @Test
     public void inecuacion_cuadratica_7()  throws InvalidExpressionException {
         String expression = "4X^2-16>=0";
-        Tree tree = (new ParserService()).parseExpression(expression);
-        List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
-        Assert.assertEquals("I=(-INF,-2]U[2,INF)",  listaNodos.get(listaNodos.size()-1).getNewEquation().toExpression());
+        inecuacion_cuadratica_test(expression,"I=(-INF,-2]U[2,INF)");
     }
 
     @Test
     public void inecuacion_cuadratica_8()  throws InvalidExpressionException {
         String expression = "X^2+12X-64>0";
-        Tree tree = (new ParserService()).parseExpression(expression);
-        List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
-        Assert.assertEquals("I=(-INF,-16)U(4,INF)",  listaNodos.get(listaNodos.size()-1).getNewEquation().toExpression());
+        inecuacion_cuadratica_test(expression,"I=(-INF,-16)U(4,INF)");
     }
 
     @Test
     public void inecuacion_cuadratica_9()  throws InvalidExpressionException {
         String expression = "X*(X+9)>0";
-        Tree tree = (new ParserService()).parseExpression(expression);
-        List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
-        Assert.assertEquals("I=(-INF,-9)U(0,INF)",  listaNodos.get(listaNodos.size()-1).getNewEquation().toExpression());
+        inecuacion_cuadratica_test(expression,"I=(-INF,-9)U(0,INF)");
     }
 
     @Test
     public void inecuacion_cuadratica_10()  throws InvalidExpressionException {
         String expression = "X^2<=0";
-        Tree tree = (new ParserService()).parseExpression(expression);
-        List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
-        Assert.assertEquals("I=0",  listaNodos.get(listaNodos.size()-1).getNewEquation().toExpression());
+        inecuacion_cuadratica_test(expression,"I=0");
     }
 
     @Test
     public void inecuacion_cuadratica_11()  throws InvalidExpressionException {
         String expression = "5X^2<0";
-        Tree tree = (new ParserService()).parseExpression(expression);
-        List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
-        Assert.assertEquals("I=VACIO",  listaNodos.get(listaNodos.size()-1).getNewEquation().toExpression());
+        inecuacion_cuadratica_test(expression,"I=VACIO");
     }
 
     @Test
     public void inecuacion_cuadratica_12()  throws InvalidExpressionException {
         String expression = "(X+7)*(X-3)<0";
-        Tree tree = (new ParserService()).parseExpression(expression);
-        List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
-        Assert.assertEquals("I=(-7,3)",  listaNodos.get(listaNodos.size()-1).getNewEquation().toExpression());
+        inecuacion_cuadratica_test(expression,"I=(-7,3)");
     }
 
     @Test
     public void inecuacion_cuadratica_13()  throws InvalidExpressionException {
         String expression = "(X+7)*(X+3)<=0";
+        inecuacion_cuadratica_test(expression, "I=[-7,-3]");
+    }
+
+    private void inecuacion_cuadratica_test(String expression, String expectedOutput) throws InvalidExpressionException {
+
+        // Metodo por el
         Tree tree = (new ParserService()).parseExpression(expression);
         List<EquationStatus> listaNodos =  super.stepThrough(tree,false);
-        Assert.assertEquals("I=[-7,-3]",  listaNodos.get(listaNodos.size()-1).getNewEquation().toExpression());
+        Assert.assertEquals(expectedOutput,  listaNodos.get(listaNodos.size()-1).getNewEquation().toExpression());
+
+        List<MultipleChoiceStep> steps = super.resolveExpressionTestWithoutContext(expression);
+        MultipleChoiceStep lastSetp = steps.get(steps.size()-1);
+        Assert.assertEquals(expectedOutput,  getCorrectOption(lastSetp));
+    }
+
+    private String getCorrectOption(MultipleChoiceStep step){
+        switch(step.getCorrectOption()){
+            case 1:
+                return step.getEquationOptionA();
+            case 2:
+                return step.getEquationOptionB();
+            case 3:
+                return step.getEquationOptionC();
+        }
+        return null;
     }
 }

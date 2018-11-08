@@ -243,7 +243,8 @@ public class InvalidOptionService {
             if (!TreeUtils.isConstant(node) && !TreeUtils.isSingleSymbol(node)){
 
                 // El = es no temrinal pero se ignora
-                if (!TreeUtils.isRootNode(node)) {
+                // Ignoro los simbolos especiales, menso unarios y parentesis
+                if (!TreeUtils.isRootNode(node) && !node.isUnaryMinus() && !node.isParenthesis()) {
 
                     // Seteo una propiedad para poder buscar el nodo cuando el arbol este clonado
                     searchId++;
