@@ -74,6 +74,14 @@ public class SolveEquationActivity extends GlobalActivity {
             lastEquation = multipleChoiceSteps.get(multipleChoiceSteps.size() - 1).getNewEquationBase();
             if(lastEquation.contains("I=")){
                 multipleChoiceSteps.remove(multipleChoiceSteps.size() - 1);
+                String comparatorOperator = ExpressionsManager.getRootOfEquation( multipleChoiceSteps.get(0).getNewEquationBase());
+                try{
+                    // Si el inverval es un número, dejar el "=" en el interval, para que se mantengan los valores puntuales
+                    Double.parseDouble(lastEquation.split(ExpressionsManager.getRootOfEquation(lastEquation))[1]);
+                }catch (Exception e){
+                    // Si el interval no es un número, respetar el operador de comparación
+                    lastEquation = lastEquation.replace("=", comparatorOperator);
+                }
             }
             adapter = new RVMultipleChoiceAdapter(multipleChoiceSteps.get(0), multipleChoiceSteps, manager);
         }else{
@@ -118,7 +126,7 @@ public class SolveEquationActivity extends GlobalActivity {
             String comparatorOperator = ExpressionsManager.getRootOfEquation(lastEquation);
             String[] members = lastEquation.split(comparatorOperator);
             // Equation
-            if(comparatorOperator.equals("=")){
+            if(!"I".equals(members[0]) && comparatorOperator.equals("=")){
                 if(members[0].equals(members[1])){
                     contextOfResolution = CONTEXT_OF_RESOLUTION_IS_EQUATION_WITH_INFINITE_SOLUTIONS;
                 }else if(members[0].toUpperCase().equals("X")){
@@ -175,25 +183,35 @@ public class SolveEquationActivity extends GlobalActivity {
                 try{
                     Double val = Double.parseDouble(members[1]);
                     StringBuilder interval = new StringBuilder("");
-                    switch (comparatorOperator){
-                        case ">":
-                            interval.append("(" + val + ", +∞ )");
-                            break;
-                        case ">=":
-                            interval.append("[" + val + ", +∞ )");
-                            break;
-                        case "<":
-                            interval.append("(-∞ , " + val + ")");
-                            break;
-                        case "<=":
-                            interval.append("(-∞ , " + val + "]");
-                            break;
+
+                    if("=".equals(comparatorOperator)){
+                        interval.append("{ ");
+                        interval.append(val);
+                        interval.append(" }");
+                    }else{
+                        switch (comparatorOperator){
+                            case ">":
+                                interval.append("(" + val + ", +∞ )");
+                                break;
+                            case ">=":
+                                interval.append("[" + val + ", +∞ )");
+                                break;
+                            case "<":
+                                interval.append("(-∞ , " + val + ")");
+                                break;
+                            case "<=":
+                                interval.append("(-∞ , " + val + "]");
+                                break;
+                        }
                     }
                     contextOfResolutionTexts = JustificationsService.replacePatterns(contextOfResolutionTexts, "second", "/intervalos/", interval.toString());
                 }catch (Exception e){
                     String interval = members[1].replace("INF", "∞");
                     contextOfResolutionTexts = JustificationsService.replacePatterns(contextOfResolutionTexts, "second", "/intervalos/", interval);
                 }
+                break;
+            case CONTEXT_OF_RESOLUTION_IS_INEQUATION_WITHOUT_SOLUTIONS:
+                contextOfResolutionTexts = JustificationsService.replacePatterns(contextOfResolutionTexts, "second", "/intervalos/", "");
                 break;
         }
     }
