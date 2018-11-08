@@ -71,8 +71,11 @@ public class SolveEquationActivity extends GlobalActivity {
         multipleChoiceSteps = this.initializeMultipleChoiceSteps();
         manager = new EquationManager();
         if(!multipleChoiceSteps.isEmpty()){
-            adapter = new RVMultipleChoiceAdapter(multipleChoiceSteps.get(0), multipleChoiceSteps, manager);
             lastEquation = multipleChoiceSteps.get(multipleChoiceSteps.size() - 1).getNewEquationBase();
+            if(lastEquation.contains("I=")){
+                multipleChoiceSteps.remove(multipleChoiceSteps.size() - 1);
+            }
+            adapter = new RVMultipleChoiceAdapter(multipleChoiceSteps.get(0), multipleChoiceSteps, manager);
         }else{
             adapter = new RVMultipleChoiceAdapter(null, new ArrayList<>(), manager);
             lastEquation = ExpressionsManager.getTreeOfExpression().toExpression();
@@ -113,8 +116,8 @@ public class SolveEquationActivity extends GlobalActivity {
         contextOfResolution = "";
         if(typeOfContextOfResolution == EQUATION_OR_INEQUATION){
             String comparatorOperator = ExpressionsManager.getRootOfEquation(lastEquation);
-            // Equation
             String[] members = lastEquation.split(comparatorOperator);
+            // Equation
             if(comparatorOperator.equals("=")){
                 if(members[0].equals(members[1])){
                     contextOfResolution = CONTEXT_OF_RESOLUTION_IS_EQUATION_WITH_INFINITE_SOLUTIONS;
@@ -126,10 +129,10 @@ public class SolveEquationActivity extends GlobalActivity {
                         Double.parseDouble(members[1]);
                         contextOfResolution = CONTEXT_OF_RESOLUTION_IS_EQUATION_WITHOUT_SOLUTIONS;
                     }catch (Exception e){
-                        contextOfResolution = "";
+                        // Raíces múltiples
+                        contextOfResolution = CONTEXT_OF_RESOLUTION_IS_EQUATION_WITH_FINITE_SOLUTIONS;
                     }
                 }
-
             }else{ // Inequation
                 if(members[0].equals(members[1])){
                     if(lastEquation.contains("=")){
@@ -139,12 +142,11 @@ public class SolveEquationActivity extends GlobalActivity {
                         // Ejemplo: 2 > 2. En este caso, no hay inecuación (el > nunca se cumple). Se podría decir que es una ecuación con 0 soluciones
                         contextOfResolution = CONTEXT_OF_RESOLUTION_IS_EQUATION_WITHOUT_SOLUTIONS;
                     }
-                }else if(members[1].equals("[]")){
+                }else if(members[1].equals("VACIO")){
                     contextOfResolution = CONTEXT_OF_RESOLUTION_IS_INEQUATION_WITHOUT_SOLUTIONS;
                 }else{
                     contextOfResolution = CONTEXT_OF_RESOLUTION_IS_INEQUATION_WITH_INTERVAL_SOLUTIONS;
                 }
-
             }
         }
 
@@ -188,9 +190,9 @@ public class SolveEquationActivity extends GlobalActivity {
                             break;
                     }
                     contextOfResolutionTexts = JustificationsService.replacePatterns(contextOfResolutionTexts, "second", "/intervalos/", interval.toString());
-                    break;
                 }catch (Exception e){
-                    // TODO: falta cuando la rta es un intervalo que surge de la intersección o unión
+                    String interval = members[1].replace("INF", "∞");
+                    contextOfResolutionTexts = JustificationsService.replacePatterns(contextOfResolutionTexts, "second", "/intervalos/", interval);
                 }
                 break;
         }
