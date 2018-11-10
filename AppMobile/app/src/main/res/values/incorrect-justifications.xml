@@ -54,10 +54,10 @@
     <string name="RAIZ_RESUELTA_INCORRECTAMENTE_OPTION">Resolver la raíz.</string>
     <string name="RAIZ_RESUELTA_INCORRECTAMENTE_JUSTIFICATION">La raíz no está bien resuelta; el resultado indicado no era el esperado.</string>
 
-    <string name="DISTRIBUTIVA_BASICA_MAL_RESUELTA_OPTION">Realizar la distributiva.</string>
+    <string name="DISTRIBUTIVA_BASICA_MAL_RESUELTA_OPTION">Aplicar distributiva.</string>
     <string name="DISTRIBUTIVA_BASICA_MAL_RESUELTA_JUSTIFICATION">La distributiva no se hizo correctamente. Cuando se distribuye un número o una variable a una suma o resta, cada término de la suma o resta se debe multiplicar o dividir por el número o variable que se distribuye.</string>
 
-    <string name="DISTRIBUTIVA_DOBLE_MAL_RESUELTA_OPTION">Realizar la distributiva.</string>
+    <string name="DISTRIBUTIVA_DOBLE_MAL_RESUELTA_OPTION">Aplicar distributiva.</string>
     <string name="DISTRIBUTIVA_DOBLE_MAL_RESUELTA_JUSTIFICATION">La distributiva no se hizo correctamente. Cuando dos sumas o restas están multiplicadas entre sí, la cantidad de términos que surja de la distributiva es igual a la cantidad de términos de uno de los factores, multiplicada por la cantidad de términos del otro factor; por ejemplo, si se tiene (x+1)(x+2), cada suma tiene 2 términos, por tanto, luego de distribuír se tendrán 4 términos. Cada término de un factor se debe multiplicar por cada uno de los términos del otro factor (idem con sus signos, aplicando la regla de los signos).</string>
 
     <string name="ASOCIATIVA_MAL_RESUELTA_OPTION">Resolver operaciones aplicando asociativa.</string>
