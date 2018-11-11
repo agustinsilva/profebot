@@ -124,5 +124,44 @@ public class EquationManager extends Manager{
         return contextOfResolutionTexts;
     }
 
+    public static String getIntervalFrom(String equation){
+        String comparatorOperator = ExpressionsManager.getRootOfEquation(equation);
+        String[] members = equation.split(comparatorOperator);
+        Double ordenadaAlOrigen = Double.parseDouble(members[1]) * -1;
+        Boolean ordenadaAlOrigenEsPositiva = ordenadaAlOrigen > 0;
+        // Si el miembro izquierdo contiene X (pero no es X) --> no se pudo resolver la cuadrática --> no hay raíces
+        if(members[0].toUpperCase().contains("X") && !members[0].toUpperCase().equals("X")){
+            if(ordenadaAlOrigenEsPositiva){
+                if(">".equals(comparatorOperator) || ">=".equals(comparatorOperator)){
+                    return "(-∞, ∞)";
+                }else{
+                    return "";
+                }
+            }
 
+            // Ordenada al origen es negativa
+            if(">".equals(comparatorOperator) || ">=".equals(comparatorOperator)){
+                return "";
+            }
+            return "(-∞, ∞)";
+        }
+
+        String result = "";
+        switch (comparatorOperator){
+            case ">":
+                result = "(AUX, +∞)";
+                break;
+            case ">=":
+                result = "[AUX, +∞)";
+                break;
+            case "<":
+                result = "(-∞, AUX)";
+                break;
+            case "<=":
+                result = "(-∞, AUX]";
+                break;
+        }
+
+        return ExpressionsManager.removeDecimals(result.replace("AUX", "" + (-1 * ordenadaAlOrigen)));
+    }
 }

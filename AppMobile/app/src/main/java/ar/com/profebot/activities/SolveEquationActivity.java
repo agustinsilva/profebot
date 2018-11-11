@@ -137,8 +137,15 @@ public class SolveEquationActivity extends GlobalActivity {
                         Double.parseDouble(members[1]);
                         contextOfResolution = CONTEXT_OF_RESOLUTION_IS_EQUATION_WITHOUT_SOLUTIONS;
                     }catch (Exception e){
-                        // Raíces múltiples
-                        contextOfResolution = CONTEXT_OF_RESOLUTION_IS_EQUATION_WITH_FINITE_SOLUTIONS;
+                        try{
+                            Double.parseDouble(members[1]);
+                            if(members[0].toUpperCase().contains("X")){
+                                contextOfResolution = CONTEXT_OF_RESOLUTION_IS_EQUATION_WITHOUT_SOLUTIONS;
+                            }
+                        }catch (Exception e2){
+                            // Raíces múltiples
+                            contextOfResolution = CONTEXT_OF_RESOLUTION_IS_EQUATION_WITH_FINITE_SOLUTIONS;
+                        }
                     }
                 }
             }else{ // Inequation
@@ -181,31 +188,53 @@ public class SolveEquationActivity extends GlobalActivity {
             case CONTEXT_OF_RESOLUTION_IS_INEQUATION_WITH_INTERVAL_SOLUTIONS:
                 members = lastEquation.split(comparatorOperator);
                 try{
-                    Double val = Double.parseDouble(members[1]);
+                    Double valDer = Double.parseDouble(members[1]);
                     StringBuilder interval = new StringBuilder("");
 
-                    if("=".equals(comparatorOperator)){
-                        interval.append("{ ");
-                        interval.append(val);
-                        interval.append(" }");
-                    }else{
-                        switch (comparatorOperator){
-                            case ">":
-                                interval.append("(" + val + ", +∞ )");
-                                break;
-                            case ">=":
-                                interval.append("[" + val + ", +∞ )");
-                                break;
-                            case "<":
-                                interval.append("(-∞ , " + val + ")");
-                                break;
-                            case "<=":
-                                interval.append("(-∞ , " + val + "]");
-                                break;
+                    try{
+                        // Si existe valor izquierdo, es una inecuación del estilo 2>1
+                        Double valIzq = Double.parseDouble(members[0]);
+                        if(valIzq.equals(valDer)){
+                            if(comparatorOperator.contains("=")){
+                                interval.append("{ ");
+                                interval.append(valDer);
+                                interval.append(" }");
+                            }
+                        }else{
+                            if(comparatorOperator.contains(">")){
+                                if(valIzq >= valDer){
+                                    interval.append("(-∞, ∞)");
+                                }else{
+                                    contextOfResolutionTexts = JustificationsService.getContextOfResolutionTexts(CONTEXT_OF_RESOLUTION_IS_INEQUATION_WITHOUT_SOLUTIONS, this);
+                                }
+                            }else if(comparatorOperator.contains("<")){
+                                if(valIzq <= valDer){
+                                    interval.append("(-∞, ∞)");
+                                }else{
+                                    contextOfResolutionTexts = JustificationsService.getContextOfResolutionTexts(CONTEXT_OF_RESOLUTION_IS_INEQUATION_WITHOUT_SOLUTIONS, this);
+                                }
+                            }
                         }
+                        contextOfResolutionTexts = JustificationsService.replacePatterns(contextOfResolutionTexts, "second", "/intervalos/", interval.toString());
+                    }catch (Exception e2){
+                        // En este caso, el miembro izquierdo no es numérico
+
+                        // Cuando el intervalo es un número. Ejemplo: x^2 <= 0 --> solo el 0 cumple
+                        if("=".equals(comparatorOperator)){
+                            interval.append("{ ");
+                            interval.append(valDer);
+                            interval.append(" }");
+                        }else{
+                            // Generar el intervalo solución cuando se tiene una cuadrática sin raíces
+                            interval.append(EquationManager.getIntervalFrom(lastEquation));
+                        }
+                        if(interval.toString().isEmpty()){
+                            contextOfResolutionTexts = JustificationsService.getContextOfResolutionTexts(CONTEXT_OF_RESOLUTION_IS_INEQUATION_WITHOUT_SOLUTIONS, this);
+                        }
+                        contextOfResolutionTexts = JustificationsService.replacePatterns(contextOfResolutionTexts, "second", "/intervalos/", interval.toString());
                     }
-                    contextOfResolutionTexts = JustificationsService.replacePatterns(contextOfResolutionTexts, "second", "/intervalos/", interval.toString());
                 }catch (Exception e){
+                    // En este caos, tengo un intervalo solución, ejemplo: I=(3, +INF)
                     String interval = members[1].replace("INF", "∞");
                     contextOfResolutionTexts = JustificationsService.replacePatterns(contextOfResolutionTexts, "second", "/intervalos/", interval);
                 }
